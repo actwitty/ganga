@@ -39,6 +39,8 @@ gem 'devise'
 gem 'i18n-inflector-rails'
 gem 'rails-i18n'
 
+#Uncatagorized
+gem 'addressable' 
 
 #JSON and API
 gem 'yajl-ruby' #fast json parser
@@ -47,6 +49,7 @@ gem 'acts_as_api'
 #Parsers
 gem 'nokogiri'
 gem 'roxml'
+
 
 
 #add validation for foreign keys
@@ -63,6 +66,11 @@ gem "squeel" # Last officially released gem
 #for http client Adaptor 
 gem 'faraday'
 gem 'faraday_middleware'
+
+#for asynchronous web-socket
+gem 'em-http-request'
+gem 'em-synchrony'
+
 
 
 #Social 
