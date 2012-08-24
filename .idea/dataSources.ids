@@ -1,0 +1,72 @@
+<?xml version="1.0"?><component name="dataSourceStorage">
+  <data-source source="LOCAL" name="Rails ganga: cucumber" product="" version="" jdbc-version="" driver-version="" uuid="f268294a-01be-4da5-a923-911eb9d4fd69">
+    <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+    <jdbc-url>jdbc:postgresql://127.0.0.1:5433/ganga_test</jdbc-url>
+    <user-name>ganga</user-name>
+    <user-password>dfc6dfcfdfc7dfc5dfc4df9bdf98df9e</user-password>
+    <libraries>
+      <library>
+        <url>file://$USER_HOME$/.RubyMine31/config/jdbc-drivers/postgresql-driver-license.txt</url>
+      </library>
+      <library>
+        <url>jar://$USER_HOME$/.RubyMine31/config/jdbc-drivers/postgresql-9.1-901.jdbc4.jar!/</url>
+      </library>
+    </libraries>
+  </data-source>
+  <data-source source="LOCAL" name="Rails ganga: development" product="" version="" jdbc-version="" driver-version="" uuid="31634088-d818-4039-b9d6-e4764cb8e58f">
+    <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+    <jdbc-url>jdbc:postgresql://127.0.0.1:5433/ganga_development</jdbc-url>
+    <user-name>ganga</user-name>
+    <user-password>dfc6dfcfdfc7dfc5dfc4df9bdf98df9e</user-password>
+    <libraries>
+      <library>
+        <url>file://$USER_HOME$/.RubyMine31/config/jdbc-drivers/postgresql-driver-license.txt</url>
+      </library>
+      <library>
+        <url>jar://$USER_HOME$/.RubyMine31/config/jdbc-drivers/postgresql-9.1-901.jdbc4.jar!/</url>
+      </library>
+    </libraries>
+  </data-source>
+  <data-source source="LOCAL" name="Rails ganga: test" product="" version="" jdbc-version="" driver-version="" uuid="82260fe0-c59a-40c7-b3d7-8c2d441b966a">
+    <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+    <jdbc-url>jdbc:postgresql://127.0.0.1:5433/ganga_test</jdbc-url>
+    <user-name>ganga</user-name>
+    <user-password>dfc6dfcfdfc7dfc5dfc4df9bdf98df9e</user-password>
+    <libraries>
+      <library>
+        <url>file://$USER_HOME$/.RubyMine31/config/jdbc-drivers/postgresql-driver-license.txt</url>
+      </library>
+      <library>
+        <url>jar://$USER_HOME$/.RubyMine31/config/jdbc-drivers/postgresql-9.1-901.jdbc4.jar!/</url>
+      </library>
+    </libraries>
+  </data-source>
+  <data-source source="LOCAL" name="Rails ganga: staging" product="" version="" jdbc-version="" driver-version="" uuid="96c63090-6326-42a3-a247-1804a2d78d0b">
+    <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+    <jdbc-url>jdbc:postgresql://127.0.0.1:5432/ganga_staging</jdbc-url>
+    <user-name>ganga</user-name>
+    <user-password>dfc6dfcfdfc7dfc5dfc4df9bdf98df9e</user-password>
+    <libraries>
+      <library>
+        <url>file://$USER_HOME$/.RubyMine31/config/jdbc-drivers/postgresql-driver-license.txt</url>
+      </library>
+      <library>
+        <url>jar://$USER_HOME$/.RubyMine31/config/jdbc-drivers/postgresql-9.1-901.jdbc4.jar!/</url>
+      </library>
+    </libraries>
+  </data-source>
+  <data-source source="LOCAL" name="Rails ganga: production" product="" version="" jdbc-version="" driver-version="" uuid="35cd4782-0cc2-4201-a491-a794033a1931">
+    <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+    <jdbc-url>jdbc:postgresql://127.0.0.1:5433/ganga_production</jdbc-url>
+    <user-name>ganga</user-name>
+    <user-password>dfc6dfcfdfc7dfc5dfc4df9bdf98df9e</user-password>
+    <libraries>
+      <library>
+        <url>file://$USER_HOME$/.RubyMine31/config/jdbc-drivers/postgresql-driver-license.txt</url>
+      </library>
+      <library>
+        <url>jar://$USER_HOME$/.RubyMine31/config/jdbc-drivers/postgresql-9.1-901.jdbc4.jar!/</url>
+      </library>
+    </libraries>
+  </data-source>
+</component>
