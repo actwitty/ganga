@@ -1,4 +1,5 @@
 Ganga::Application.routes.draw do
+
   devise_for :accounts
 
   # The priority is based upon order of creation:

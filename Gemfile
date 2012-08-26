@@ -31,7 +31,6 @@ gem 'algorithms'
 gem 'omniauth'
 gem 'omniauth-twitter'
 gem 'omniauth-facebook'
-gem 'omniauth-linkedin'
 gem 'devise'
 
 #Inflected translations
