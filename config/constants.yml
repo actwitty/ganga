@@ -7,7 +7,7 @@ development: &default
 production:
   facebook_app_id:      '172893766124779'
   facebook_secret_key:  'd842d4c68c7698a9e0a0823333d691a2'
-  server_base:          'http://ganga-cedar.herokuapp.com'
+  server_base:          'http://ganga.herokuapp.com'
   <<: *default
 
 test:
