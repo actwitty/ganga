@@ -2,7 +2,6 @@ source 'https://rubygems.org'
 
 gem 'rails', '3.2.8'
 
-gem 'pg'
 gem 'heroku'
 
 
@@ -51,17 +50,9 @@ gem 'nokogiri'
 gem 'roxml'
 
 
-
-#add validation for foreign keys
-gem "validates_existence"
-
-
 #Manages constants
 gem 'app_constants'
 
-
-#easy ARel
-gem "squeel" # Last officially released gem
 
 #for http client Adaptor 
 gem 'faraday'
@@ -70,7 +61,6 @@ gem 'faraday_middleware'
 #for asynchronous web-socket
 gem 'em-http-request'
 gem 'em-synchrony'
-
 
 
 #Social 
@@ -88,7 +78,6 @@ gem 'haml'
 gem 'mobile-fu'
 
 
-#solr
 gem 'sunspot_rails'
 gem 'sunspot_solr' # optional pre-packaged Solr distribution for use in development
 
