@@ -33,7 +33,6 @@ gem 'omniauth-facebook'
 gem 'omniauth-linkedin'
 gem 'devise'
 
-
 #Inflected translations
 gem 'i18n-inflector-rails'
 gem 'rails-i18n'
@@ -72,7 +71,7 @@ gem 'meta-tags', :require => 'meta_tags'  #Facebook meta tags
 gem 'thin'
 
 #haml
-gem 'haml'
+gem 'haml-rails'
 
 #to enable detect mobile devices that access  Rails application
 gem 'mobile-fu'

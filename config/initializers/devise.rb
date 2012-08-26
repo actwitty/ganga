@@ -13,7 +13,7 @@ Devise.setup do |config|
   # Load and configure the ORM. Supports :active_record (default) and
   # :mongoid (bson_ext recommended) by default. Other ORMs may be
   # available as additional gems.
-  require 'devise/orm/active_record'
+  require 'devise/orm/mongoid'
 
   # ==> Configuration for any authentication mechanism
   # Configure which keys are used when authenticating a user. The default is
@@ -82,7 +82,7 @@ Devise.setup do |config|
   config.stretches = Rails.env.test? ? 1 : 10
 
   # Setup a pepper to generate the encrypted password.
-  # config.pepper = "3bc0c1b667cfd9f77c789bffad96b56cd71a58d7de36dc903e8566d684b3a806ea9767e73f09ddeda4cf2cd197f73225cc1ae31f3556dcac9b409f1042b71ab0"
+  # config.pepper = "13872a526e0336851d43bca89ca905c7cd267607d9e4eaea13ca10d6cf6be4a230e037b221e08f6dcc94054cbe3d907cea3dff012383c3ddcf6968caf0ab88f7"
 
   # ==> Configuration for :confirmable
   # A period that the user is allowed to access the website even without
@@ -229,17 +229,4 @@ Devise.setup do |config|
   # When using omniauth, Devise cannot automatically set Omniauth path,
   # so you need to do it manually. For the users scope, it would be:
   # config.omniauth_path_prefix = "/my_engine/users/auth"
-
-  # ==> OmniAuth
-  # Add a new OmniAuth provider. Check the wiki for more information on setting
-  # up on your models and hooks.
-  # config.omniauth :github, 'APP_ID', 'APP_SECRET', :scope => 'user,public_repo'
-  require "omniauth-facebook"
-
-  if Rails.env == "development"
-    config.omniauth :facebook, AppConstants.facebook_app_id, AppConstants.facebook_secret_key,:scope => 'email,user_birthday, friends_checkins, user_location,user_photos,user_checkins,user_hometown,friends_location,friends_photos,friends_checkins,friends_hometown, publish_stream',  :client_options => {:ssl => {:ca_path => "/etc/ssl/certs"}}
-  else
-    config.omniauth :facebook, AppConstants.facebook_app_id, AppConstants.facebook_secret_key,
-                  :scope=>'email,user_birthday, friends_checkins, user_location,user_photos,user_checkins,user_hometown,friends_location,friends_photos,friends_checkins,friends_hometown, publish_stream',:display => 'popup'
-  end
 end
