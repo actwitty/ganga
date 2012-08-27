@@ -92,3 +92,7 @@ gem 'sidekiq'
 gem "mongoid", "~> 3.0.0"
 #postgres
 gem 'pg'
+
+group :development,:test  do
+  gem "rspec-rails"
+end
