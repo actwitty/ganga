@@ -16,7 +16,11 @@
       <change type="DELETED" beforePath="$PROJECT_DIR$/test/functional/users_controller_test.rb" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/test/unit/helpers/users_helper_test.rb" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/test/unit/user_test.rb" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/database.yml" afterPath="$PROJECT_DIR$/config/database.yml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/ganga.iml" afterPath="$PROJECT_DIR$/.idea/ganga.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Gemfile.lock" afterPath="$PROJECT_DIR$/Gemfile.lock" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Gemfile" afterPath="$PROJECT_DIR$/Gemfile" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db/migrate/20120826122122_create_apps.rb" afterPath="$PROJECT_DIR$/db/migrate/20120826122122_create_apps.rb" />
     </list>
     <ignored path="ganga.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -70,7 +74,7 @@
       <file leaf-file-name="account.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/models/account.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="39" selection-start="512" selection-end="512" vertical-scroll-proportion="0.0">
+            <state line="11" column="44" selection-start="485" selection-end="507" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -79,7 +83,7 @@
       <file leaf-file-name="app.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/models/app.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="3" column="31" selection-start="87" selection-end="87" vertical-scroll-proportion="0.0">
+            <state line="3" column="23" selection-start="87" selection-end="87" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -88,16 +92,7 @@
       <file leaf-file-name="20120826122122_create_apps.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/db/migrate/20120826122122_create_apps.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="35" selection-start="0" selection-end="239" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="database.yml" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/config/database.yml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="54" column="12" selection-start="1041" selection-end="1041" vertical-scroll-proportion="0.6833773">
+            <state line="14" column="92" selection-start="267" selection-end="267" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -107,7 +102,9 @@
         <entry file="file://$PROJECT_DIR$/db/migrate/20120826121147_devise_create_accounts.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state line="42" column="74" selection-start="1315" selection-end="1315" vertical-scroll-proportion="0.0">
-              <folding />
+              <folding>
+                <marker date="1345984161000" expanded="true" signature="1321:1514" placeholder="#..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -115,7 +112,7 @@
       <file leaf-file-name="application.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/config/application.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="17" column="22" selection-start="639" selection-end="639" vertical-scroll-proportion="0.0">
+            <state line="62" column="40" selection-start="2774" selection-end="2774" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -124,7 +121,7 @@
       <file leaf-file-name="development.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/config/environments/development.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="72" selection-start="625" selection-end="625" vertical-scroll-proportion="0.0">
+            <state line="25" column="2" selection-start="1008" selection-end="1054" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -133,7 +130,19 @@
       <file leaf-file-name="routes.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/config/routes.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="3" column="25" selection-start="58" selection-end="58" vertical-scroll-proportion="0.0">
+            <state line="15" column="29" selection-start="498" selection-end="498" vertical-scroll-proportion="0.0">
+              <folding>
+                <marker date="1345983107000" expanded="true" signature="31:1812" placeholder="do ... end" />
+                <marker date="1345983107000" expanded="true" signature="61:1808" placeholder="#..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Gemfile" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Gemfile">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="90" column="23" selection-start="1751" selection-end="1751" vertical-scroll-proportion="0.71311474">
               <folding />
             </state>
           </provider>
@@ -170,12 +179,12 @@
         <option value="$PROJECT_DIR$/config/application.rb" />
         <option value="$PROJECT_DIR$/db/migrate/20120826114610_accounts.rb" />
         <option value="$PROJECT_DIR$/config/routes.rb" />
-        <option value="$PROJECT_DIR$/Gemfile" />
         <option value="$PROJECT_DIR$/app/models/app.rb" />
         <option value="$PROJECT_DIR$/app/models/account.rb" />
         <option value="$PROJECT_DIR$/db/migrate/20120826121147_devise_create_accounts.rb" />
-        <option value="$PROJECT_DIR$/db/migrate/20120826122122_create_apps.rb" />
         <option value="$PROJECT_DIR$/config/database.yml" />
+        <option value="$PROJECT_DIR$/db/migrate/20120826122122_create_apps.rb" />
+        <option value="$PROJECT_DIR$/Gemfile" />
       </list>
     </option>
   </component>
@@ -631,41 +640,16 @@
     <entry file="file://$PROJECT_DIR$/config/routes.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state line="12" column="19" selection-start="419" selection-end="419" vertical-scroll-proportion="0.0">
-          <folding />
+          <folding>
+            <marker date="1345983107000" expanded="true" signature="31:1812" placeholder="do ... end" />
+            <marker date="1345983107000" expanded="true" signature="61:1808" placeholder="#..." />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/config/constants.yml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="16" column="18" selection-start="575" selection-end="575" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Gemfile">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="39" column="62" selection-start="645" selection-end="645" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/application.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="22" selection-start="639" selection-end="639" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/environments/development.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="72" selection-start="625" selection-end="625" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/routes.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="25" selection-start="58" selection-end="58" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -704,37 +688,70 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/models/app.rb">
+    <entry file="file://$PROJECT_DIR$/db/migrate/20120826121147_devise_create_accounts.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="31" selection-start="87" selection-end="87" vertical-scroll-proportion="0.0">
+        <state line="42" column="74" selection-start="1315" selection-end="1315" vertical-scroll-proportion="0.0">
+          <folding>
+            <marker date="1345984161000" expanded="true" signature="1321:1514" placeholder="#..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/database.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="54" column="12" selection-start="1041" selection-end="1041" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/routes.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="29" selection-start="498" selection-end="498" vertical-scroll-proportion="0.0">
+          <folding>
+            <marker date="1345983107000" expanded="true" signature="31:1812" placeholder="do ... end" />
+            <marker date="1345983107000" expanded="true" signature="61:1808" placeholder="#..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/environments/development.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="2" selection-start="1008" selection-end="1054" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/application.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="62" column="40" selection-start="2774" selection-end="2774" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/models/account.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="39" selection-start="512" selection-end="512" vertical-scroll-proportion="0.0">
+        <state line="11" column="44" selection-start="485" selection-end="507" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/db/migrate/20120826121147_devise_create_accounts.rb">
+    <entry file="file://$PROJECT_DIR$/app/models/app.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="74" selection-start="1315" selection-end="1315" vertical-scroll-proportion="0.0">
+        <state line="3" column="23" selection-start="87" selection-end="87" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/db/migrate/20120826122122_create_apps.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="35" selection-start="0" selection-end="239" vertical-scroll-proportion="0.0">
+        <state line="14" column="92" selection-start="267" selection-end="267" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/config/database.yml">
+    <entry file="file://$PROJECT_DIR$/Gemfile">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="54" column="12" selection-start="1041" selection-end="1041" vertical-scroll-proportion="0.6833773">
+        <state line="90" column="23" selection-start="1751" selection-end="1751" vertical-scroll-proportion="0.71311474">
           <folding />
         </state>
       </provider>

@@ -2,9 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rails', '3.2.8'
 
-gem 'pg'
 gem 'heroku'
-
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -28,9 +26,6 @@ gem 'annotate'
 gem 'algorithms'
 
 #Authentication
-gem 'omniauth'
-gem 'omniauth-twitter'
-gem 'omniauth-facebook'
 gem 'devise'
 
 #Inflected translations
@@ -77,10 +72,6 @@ gem 'haml-rails'
 gem 'mobile-fu'
 
 
-gem 'sunspot_rails'
-gem 'sunspot_solr' # optional pre-packaged Solr distribution for use in development
-
-
 #For instance, in a social network, a user might have tags that are called skills, interests, sports, and more. 
 #There is no real way to differentiate between tags and so an implementation of this type is not possible with acts as taggable on steroids.
 #Enter Acts as Taggable On. Rather than tying functionality to a specific keyword (namely “tags”), 
@@ -94,7 +85,10 @@ gem 'amqp'
 
 
 #Background Job
-gem 'resque'
+gem 'redis'
+gem 'sidekiq'
 
 #mongo db
 gem "mongoid", "~> 3.0.0"
+#postgres
+gem 'pg'
