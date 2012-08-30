@@ -25,39 +25,39 @@
 development:
   adapter: postgresql
   database: ganga_development
-  username: ganga 
+  username: sangam 
   password: 'lemon124' 
   charset: unicode 
   pool: 5
   host: localhost 
-  port: 5433
+  port: 5432
 
 
 test: &test
   adapter: postgresql
   database: ganga_test
-  username: ganga 
+  username: sangam
   password: 'lemon124'
   charset: unicode
   pool: 5
   host: localhost 
   min_messages: WARNING
-  port: 5433
+  port: 5432
 
 production:
   adapter: postgresql
   database: ganga_production
-  username: ganga 
+  username: sangam
   password: 'lemon124'
   charset: unicode
   pool: 5
   host: localhost 
-  port: 5433
+  port: 5432
 
 staging:
   adapter: postgresql
-  database: ganga_staging
-  username: ganga 
+  database: ganga_production
+  username: sangam
   password: 'lemon124'
   charset: unicode
   pool: 5

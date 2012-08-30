@@ -2,15 +2,9 @@ source 'http://rubygems.org'
 
 gem 'rails', '3.2.8'
 
-# Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
-
 gem 'pg'
 gem 'heroku'
 
-
-
-gem 'faraday'
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -29,91 +23,81 @@ gem 'jquery-rails'
 gem 'emberjs-rails'
 gem 'twitter-bootstrap-rails'
 
-# To use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.0.0'
 
-# To use Jbuilder templates for JSON
-# gem 'jbuilder'
+#annotate models
+gem 'annotate'
 
-# Use unicorn as the web server
-# gem 'unicorn'
-
-# Deploy with Capistrano
-# gem 'capistrano'
-
-# To use debugger
-# gem 'ruby-debug19', :require => 'ruby-debug'
-#
-#
-gem 'heroku'
+#algorithms
 gem 'algorithms'
 
 #Authentication
-#gem 'omniauth', '~> 0.3.2'
 gem 'omniauth'
 gem 'omniauth-twitter'
 gem 'omniauth-facebook'
-gem 'omniauth-linkedin'
-gem 'oa-core'
-gem 'oauth'
+gem 'devise'
 
 #Inflected translations
 gem 'i18n-inflector-rails'
+gem 'rails-i18n'
 
 #Uncatagorized
 gem 'addressable' 
 
-#json parer
-gem 'json'
-#fast json parser
-gem 'yajl-ruby'
+#JSON and API
+gem 'yajl-ruby' #fast json parser
+gem 'acts_as_api'
 
-gem 'annotate'
-
+#Parsers
 gem 'nokogiri'
+gem 'roxml'
 
-gem 'jammit'
-
-gem 'date_validator'
-
-#generators for gems which dont have it yet
-gem 'rails3-generators'
-
-#add validation for foreign keys
-gem "validates_existence", ">= 0.4"
-
-
-gem 'client_side_validations'
-
-#Form Styling
-gem 'simple_form' , '1.4.1'
 
 #Manages constants
 gem 'app_constants'
 
 
-#Twitter
-gem "twitter"
-
-#Delayed Job
-gem 'delayed_job'
-gem 'delayed_job_active_record'
-gem "dj_remixes"
-
-
-#easy ARel
-gem "squeel" # Last officially released gem
+#for http client Adaptor 
+gem 'faraday'
+gem 'faraday_middleware'
 
 #for asynchronous web-socket
 gem 'em-http-request'
 gem 'em-synchrony'
 
-#Facebook meta tags
-gem 'meta-tags', :require => 'meta_tags'
 
-#for facebook
-gem 'koala'
+#Social 
+gem 'koala' #for facebook
+gem "twitter"
+gem 'meta-tags', :require => 'meta_tags'  #Facebook meta tags
 
-#thin
+#thin Webserver
 gem 'thin'
 
+#haml
+gem 'haml-rails'
+
+#to enable detect mobile devices that access  Rails application
+gem 'mobile-fu'
+
+
+gem 'sunspot_rails'
+gem 'sunspot_solr' # optional pre-packaged Solr distribution for use in development
+
+
+#For instance, in a social network, a user might have tags that are called skills, interests, sports, and more. 
+#There is no real way to differentiate between tags and so an implementation of this type is not possible with acts as taggable on steroids.
+#Enter Acts as Taggable On. Rather than tying functionality to a specific keyword (namely “tags”), 
+#acts as taggable on allows you to specify an arbitrary number of tag “contexts” that can be used locally
+#or in combination in the same way steroids was used.
+gem 'acts-as-taggable-on', '~> 2.3.1'
+
+
+#Queue 
+gem 'amqp'
+
+
+#Background Job
+gem 'resque'
+
+#mongo db
+gem "mongoid", "~> 3.0.0"
