@@ -1,2 +1,0 @@
-class RulesController < ApplicationController
-end

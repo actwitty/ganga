@@ -1,0 +1,22 @@
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+AccountsController	app/controllers/accounts_controller.rb	/^class AccountsController < ApplicationController$/;"	c
+ApplicationController	app/controllers/application_controller.rb	/^class ApplicationController < ActionController::Base$/;"	c
+AppsController	app/controllers/apps_controller.rb	/^class AppsController < ApplicationController$/;"	c
+AccountsHelper	app/helpers/accounts_helper.rb	/^module AccountsHelper$/;"	m
+ApplicationHelper	app/helpers/application_helper.rb	/^module ApplicationHelper$/;"	m
+AppsHelper	app/helpers/apps_helper.rb	/^module AppsHelper$/;"	m
+Account	app/models/account.rb	/^class Account$/;"	c
+App	app/models/app.rb	/^class App$/;"	c
+Obj	app/models/obj.rb	/^class Obj$/;"	c
+ObjMeta	app/models/obj_meta.rb	/^class ObjMeta$/;"	c
+Application	config/application.rb	/^  class Application < Rails::Application$/;"	c	class:Ganga
+Ganga	config/application.rb	/^module Ganga$/;"	m
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+TestWorker	lib/testing/test_worker.rb	/^module TestWorker$/;"	m
+Worker	lib/testing/test_worker.rb	/^ class Worker$/;"	c	class:TestWorker
+perform	lib/testing/test_worker.rb	/^   def perform(name, count)$/;"	f	class:TestWorker.Worker
+about	public/index.html	/^      function about() {$/;"	f

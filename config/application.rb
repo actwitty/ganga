@@ -1,6 +1,11 @@
 require File.expand_path('../boot', __FILE__)
 
-require 'rails/all'
+# Commented - To remove active record as mongoid is present and added following 4 lines - alok
+#require 'rails/all'
+require "action_controller/railtie"
+require "action_mailer/railtie"
+require "active_resource/railtie"
+#require "rails/test_unit/railtie"  #removed as we are using rspec - alok
 
 
 if defined?(Bundler)
@@ -60,7 +65,9 @@ module Ganga
     config.assets.version = '1.0'
 
     config.generators do |g|
-      g.orm :active_record
+      #g.orm :active_record  #alok removed it 
+      g.view_specs false
+      g.helper_specs false
     end
   end
 end

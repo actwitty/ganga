@@ -1,0 +1,42 @@
+Command	          						Key Binding				Alt Binding				Mouse Binding
+============================================================================================================
+
+CTAGS (https://github.com/SublimeText/CTags)
+*****************************************************
+rebuild_ctags							ctrl+t ctrl+r		
+navigate_to_definition					ctrl+t ctrl+t			ctrl+alt+]				ctrl+alt+left_click
+jump_back								ctrl+t ctrl+b			ctrl+alt+[	
+jump_back to_last_modification			ctrl+t ctrl+m		
+show_symbols							alt+s		
+show_symbols multi  					alt+shift+s		
+
+
+RSPEC
+*****************************************************
+Run single ruby test                    ctrl+shift+r
+Run all ruby tests from current file    ctrl+shift+t
+Run last ruby test(s)                   ctrl+shift+e
+Show test panel                         ctrl+shift+x (when test panel visible hit esc to hide it)
+Check RB, ERB file syntax               alt+shift+v
+	
+Switching between code and test:
+	Single View 						ctrl+.
+	Split View                          ctrl+ctrl+. 
+
+
+GENERAL
+*****************************************************
+1 panel layout							shift+alt+1
+2 panel layout							shift+alt+2
+3 panel layout							shift+alt+3
+
+Goto									ctrl+p
+Package list							ctrl+shift+p
+
+python console							ctrl+`
+open term in file's folder				ctrl+shift+t
+open term in project folder				ctrl+alt+shift+t
+
+Detailed list is here
+++++++++++++++++++++++++++++++++++++
+http://docs.sublimetext.info/en/latest/reference/keyboard_shortcuts_win.html

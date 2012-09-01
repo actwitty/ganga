@@ -41,7 +41,7 @@ gem 'acts_as_api'
 
 #Parsers
 gem 'nokogiri'
-gem 'roxml'
+gem 'roxml' #ROXML is a module for binding Ruby classes to XML.
 
 
 #Manages constants
@@ -90,10 +90,15 @@ gem 'sidekiq'
 
 #mongo db
 gem "mongoid", "~> 3.0.0"
-#postgres
-gem 'pg'
 
-group :development,:test  do
+
+group :test, :development  do
   gem 'rspec-rails'
+  gem 'factory_girl_rails'
+end
+
+group :test  do
   gem "mongoid-rspec", "~> 1.5.4"
+  gem 'spork-rails'
+  gem 'database_cleaner'
 end
