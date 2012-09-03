@@ -40,4 +40,26 @@ class Account
 
   ## Token authenticatable
   # field :authentication_token, :type => String
+
+  ## Other attributes for Profile
+  # Identity
+  field :name,              :type => String, :default => ""
+  
+  validates_presence_of :name
+  
+  field :photo,             :type => String
+
+  # Address
+  field :address,           :type => String
+  field :city,              :type => String
+  field :country,           :type => String
+  field :region,            :type => String
+  field :pin_code,          :type => String
+  
+  # Contact
+  field :office,            :type => String
+  field :mobile,            :type => String
+
+  ## Associations
+  has_many :apps, :dependent => :destroy
 end
