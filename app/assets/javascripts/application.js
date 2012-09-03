@@ -13,5 +13,12 @@
 //= require jquery
 //= require jquery_ujs
 //= require ember
+//= require ember-rest
 //= require twitter/bootstrap
-//= require_tree .
+//= require_tree ./lib
+//= require app/app
+//= require_tree ./app/helper
+//= require_tree ./app/model
+//= require_tree ./app/controller
+//= require_tree ./app/view
+//= require_tree ./app/templates

@@ -1,6 +1,12 @@
 Ganga::Application.routes.draw do
 
-  devise_for :accounts
+  root :to => "base/index"
+
+  devise_scope :user do
+    get "signin", :to => "devise/sessions#new"
+    get "signup", :to => "devise/registrations#new"
+  end
+
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
@@ -59,3 +65,4 @@ Ganga::Application.routes.draw do
   # Note: This route will make all actions in every controller accessible via GET requests.
   # match ':controller(/:action(/:id))(.:format)'
 end
+

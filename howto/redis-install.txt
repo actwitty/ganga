@@ -1,0 +1,32 @@
+wget http://redis.googlecode.com/files/redis-2.4.15.tar.gz
+
+tar xzf redis-2.4.15.tar.gz
+
+cd redis-2.4.15
+
+make
+
+make test
+
+#test the server install by following
+src/redis-server
+
+#Now kill the server and do following
+make install
+
+cd utils
+
+sudo ./install_server
+#keep pressing ENTER
+
+sudo /etc/init.d/redis_6379 start
+
+#to test
+src/redis-cli
+>ping
+PONG
+
+#To Stop
+sudo /etc/init.d/redis_6379 stop
+
+
