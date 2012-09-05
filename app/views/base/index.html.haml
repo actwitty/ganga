@@ -1,0 +1,23 @@
+.row.equal-heights{:style => "text-align: center;"}
+  .span6.offset3
+    %header
+      %h1.title RuleBot
+      %br/
+      .inner
+        / Check logged in user else do not add this initialization
+        - if current_account
+          :javascript
+            $(function() {
+              App.accountsController.load(@account.to_json.html_safe);             
+            });
+
+            {{outlet}}
+
+          %footer.footer
+            = link_to "Sign out, #{current_user.email}", destroy_account_session_path, method: :delete
+            %br/
+            = link_to "Edit profile", edit_user_registration_path
+        -else
+          = link_to "Sign in", new_account_session_path()
+          = link_to "Sign up", new_account_registration_path()
+          

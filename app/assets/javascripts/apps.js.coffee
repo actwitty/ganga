@@ -1,3 +1,15 @@
-# Place all the behaviors and hooks related to the matching controller here.
-# All this logic will automatically be available in application.js.
-# You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
+# App created for Ember
+window.App = Em.Application.create()
+
+#Main error handler function
+App.displayError = (e) ->
+  if typeof e is "string"
+    
+    # display error strings
+    alert e
+  else if typeof e is "object" and e.responseText isnt `undefined`
+    
+    # TODO - further process json errors
+    alert e.responseText
+  else
+    alert "An unexpected error occurred."
