@@ -64,4 +64,18 @@ Ganga::Application.configure do
   # Log the query plan for queries taking more than this (works
   # with SQLite, MySQL, and PostgreSQL)
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
+
+  # Don't care if the mailer can't send
+
+  # Commented to enable mailer in developer - alok
+  # config.action_mailer.raise_delivery_errors = false
+  # ActionMailer Config
+
+  # adding mailer in production - alok - 6 lines
+  config.action_mailer.default_url_options = { :host => 'ganga.herokuapp.com' }
+  # A dummy setup for production - no deliveries, but logged
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = false
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.default :charset => "utf-8"
 end

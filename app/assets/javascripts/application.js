@@ -16,9 +16,9 @@
 //= require ember-rest
 //= require twitter/bootstrap
 //= require_tree ./lib
-//= require app/app
-//= require_tree ./app/helper
-//= require_tree ./app/model
-//= require_tree ./app/controller
-//= require_tree ./app/view
+//= require apps
+//= require_tree ./app/helpers
+//= require_tree ./app/models
+//= require_tree ./app/controllers
+//= require_tree ./app/views
 //= require_tree ./app/templates

@@ -1,2 +1,0 @@
-class TriggersController < ApplicationController
-end

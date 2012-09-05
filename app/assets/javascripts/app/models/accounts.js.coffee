@@ -1,6 +1,5 @@
 ########################################################
 # Main account resource
-#
 #######################################################
 App.Account = Ember.Resource.extend(
   resourceUrl: '/account'

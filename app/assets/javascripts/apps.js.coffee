@@ -12,4 +12,4 @@ App.displayError = (e) ->
     # TODO - further process json errors
     alert e.responseText
   else
-    alert "An unexpected error occurred.
+    alert "An unexpected error occurred."

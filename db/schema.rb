@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120826122122) do
+ActiveRecord::Schema.define(:version => 20120828091845) do
 
   create_table "accounts", :force => true do |t|
     t.text     "name"
@@ -44,5 +44,10 @@ ActiveRecord::Schema.define(:version => 20120826122122) do
   add_index "apps", ["created_at"], :name => "index_apps_on_created_at"
   add_index "apps", ["name"], :name => "index_apps_on_name"
   add_index "apps", ["updated_at"], :name => "index_apps_on_updated_at"
+
+  create_table "objekts", :force => true do |t|
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
 end

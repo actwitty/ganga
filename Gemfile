@@ -10,6 +10,7 @@ group :assets do
   gem "bootstrap-sass", "~> 2.0.4.0"
   gem 'sass-rails',   '~> 3.2.3'
   gem 'coffee-rails', '~> 3.2.1'
+  gem 'less-rails'
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   # gem 'therubyracer'
@@ -22,7 +23,7 @@ gem 'jquery-rails'
 gem 'emberjs-rails'
 gem 'ember-rest-rails'
 gem 'twitter-bootstrap-rails'
-
+gem 'less-rails-bootstrap'
 
 #annotate models
 gem 'annotate'
@@ -46,7 +47,7 @@ gem 'acts_as_api'
 
 #Parsers
 gem 'nokogiri'
-gem 'roxml'
+gem 'roxml' #ROXML is a module for binding Ruby classes to XML.
 
 
 #Manages constants
@@ -95,10 +96,15 @@ gem 'sidekiq'
 
 #mongo db
 gem "mongoid", "~> 3.0.0"
-#postgres
-gem 'pg'
 
-group :development,:test  do
+
+group :test, :development  do
   gem 'rspec-rails'
+  gem 'factory_girl_rails'
+end
+
+group :test  do
   gem "mongoid-rspec", "~> 1.5.4"
+  gem 'spork-rails'
+  gem 'database_cleaner'
 end

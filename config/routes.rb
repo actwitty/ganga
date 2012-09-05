@@ -1,12 +1,8 @@
 Ganga::Application.routes.draw do
 
-  root :to => "base/index"
-
-  devise_scope :user do
-    get "signin", :to => "devise/sessions#new"
-    get "signup", :to => "devise/registrations#new"
-  end
-
+  
+  devise_for :accounts
+  root :to => "base#index"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

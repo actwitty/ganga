@@ -1,0 +1,26 @@
+wget http://www.rabbitmq.com/rabbitmq-signing-key-public.asc
+sudo apt-key add rabbitmq-signing-key-public.asc
+
+sudo apt-get update
+sudo apt-get install rabbitmq-server
+#now rabbitmq server is running
+
+sudo gvim /etc/default/rabbitmq-server
+#set the sysmtem handle limit for rabbitmq
+ulimit -n 1024
+
+#to stop the rabbitmq server
+sudo rabbitmqctl stop 
+
+#status of the rabbitmq server
+sudo rabbitmqctl status
+
+#log file is 
+/var/log/rabbitmq
+
+#default node name is rabbit@{OUTPUT OF hostname -s}
+
+
+
+DETAILS at http://www.skaag.net/2010/03/12/rabbitmq-for-beginners/
+or http://www.rabbitmq.com/install-debian.html

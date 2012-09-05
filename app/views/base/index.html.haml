@@ -4,23 +4,20 @@
       %h1.title RuleBot
       %br/
       .inner
-        = link_to "Sign in", new_session_path(resource_name)
-        = link_to "Sign up", new_registration_path(resource_name)
-         / Check logged in user else do not add this initialization
-         - if current_user          
-          :javascript
-            $(function() {
-              App.set_loggedin_user_id.set_user_id( current_user.id );
-            });
-          
-          {{outlet}}
-
-          %footer.footer
-            = link_to "Sign out, #{current_user.email}", destroy_user_session_path, method: :delete
-            %br/
-            = link_to "Edit profile", edit_user_registration_path
-        -else
+        / Check logged in user else do not add this initialization
+        - if current_account
           :javascript
             $(function() {
               App.accountsController.load(@account.to_json.html_safe);             
             });
+
+            {{outlet}}
+
+          %footer.footer
+            = link_to "Sign out, #{current_user.email}", destroy_account_session_path, method: :delete
+            %br/
+            = link_to "Edit profile", edit_user_registration_path
+        -else
+          = link_to "Sign in", new_account_session_path()
+          = link_to "Sign up", new_account_registration_path()
+          

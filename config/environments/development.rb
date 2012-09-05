@@ -13,8 +13,20 @@ Ganga::Application.configure do
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
 
+
   # Don't care if the mailer can't send
-  config.action_mailer.raise_delivery_errors = false
+
+  # Commented to enable mailer in developer - alok
+  # config.action_mailer.raise_delivery_errors = false
+  # ActionMailer Config
+
+  # adding mailer in developer - alok - 6 lines
+  config.action_mailer.default_url_options = { :host => 'localhost:3000' }
+  # A dummy setup for development - no deliveries, but logged
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = false
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.default :charset => "utf-8"
 
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log
@@ -23,11 +35,13 @@ Ganga::Application.configure do
   config.action_dispatch.best_standards_support = :builtin
 
   # Raise exception on mass assignment protection for Active Record models
-  config.active_record.mass_assignment_sanitizer = :strict
+  # Commented - To remove active record as mongoid is present  - alok
+  #config.active_record.mass_assignment_sanitizer = :strict
 
   # Log the query plan for queries taking more than this (works
   # with SQLite, MySQL, and PostgreSQL)
-  config.active_record.auto_explain_threshold_in_seconds = 0.5
+  # Commented - To remove active record as mongoid is present  - alok
+  #config.active_record.auto_explain_threshold_in_seconds = 0.5
 
   # Do not compress assets
   config.assets.compress = false
