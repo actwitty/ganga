@@ -1,7 +1,6 @@
-class App < ActiveRecord::Base
-  # attr_accessible :title, :body
-
+class App
+  include Mongoid::Document
+  
   belongs_to :account
-
-   
+  
 end
