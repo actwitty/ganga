@@ -19,7 +19,7 @@ group :assets do
 end
 
 # Add Jquery source gems for asset pipline
-gem 'jquery-rails'
+gem 'jquery-rails', "1.0.19"
 gem 'emberjs-rails'
 gem 'ember-rest-rails'
 gem 'twitter-bootstrap-rails'
