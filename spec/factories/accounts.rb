@@ -2,10 +2,10 @@
 
 FactoryGirl.define do
   factory :account do
-  	sequence(:email) { |n| "lemony#{n}@lemonbag.com" }
+  	sequence(:email) { |n| "account_#{n}@actwitty.com" }
   	password "lemonyssecret"
   	password_confirmation { |u| u.password }
-  	sequence(:name){|n| "lemony lime" }
+  	sequence(:name){|n| "Account Name #{n}" }
   	sequence(:photo ){|n| "images/id_#{n}" }
   end
 end
