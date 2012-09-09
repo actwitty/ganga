@@ -1,10 +1,6 @@
 App.Router = Em.Router.extend
   enableLogging: true
   location: 'hash'
-  
-
-
-
 
 
   root: Em.Route.extend
@@ -13,14 +9,14 @@ App.Router = Em.Router.extend
     # STATES
     index: Em.Route.extend
       route: '/'
-      index: Em.Route.extend(enter: (router) ->
+      index: Em.Route.extend( enter: (router) ->
         logged = App.Router.get('accountsController').isLoaded()
         Ember.run.next ->
           if logged
             router.transitionTo "loggedIn"
           else
             # stay where you are
-            
+      )
     loggedIn: Em.Route.extend
       # SETUP
       route: '/home/index'
