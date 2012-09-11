@@ -1,0 +1,24 @@
+.row.equal-heights{:style => "text-align: center;"}
+  .span4.offset4
+    
+  = form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f|
+    = devise_error_messages!
+    %fieldset
+      %legend Sign in
+      %br/
+      .control-group
+        .controls
+          = f.email_field :email, placeholder: :email
+      .control-group
+        .controls
+          = f.password_field :password, placeholder: :password
+      .control-group
+        .controls
+          - if devise_mapping.rememberable?
+            %p
+              = f.check_box :remember_me
+      .control-group
+        .controls
+          = f.submit "Sign in", :class => "btn btn-primary"
+  = render "accounts/links"
+  

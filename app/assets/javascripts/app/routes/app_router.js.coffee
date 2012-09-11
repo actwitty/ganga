@@ -10,6 +10,7 @@ App.Router = Em.Router.extend
     index: Em.Route.extend
       route: '/'
       index: Em.Route.extend( enter: (router) ->
+        console.log('HERE I AM')
         logged = App.Router.get('accountsController').isLoaded()
         Ember.run.next ->
           if logged

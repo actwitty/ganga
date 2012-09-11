@@ -1,6 +1,3 @@
-# App created for Ember
-window.App = Em.Application.create()
-
 #Main error handler function
 App.displayError = (e) ->
   if typeof e is "string"
@@ -13,3 +10,5 @@ App.displayError = (e) ->
     alert e.responseText
   else
     alert "An unexpected error occurred."
+$ ->
+  App.initialize()

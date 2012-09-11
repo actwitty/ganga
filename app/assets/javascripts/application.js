@@ -1,3 +1,4 @@
+
 // This is a manifest file that'll be compiled into application.js, which will include all the files
 // listed below.
 //
@@ -16,6 +17,8 @@
 //= require ember-rest
 //= require twitter/bootstrap
 //= require_tree ./lib
+
+App = Em.Application.create()
 //= require apps
 //= require_tree ./app/helpers
 //= require_tree ./app/models
