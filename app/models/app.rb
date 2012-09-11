@@ -6,8 +6,8 @@ class App
   has_many    :actors,  :dependent => :destroy
   embeds_many :rules
 
-  field       :schema,  :type => Hash
-  field		  :name,    :type => String
-
+  field		  :name,    :type => String,    :default => ""
   validates_presence_of    :name
+
+  field       :schema,  :type => Hash,      :default => {}
 end

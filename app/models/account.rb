@@ -1,11 +1,11 @@
 class Account
   include Mongoid::Document
   # Include default devise modules. Others available are:
-  # :token_authenticatable, 
+  # :token_authenticatable,
   # :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable,
-         :lockable, :confirmable
+    :recoverable, :rememberable, :trackable, :validatable,
+    :lockable, :confirmable
 
   ## Database authenticatable
   field :email,              :type => String, :default => ""
@@ -13,7 +13,7 @@ class Account
 
   validates_presence_of :email
   validates_presence_of :encrypted_password
-  
+
   ## Recoverable
   field :reset_password_token,   :type => String
   field :reset_password_sent_at, :type => Time
@@ -45,9 +45,9 @@ class Account
   ## Other attributes for Profile
   # Identity
   field :name,              :type => String, :default => ""
-  
+
   validates_presence_of :name
-  
+
   field :photo,             :type => String
 
   # Address
@@ -56,7 +56,7 @@ class Account
   field :country,           :type => String
   field :region,            :type => String
   field :pin_code,          :type => String
-  
+
   # Contact
   field :office,            :type => String
   field :mobile,            :type => String

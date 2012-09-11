@@ -3,9 +3,11 @@ class Actor
 
   belongs_to      :app
 
-  embeds_many     :properties
   embeds_many     :events
 
-  field           :name,    :type => String
+  field   :name,    :type => String, 	:default => ""
   validates_presence_of  :name
+
+  field   :uid,		:type => String, 	:default => ""
+  validates_presence_of  :uid
 end
