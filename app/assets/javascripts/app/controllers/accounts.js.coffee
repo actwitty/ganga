@@ -1,2 +1,2 @@
-App.accountsController = Em.ResourceController.create
-  resourceType: App.Account  
+App.accountsController = Em.ResourceController.extend
+  resourceType: App.Account
