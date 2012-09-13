@@ -1,8 +1,8 @@
 class BaseController < ApplicationController
   ####################################################################
   # In your controllers
-  protect_from_forgery 
-  before_filter :authenticate_user!, :except => [:index]
+  protect_from_forgery
+  before_filter :authenticate_account!, :except => [:index]
 
   ####################################################################
   def index

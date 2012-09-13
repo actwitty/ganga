@@ -10,6 +10,7 @@ Ganga::Application.routes.draw do
                                       :passwords => "accounts/passwords"}
                                       
   root :to => "base#index"
+  get   '/credentials', :to => 'accounts#credentials'
   
 
   # The priority is based upon order of creation:
