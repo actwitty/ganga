@@ -12,12 +12,16 @@ App.Router = Ember.Router.extend
 	  #STATES
 	  index: Ember.Route.extend
 	    route: '/'	
-
 	  mainPage: Ember.Route.extend
+	    #SETUP
 	  	route: '/'
+	  	#EVENTS
+	  	#STATES
 	  loggedIn: Ember.Route.extend
 	    #SETUP
 	    route: '/home'
+	    connectOutlets: (router) ->
+	      router.get('applicationController').connectOutlet('mainTopbar')
 	    #EVENTS
 	    logoutEvent: Ember.Route.transitionTo 'logout'
 

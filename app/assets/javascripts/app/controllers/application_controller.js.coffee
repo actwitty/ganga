@@ -1,2 +1,3 @@
-App.ApplicationController = Ember.Object.extend
+App.ApplicationController = Ember.ObjectController.extend
   transaction: null
+  content: []	
