@@ -45,7 +45,6 @@ gem 'acts_as_api'
 
 #Parsers
 gem 'nokogiri'
-gem 'roxml' #ROXML is a module for binding Ruby classes to XML.
 
 
 #Manages constants
@@ -61,11 +60,6 @@ gem 'faraday_middleware-parse_oj' #to register Oj json parser in faraday middlew
 gem 'em-http-request'
 gem 'em-synchrony'
 
-
-#Social 
-gem 'koala' #for facebook
-gem "twitter"
-gem 'meta-tags', :require => 'meta_tags'  #Facebook meta tags
 
 #thin Webserver
 gem 'thin'
