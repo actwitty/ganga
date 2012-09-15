@@ -1,8 +1,14 @@
 class Account
   include Mongoid::Document
-  # Include default devise modules. Others available are:
-  # :token_authenticatable,
-  # :timeoutable and :omniauthable
+  include Mongoid::Timestamps
+
+  # Relations
+  has_many :apps, :dependent => :destroy
+
+  # Attributes
+  ## Include default devise modules. Others available are:
+  ## :token_authenticatable,
+  ## :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
     :recoverable, :rememberable, :trackable, :validatable,
     :lockable, :confirmable
@@ -35,32 +41,30 @@ class Account
   field :unconfirmed_email,    :type => String # Only if using reconfirmable
 
   ## Lockable
-  field :failed_attempts, :type => Integer, :default => 0 # Only if lock strategy is :failed_attempts
-  field :unlock_token,    :type => String # Only if unlock strategy is :email or :both
-  field :locked_at,       :type => Time
+  ### field :failed_attempts, :type => Integer, :default => 0 # Only if lock strategy is :failed_attempts
+  ### field :unlock_token,    :type => String # Only if unlock strategy is :email or :both
+  ### field :locked_at,       :type => Time
 
   ## Token authenticatable
-  # field :authentication_token, :type => String
+  ### field :authentication_token, :type => String
 
   ## Other attributes for Profile
-  # Identity
+  ### Identity
   field :name,              :type => String, :default => ""
 
   validates_presence_of :name
 
   field :photo,             :type => String
 
-  # Address
+  ### Address
   field :address,           :type => String
   field :city,              :type => String
   field :country,           :type => String
   field :region,            :type => String
   field :pin_code,          :type => String
 
-  # Contact
+  ### Contact
   field :office,            :type => String
   field :mobile,            :type => String
-
-  ## Associations
-  has_many :apps, :dependent => :destroy
+ 
 end

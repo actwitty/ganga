@@ -44,8 +44,6 @@ GEM
       amq-client (~> 0.9.4)
       amq-protocol (>= 0.9.4)
       eventmachine
-    annotate (2.5.0)
-      rake
     app_constants (1.0.4)
     arel (3.0.2)
     bcrypt-ruby (3.0.1)
@@ -285,7 +283,6 @@ DEPENDENCIES
   addressable
   algorithms
   amqp
-  annotate
   app_constants
   bootstrap-sass (~> 2.0.4.0)
   coffee-rails (~> 3.2.1)

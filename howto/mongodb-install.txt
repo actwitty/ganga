@@ -1,0 +1,2 @@
+#mongo db install on ubuntu - CHECK THIS LINK
+http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/

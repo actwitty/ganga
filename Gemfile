@@ -25,9 +25,6 @@ gem 'ember-rest-rails'
 gem 'twitter-bootstrap-rails'
 gem 'less-rails-bootstrap'
 
-#annotate models
-gem 'annotate'
-
 #algorithms
 gem 'algorithms'
 

@@ -3,5 +3,7 @@
 FactoryGirl.define do
   factory :event do
   	association :actor, :factory => :actor
+  	association :app, :factory => :app
+  	sequence(:name){|n| "Event Name #{n}" }
   end
 end
