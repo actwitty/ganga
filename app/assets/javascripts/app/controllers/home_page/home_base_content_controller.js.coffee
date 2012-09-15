@@ -1,0 +1,1 @@
+App.HomeContentDefaultController = Ember.Controller.extend() 
