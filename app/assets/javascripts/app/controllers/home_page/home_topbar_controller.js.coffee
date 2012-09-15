@@ -1,1 +1,0 @@
-App.HomeTopbarController = Ember.ObjectController.extend()
