@@ -17,10 +17,10 @@ class AccountsController < ApplicationController
  			else
  				@account[:inactive] = false
  			end
- 			response_json = @account.to_json
+ 			response_json = @account
  			Rails.logger.debug("#{__FILE__}:#{__method__}: Response :#{response_json}")	
  			
- 			if request.xhr?
+ 			if request.xhr? 			    
  				response_json[:logged_in] = true
            		render :json => response_json, :status => 200
       		end 
