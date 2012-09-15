@@ -24,6 +24,9 @@ ActiveRecord::Schema.define(:version => 20120828091845) do
     t.datetime "confirmation_sent_at"
     t.string   "confirmation_token"
     t.string   "unconfirmed_email"
+    t.integer  "failed_attempts"
+    t.string   "unlock_token"
+    t.datetime "locked_at"
     t.integer  "sign_in_count",          :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
