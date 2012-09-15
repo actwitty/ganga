@@ -1,36 +1,43 @@
-App.Router = Em.Router.extend
-  enableLogging: true
-  location: 'hash'
+App.Router = Ember.Router.extend
+	location: "hash"
+	enableLogging: true
+	  
+	root: Ember.Route.extend
+		
+	  #SETUP
+	  #EVENTS
+	  loginSwitchRoute: Ember.Route.transitionTo 'loggedIn'
+	  mainpageSwitchRoute: Ember.Route.transitionTo 'mainPage'
+	  
+	  #STATES
+	  index: Ember.Route.extend
+	    route: '/'	
+	  mainPage: Ember.Route.extend
+	    #SETUP
+	  	route: '/'
+	  	#EVENTS
+	  	#STATES
+	  loggedIn	: Ember.Route.extend
+	    #SETUP
+	    route: '/home'
+	    connectOutlets: (router) ->
+	      router.get('applicationController').connectOutlet('home')
+	      homeController = router.get('homeController')
+	      homeController.connectOutlet({name: 'homeSideBarDefault',outletName: 'homeSideBarOutlet'} )
+	      homeController.connectOutlet({name: 'homeContentDefault',outletName: 'homeContentOutlet'} )
+	    #EVENTS
+	    logoutEvent: Ember.Route.transitionTo 'logout'
 
+	    index: Ember.Route.extend
+	      route: '/'	
+	    #STATES
+	    logout: Ember.Route.extend
+	      route: '/thankyou'
+	    	
+	    	
 
-  root: Em.Route.extend
-    # SETUP
-    # EVENTS
-    # STATES
-    index: Em.Route.extend
-      route: '/'
-      index: Em.Route.extend( enter: (router) ->
-        console.log('HERE I AM')
-        logged = App.Router.get('accountsController').isLoaded()
-        Ember.run.next ->
-          if logged
-            router.transitionTo "loggedIn"
-          else
-            # stay where you are
-      )
-    loggedIn: Em.Route.extend
-      # SETUP
-      route: '/home/index'
-      # EVENTS
-      createPost: Em.Route.transitionTo 'create'
-      editPost: Em.Route.transitionTo 'edit'
-      showPost: Em.Route.transitionTo 'show.index'
-      goBack: Em.Route.transitionTo 'posts.index'
-      cancel: (router, event) ->
-        router.get('applicationController.transaction').rollback()
-        router.transitionTo('index')
-      save: (router, event) ->
-        router.get('applicationController.transaction').commit()
-        router.transitionTo('index')
-      # STATES
+	    
+	    
+	
+
 

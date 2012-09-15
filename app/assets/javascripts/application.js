@@ -13,15 +13,17 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require handlebars
 //= require ember
 //= require ember-rest
 //= require twitter/bootstrap
-//= require_tree ./lib
+//= require handlebars
+//= require ember
+//= require_self
+//= require ember_app
+App = Ember.Application.create( /*{
+								rootElement: $('#rulebotEmberBase')
+							   }*/);
 
-App = Em.Application.create()
-//= require apps
-//= require_tree ./app/helpers
-//= require_tree ./app/models
-//= require_tree ./app/controllers
-//= require_tree ./app/views
-//= require_tree ./app/templates
+
+
