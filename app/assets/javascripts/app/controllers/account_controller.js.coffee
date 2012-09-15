@@ -10,8 +10,11 @@ App.AccountController = Em.ObjectController.extend
       data: {}
       success: (data) ->
         App.log App.DBG, "Received: " + JSON.stringify(data)
-        self.set('content', App.Account.create(data))
-        App.get("router").send "loginSwitchRoute"
+        self.set('content', App.Account.create(data))        
+        if data and data.logged_in is true
+          App.get("router").send "loginSwitchRoute"
+        else
+          App.get("router").send "mainpageSwitchRoute"
 
       error: (xhr, textStatus, errorThrown) ->
         $("#error").html xhr.responseText

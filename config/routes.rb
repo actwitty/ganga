@@ -3,11 +3,12 @@ Ganga::Application.routes.draw do
   
 
   # devise_for :accounts
-  devise_for :accounts, :controllers => {:registrations => "accounts/registrations",
-                                      :sessions => "accounts/sessions",
-                                      :confirmations => "accounts/confirmations",
-                                      :unlocks => "accounts/unlocks",
-                                      :passwords => "accounts/passwords"}
+  devise_for :accounts, :controllers => { :registrations => "accounts/registrations",
+                                          :sessions => "accounts/sessions",
+                                          :confirmations => "accounts/confirmations",
+                                          :unlocks => "accounts/unlocks",
+                                          :passwords => "accounts/passwords"}
+                                          
                                       
   root :to => "base#index"
   get   '/credentials', :to => 'accounts#credentials'

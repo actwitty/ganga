@@ -21,6 +21,7 @@ class AccountsController < ApplicationController
  			Rails.logger.debug("#{__FILE__}:#{__method__}: Response :#{response_json}")	
  			
  			if request.xhr?
+ 				response_json[:logged_in] = true
            		render :json => response_json, :status => 200
       		end 
  			
@@ -28,7 +29,8 @@ class AccountsController < ApplicationController
  			response_json = {}
  			Rails.logger.debug("#{__FILE__}:#{__method__}: Response :#{response_json}")	
  			if request.xhr?
-           		render :json => {}, :status => 200
+ 				response_json[:logged_in] = false
+           		render :json => response_json, :status => 200
       		end  
  		end
 	end
