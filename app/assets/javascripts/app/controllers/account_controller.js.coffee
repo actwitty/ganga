@@ -14,7 +14,7 @@ App.AccountController = Em.ObjectController.extend
         if data and data.logged_in is true
           App.get("router").send "loginSwitchRoute"
         else
-          App.get("router").send "mainpageSwitchRoute"
+         App.get("router").send "mainpageSwitchRoute"
 
       error: (xhr, textStatus, errorThrown) ->
         $("#error").html xhr.responseText
