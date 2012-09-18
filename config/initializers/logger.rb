@@ -38,6 +38,7 @@ class Formatter
   FOLDER_VALUE = {"app" => 1, "lib" => 2, "models" => 3, "controllers" => 4, "internal" => 5}
   FOLDER_LEVEL = "internal"
 
+
   def beautify_filename(str)
     filename = ""
     array = str.split(':')
