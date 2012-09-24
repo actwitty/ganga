@@ -24,16 +24,6 @@ class Actor
   ## TODO => This contains hot properties value 
   field   :property_cache,     :type => Hash,  :default => {}
 
-  attr_accessor     :evt
-
-
-  # Hooks
-  after_create      :create_events_cb
-
-  def create_events_cb
-    puts self.event
-    self.events.create!(self.event)
-  rescue => e
-    puts("[Model] [App] [create_events_cb] ****ERROR**** #{e.message}")
-  end
+  # Function
+  
 end

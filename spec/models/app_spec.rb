@@ -24,8 +24,8 @@ describe App do
                                     }
                                  }
                         )
-      puts a.inspect
-      puts a.events.inspect
+      # puts a.inspect
+      # puts a.events.inspect
     end
   end
 end

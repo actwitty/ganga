@@ -66,5 +66,8 @@ class Account
   ### Contact
   field :office,            :type => String
   field :mobile,            :type => String
+
+  ### Subscription
+  field :subscription,       :type => String,  :default => AppConstants.subscriptions.free.name
  
 end
