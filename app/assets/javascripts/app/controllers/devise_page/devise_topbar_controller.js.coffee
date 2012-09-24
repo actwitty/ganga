@@ -1,0 +1,1 @@
+App.DeviseTopbarController = Ember.Controller.extend()

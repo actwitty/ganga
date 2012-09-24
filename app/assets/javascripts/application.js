@@ -21,9 +21,9 @@
 //= require ember
 //= require_self
 //= require ember_app
-App = Ember.Application.create( /*{
-								rootElement: $('#rulebotEmberBase')
-							   }*/);
+App = Ember.Application.create( {
+								 rootElement: '#rulebotEmberBase'
+							   });
 
 
 

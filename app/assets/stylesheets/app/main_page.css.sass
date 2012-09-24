@@ -1,45 +1,50 @@
-#main_page_header
+.main_page_header
   position: relative
   height: 72px
   background: white
+  width: 100%
+  display: block
   border-top: 1px solid #C9D0D6
   .main_page_header_wrapper
     width: 960px
+    display: blocks
     padding: 0 10px
     margin: auto
-  .header_logo
-    float: left
-    background: url(/assets/logo.png) no-repeat
-    height: 41px
-    width: 124px
-    top: 17px
-  %a.login
-    display: block
-    background-image: url(/assets/sign_in.png)
-    background-position: 0 -3px
-    width: 90px
-    height: 32px
-    top: 20px
-  %a.register
-    display: block
-    background-image: url(/assets/sign_in.png)
-    background-position: -90px -3px
-    width: 90px
-    height: 32px
-    top: 20px
-  %img
-    float: right
     position: relative
-    top: 18px
-    margin-right: 10px
-    padding-left: 15px
-    border-left: 1px dotted black
-  .menu_links
-    top: 30px
-    margin-right: 20px
-    font-family: helvetica,arial,sans-serif
-    font-size: 12px
-    font-weight: bold
-    color: #69717E
-    text-decoration: none
-    padding: 1px 0
+    .main_page_header_single_menu_box
+      position: relative
+      display: inline-block
+      margin-top: 17px
+      float: left
+      .header_logo
+        background: url(/assets/logo_small.png) no-repeat
+        height: 41px
+        width: 124px
+        display: block
+        margin-right: 250px        
+      .login
+        display: block
+        background-image: url(/assets/sign_in.png)
+        background-position: 0 -3px
+        width: 90px
+        height: 32px    
+      .register
+        display: block
+        background-image: url(/assets/sign_in.png)
+        background-position: -90px -3px
+        width: 90px
+        height: 32px    
+      .intro
+        padding-left: 15px
+        border-left: 1px dotted black
+        margin-left: 80px
+        display: block
+      .menu_links
+        font-family: helvetica,arial,sans-serif
+        font-size: 12px
+        font-weight: bold
+        color: #69717E
+        text-decoration: none
+        padding: 1px 0
+        margin-left: 10px
+     

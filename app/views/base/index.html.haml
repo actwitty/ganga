@@ -1,14 +1,3 @@
-.row.equal-heights{:style => "text-align: center;"}
-  .span6.offset3
-    / Check logged in user else do not add this initialization
-    #rulebotEmberBase 
-          
-    - if current_account        
-      / %footer.footer
-      /   = link_to "Sign out, #{current_account.email}", destroy_account_session_path, method: :delete
-      /   %br/
-      /   = link_to "Edit profile", edit_account_registration_path
-    -else
-      = link_to "Sign in", new_account_session_path()
-      = link_to "Sign up", new_account_registration_path()
-          
+:javascript
+  var emberRouterContext = true;         
+      
