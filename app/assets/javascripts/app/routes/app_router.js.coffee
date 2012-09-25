@@ -8,13 +8,27 @@ App.Router = Ember.Router.extend
 	  #EVENTS
 	  loginSwitchRoute: Ember.Route.transitionTo 'loggedIn'
 	  mainpageSwitchRoute: Ember.Route.transitionTo 'mainPage'
-	  
+	  devisepageSwitchRoute: Ember.Route.transitionTo 'devisePage'
 	  #STATES
 	  index: Ember.Route.extend
 	    route: '/'	
+
 	  mainPage: Ember.Route.extend
 	    #SETUP
 	  	route: '/'
+	  	connectOutlets: (router) ->
+	      router.get('applicationController').connectOutlet('main')
+	      mainController = router.get('mainController')
+	      mainController.connectOutlet({name: 'mainTopbar',outletName: 'mainTopBarOutlet'} )
+	  	#EVENTS
+	  	#STATES
+	  devisePage: Ember.Route.extend
+	    #SETUP
+	  	route: '/'
+	  	connectOutlets: (router) ->
+	      router.get('applicationController').connectOutlet('devise')
+	      deviseController = router.get('deviseController')
+	      deviseController.connectOutlet({name: 'deviseTopbar',outletName: 'deviseTopBarOutlet'} )
 	  	#EVENTS
 	  	#STATES
 	  loggedIn	: Ember.Route.extend

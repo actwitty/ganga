@@ -1,0 +1,1 @@
+App.DeviseController = Ember.Controller.extend()
