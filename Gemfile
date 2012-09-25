@@ -99,4 +99,5 @@ group :test  do
   gem "mongoid-rspec", "~> 1.5.4"
   gem 'spork-rails'
   gem 'database_cleaner'
+  gem 'rspec-mocks'
 end

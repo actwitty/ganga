@@ -305,6 +305,7 @@ DEPENDENCIES
   rails (= 3.2.8)
   rails-i18n
   redis
+  rspec-mocks
   rspec-rails
   sass-rails (~> 3.2.3)
   sidekiq

@@ -1,0 +1,6 @@
+en:
+	actors:
+		no_properties: "No properties sent!!"
+		wrong_actor:   "UID and actor_id is not matching"
+		no_actor:			 "No Actor found!!"
+		no_uid:				 "%{uid} does not exist in app_id %{app_id}"

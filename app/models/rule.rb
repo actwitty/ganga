@@ -5,7 +5,8 @@ class Rule
   # Trigger => Filters => Actions
 
   # Relations
-
+  embedded_in :app
+  
   # Atrributes
 
 end
