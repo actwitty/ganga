@@ -1,46 +1,103 @@
-#main_page_header
-  position: relative
-  height: 72px
+
+.main_container
+  margin-left: auto
+  margin-right: auto
+  width: 960px
+  zoom: 1
+
+.grid
+  display: inline
+  float: left
+  margin-left: 10px
+  margin-right: 10px
+
+.main_clear
+  clear: both
+  display: block
+  overflow: hidden
+  visibility: hidden
+  width: 0
+  height: 0
+
+
+  
+.main_page_intro_container
+  background: black
   width: 100%
-  background: white
-  border-top: 1px solid #C9D0D6
-  .main_page_header_wrapper
-    width: 960px
-    padding: 0 10px
-    margin: auto
-  .header_logo
-    float: left
-    background: url(/assets/logo.png) no-repeat
-    height: 41px
-    width: 124px
-    top: 17px
-  %a.login
-    display: block
-    background-image: url(/assets/sign_in.png)
-    background-position: 0 -3px
-    width: 90px
-    height: 32px
-    top: 20px
-  %a.register
-    display: block
-    background-image: url(/assets/sign_in.png)
-    background-position: -90px -3px
-    width: 90px
-    height: 32px
-    top: 20px
-  %img
-    float: right
-    position: relative
-    top: 18px
-    margin-right: 10px
-    padding-left: 15px
-    border-left: 1px dotted black
-  .menu_links
-    top: 30px
-    margin-right: 20px
-    font-family: helvetica,arial,sans-serif
-    font-size: 12px
-    font-weight: bold
-    color: #69717E
-    text-decoration: none
-    padding: 1px 0
+  height: 600px
+  display: block
+  position: relative
+  
+  .grid1
+    width: 220px    
+    margin-left: 100px
+    margin-top: 40px
+    .logo
+      width: 120px
+      padding: 15px 100px 10px 0
+      padding-main_clear
+    .address
+      margin: 0
+      padding: 0 0 15px 0        
+      font-size: 11px
+      line-height: 14px
+      text-align: left
+      color: white
+      a     
+        color: white
+        &:hover
+          color: #FAAB42
+          text-decoration: underline
+
+  .grid2
+    width: 480px
+    margin-left: 350px
+    margin-top: 40px
+    
+    .pitch
+      font-weight: regular
+      font-size: 26px
+      line-height: 30px
+      text-decoration: none
+      text-align: left
+      color: white
+    .detail_pitch
+      font-weight: regular
+      font-size: 44px    
+      line-height: 50px
+      text-decoration: none
+      text-align: left
+      margin-top: 5px
+      margin-bottom: 10px
+      letter-spacing: 1px
+      span
+        border: 0
+        margin: 0
+        padding: 0
+      .white
+        color: white
+      .grey
+        color: #666
+.main_page_about_container
+  background: #00B0D8
+  width: 100%
+  height: 600px
+  display: block
+  position: relative
+.main_page_how_container  
+  width: 100%
+  height: 600px
+  display: block
+  position: relative
+.main_page_contact_container
+  background: #FAAB42
+  width: 100%
+  height: 600px
+  display: block
+  position: relative
+.main_page_footer_container
+  background: #fe4c4c
+  width: 100%
+  height: 600px
+  display: block
+  position: relative

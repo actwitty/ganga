@@ -34,6 +34,7 @@ ActiveRecord::Schema.define(:version => 20120828091845) do
     t.string   "last_sign_in_ip"
     t.datetime "created_at",                             :null => false
     t.datetime "updated_at",                             :null => false
+    t.integer  "password_unset"                          :null => 0
   end
 
   add_index "accounts", ["created_at"], :name => "index_accounts_on_created_at"

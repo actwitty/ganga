@@ -20,6 +20,8 @@ App.Router = Ember.Router.extend
 	      router.get('applicationController').connectOutlet('main')
 	      mainController = router.get('mainController')
 	      mainController.connectOutlet({name: 'mainTopbar',outletName: 'mainTopBarOutlet'} )
+	      mainController.connectOutlet({name: 'mainInvite',outletName: 'mainInviteBoxOutlet'} )
+	      
 	  	#EVENTS
 	  	#STATES
 	  devisePage: Ember.Route.extend
@@ -38,7 +40,7 @@ App.Router = Ember.Router.extend
 	      router.get('applicationController').connectOutlet('home')
 	      homeController = router.get('homeController')
 	      homeController.connectOutlet({name: 'homeSideBarDefault',outletName: 'homeSideBarOutlet'} )
-	      homeController.connectOutlet({name: 'homeContentDefault',outletName: 'homeContentOutlet'} )
+	      homeController.connectOutlet({name: 'homeContentDefault',outletName: 'homeContentOutlet'} )	      
 	    #EVENTS
 	    logoutEvent: Ember.Route.transitionTo 'logout'
 

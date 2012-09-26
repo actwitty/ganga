@@ -29,8 +29,13 @@ gem 'less-rails-bootstrap'
 #algorithms
 gem 'algorithms'
 
+#Mailchimp
+gem "hominid"
+
 #Authentication
 gem 'devise'
+gem "devise_invitable"
+
 
 #Inflected translations
 gem 'i18n-inflector-rails'

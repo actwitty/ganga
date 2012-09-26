@@ -11,18 +11,14 @@ jQuery.ajaxSetup({
   'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")}
 });
 
-$(document).ajaxSend(function(event, request, settings) {
-  if (typeof(AUTH_TOKEN) == "undefined") return;
-  
-  if ( settings.type == 'post' ||  settings.type == 'POST' ) {
-    settings.data = settings.data || "";
-    settings.data += (settings.data ? "&" : "") + "authenticity_token=" + encodeURIComponent(AUTH_TOKEN);   
-  }
-
-});
 
 /************************** Ember Init ****************************/
 App.initialize();
+
+/************************** Manage forgery post check ****************/
+if (typeof(AUTH_TOKEN) !== "undefined"){
+  App['AUTH_TOKEN'] = encodeURIComponent(AUTH_TOKEN);
+}
 
 App.displayError = function(e) {
   if (typeof e === "string") {
