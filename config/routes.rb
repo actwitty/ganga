@@ -1,21 +1,27 @@
 Ganga::Application.routes.draw do
 
   
+  devise_scope :account do                                      
+    match '/account/confirmations' => 'accounts/confirmations#update', :via => :put, :as => :update_account_confirmation 
+
+    post "invite_request", :to => "accounts/registrations#invite_account_request", :as => "save_account_request"     
+  end
 
   # devise_for :accounts
-  devise_for :accounts, :controllers => { :registrations => "accounts/registrations",
+  devise_for :accounts, :controllers => { 
+                                          :registrations => "accounts/registrations",
                                           :sessions => "accounts/sessions",
                                           :confirmations => "accounts/confirmations",
                                           :unlocks => "accounts/unlocks",
                                           :passwords => "accounts/passwords"}
-                                          
+                                        }
+  
   get   '/credentials', :to => 'accounts#credentials'
 
   post  '/identify',    :to => 'actors#identify'
   
   match '/:locale' => 'base#index'                                    
   root :to => "base#index"
-  
   
 
   # The priority is based upon order of creation:

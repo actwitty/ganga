@@ -1,3 +1,16 @@
+.main_nav
+  %ul
+    %li
+      %a.scroll{:href => "/"} Home
+    %li
+      %a.scroll{:href => "/accounts/sign_up"} Sign Up
+    %li
+      %a.scroll{:href => "/accounts/sign_in"} Sign In
+    %li
+      %a.scroll{:href => "/accounts/confirmation/new"} Resend Confirmation
+    %li
+      %a.scroll{:href => "/accounts/unlock/new"} Unlock Account
+
 .row.equal-heights{:style => "text-align: center;"}
   .span4.offset4
   = form_for(resource, :as => resource_name, :url => password_path(resource_name)) do |f|
@@ -11,7 +24,7 @@
       .control-group
         .controls
           = f.submit "Send me reset password instructions",class: "btn btn-primary"
-    = render "accounts/links"
+
 
 
 

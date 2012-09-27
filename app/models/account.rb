@@ -2,6 +2,7 @@ class Account
   include Mongoid::Document
   include Mongoid::Timestamps
 
+
   # Relations
   has_many :apps, :dependent => :destroy
 
@@ -16,6 +17,8 @@ class Account
   ## Database authenticatable
   field :email,              :type => String, :default => ""
   field :encrypted_password, :type => String, :default => ""
+
+  field :password_unset, :type => Integer, :default => 1 
 
   validates_presence_of :email
   validates_presence_of :encrypted_password
@@ -69,4 +72,48 @@ class Account
   ### Subscription
   field :subscription,       :type => String,  :default => AppConstants.subscriptions.free.name
  
+
+  # Setup accessible (or protected) attributes for your model
+  attr_accessible :name, :email, :password, :password_confirmation, :remember_me, :confirmed_at, :password_unset
+   
+  after_create :add_user_to_mailchimp 
+  before_destroy :remove_user_from_mailchimp 
+
+  
+  # new function to set the password
+  def attempt_set_password(params)
+    p = {}
+    p[:password] = params[:password]
+    p[:password_confirmation] = params[:password_confirmation]
+    p[:password_unset] = 0  
+    update_attributes(p)
+  end  
+  
+  # new function to provide access to protected method pending_any_confirmation
+  def only_if_unconfirmed
+    pending_any_confirmation {yield}
+  end
+
+  # Mailchimp integration, add to subscribed list ASA email id is added
+  def add_user_to_mailchimp    
+    unless self.email.include?('@example.com')
+      mailchimp = Hominid::API.new(AppConstants.mailchimp_key)      
+      list_id = mailchimp.find_list_id_by_name AppConstants.mailchimp_list      
+      info = { }
+      result = mailchimp.list_subscribe(list_id, self.email, info, 'html', false, true, false, true)
+      Rails.logger.info("Mailchimp subscribed for the email id #{self.email}")
+    end
+  end
+
+
+  # Mailchimp integration, remove from subscribed list ASA email id is removed
+  def remove_user_from_mailchimp
+    unless self.email.include?('@example.com')
+      mailchimp = Hominid::API.new(AppConstants.mailchimp_key)
+      list_id = mailchimp.find_list_id_by_name AppConstants.mailchimp_list
+      result = mailchimp.list_unsubscribe(list_id, self.email, true, false, true)  
+      Rails.logger.info("Mailchimp unsubscribed for email id #{self.email}")
+    end
+  end
+  
 end

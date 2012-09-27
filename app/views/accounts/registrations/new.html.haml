@@ -1,8 +1,20 @@
+.main_nav
+  %ul
+    %li
+      %a.scroll{:href => "/"} Home
+    %li
+      %a.scroll{:href => "/accounts/sign_in"} Sign In
+    %li
+      %a.scroll{:href => "/accounts/password/new"} Forgot Password
+    %li
+      %a.scroll{:href => "/accounts/confirmation/new"} Resend Confirmation
+    %li
+      %a.scroll{:href => "/accounts/unlock/new"} Unlock Account
+    
+
 .row.equal-heights{:style => "text-align: center;"}
-  .span4.offset4
     
   = form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f|
-    = devise_error_messages!
     %fieldset
       %legend Sign up
       %br/
@@ -21,5 +33,5 @@
       .control-group
         .controls
           = f.submit "Sign up", :class => "btn btn-primary"
-  = render "accounts/links"
+
   

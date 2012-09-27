@@ -1,6 +1,17 @@
+.main_nav
+  %ul
+    %li
+      %a.scroll{:href => "/"} Home
+    %li
+      %a.scroll{:href => "/accounts/sign_up"} Sign Up
+    %li
+      %a.scroll{:href => "/accounts/password/new"} Forgot Password
+    %li
+      %a.scroll{:href => "/accounts/confirmation/new"} Resend Confirmation
+    %li
+      %a.scroll{:href => "/accounts/unlock/new"} Unlock Account
 .row.equal-heights{:style => "text-align: center;"}
-  .span4.offset4
-    
+  
   = form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f|
     = devise_error_messages!
     %fieldset
@@ -15,10 +26,11 @@
       .control-group
         .controls
           - if devise_mapping.rememberable?
-            %p
+            %p              
               = f.check_box :remember_me
+                
       .control-group
         .controls
           = f.submit "Sign in", :class => "btn btn-primary"
-  = render "accounts/links"
+
   

@@ -1,0 +1,27 @@
+.main_nav
+  %ul
+    %li
+      %a.scroll{:href => "/"} Home
+    %li
+      %a.scroll{:href => "/accounts/sign_in"} Sign In
+    %li
+      %a.scroll{:href => "/accounts/sign_up"} Sign Up      
+    %li
+      %a.scroll{:href => "/accounts/password/new"} Forgot Password
+    %li
+      %a.scroll{:href => "/accounts/confirmation/new"} Resend Confirmation
+
+    
+
+.row.equal-heights{:style => "text-align: center;"}
+  = form_for(resource, :as => resource_name, :url => unlock_path(resource_name), :html => { :method => :post }) do |f|
+    %fieldset
+      %legend Send unlock instruction
+      %br/
+      .control-group
+        .controls
+          = f.email_field :email, placeholder: :email
+      .control-group
+        .controls
+          = f.submit "Resend unlock instructions", :class => "btn btn-primary"
+      
