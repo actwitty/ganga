@@ -13,7 +13,7 @@ Ganga::Application.routes.draw do
                                           :sessions => "accounts/sessions",
                                           :confirmations => "accounts/confirmations",
                                           :unlocks => "accounts/unlocks",
-                                          :passwords => "accounts/passwords"}
+                                          :passwords => "accounts/passwords"
                                         }
   
   get   '/credentials', :to => 'accounts#credentials'
