@@ -14,18 +14,31 @@ Accounts	app/controllers/accounts/sessions_controller.rb	/^class Accounts::Sessi
 create	app/controllers/accounts/sessions_controller.rb	/^  def create$/;"	f	class:Accounts
 Accounts	app/controllers/accounts/unlocks_controller.rb	/^class Accounts::UnlocksController < Devise::UnlocksController$/;"	c
 AccountsController	app/controllers/accounts_controller.rb	/^class AccountsController < ApplicationController$/;"	c
-create	app/controllers/accounts_controller.rb	/^  def create$/;"	f	class:AccountsController
 credentials	app/controllers/accounts_controller.rb	/^  def credentials$/;"	f	class:AccountsController
+ActorsController	app/controllers/actors_controller.rb	/^class ActorsController < ApplicationController$/;"	c
+alias	app/controllers/actors_controller.rb	/^  def alias$/;"	f	class:ActorsController
+identify	app/controllers/actors_controller.rb	/^  def identify$/;"	f	class:ActorsController
+set	app/controllers/actors_controller.rb	/^  def set$/;"	f	class:ActorsController
 ApplicationController	app/controllers/application_controller.rb	/^class ApplicationController < ActionController::Base$/;"	c
 after_sign_in_path_for	app/controllers/application_controller.rb	/^  def after_sign_in_path_for(resource_or_scope)$/;"	f	class:ApplicationController
+set_locale	app/controllers/application_controller.rb	/^  def set_locale$/;"	f	class:ApplicationController
 AppsController	app/controllers/apps_controller.rb	/^class AppsController < ApplicationController$/;"	c
+create	app/controllers/apps_controller.rb	/^	def create$/;"	f	class:AppsController
+delete	app/controllers/apps_controller.rb	/^	def delete$/;"	f	class:AppsController
+read	app/controllers/apps_controller.rb	/^	def read$/;"	f	class:AppsController
+update	app/controllers/apps_controller.rb	/^	def update$/;"	f	class:AppsController
 BaseController	app/controllers/base_controller.rb	/^class BaseController < ApplicationController$/;"	c
 index	app/controllers/base_controller.rb	/^  def index$/;"	f	class:BaseController
+SocialController	app/controllers/social_controller.rb	/^class SocialController < ApplicationController$/;"	c
+index	app/controllers/social_controller.rb	/^    def index$/;"	f	class:SocialController
+social_crm	app/controllers/social_controller.rb	/^	def social_crm$/;"	f	class:SocialController
 AccountsHelper	app/helpers/accounts_helper.rb	/^module AccountsHelper$/;"	m
+ActorsHelper	app/helpers/actors_helper.rb	/^module ActorsHelper$/;"	m
 ApplicationHelper	app/helpers/application_helper.rb	/^module ApplicationHelper	$/;"	m
 AppsHelper	app/helpers/apps_helper.rb	/^module AppsHelper$/;"	m
 Account	app/models/account.rb	/^class Account$/;"	c
 Actor	app/models/actor.rb	/^class Actor$/;"	c
+Alias	app/models/alias.rb	/^class Alias$/;"	c
 App	app/models/app.rb	/^class App$/;"	c
 Event	app/models/event.rb	/^class Event$/;"	c
 Property	app/models/property.rb	/^class Property$/;"	c
@@ -33,6 +46,14 @@ Report	app/models/report.rb	/^class Report$/;"	c
 Rule	app/models/rule.rb	/^class Rule$/;"	c
 Application	config/application.rb	/^  class Application < Rails::Application$/;"	c	class:Ganga
 Ganga	config/application.rb	/^module Ganga$/;"	m
+Object	config/initializers/log_locale.rb	/^class Object$/;"	c
+__error_translate	config/initializers/log_locale.rb	/^	def __error_translate(*argv)$/;"	f	class:Object
+ActiveSupport	config/initializers/logger.rb	/^class ActiveSupport::BufferedLogger$/;"	c
+Formatter	config/initializers/logger.rb	/^class Formatter$/;"	c
+beautify_caller	config/initializers/logger.rb	/^  def beautify_caller$/;"	f	class:Formatter
+beautify_filename	config/initializers/logger.rb	/^  def beautify_filename(str)$/;"	f	class:Formatter
+call	config/initializers/logger.rb	/^  def call(severity, time, progname, msg)$/;"	f	class:Formatter
+formatter=	config/initializers/logger.rb	/^  def formatter=(formatter)$/;"	f	class:ActiveSupport
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 faraday_example	lib/testing/faraday-example.rb	/^def faraday_example(message)$/;"	f
 TestWorker	lib/testing/test_worker.rb	/^module TestWorker$/;"	m
@@ -40,6 +61,12 @@ Worker	lib/testing/test_worker.rb	/^ class Worker$/;"	c	class:TestWorker
 perform	lib/testing/test_worker.rb	/^   def perform(name, count)$/;"	f	class:TestWorker.Worker
 Utility	lib/utility.rb	/^module Utility$/;"	m
 method_missing	lib/utility.rb	/^  def self.method_missing(name, *args, &block)$/;"	F	class:Utility
-Hash	lib/utility/hash.rb	/^  class Hash$/;"	c	class:Utility
-Utility	lib/utility/hash.rb	/^module Utility$/;"	m
-hash_structure	lib/utility/hash.rb	/^    def self.hash_structure(params)$/;"	F	class:Utility.Hash
+FormatHash	lib/utility/format_hash.rb	/^  class FormatHash$/;"	c	class:Utility
+Utility	lib/utility/format_hash.rb	/^module Utility$/;"	m
+hash_serialize	lib/utility/format_hash.rb	/^    def self.hash_serialize(params)$/;"	F	class:Utility.FormatHash
+ControllerMacros	spec/support/controller_macros.rb	/^module ControllerMacros$/;"	m
+login_account	spec/support/controller_macros.rb	/^  def login_account$/;"	f	class:ControllerMacros
+Hello	test.rb	/^class Hello$/;"	c
+Object	test.rb	/^class Object$/;"	c
+_error	test.rb	/^	def _error(*argv)$/;"	f	class:Object
+testing	test.rb	/^	def testing$/;"	f	class:Hello

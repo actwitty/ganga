@@ -28,7 +28,7 @@ describe ActorsController do
       }.to change(Alias, :count).by(1) 
       
       expect{
-        post  'identify', {app_id: @app._id, uid: 'balu@gmail.com'}
+        post  'identify', {app_id: @app._id, uid: 'alok@gmail.com'}
       }.to change(Actor, :count).by(1)
 
       response.status.should eq(200)      
@@ -51,9 +51,15 @@ describe ActorsController do
   
       expect{
         post  'identify', {app_id: @app._id, uid: 'balu@gmail.com'}
-      }.to change(Alias, :count).by(1)
+      }.to change(Alias, :count).by(0)
 
       response.status.should eq(200)      
+    end
+  end
+
+  describe "Set Properties" do
+    it "should set property of actor" do
+      
     end
   end
 end

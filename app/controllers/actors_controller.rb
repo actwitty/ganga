@@ -31,7 +31,8 @@ class ActorsController < ApplicationController
       
       else
         actor = Actor.find(a.actor_id)
-        raise I18n.t("actors.no_actor") if actor.blank?
+        raise __et("actors.no_actor") if actor.blank?
+        raise __et("actors.wrong_actor") if a.actor_id != params[:actor_id]
         Rails.logger.info("Alias exists so returning the associated actor")
       end
     
@@ -40,13 +41,13 @@ class ActorsController < ApplicationController
       if a.blank?
         a = Alias.create!(app_id: params[:app_id], actor_id: params[:actor_id], uid: params[:uid])
       else
-        raise I18n.t("actors.wrong_actor") if a.actor_id != params[:actor_id]
+        raise __et("actors.already_in_use", uid: params[:uid] ) if a.actor_id != params[:actor_id]
         actor = Actor.find(params[:actor_id])
       end
     end
     render json: {status: true}, status: 200
   rescue => e
-    puts("**** ERROR **** #{e.message}")
+    puts("**** ERROR **** #{self.__err_default}")
     render json: { errors: e , status: 422}
   end
 
@@ -64,7 +65,7 @@ class ActorsController < ApplicationController
   # OUTPUT => {status: true}
 
   def set
-    Rails.logger.info("Enter Actor Identify")
+    Rails.logger.info("Enter Set Property of Actor")
 
     if !params[:properties].blank?
       #get app object
@@ -81,7 +82,7 @@ class ActorsController < ApplicationController
 
       render json: {status: true}, status: 200
     else
-      raise I18n.t("actors.no_property")
+      raise __et("actors.no_property")
     end
 
   rescue => e
@@ -105,8 +106,8 @@ class ActorsController < ApplicationController
 
     # check if this user exists already
     uid = Alias.where(app_id: params[:app_id], uid: params[:uid] ).first
-    raise I18n.t("actors.no_uid", uid: params[:uid], app_id: params[:app_id]) if uid.blank? 
-    raise I18n.t("actors.no_actor") if uid.actor_id != params[:actor_id]
+    raise __et("actors.no_uid", uid: params[:uid], app_id: params[:app_id]) if uid.blank? 
+    raise __et("actors.no_actor") if uid.actor_id != params[:actor_id]
 
     # check if alias is already exists with this actor
     a = Alias.where(app_id: params[:app_id], uid: params[:alias_uid], actor_id: params[:actor_id]).first
