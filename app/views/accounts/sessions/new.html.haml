@@ -15,7 +15,7 @@
   = form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f|
     = devise_error_messages!
     %fieldset
-      %legend Sign in
+      %legend Sign In using email
       %br/
       .control-group
         .controls
@@ -28,6 +28,7 @@
           - if devise_mapping.rememberable?
             %p              
               = f.check_box :remember_me
+              %span Remeber Me
                 
       .control-group
         .controls
