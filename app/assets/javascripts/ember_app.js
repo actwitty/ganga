@@ -58,3 +58,10 @@ debugRouter = function(state) {
 App.router.get("childStates").forEach(function(state) {
   debugRouter(state);
 });
+
+/* temp hack */
+$(".in_pg_nav").live('click', function(){
+  var divid = $(this).attr('href');
+  document.getElementById(divid).scrollIntoView();
+  return false;
+});

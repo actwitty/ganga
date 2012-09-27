@@ -1,12 +1,13 @@
-%div{:style => "width:100%;display:block;margin-top:10px;"}
+%div{:style => "width:100%;display:block;"}
+  %div{:style => "width:600px;display:block;margin:auto;margin-top:2px;"}
 
-- flash.each do |name, msg|
-  -if msg.class == Array
-    - msg.each do | single_msg|
-      %div{:class => "alert alert-#{name == :notice ? "success" : "error"}"}
-        %a.close{"data-dismiss" => "alert"} ×
-        = content_tag :div, single_msg, :id => "flash_#{name}" if single_msg.is_a?(String)        
-  -else
-    %div{:class => "alert alert-#{name == :notice ? "success" : "error"}"}
-      %a.close{"data-dismiss" => "alert"} ×
-      = content_tag :div, msg, :id => "flash_#{name}" if msg.is_a?(String)
+    - flash.each do |name, msg|
+      -if msg.class == Array
+        - msg.each do | single_msg|
+          %div{:class => "alert alert-#{name == :notice ? "success" : "error"}"}
+            %a.close{"data-dismiss" => "alert"} ×
+            = content_tag :div, single_msg, :id => "flash_#{name}" if single_msg.is_a?(String)        
+      -else
+        %div{:class => "alert alert-#{name == :notice ? "success" : "error"}"}
+          %a.close{"data-dismiss" => "alert"} ×
+          = content_tag :div, msg, :id => "flash_#{name}" if msg.is_a?(String)
