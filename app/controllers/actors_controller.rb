@@ -18,7 +18,7 @@ class ActorsController < ApplicationController
     Rails.logger.info("Enter Actor Identify")
 
     # check if this user exists already
-    a = Alias.where(app_id: params[:app_id], uid: params[:uid]).first
+    a = Identifier.where(app_id: params[:app_id], uid: params[:uid]).first
 
     # its a case when identity is called more than once in a session
     # we should treat it as different person
@@ -26,28 +26,28 @@ class ActorsController < ApplicationController
       # if this is new actor
       if a.blank?
         actor = Actor.create!(app_id: params[:app_id])
-        actor.aliases.create!(app_id: params[:app_id], uid: params[:uid])
-        Rails.logger.info("creating new and new alias")
+        actor.identifiers.create!(app_id: params[:app_id], uid: params[:uid])
+        Rails.logger.info("creating new identifier")
       
       else
         actor = Actor.find(a.actor_id)
-        raise __et("actors.no_actor") if actor.blank?
-        raise __et("actors.wrong_actor") if a.actor_id != params[:actor_id]
-        Rails.logger.info("Alias exists so returning the associated actor")
+        raise et("actors.no_actor") if actor.blank?
+        raise et("actors.wrong_actor") if a.actor_id != params[:actor_id]
+        Rails.logger.info("Identifier exists so returning the associated actor")
       end
     
     else
-      # create alias for the actor
+      # create Identifier for the actor
       if a.blank?
-        a = Alias.create!(app_id: params[:app_id], actor_id: params[:actor_id], uid: params[:uid])
+        a = Identifier.create!(app_id: params[:app_id], actor_id: params[:actor_id], uid: params[:uid])
       else
-        raise __et("actors.already_in_use", uid: params[:uid] ) if a.actor_id != params[:actor_id]
+        raise et("actors.already_in_use", uid: params[:uid] ) if a.actor_id != params[:actor_id]
         actor = Actor.find(params[:actor_id])
       end
     end
     render json: {status: true}, status: 200
   rescue => e
-    puts("**** ERROR **** #{self.__err_default}")
+    puts("**** ERROR **** #{er(e)}")
     render json: { errors: e , status: 422}
   end
 
@@ -82,22 +82,22 @@ class ActorsController < ApplicationController
 
       render json: {status: true}, status: 200
     else
-      raise __et("actors.no_property")
+      raise et("actors.no_property")
     end
 
   rescue => e
-    Rails.logger.error("**** ERROR **** #{e.message}")
+    Rails.logger.error("**** ERROR **** #{er(e)}")
     render json: { errors: e , status: 422}
   end
 
   # NOTE
-  ## set the property of actor explicitly
+  ## set a new identifier(alias) of actor
 
   # INPUT
   ## {app_id: "1234444',
   ##  actor_id: "1223343",
   ##  uid: "john.doe@example.com", 
-  ##  alias_uid: "+1-9911231234"
+  ##  identifier: "+1-9911231234"
   ## }
 
   # OUTPUT => {status: true}
@@ -105,20 +105,20 @@ class ActorsController < ApplicationController
     Rails.logger.info("Enter Actor Alias")
 
     # check if this user exists already
-    uid = Alias.where(app_id: params[:app_id], uid: params[:uid] ).first
-    raise __et("actors.no_uid", uid: params[:uid], app_id: params[:app_id]) if uid.blank? 
-    raise __et("actors.no_actor") if uid.actor_id != params[:actor_id]
+    uid = Identifier.where(app_id: params[:app_id], uid: params[:uid] ).first
+    raise et("actors.no_uid", uid: params[:uid], app_id: params[:app_id]) if uid.blank? 
+    raise et("actors.no_actor") if uid.actor_id != params[:actor_id]
 
-    # check if alias is already exists with this actor
-    a = Alias.where(app_id: params[:app_id], uid: params[:alias_uid], actor_id: params[:actor_id]).first
+    # check if Identifier is already exists with this actor
+    a = Identifier.where(app_id: params[:app_id], uid: params[:identifier], actor_id: params[:actor_id]).first
     
     if a.blank?   
-      Alias.create!(app_id: params[:app_id], actor_id: params[:actor_id], uid: params[:alias_uid] )
+      Identifier.create!(app_id: params[:app_id], actor_id: params[:actor_id], uid: params[:identifier] )
     end
 
     render json: {status: true}, status: 200
   rescue => e 
-    Rails.logger.error("**** ERROR **** #{e.message}")
+    Rails.logger.error("**** ERROR **** #{er(e)}")
     render json: { errors: e , status: 422}
   end
 end

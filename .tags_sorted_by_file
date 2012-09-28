@@ -3,15 +3,20 @@
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
 !_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
-App.displayError	app/assets/javascripts/ember_app.js	/^App.initialize();$/;"	f
+App.displayError	app/assets/javascripts/ember_app.js	/^}$/;"	f
 App.log	app/assets/javascripts/ember_app.js	/^App.LogLvl = App.DBG;$/;"	f
 debugRouter	app/assets/javascripts/ember_app.js	/^}$/;"	f
 Accounts	app/controllers/accounts/confirmations_controller.rb	/^class Accounts::ConfirmationsController < Devise::ConfirmationsController$/;"	c
+after_confirmation_path_for	app/controllers/accounts/confirmations_controller.rb	/^  def after_confirmation_path_for(resource_name, resource)$/;"	f	class:Accounts
+after_resending_confirmation_instructions_path_for	app/controllers/accounts/confirmations_controller.rb	/^  def after_resending_confirmation_instructions_path_for(resource_name)$/;"	f	class:Accounts
+create	app/controllers/accounts/confirmations_controller.rb	/^  def create$/;"	f	class:Accounts
+show	app/controllers/accounts/confirmations_controller.rb	/^  def show$/;"	f	class:Accounts
+update	app/controllers/accounts/confirmations_controller.rb	/^  def update$/;"	f	class:Accounts
 Accounts	app/controllers/accounts/passwords_controller.rb	/^class Accounts::PasswordsController < Devise::PasswordsController$/;"	c
 Accounts	app/controllers/accounts/registrations_controller.rb	/^class Accounts::RegistrationsController < Devise::RegistrationsController$/;"	c
 create	app/controllers/accounts/registrations_controller.rb	/^  def create$/;"	f	class:Accounts
+invite_account_request	app/controllers/accounts/registrations_controller.rb	/^  def invite_account_request$/;"	f	class:Accounts
 Accounts	app/controllers/accounts/sessions_controller.rb	/^class Accounts::SessionsController < Devise::SessionsController$/;"	c
-create	app/controllers/accounts/sessions_controller.rb	/^  def create$/;"	f	class:Accounts
 Accounts	app/controllers/accounts/unlocks_controller.rb	/^class Accounts::UnlocksController < Devise::UnlocksController$/;"	c
 AccountsController	app/controllers/accounts_controller.rb	/^class AccountsController < ApplicationController$/;"	c
 credentials	app/controllers/accounts_controller.rb	/^  def credentials$/;"	f	class:AccountsController
@@ -29,6 +34,7 @@ read	app/controllers/apps_controller.rb	/^	def read$/;"	f	class:AppsController
 update	app/controllers/apps_controller.rb	/^	def update$/;"	f	class:AppsController
 BaseController	app/controllers/base_controller.rb	/^class BaseController < ApplicationController$/;"	c
 index	app/controllers/base_controller.rb	/^  def index$/;"	f	class:BaseController
+IdentifiersController	app/controllers/identifiers_controller.rb	/^class IdentifiersController < ApplicationController$/;"	c
 SocialController	app/controllers/social_controller.rb	/^class SocialController < ApplicationController$/;"	c
 index	app/controllers/social_controller.rb	/^    def index$/;"	f	class:SocialController
 social_crm	app/controllers/social_controller.rb	/^	def social_crm$/;"	f	class:SocialController
@@ -36,18 +42,26 @@ AccountsHelper	app/helpers/accounts_helper.rb	/^module AccountsHelper$/;"	m
 ActorsHelper	app/helpers/actors_helper.rb	/^module ActorsHelper$/;"	m
 ApplicationHelper	app/helpers/application_helper.rb	/^module ApplicationHelper	$/;"	m
 AppsHelper	app/helpers/apps_helper.rb	/^module AppsHelper$/;"	m
+IdentifiersHelper	app/helpers/identifiers_helper.rb	/^module IdentifiersHelper$/;"	m
 Account	app/models/account.rb	/^class Account$/;"	c
+add_user_to_mailchimp	app/models/account.rb	/^  def add_user_to_mailchimp    $/;"	f	class:Account
+attempt_set_password	app/models/account.rb	/^  def attempt_set_password(params)$/;"	f	class:Account
+only_if_unconfirmed	app/models/account.rb	/^  def only_if_unconfirmed$/;"	f	class:Account
+remove_user_from_mailchimp	app/models/account.rb	/^  def remove_user_from_mailchimp$/;"	f	class:Account
 Actor	app/models/actor.rb	/^class Actor$/;"	c
-Alias	app/models/alias.rb	/^class Alias$/;"	c
 App	app/models/app.rb	/^class App$/;"	c
 Event	app/models/event.rb	/^class Event$/;"	c
+Identifier	app/models/identifier.rb	/^class Identifier$/;"	c
 Property	app/models/property.rb	/^class Property$/;"	c
 Report	app/models/report.rb	/^class Report$/;"	c
 Rule	app/models/rule.rb	/^class Rule$/;"	c
 Application	config/application.rb	/^  class Application < Rails::Application$/;"	c	class:Ganga
 Ganga	config/application.rb	/^module Ganga$/;"	m
-Object	config/initializers/log_locale.rb	/^class Object$/;"	c
-__error_translate	config/initializers/log_locale.rb	/^	def __error_translate(*argv)$/;"	f	class:Object
+ErrorTranslator	config/initializers/error_translator.rb	/^module ErrorTranslator$/;"	m
+Kernel	config/initializers/error_translator.rb	/^module Kernel$/;"	m
+Object	config/initializers/error_translator.rb	/^class Object$/;"	c
+__error_return	config/initializers/error_translator.rb	/^	def __error_return(exception)$/;"	f	class:ErrorTranslator
+__error_translate	config/initializers/error_translator.rb	/^	def __error_translate(*argv)$/;"	f	class:ErrorTranslator
 ActiveSupport	config/initializers/logger.rb	/^class ActiveSupport::BufferedLogger$/;"	c
 Formatter	config/initializers/logger.rb	/^class Formatter$/;"	c
 beautify_caller	config/initializers/logger.rb	/^  def beautify_caller$/;"	f	class:Formatter

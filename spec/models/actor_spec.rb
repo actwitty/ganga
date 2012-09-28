@@ -5,7 +5,7 @@ describe Actor do
   it "should create actor" do
   	app = FactoryGirl.create(:app)
   	actor = Actor.create!(app_id: app._id)
-  	actor.aliases.create!(app_id: app._id, uid: "params[:uid]")
+  	actor.identifiers.create!(app_id: app._id, uid: "params[:uid]")
 
   end
 end

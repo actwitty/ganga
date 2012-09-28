@@ -11,7 +11,7 @@ class Actor
   ## so explicit destroy is needed
   has_many     :properties,   :dependent => :destroy
   
-  has_many      :aliases,     :dependent => :destroy
+  has_many     :identifiers,     :dependent => :destroy
 
   # Attributes
 
