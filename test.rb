@@ -1,8 +1,11 @@
-#regex = Regexp.escape('/ruby/|activerecord|active_support|__DELEGATION__|/.rvm|/vendor/|script/rails|/config/initializers')
-puts Regexp.escape('\*?{}.|/')   #=> \\\*\?\{\}\.
-if "/vendor" =~ /#{regex}/i
-  puts "found"
-end
+require 'rubygems'
+require 'uri'
+require 'mongo'
 
-
-
+str = 'mongodb://heroku_app6991080:19ucpel6nqcb60jn91jc1ij7he@ds039027.mongolab.com/heroku_app6991080'
+uri  = URI.parse(str)
+puts str.scan(%r{//(.*):(.*)@(.*)/(.*)}).first
+conn = Mongo::Connection.from_uri('mongodb://heroku_app6991080:19ucpel6nqcb60jn91jc1ij7he@ds039027.mongolab.com/heroku_app6991080')
+db   = conn.db(uri.path.gsub(/^\//, ''))
+db.collection_names.each { |name| puts name }
+puts "hello"

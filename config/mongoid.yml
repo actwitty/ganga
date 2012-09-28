@@ -63,9 +63,7 @@ production:
   # Configure available database sessions. (required)
   sessions:
     default:
-      database: ganga_production
-      hosts:
-        - <%= ENV['MONGOLAB_URI'] %>
+      uri: mongodb://heroku_app6991080:19ucpel6nqcb60jn91jc1ij7he@ds039027.mongolab.com/heroku_app6991080
       options:
         consistency: :strong
   # Configure Mongoid specific options. (optional)
