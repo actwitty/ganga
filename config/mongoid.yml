@@ -65,7 +65,7 @@ production:
     default:
       database: heroku_app1234
       hosts:
-        - ds039027.mongolab.com:27007
+        - ds039027.mongolab.com
       username: heroku_app6991080
       password: 19ucpel6nqcb60jn91jc1ij7he
       options:
