@@ -34,7 +34,7 @@ class Accounts::RegistrationsController < Devise::RegistrationsController
     end    
  
   rescue => e 
-    Rails.logger.error('Invite failed in rescue #{e.message}')
+    Rails.logger.error('Invite failed in rescue #{e.message}  Resource => #{resource.inspect}')
     response_json[:processed] = status
     processed = {}  
     response_json[:error_str] = []
