@@ -1,9 +1,9 @@
-require 'utility/hash'
+require 'utility/format_hash'
 
 module Utility
   def self.method_missing(name, *args, &block)
     self.constants.each do |constant|
-      klass = constant.to_s.split("_").collect(&:capitalize).join.constantize
+      klass = constant.to_s.split("_").collect(&:camelize).join
       klass = "Utility::#{klass}".constantize
 
       if klass.class == Class and klass.respond_to?(name) == true

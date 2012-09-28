@@ -1,0 +1,7 @@
+en:
+  actors:
+    no_properties: 'No properties sent'
+    wrong_actor: 'UID and actor id is not matching'
+    no_actor:  'No Actor found'
+    no_uid:  'does not exist in app id '
+    already_in_use: "%{uid} is already in use"

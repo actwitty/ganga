@@ -54,7 +54,6 @@ class Account
   ## Other attributes for Profile
   ### Identity
   field :name,              :type => String, :default => ""
-
   validates_presence_of :name
 
   field :photo,             :type => String

@@ -58,6 +58,20 @@ development:
 
     # Ensure all times are UTC in the app side. (default: false)
     # use_utc: false
+
+production:
+  # Configure available database sessions. (required)
+  sessions:
+    default:
+      database: ganga_production
+      uri: <%= ENV['MONGOLAB_URI'] %>
+      options:
+        consistency: :strong
+  # Configure Mongoid specific options. (optional)
+  options:
+    identity_map_enabled: true
+    use_utc: true
+    
 test:
   sessions:
     default:
@@ -66,3 +80,4 @@ test:
         - localhost:27017
       options:
         consistency: :strong
+

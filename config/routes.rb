@@ -13,14 +13,15 @@ Ganga::Application.routes.draw do
                                           :sessions => "accounts/sessions",
                                           :confirmations => "accounts/confirmations",
                                           :unlocks => "accounts/unlocks",
-                                          :passwords => "accounts/passwords",
-                                          
+                                          :passwords => "accounts/passwords"
                                         }
-
-  root :to => "base#index"
+  
   get   '/credentials', :to => 'accounts#credentials'
 
-
+  post  '/identify',    :to => 'actors#identify'
+  
+  match '/:locale' => 'base#index'                                    
+  root :to => "base#index"
   
 
   # The priority is based upon order of creation:

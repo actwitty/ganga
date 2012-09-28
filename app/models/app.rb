@@ -12,12 +12,8 @@ class App
   embeds_many :rules
 
   # Attributes
-  field		    :name,    :type => String,    :default => ""
-  validates_presence_of    :name
-
-  ## unique uid of the actor. can be email or any othe guid
-  field		    :uid,    :type => String,    :default => ""
-  validates_presence_of    :uid
+  field		    :description,    :type => Hash,    :default => {}
+  validates_presence_of    :description
 
   field       :schema, :type => Hash,      :default => {}
 end

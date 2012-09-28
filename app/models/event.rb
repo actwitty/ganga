@@ -21,6 +21,8 @@ class Event
   has_many    :properties, :dependent => :destroy
 
   # Attributes
+  validates_presence_of  :actor_id, :app_id, :account_id
+
   field   :name,    :type => String,  :default => ""
   validates_presence_of  :name  
 
