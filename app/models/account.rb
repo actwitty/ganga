@@ -77,6 +77,7 @@ class Account
   attr_accessible :name, :email, :password, :password_confirmation, :remember_me, :confirmed_at, :password_unset
    
   after_create :add_user_to_mailchimp 
+  before_create :foo
   before_destroy :remove_user_from_mailchimp 
 
   
@@ -93,7 +94,9 @@ class Account
   def only_if_unconfirmed
     pending_any_confirmation {yield}
   end
-
+  def foo
+    Rails.logger.info("Foo is hit #{self.inspect}")
+  end
   # Mailchimp integration, add to subscribed list ASA email id is added
   def add_user_to_mailchimp    
     Rails.logger.info("Mailchimp subscribe request being made")

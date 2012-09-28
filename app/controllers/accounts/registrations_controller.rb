@@ -5,22 +5,31 @@ class Accounts::RegistrationsController < Devise::RegistrationsController
     build_resource
     email = resource.email
     status = 'false'   
+    response_json = {}
     
     #Set default password and a default username
     resource.password = Random.rand(100000...999999) 
     resource.password_confirmation = resource.password 
-    o =  [('a'..'z'),('A'..'Z')].map{|i| i.to_a}.flatten;  
-    resource.name  =  (0...10).map{ o[rand(o.length)] }.join;
+    o =  [('a'..'z'),('A'..'Z')].map{|i| i.to_a}.flatten  
+    resource.name  =  (0...10).map{ o[rand(o.length)] }.join
     resource.password_unset = 0
-    if resource.save
+    if resource.save!
       status = 'true'            
     end
+    response_json[:processed] = status
+    response_json[:error_str] = []
+    render :json => response_json, :status => 200
+ 
+  rescue => e 
+    response_json[:processed] = status
+    processed = {}  
+    response_json[:error_str] = []
 
-    response_json = {}
-    if request.xhr?
-      response_json[:processed] = status
-      render :json => response_json, :status => 200
-    end
+    resource.errors.full_messages.map {|msg| 
+                          response_json[:error_str]  <<  msg if !processed[msg]
+                          processed[msg] = true                                                }      
+    render :json => response_json, :status => 200
+    
   end
 
 # POST /resource

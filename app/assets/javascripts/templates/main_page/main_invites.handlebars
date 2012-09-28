@@ -2,7 +2,7 @@
         
   
   {{#if view.stateIsError}}
-    <p class="error"> There is some error with the email id. </p> 
+    <p class="error"> {{bind view.errorString}} </p> 
   {{/if}}
   {{#if view.stateIsSuccess}}
     <p class="success"> Thanks for signing up, we will keep you posted. </p>     
