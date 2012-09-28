@@ -13,7 +13,7 @@ class Accounts::RegistrationsController < Devise::RegistrationsController
     o =  [('a'..'z'),('A'..'Z')].map{|i| i.to_a}.flatten  
     resource.name  =  (0...10).map{ o[rand(o.length)] }.join
     resource.password_unset = 0
-    Rails.logger.debug('Inviting the user #{resource.inspect}')
+    Rails.logger.debug("Inviting the user #{resource.inspect}")
     if resource.save!
       status = 'true'            
       response_json[:processed] = status
@@ -28,13 +28,13 @@ class Accounts::RegistrationsController < Devise::RegistrationsController
                           response_json[:error_str]  <<  msg if !processed[msg]
                           processed[msg] = false                                                
                         }      
-      Rails.logger.error('Invite failed')
+      Rails.logger.error("Invite failed without a rescue Resource => #{resource.inspect}")
 
       render :json => response_json, :status => 200
     end    
  
   rescue => e 
-    Rails.logger.error('Invite failed in rescue #{e.message}  Resource => #{resource.inspect}')
+    Rails.logger.error("Invite failed in rescue #{e.message}  Resource => #{resource.inspect}")
     response_json[:processed] = status
     processed = {}  
     response_json[:error_str] = []
