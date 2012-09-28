@@ -60,17 +60,7 @@ development:
     # use_utc: false
 
 production:
-  # Configure available database sessions. (required)
-  sessions:
-    default:
-      database: ganga_production
-      uri: <%= ENV['MONGOLAB_URI'] %>
-      options:
-        consistency: :strong
-  # Configure Mongoid specific options. (optional)
-  options:
-    identity_map_enabled: true
-    use_utc: true
+  uri: <%= ENV['MONGOHQ_URL'] %>
     
 test:
   sessions:
