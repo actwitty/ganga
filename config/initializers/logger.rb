@@ -52,7 +52,7 @@ class Formatter
 
   def beautify_caller
     kaller = ""
-    regex = /(activerecord|active_support|__DELEGATION__|\/\.rvm|\/vendor\/plugins|\/vendor\/gems|script\/rails|\/config\/initializers)/i
+    regex = /(\/ruby\/|activerecord|active_support|__DELEGATION__|\/\.rvm|\/vendor\/|script\/rails|\/config\/initializers)/i
     c = caller.detect{|line| line !~ regex}
 
     unless c.blank?
