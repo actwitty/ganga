@@ -13,23 +13,36 @@ class Accounts::RegistrationsController < Devise::RegistrationsController
     o =  [('a'..'z'),('A'..'Z')].map{|i| i.to_a}.flatten  
     resource.name  =  (0...10).map{ o[rand(o.length)] }.join
     resource.password_unset = 0
+    Rails.logger.debug('Inviting the user #{resource.inspect}')
     if resource.save!
       status = 'true'            
-    end
-    response_json[:processed] = status
-    response_json[:error_str] = []
-    render :json => response_json, :status => 200
+      response_json[:processed] = status
+      response_json[:error_str] = []
+      Rails.logger.debug('Invite success')
+      render :json => response_json, :status => 200
+    else
+      processed = {}  
+      response_json[:error_str] = []
+
+      resource.errors.full_messages.map {|msg| 
+                          response_json[:error_str]  <<  msg if !processed[msg]
+                          processed[msg] = false                                                
+                        }      
+      Rails.logger.error('Invite failed')
+
+      render :json => response_json, :status => 200
+    end    
  
   rescue => e 
+    Rails.logger.error('Invite failed in rescue')
     response_json[:processed] = status
     processed = {}  
     response_json[:error_str] = []
 
     resource.errors.full_messages.map {|msg| 
                           response_json[:error_str]  <<  msg if !processed[msg]
-                          processed[msg] = true                                                }      
-    render :json => response_json, :status => 200
-    
+                          processed[msg] = false                                                }      
+    render :json => response_json, :status => 200    
   end
 
 # POST /resource
