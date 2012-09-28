@@ -96,12 +96,13 @@ class Account
 
   # Mailchimp integration, add to subscribed list ASA email id is added
   def add_user_to_mailchimp    
+    Rails.logger.info("Mailchimp subscribe request being made")
     unless self.email.include?('@example.com')
       mailchimp = Hominid::API.new(AppConstants.mailchimp_key)      
       list_id = mailchimp.find_list_id_by_name AppConstants.mailchimp_list      
       info = { }
       result = mailchimp.list_subscribe(list_id, self.email, info, 'html', false, true, false, true)
-      Rails.logger.info("Mailchimp subscribed for the email id #{self.email}")
+      Rails.logger.info("Mailchimp subscribed for the email id #{self.email} to #{AppConstants.mailchimp_list}")
     end
   end
 

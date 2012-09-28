@@ -37,7 +37,7 @@ production:
 
   redis_server:          'redis://localhost:6379'
   mailchimp_key:         '1b16707a608bd76703eeb349cc45dfdb-us5'
-  mailchimp_list:        'visitors'
+  mailchimp_list:        'Rulebot User'
   <<: *default
 
 test:
