@@ -48,9 +48,9 @@ App.MainInviteView = Ember.View.extend
           App.log App.DBG,'AJAX: invite success'
           viewObj.set 'inviteError', 'done'
         else
-          App.log App.DBG,'AJAX: invite failed with 200'
+          App.log App.ERR,'AJAX: invite failed with 200'
           viewObj.set 'inviteError', 'error'          
-          viewObj.set 'errorString', 'An error occurred:' + data.error_str if data.error_str
+          viewObj.set 'errorString', 'An error occurred : ' + data.error_str if data.error_str
         viewObj.set 'isBusy', false
         
       error: (jqXHR, textStatus, errorThrown) ->
