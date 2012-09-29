@@ -63,11 +63,7 @@ production:
   # Configure available database sessions. (required)
   sessions:
     default:
-      database: heroku_app6991080
-      hosts:
-        - ds039027.mongolab.com
-      username: heroku_app6991080
-      password: 19ucpel6nqcb60jn91jc1ij7he
+      uri: mongodb://heroku_app6991080:19ucpel6nqcb60jn91jc1ij7he@ds039027.mongolab.com:39027/heroku_app6991080
       options:
         consistency: :strong
   # Configure Mongoid specific options. (optional)
