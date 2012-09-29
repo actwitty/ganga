@@ -13,7 +13,7 @@ class AppsController < ApplicationController
 		render json: @app, status: 200			
 	rescue => e
 		Rails.logger.error("**** ERROR **** #{e.message}")
-		render json: { errors: e }, status: 422}
+		render json: { errors: e , status: 422}
 	end
 
 	def delete

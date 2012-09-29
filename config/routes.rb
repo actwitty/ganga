@@ -19,6 +19,8 @@ Ganga::Application.routes.draw do
   get   '/credentials', :to => 'accounts#credentials'
 
   post  '/identify',    :to => 'actors#identify'
+  post  '/set',         :to => 'actors#set'
+  post  '/alias',       :to => 'actors#alias'
   
   match '/:locale' => 'base#index'                                    
   root :to => "base#index"

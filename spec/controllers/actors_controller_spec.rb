@@ -61,7 +61,13 @@ describe ActorsController do
 
   describe "Set Properties" do
     it "should set property of actor" do
-
+      post 'set', { app_id: @app._id, actor_id: @actor._id, 
+                      properties: { :email => "john.doe@example.com",
+                                    :customer => {:address => {:city => "Bangalore"}
+                                                 }
+                                  }
+                  }  
+      @app.schema.should_not be_blank 
     end
   end
 end

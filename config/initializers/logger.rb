@@ -29,7 +29,7 @@ class Formatter
           }  
 
 
-  ONLY_APP_LOGS  = true 
+  ONLY_APP_LOGS  = false 
 
   SEVERITY_VALUE = {"INFO" => 1, "DEBUG" => 2, "WARN" => 3, "ERROR" => 4, "FATAL" => 5, "UNKNOWN" => 6}
   SEVERITY_LEVEL = "INFO"
@@ -52,7 +52,7 @@ class Formatter
 
   def beautify_caller
     kaller = ""
-    regex = /(activerecord|active_support|__DELEGATION__|\/\.rvm|\/vendor\/plugins|\/vendor\/gems|script\/rails|\/config\/initializers)/i
+    regex = /(\/ruby\/|activerecord|active_support|__DELEGATION__|\/\.rvm|\/vendor\/|script\/rails|\/config\/initializers)/i
     c = caller.detect{|line| line !~ regex}
 
     unless c.blank?
