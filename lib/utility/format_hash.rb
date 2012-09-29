@@ -41,7 +41,7 @@ module Utility
           schema[e[1][:path]] = e[0].values[0].class
         end
       end while !stack.blank?
-
+      puts schema.inspect
       schema
     rescue => e
       Rails.logger.error("**** ERROR **** => #{e.message}")

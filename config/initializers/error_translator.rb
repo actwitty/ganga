@@ -29,7 +29,7 @@ module ErrorTranslator
 	alias_method :et, :__error_translate 
 
 	def __error_return(exception)
-		return self.__err_default unless self.__err_default.blank?
+		return self.__err_default if self.instance_variable_defined?(:@__err_default)
 		return exception.message unless exception.blank?
 		return nil
 	end

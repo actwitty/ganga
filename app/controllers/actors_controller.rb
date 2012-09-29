@@ -1,3 +1,4 @@
+require 'utility'
 class ActorsController < ApplicationController
   before_filter :authenticate_account!
   protect_from_forgery
@@ -47,7 +48,7 @@ class ActorsController < ApplicationController
     end
     render json: {status: true}, status: 200
   rescue => e
-    puts("**** ERROR **** #{er(e)}")
+    Rails.logger.error("**** ERROR **** #{er(e)}")
     render json: { errors: e , status: 422}
   end
 
@@ -69,24 +70,26 @@ class ActorsController < ApplicationController
 
     if !params[:properties].blank?
       #get app object
-      app = App.find(params)
+      app = App.find(params[:app_id])
 
       params[:properties].each do |k,v|
-        p = Property.create(actor_id: params[:actor_id], k.to_sym => v)
-
-        schema = Utility.hash_serialize(hash: properties)
-        # add schema in app
-        app.schema[:actor] = {} if app.schema[:actor].blank?
-        app.schema[:actor].merge!(schema)
+        p = Property.create!(actor_id: params[:actor_id], k.to_sym => v)
       end
 
+      schema = Utility.hash_serialize(hash: params[:properties])
+      puts schema.inspect
+      # add schema in app
+      app.schema[:actor] = {} if app.schema[:actor].blank?
+      app.schema[:actor].merge!(schema)
+      app.save!
+      
       render json: {status: true}, status: 200
     else
       raise et("actors.no_property")
     end
 
   rescue => e
-    Rails.logger.error("**** ERROR **** #{er(e)}")
+    puts("**** ERROR **** #{er(e)}")
     render json: { errors: e , status: 422}
   end
 
