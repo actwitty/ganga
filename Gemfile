@@ -77,12 +77,12 @@ gem 'haml-rails'
 # gem 'acts-as-taggable-on', '~> 2.3.1'
 
 #Queue 
-# gem 'amqp'
+gem 'amqp'
 
 
 #Background Job
-# gem 'redis'
-# gem 'sidekiq'
+gem 'redis'
+gem 'sidekiq'
 
 #mongo db
 gem "mongoid", "~> 3.0.0"
