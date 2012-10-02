@@ -5,6 +5,8 @@ App.Router = Ember.Router.extend
 	root: Ember.Route.extend
 		
 	  #SETUP
+
+	  
 	  #EVENTS
 	  loginSwitchRoute: Ember.Route.transitionTo 'loggedIn'
 	  mainpageSwitchRoute: Ember.Route.transitionTo 'mainPage'
@@ -15,12 +17,15 @@ App.Router = Ember.Router.extend
 
 	  mainPage: Ember.Route.extend
 	    #SETUP
+
 	  	route: '/'
 	  	connectOutlets: (router) ->
 	      router.get('applicationController').connectOutlet('main')
 	      mainController = router.get('mainController')
 	      mainController.connectOutlet({name: 'mainTopbar',outletName: 'mainTopBarOutlet'} )
 	      mainController.connectOutlet({name: 'mainInvite',outletName: 'mainInviteBoxOutlet'} )
+
+	      
 	      
 	  	#EVENTS
 	  	#STATES
