@@ -1,0 +1,67 @@
+<div class = "mainRulesetDiv">
+  {{console_log rule.category}}
+  <div class = "ruleSet">
+  
+    <select class = "category" {{action selectedCategoryField rule target="App.ruleView"}}>
+      
+      {{#each rule.field_choices}}        
+
+        {{#ifequal rule.category category}}
+
+          <option class = "category" selected="selected" {{bindAttr value="category"}}  {{bindAttr type="type"}}> 
+            {{category}}
+          </option>
+
+        {{else}} 
+
+          <option class = "category" {{bindAttr value="category"}}  {{bindAttr type="type"}}> 
+            {{category}}
+          </option>
+
+        {{/ifequal}}
+
+      {{/each}}
+
+    </select>
+   
+    <select class = "comp"{{action comaparatorField rule target="App.ruleView"}} >
+      {{#each rule.comp_choices}}
+        {{#ifequal rule.comp tag}}
+          <option class = "comp"selected="selected" {{bindAttr value="tag"}} value ='tag'> {{tag}} </option> 
+      {{else}}
+        <option class = "comp" {{bindAttr value="tag"}}  value = 'tag'> {{tag}} </option>
+      {{/ifequal}}
+      
+      {{/each}}
+    </select>
+
+    {{#if rule.ifValueTextBox }}
+      {{view Ember.TextField placeholder="Type" valueBinding ="rule.defaults" class = "value"}}
+    {{else}}
+      <select>
+        {{#each rule.default_choices}}
+          <option class = value {{bindAttr value="value"}}>{{value}}</option>
+        {{/each}}
+      </select>
+    {{/if}}
+  
+    <a class = "deleteRule"{{action deleteRule rule target="App.ruleView"}}>x</a>
+  </div>
+
+  <div class = "orand" >
+    {{#if rule.orSelected}}
+      <button class= "orSelected" {{action selectedOr rule target="App.ruleView" }} > OR </button>
+    {{else}}
+      <button class= "or" {{action selectedOr rule target="App.ruleView"}} > OR </button>
+    {{/if}}
+
+    {{#if rule.andSelected}}
+      <button class = "andSelected" {{action selectedAnd rule target="App.ruleView"}}> AND </button> 
+    
+    {{else}}
+      <button class = "and" {{action selectedAnd rule target="App.ruleView"}}  > AND </button> 
+    {{/if}}
+
+  </div>  
+
+</div> 

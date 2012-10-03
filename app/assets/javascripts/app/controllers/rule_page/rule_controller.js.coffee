@@ -1,0 +1,1 @@
+App.RuleController = Ember.ObjectController.extend()
