@@ -1,3 +1,4 @@
+//= require_tree ./app/helpers
 //= require ./app/store
 //= require_tree ./app/models
 //= require_tree ./app/controllers
@@ -56,14 +57,8 @@ debugRouter = function(state) {
   });
 };
 
-
+/* For debugging */
 App.router.get("childStates").forEach(function(state) {
   debugRouter(state);
 });
 
-/* temp hack */
-$(".in_pg_nav").live('click', function(){
-  var divid = $(this).attr('href');
-  document.getElementById(divid).scrollIntoView();
-  return false;
-});
