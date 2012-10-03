@@ -14,39 +14,15 @@ class ActorsController < ApplicationController
   ##          :actor_id => "23232323"
   ##          :uid => "john.doe@example.com"}
 
-  # OUTPUT => {status: true}
+  # OUTPUT => {status: true OR false}
   def identify
     Rails.logger.info("Enter Actor Identify")
 
-    # check if this user exists already
-    a = Identifier.where(app_id: params[:app_id], uid: params[:uid]).first
+    ret = Actor.identify(params)
 
-    # its a case when identity is called more than once in a session
-    # we should treat it as different person
-    if params[:actor_id].blank?
-      # if this is new actor
-      if a.blank?
-        actor = Actor.create!(app_id: params[:app_id])
-        actor.identifiers.create!(app_id: params[:app_id], uid: params[:uid])
-        Rails.logger.info("creating new identifier")
-      
-      else
-        actor = Actor.find(a.actor_id)
-        raise et("actors.no_actor") if actor.blank?
-        raise et("actors.wrong_actor") if a.actor_id != params[:actor_id]
-        Rails.logger.info("Identifier exists so returning the associated actor")
-      end
-    
-    else
-      # create Identifier for the actor
-      if a.blank?
-        a = Identifier.create!(app_id: params[:app_id], actor_id: params[:actor_id], uid: params[:uid])
-      else
-        raise et("actors.already_in_use", uid: params[:uid] ) if a.actor_id != params[:actor_id]
-        actor = Actor.find(params[:actor_id])
-      end
-    end
-    render json: {status: true}, status: 200
+    raise ret[:error] if !ret[:error].blank?
+
+    render json: {actor_id: ret[:return]}, status: 200 
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
     render json: { errors: e , status: 422}
@@ -66,30 +42,16 @@ class ActorsController < ApplicationController
   # OUTPUT => {status: true}
 
   def set
-    Rails.logger.info("Enter Set Property of Actor")
+    Rails.logger.info("Enter Actor Set")
 
-    if !params[:properties].blank?
-      #get app object
-      app = App.find(params[:app_id])
+    ret = Actor.set(params)
 
-      params[:properties].each do |k,v|
-        p = Property.create!(actor_id: params[:actor_id], k.to_sym => v)
-      end
+    raise ret[:error] if !ret[:error].blank?
 
-      schema = Utility.hash_serialize(hash: params[:properties])
-      puts schema.inspect
-      # add schema in app
-      app.schema[:actor] = {} if app.schema[:actor].blank?
-      app.schema[:actor].merge!(schema)
-      app.save!
-      
-      render json: {status: true}, status: 200
-    else
-      raise et("actors.no_property")
-    end
+    render json: {status: ret[:return]}, status: 200
 
   rescue => e
-    puts("**** ERROR **** #{er(e)}")
+     Rails.logger.error("**** ERROR **** #{er(e)}")
     render json: { errors: e , status: 422}
   end
 
@@ -107,19 +69,12 @@ class ActorsController < ApplicationController
   def alias
     Rails.logger.info("Enter Actor Alias")
 
-    # check if this user exists already
-    uid = Identifier.where(app_id: params[:app_id], uid: params[:uid] ).first
-    raise et("actors.no_uid", uid: params[:uid], app_id: params[:app_id]) if uid.blank? 
-    raise et("actors.no_actor") if uid.actor_id != params[:actor_id]
+    ret = Actor.alias(params)
 
-    # check if Identifier is already exists with this actor
-    a = Identifier.where(app_id: params[:app_id], uid: params[:identifier], actor_id: params[:actor_id]).first
-    
-    if a.blank?   
-      Identifier.create!(app_id: params[:app_id], actor_id: params[:actor_id], uid: params[:identifier] )
-    end
+    raise ret[:error] if !ret[:error].blank?
 
-    render json: {status: true}, status: 200
+    render json: {status: ret[:return]}, status: 200
+
   rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
     render json: { errors: e , status: 422}

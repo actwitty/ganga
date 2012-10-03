@@ -29,7 +29,8 @@ class Formatter
           }  
 
 
-  ONLY_APP_LOGS  = false 
+  ONLY_APP_LOGS  = true 
+  TEST_LOG_TO_CONSOLE = true
 
   SEVERITY_VALUE = {"INFO" => 1, "DEBUG" => 2, "WARN" => 3, "ERROR" => 4, "FATAL" => 5, "UNKNOWN" => 6}
   SEVERITY_LEVEL = "INFO"
@@ -38,14 +39,22 @@ class Formatter
   FOLDER_VALUE = {"app" => 1, "lib" => 2, "models" => 3, "controllers" => 4, "internal" => 5}
   FOLDER_LEVEL = "internal"
 
+  def format_string( str, color)
+    # In test env we want to put the logs in consle
+    if Rails.env == "test" and TEST_LOG_TO_CONSOLE
+      return  "[#{str}] "
+    else
+      return  "\033[#{color}[\033[#{color}#{str}\033[0m] " 
+    end
+  end
 
   def beautify_filename(str)
     filename = ""
     array = str.split(':')
     
-    filename += "\033[0m[\033[#{COLOR[:default]}#{array[0]}\033[0m] " if FILE
-    filename += "\033[0m[\033[#{COLOR[:default]}Line:#{array[1]}\033[0m] " if LINE
-    filename += "\033[0m[\033[#{COLOR[:default]}#{array[2].split(' ')[1].capitalize.gsub!(/\'|\`/,'')}\033[0m] " if METHOD
+    filename += format_string(array[0], COLOR[:default])  if FILE
+    filename += format_string("Line: #{array[1]}", COLOR[:default])  if LINE
+    filename += format_string(array[2].split(' ')[1].capitalize.gsub!(/\'|\`/,''), COLOR[:default]) if METHOD
     
     filename
   end
@@ -71,7 +80,9 @@ class Formatter
           else
             color = COLOR[:default]
           end
-          kaller += "\033[0m[\033[#{color}#{folder.capitalize}\033[0m] " if !folder.blank? and PATH_BREAKUP
+          if !folder.blank? and PATH_BREAKUP
+            kaller += format_string(folder.capitalize, color)
+          end
         end
 
       end
@@ -99,10 +110,17 @@ class Formatter
     
     if kaller.blank?
       return ""  if ONLY_APP_LOGS
-      kaller = "\033[0m[\033[#{COLOR[:internal]}__Internal__\033[0m] " if HIGHLIGHT_INTERNAL_LOGS
+      kaller = format_string("__Internal__", COLOR[:internal]) if HIGHLIGHT_INTERNAL_LOGS
     end
     
-    "\033[0;37m#{formatted_time}\033[0m [\033[#{color}m#{formatted_severity}\033[0m] #{kaller}\033[0m#{msg.strip} (pid:#{$$})\n"
+    fmt = "\033[0;37m#{formatted_time}\033[0m [\033[#{color}m#{formatted_severity}\033[0m] #{kaller}\033[0m#{msg.strip} (pid:#{$$})\n"
+
+    # dump the output on console for test env
+    if Rails.env == "test" and TEST_LOG_TO_CONSOLE
+      puts "#{formatted_time} [#{formatted_severity}] #{kaller} #{msg.strip} (pid:#{$$})\n\n"
+    end
+
+    fmt 
   end
 
 end

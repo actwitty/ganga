@@ -68,7 +68,6 @@ production:
         consistency: :strong
   # Configure Mongoid specific options. (optional)
   options:
-    identity_map_enabled: true
     use_utc: true
 
 test:

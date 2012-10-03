@@ -27,21 +27,20 @@ module Utility
       Rails.logger.info("Hash Serialize Enter")
       stack = []
       schema = {}
-    
+
       # initialize stack
       params[:hash].map {|p| stack << [{p[0] => p[1]}, {:path => "#{p[0]}"}]}
 
       begin
         e = stack.pop  
-        if e[0].values[0].class == Hash
+        if e[0].values[0].class == Hash or (e[0].values[0].class == ActiveSupport::HashWithIndifferentAccess)
           # push nested hash info
-          e[0].values[0].map {|p| stack << [{p[0] => p[1]}, {:path => "#{e[1][:path]}.#{p[0]}"}]}
+          e[0].values[0].map {|p| stack << [{p[0] => p[1]}, {:path => "#{e[1][:path]}[#{p[0]}]"}]}
         else
           # process terminal element
-          schema[e[1][:path]] = e[0].values[0].class
+          schema[e[1][:path]] = "#{e[0].values[0].class}"
         end
       end while !stack.blank?
-      puts schema.inspect
       schema
     rescue => e
       Rails.logger.error("**** ERROR **** => #{e.message}")

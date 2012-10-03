@@ -4,6 +4,7 @@ ruby "1.9.3"
 gem 'rails', '3.2.8'
 
 gem 'heroku'
+gem 'rb-readline'
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -87,7 +88,7 @@ gem 'sidekiq'
 #mongo db
 gem "mongoid", "~> 3.0.0"
 
-
+gem 'colorize'
 group :test, :development  do
   gem 'rspec-rails'
   gem 'factory_girl_rails'
@@ -97,5 +98,6 @@ group :test  do
   gem "mongoid-rspec", "~> 1.5.4"
   gem 'spork-rails'
   gem 'database_cleaner'
-  gem 'rspec-mocks'
+  gem 'ruby-prof'
+
 end
