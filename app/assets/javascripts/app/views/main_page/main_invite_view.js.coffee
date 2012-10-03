@@ -47,6 +47,9 @@ App.MainInviteView = Ember.View.extend
         if data and data.processed and data.processed is "true"
           App.log App.DBG,'AJAX: invite success'
           viewObj.set 'inviteError', 'done'
+
+          App.mixpanel.userInviteSet accountEmail
+          App.kissmetrics.userInviteSet accountEmail
         else
           App.log App.ERR,'AJAX: invite failed with 200'
           viewObj.set 'inviteError', 'error'          

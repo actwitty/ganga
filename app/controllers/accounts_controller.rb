@@ -6,7 +6,7 @@ class AccountsController < ApplicationController
   
   # API to send the credentials to check if the user is logged in
   def credentials
-    Rails.logger.debug("Enter: URL#{request.env['PATH_INFO']} params:#{params}")
+    Rails.logger.debug("Enter: params:#{params}")
     if current_account
 
       @account = current_account

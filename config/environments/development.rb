@@ -51,4 +51,15 @@ Ganga::Application.configure do
 
   config.ember.variant = :development
   
+
+
+    ActionMailer::Base.smtp_settings = {
+    :port =>           '465',
+    :address =>        'smtp.mandrillapp.com',
+    :user_name =>      'contact@actwitty.com',
+    :password =>       '7f57a57a-5fcb-48db-a8da-f33635884d42',
+    :domain =>         'localhost:3000',
+    :authentication => :plain
+  }
+  ActionMailer::Base.delivery_method = :smtp
 end

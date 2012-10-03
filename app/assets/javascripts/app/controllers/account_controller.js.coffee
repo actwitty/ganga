@@ -1,5 +1,7 @@
 App.AccountController = Em.ObjectController.extend
   init: ->    
+    #Set mixpanel to track every minute spent on the page
+    App.mixpanel.trackMinuteSpent
     self = this 
     $.ajax
       type: "GET"

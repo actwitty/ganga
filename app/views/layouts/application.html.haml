@@ -11,14 +11,24 @@
     %meta{"http-equiv"=>"Content-Type", :content=>"text/html; charset=utf-8"}/    
     = javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery?
 
-  %body
+  /* Only in the production mode */
+  -if  Rails.env.production?
+    =render 'layouts/google_analytics'  
+    =render 'layouts/mixpanel'    
+    =render 'layouts/kissmetrics'
+
+
+  %body  
+    = render 'layouts/messages'
     #rulebotEmberBase
-    #main{:role => "main"}
-      .container
-        .content
-          .row
-            .span12
-              = render 'layouts/messages'
-    
+
     = yield
-    %footer
+
+    /* Only in the production mode */
+    -if  Rails.env.production?
+      =render 'layouts/intercomio'
+      =render 'layouts/olark'
+      =render 'layouts/uservoice'
+
+
+      

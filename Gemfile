@@ -34,6 +34,7 @@ gem 'algorithms'
 #Mailchimp
 gem "hominid"
 
+
 #Authentication
 gem 'devise'
 gem "devise_invitable"
