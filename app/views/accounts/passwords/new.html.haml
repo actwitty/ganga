@@ -14,7 +14,7 @@
 .row.equal-heights{:style => "text-align: center;"}
   .span4.offset4
   = form_for(resource, :as => resource_name, :url => password_path(resource_name)) do |f|
-    = devise_error_messages!
+
     %fieldset
       %legend Forgot your password?
       %br/

@@ -51,13 +51,15 @@ Ganga::Application.configure do
 
   config.ember.variant = :development
   
-  ActionMailer::Base.smtp_settings = {
-    :address => "smtp.gmail.com",
-    :domain => "actwitty.com",
-    :enable_starttls_auto => true,
-    :port => 587,
-    :authentication => :plain,
-    :user_name => "no-reply@actwitty.com",
-    :password => 'actwitty08032011'
+
+
+    ActionMailer::Base.smtp_settings = {
+    :port =>           '465',
+    :address =>        'smtp.mandrillapp.com',
+    :user_name =>      'contact@actwitty.com',
+    :password =>       '7f57a57a-5fcb-48db-a8da-f33635884d42',
+    :domain =>         'localhost:3000',
+    :authentication => :plain
   }
+  ActionMailer::Base.delivery_method = :smtp
 end
