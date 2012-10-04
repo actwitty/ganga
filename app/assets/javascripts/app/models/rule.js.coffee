@@ -1,28 +1,28 @@
 App.Rule = Ember.Object.extend(
   category: null
   type: null
-  comp: null
-  defaults: null
+  operator: null
+  value: null
   connect: null
   ifCompTextBox: false
   ifValueTextBox: true
   orSelected: true
   andSelected: false
-  comp_choices: null
-  default_choices: null
-  field_choices: null
+  operator_choices: null
+  value_choices: null
+  category_choices: null
 
-  setComparators: (comparators) ->
-    @set "comp_choices", comparators
+  setOperatorChoices: (comparators) ->
+    @set "operator_choices", comparators
 
-  setDefaults: (defaults) ->
-    @set "default_choices", defaults
+  setDefaultsValues: (defaults) ->
+    @set "value_choices", defaults
 
-  setFields: (fields) ->
-    @set "field_choices", fields
+  setCategoryChoices: (categories) ->
+    @set "category_choices", categories
 
-  setComp: (comparator) ->
-    @set "comp", comparator
+  setOperator: (operator) ->
+    @set "operator", operator
 
   setCategory: (category) ->
     @set "category", category
@@ -31,7 +31,7 @@ App.Rule = Ember.Object.extend(
     @set "connect", connect
 
   setdefault: (value) ->
-    @set "defaults", value
+    @set "value", value
 
   setifCompTextBox: (value) ->
     @set "ifCompTextBox", value

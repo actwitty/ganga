@@ -10,13 +10,10 @@ Handlebars.registerHelper "ifequal", (val1, val2, options) ->
   else
     options.inverse this
 
-console.log "Handlebars.registerHelper"
 
 
 Handlebars.registerHelper "console_log", (val1,options) ->
   return false  if not val1?	
   context = (options.contexts.fn and options.fn.contexts[0]) or this
   val1 = getPath(context, val1, options.fn)
-  console.log  "Amartya_console"
-  console.log val1
-
+  App.log App.DBG, val1
