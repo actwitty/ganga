@@ -17,6 +17,9 @@ Ganga::Application.routes.draw do
                                         }
   
   get   '/credentials', :to => 'accounts#credentials'
+  get   '/category', :to => 'rules#category'
+  post   '/submitRule' , :to => 'rules#submitRule'
+  get '/rules/editRule' , :to => 'rules#editRule'
 
   post  '/identify',    :to => 'actors#identify'
   post  '/set',         :to => 'actors#set'

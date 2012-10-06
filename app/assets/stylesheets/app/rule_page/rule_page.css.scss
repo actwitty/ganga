@@ -1,0 +1,125 @@
+.orand
+{
+display : block
+}
+.or
+{
+display :inline;
+border-style:solid;
+border-width:1px;
+margin-left:180px;
+margin-top:5px;
+margin-bottom:5px;
+
+
+}
+.orSelected
+{
+display :inline;
+font-weight:bold;
+border-style:solid;
+border-width:1px;
+margin-left:180px;
+margin-top:5px;
+margin-bottom:5px;
+
+
+}
+.and
+{
+display : inline;
+border-style:solid;
+border-width:1px;
+margin-top:5px;
+margin-bottom:5px;
+
+
+/*margin-left:20px; */
+
+}
+.andSelected
+{
+display : inline;
+font-weight:bold;
+border-style:solid;
+border-width:1px;
+margin-top:5px;
+margin-bottom:5px;
+
+
+/*margin-left:20px; */
+
+}
+
+.submitButton
+{
+	margin-top:20px;
+   margin-bottom:20px;
+}
+
+.ruleSubSuccess
+{
+	margin-left:250px;
+   margin-top:100px;
+}
+.editRule
+{
+      margin-top:20px;
+
+}   
+
+.addButton
+{
+	margin-top:20px;
+} 
+
+.deleteRule
+{
+	display:none; 
+}  
+
+.ruleSet
+{
+height: 50px;
+width: 600px;
+border: 1px solid #EBEBEB;
+background-color: #F8F8F8;
+
+}
+.mainRulesetDiv:hover
+{
+	 .deleteRule
+	 {
+	 	 display : inline;
+	 };
+}  
+
+.category
+{
+	width: 160px;
+	margin-top:10px;
+	background-color: #F8F8F8;
+
+}
+
+.comp
+{
+	width: 160px;
+	margin-top:10px;
+	background-color: #F8F8F8;
+
+
+}
+.value
+{
+	width: 160px;
+	margin-top:10px;
+	background-color: #F8F8F8;
+}
+
+.submitButton
+{
+	background: #CCF;
+    /*margin-left:180px; */
+}
+
