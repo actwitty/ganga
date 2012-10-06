@@ -22,26 +22,29 @@ development: &default
       name:               "High_Volume"
       price:              1000
 
+  # Fixed Events
+  event_set_actor_property: "set_actor_property"
+
   # Service Keys
   facebook_app_id:      '244515575666539'
   facebook_secret_key:  '2ce9532a07461bf35f2ea18b50ff2afa'
   server_base:          'http://localhost:3000'
 
-  redis_server:          'redis://localhost:6379'
+  redis_server:         'redis://localhost:6379'
 
-  mailchimp_key:         '1b16707a608bd76703eeb349cc45dfdb-us5'
-  mailchimp_list:        'visitors_development'
+  mailchimp_key:        '1b16707a608bd76703eeb349cc45dfdb-us5'
+  mailchimp_list:       'visitors_development'
 
 
   google_analytics_key: 'UA-35207235-1'
-  intercom_io_key:  '3yfygk8e'
+  intercom_io_key:      '3yfygk8e'
 
-  olark_key:        '9266-944-10-1952'
-  olark_show_wait:  60000
+  olark_key:            '9266-944-10-1952'
+  olark_show_wait:       60000
 
-  mixpanel_key:    'd73d98b374597f86aa5c6131d24b75b0'
-  kissmetric_key:  '37e967f88262226bb6b042b360823198784fee85'
-  user_voice_wait: 120000
+  mixpanel_key:         'd73d98b374597f86aa5c6131d24b75b0'
+  kissmetric_key:       '37e967f88262226bb6b042b360823198784fee85'
+  user_voice_wait:       120000
 production:  
   <<: *default
   facebook_app_id:      '172893766124779'

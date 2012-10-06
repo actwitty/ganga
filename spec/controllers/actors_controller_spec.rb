@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe ActorsController do
   login_account
+
   before(:each) do
     @app = FactoryGirl.create(:app)
     @actor = FactoryGirl.create(:actor)
@@ -12,14 +13,14 @@ describe ActorsController do
       expect{
         post  'identify', {app_id: @app._id, actor_id: @actor._id, uid: 'alok@gmail.com'}
       }.to change(Identifier, :count).by(1)
-      response.status.should eq(200)
+      JSON.parse(response.body)["status"].should eq(200)
     end
 
     it "should create new actor when no actor is given" do
       expect{
         post  'identify', {app_id: @app._id, uid: 'alok@gmail.com'}
       }.to change(Actor, :count).by(1)
-      response.status.should eq(200)
+      JSON.parse(response.body)["status"].should eq(200)
     end
 
     it "should create two identities if identify called 2 times" do
@@ -31,7 +32,7 @@ describe ActorsController do
         post  'identify', {app_id: @app._id, uid: 'alok@gmail.com'}
       }.to change(Actor, :count).by(1)
 
-      response.status.should eq(200)
+      JSON.parse(response.body)["status"].should eq(200)
     end
 
     it "should not re-assign identify" do
@@ -45,7 +46,7 @@ describe ActorsController do
         post  'identify', {app_id: @app._id, actor_id: actor._id,uid: 'balu@gmail.com'}
       }.to change(Actor, :count).by(0)
 
-      response.status.should eq(200)
+      JSON.parse(response.body)["status"].should eq(200)
     end
 
     it "should re-map actor if " do
@@ -55,8 +56,8 @@ describe ActorsController do
         }
       Identifier.create!(app_id: @app._id, actor_id: @actor._id, uid: 'balu@gmail.com')
       
-      actor = Actor.create(app_id: @app._id)
-      Property.create!(actor_id: actor._id, properties: h)
+      actor = Actor.create!(app_id: @app._id)
+      Event.add!(app_id: @app._id, actor_id: actor._id, name: "sign_up", properties: h)
 
       expect{
         post  'identify', {app_id: @app._id, actor_id: actor._id, uid: 'balu@gmail.com'}
@@ -66,11 +67,11 @@ describe ActorsController do
       actor = Actor.where(_id: actor._id).first
       actor.should be_blank
 
-      #check if property is assigned to newly mapped actor
-      p = Property.where(actor_id: @actor._id).first
+      #check if events is assigned to newly mapped actor
+      p = Event.where(actor_id: @actor._id).first
       p.should_not be_blank
 
-      response.status.should eq(200)
+      JSON.parse(response.body)["status"].should eq(200)
     end
   end
 
@@ -84,20 +85,21 @@ describe ActorsController do
         }
       }
       app = App.find(@app._id)
-      app.schema.should_not be_blank
+      app.schema["properties"].should_not be_blank
       puts app.schema.inspect
 
       post 'set', { app_id: @app._id, actor_id: @actor._id,
         properties: { :email => "john.doe@example.com",
-          :customer => {:address => {:city => {:geo =>{:lat => 23, :long => 34}, :name => "bangalore"}}
+          :customer => {:address => {:city => {:geo =>{:lat => 23, :long => 34}, :name => "bangalore"}, :place => ["hello"]}
           }
         }
       }
       app = App.find(@app._id)
+      app.schema["properties"].should_not be_blank
       puts app.schema.inspect
     end
 
-    it "should populate property table " do
+    it "should populate event table " do
       
       post 'set', { app_id: @app._id, actor_id: @actor._id,
         properties: { :email => "john.doe@example.com",
@@ -105,8 +107,34 @@ describe ActorsController do
           }
         }
       }
-      app = App.find(@app._id)
-      app.schema.should_not be_blank
+      post 'set', { app_id: @app._id, actor_id: @actor._id,
+        properties: { :email => "mon.doe@example.com",
+          :customer => {:address => {:city => "Pune"}
+          }
+        }
+      }
+      post 'set', { app_id: @app._id, actor_id: @actor._id,
+        properties: { :email => "tom.doe@example.com",
+          :customer => {:address => {:city => "Bangalore"}
+          }
+        }
+      }
+      p = Event.where("properties.k" => "customer[address][city]", "properties.v" => "Bangalore").all
+      p.size.should equal(2)
+      puts p.inspect
+    end
+  end
+
+  describe "create actor" do
+    it "should create actor properly" do
+      post 'create', { app_id: @app._id, 
+        properties: { :email => "john.doe@example.com",
+          :customer => {:address => {:city => "Bangalore"}
+          }
+        }
+      }
+      JSON.parse(response.body)["status"].should eq(200)
+      Actor.count.should eq(2)
     end
   end
 end

@@ -5,6 +5,8 @@ class Account
 
   # Relations
   has_many :apps, :dependent => :destroy
+  has_many :actors
+  has_many :events
 
   # Attributes
   ## Include default devise modules. Others available are:
@@ -70,7 +72,10 @@ class Account
   field :mobile,            :type => String
 
   ### Subscription
-  field :subscription,       :type => String,  :default => AppConstants.subscriptions.free.name
+  field :subscription,      :type => String,  :default => AppConstants.subscriptions.free.name
+
+  ### App Authentication
+  field :authenticate_app,  :type => Boolean, :default => true 
  
 
   # Setup accessible (or protected) attributes for your model

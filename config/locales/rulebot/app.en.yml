@@ -1,0 +1,8 @@
+en:
+  app:
+    update_failed: "App description update failed"
+    invalid_argument_in_update: "App id or Account id is missing !!"
+    invalid_app_id: "App not found.. Invalid app id" 
+    invalid_argument_in_delete: "Invalid arguments in Delete App"
+    invalid_argument_in_create: "Invalid arguments in Create App"
+    invalid_argument_in_read:   "Invalid arguments in Read App"

@@ -1,3 +1,4 @@
+require 'json'
 module ControllerMacros
   def login_account
     before(:each) do
@@ -7,4 +8,8 @@ module ControllerMacros
       sign_in  account# Using factory girl as an example
     end
   end
+end
+
+RSpec.configure do |config|
+  config.extend ControllerMacros, :type => :controller
 end

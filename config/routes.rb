@@ -21,6 +21,7 @@ Ganga::Application.routes.draw do
   post  '/identify',    :to => 'actors#identify'
   post  '/set',         :to => 'actors#set'
   post  '/alias',       :to => 'actors#alias'
+  post  '/create',      :to => 'actors#create'
   
   match '/:locale' => 'base#index'                                    
   root :to => "base#index"

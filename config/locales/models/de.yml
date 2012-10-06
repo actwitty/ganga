@@ -1,6 +1,0 @@
-de:
-  actors:
-    no_properties: 'No properties sent'
-    wrong_actor: 'UID and aktor id is not matching'
-    no_actor:  'No Aktor found'
-    no_uid:  'does not exist in app id '

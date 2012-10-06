@@ -13,21 +13,23 @@ module Utility
     ##                              }
     ##                            }
     ##                 }
+    ##        :serialize_to => "type" or "value" 
 
-    # OUTPUT => {"property.customer.address.geo.long"=>Float,
-    ##           "property.customer.address.geo.lat"=>Float,
-    ##           "property.customer.address.city"=>String,
-    ##           "property.customer.id"=>Fixnum,
+    # OUTPUT => {"property[customer][address][geo][long]"=>Float,
+    ##           "property[customer][address][geo][lat]"=>Float,
+    ##           "property[customer][address][city]"=>String,
+    ##           "property[customer][id]"=>Fixnum,
     ##           "location"=>String,
-    ##           "event.time"=>String,
-    ##           "event.name"=>String
+    ##           "event[time]"=>String,
+    ##           "event[name]"=>String
     ##           }
 
-    def self.hash_serialize(params)
+    def self.serialize_to(params)
       Rails.logger.info("Hash Serialize Enter")
       stack = []
       schema = {}
 
+      raise "Invalid arguments in serialize_to" if params[:serialize_to].blank?
       # initialize stack
       params[:hash].map {|p| stack << [{p[0] => p[1]}, {:path => "#{p[0]}"}]}
 
@@ -38,7 +40,13 @@ module Utility
           e[0].values[0].map {|p| stack << [{p[0] => p[1]}, {:path => "#{e[1][:path]}[#{p[0]}]"}]}
         else
           # process terminal element
-          schema[e[1][:path]] = "#{e[0].values[0].class}"
+          if params[:serialize_to] == "type"
+            schema[e[1][:path]] = "#{e[0].values[0].class}"
+          elsif params[:serialize_to] == "value"
+            schema[e[1][:path]]= e[0].values[0]
+          else
+            raise "Invalid Parameter: :serialize_to =>  #{params[:serialize_to]}"
+          end   
         end
       end while !stack.blank?
       schema

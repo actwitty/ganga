@@ -2,6 +2,7 @@
 
 FactoryGirl.define do
   factory :actor do
-    association :app, :factory => :app
+  	association :account, :factory => :account
+    association :app, :factory => :app 
   end
 end

@@ -12,6 +12,17 @@ class ApplicationController < ActionController::Base
     root_path
   end
 
+  # NOTE - If app authentication enabled then do app sign in also 
+  ##       otherwise account sign in is enough
+  def authenticate_app! 	
+  	if !current_account.authenticate_app.blank?
+  		Rails.logger.info("App authentication enabled")
+  		# sign in into app or redirect to login page
+  	else
+  		authenticate_account!
+  	end
+  end
+
  #def after_inactive_sign_up_path_for(resource_or_scope)
  #	waiting_path
  #end

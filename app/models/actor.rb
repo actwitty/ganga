@@ -3,17 +3,14 @@ class Actor
   include Mongoid::Timestamps
   
   # Relations
-  belongs_to   :app
+  belongs_to   :app, index: true
+  belongs_to   :account, index: true
 
-  has_many     :events,       :dependent => :destroy
-
-  ## Actor can have properties independent of event as well.. 
-  ## so explicit destroy is needed
-  has_many     :properties,   :dependent => :destroy
-  
+  has_many     :events,   :dependent => :destroy
   has_many     :identifiers,  :dependent => :destroy
 
   # Attributes
+  validates_presence_of :account_id, :app_id
 
   # Function  
 
@@ -24,13 +21,24 @@ class Actor
   ## will be identified as two different user.
   ## Identiy Any unique id which business want - email or any other id
 
-  # INPUT => {:app_id => "1234444',
-  ##          :actor_id => "23232323"
-  ##          :uid => "john.doe@example.com"}
+  # INPUT => 
+  ## {
+  ##  :account_id => '1222343'       [MANDATORY]
+  ##  :app_id => "1234444',          [MANDATORY]
+  ##  :actor_id => "23232323",       [OPTIONAL] ## if not give anonymous actor is created and
+  ##                                            ## if uid is not already existing in app_id then
+  ##                                            ## the uid is assigned to anonymous actor otherwise  
+  ##                                            ## actor_id of assigned actor is return
+  ##  :uid => "john.doe@example.com" [MANDATORY]
+  ## }
 
   # OUTPUT => {:return => actor_id, :error => nil}
   def self.identify(params)
     Rails.logger.info("Enter Actor Identify")
+
+    if params[:app_id].blank? or params[:account_id].blank? or params[:uid].blank? 
+      raise et("actor.invalid_argument_in_identify") 
+    end
 
     actor_id = nil
 
@@ -43,8 +51,8 @@ class Actor
     if params[:actor_id].blank?
       # if this is new actor
       if identifier.blank?
-        actor = Actor.create!(app_id: params[:app_id])
-        actor.identifiers.create!(app_id: params[:app_id], uid: params[:uid])
+        actor = Actor.create!(account_id: params[:account_id], app_id: params[:app_id])
+        actor.identifiers.create!(account_id: params[:account_id], app_id: params[:app_id], uid: params[:uid])
         Rails.logger.info("creating new actor and new identifier for #{params[:uid]}")
       
       else
@@ -56,8 +64,8 @@ class Actor
     else
       # create Identifier for the actor
       if identifier.blank?
-        identifier = Identifier.create!(app_id: params[:app_id], actor_id: params[:actor_id], uid: params[:uid])
-        Rails.logger.info("Creating Identifier #{params[uid]} for Anonymous actor")
+        identifier = Identifier.create!(account_id: params[:account_id], app_id: params[:app_id], actor_id: params[:actor_id], uid: params[:uid])
+        Rails.logger.info("Creating Identifier #{params[:uid]} for Anonymous actor")
       else
         actor = Actor.find(params[:actor_id])
         
@@ -81,53 +89,25 @@ class Actor
 
 
   # NOTE
-  ## set the property of actor explicitly
-
-  # INPUT
-  ## {:app_id => "1234444',
-  ##  :actor_id => "1223343",
-  ##  :properties => {
-  ##      :email => "john.doe@example.com",
-  ##      :customer => {:address => {:city => "Bangalore"}}}
-  ## }
-
-  # OUTPUT => {:return => true, :error => nil}
-  def self.set(params)
-    Rails.logger.info("Enter Set Property of Actor")
-    
-    if !params[:properties].blank?
-      #get app object
-      app = App.find(params[:app_id])
-
-      Property.create!(actor_id: params[:actor_id], properties: params[:properties])
-      
-      schema = Utility.hash_serialize(hash: params[:properties])   
-      app.update_schema(event: AppsConstant.event_set_actor_property, properties: schema)   
-    else
-      raise et("actor.no_property")
-    end
-
-    {:return => true, :error => nil}
-  
-  rescue => e
-    Rails.logger.error("**** ERROR **** #{er(e)}")
-    {:return => false, :error => e}
-  end
-
-
-  # NOTE
   ## set a new identifier(alias) of actor
 
   # INPUT
-  ## {app_id: "1234444',
-  ##  actor_id: "1223343",
-  ##  uid: "john.doe@example.com", 
-  ##  identifier: "+1-9911231234"
+  ## {
+  ##   account_id: "123436456"       [MANDATORY]
+  ##   app_id: "1234444',            [MANDATORY]
+  ##   actor_id: "1223343",          [MANDATORY]
+  ##   uid: "john.doe@example.com",  [MANDATORY]
+  ##   identifier: "+1-9911231234"   [MANDATORY]
   ## }
 
   # OUTPUT => {:return => true, :error => nil}
   def self.alias(params)
     Rails.logger.info("Enter Actor Alias")
+
+    if params[:account_id].blank? or params[:app_id].blank? or 
+          params[:actor_id].blank? or params[:uid].blank? or params[:identifier].blank?
+      raise et("actor.invalid_argument_in_alias")
+    end
 
     # check if this user exists already
     uid = Identifier.where(app_id: params[:app_id], uid: params[:uid] ).first
@@ -138,7 +118,7 @@ class Actor
     a = Identifier.where(app_id: params[:app_id], uid: params[:identifier], actor_id: params[:actor_id]).first
     
     if a.blank?   
-      Identifier.create!(app_id: params[:app_id], actor_id: params[:actor_id], uid: params[:identifier] )
+      Identifier.create!(account_id: params[:account_id], app_id: params[:app_id], actor_id: params[:actor_id], uid: params[:identifier] )
     end
 
     {:return => true, :error => nil}
@@ -162,7 +142,6 @@ class Actor
     Rails.logger.info("Actor Remap #{actor_id}")
     
     Event.where(:actor_id => self._id).update_all(:actor_id => actor_id)
-    Property.where(:actor_id => self._id).update_all(:actor_id => actor_id)
     Identifier.where(:actor_id => self._id).update_all(:actor_id => actor_id)
 
     self.destroy
