@@ -21,7 +21,7 @@ class EventsController < ApplicationController
     Rails.logger.info("Enter Actor Set")
 
     params[:account_id] = current_account._id
-    ret = Event.create!(params)
+    ret = Event.add!(params)
 
     raise ret[:error] if !ret[:error].blank?
 

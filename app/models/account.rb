@@ -7,6 +7,7 @@ class Account
   has_many :apps, :dependent => :destroy
   has_many :actors
   has_many :events
+  has_many :identifiers
 
   # Attributes
   ## Include default devise modules. Others available are:
@@ -53,30 +54,14 @@ class Account
   ## Token authenticatable
   ### field :authentication_token, :type => String
 
-  ## Other attributes for Profile
-  ### Identity
-  field :name,              :type => String, :default => ""
-  validates_presence_of :name
+  ## Account Description
+  field :description,   type:    Hash,      :default => {
+                                                           subscription: AppConstants.subscriptions.free.name,
+                                                           authenticate_app: true 
+                                                        }
 
-  field :photo,             :type => String
-
-  ### Address
-  field :address,           :type => String
-  field :city,              :type => String
-  field :country,           :type => String
-  field :region,            :type => String
-  field :pin_code,          :type => String
-
-  ### Contact
-  field :office,            :type => String
-  field :mobile,            :type => String
-
-  ### Subscription
-  field :subscription,      :type => String,  :default => AppConstants.subscriptions.free.name
-
-  ### App Authentication
-  field :authenticate_app,  :type => Boolean, :default => true 
- 
+  field :name,         type:  String,   default: "" 
+  validates_presence_of  :name
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :name, :email, :password, :password_confirmation, :remember_me, :confirmed_at, :password_unset
@@ -85,7 +70,63 @@ class Account
   before_create :foo
   before_destroy :remove_user_from_mailchimp 
 
-  
+  # Functions
+
+  # INPUT
+  ## {  
+  ##    :account_id => "1212121212"      [MANDATORY]
+  ##    :events => true or false         [OPTIONAL] # events 
+  ## }
+
+  # OUTPUT =>{ 
+  ##            account: {id: "445654654645", name: "Sudhanshu & Sons Chaddhi Wale", description: {subscription: "Free", authenticate_app: false}},
+  ##            events: [
+  ##                      {
+  ##                        app: {id: "343433433"}
+  ##                        actor: { id: "3433434", description: {"name":  "John Doe","email": "john@doe.com"}
+  ##          
+  ##                        name: "sign_in", 
+  ##                        properties: [{"k" => "name", "v" => "alok"}, {"k" => "address[city]", "v" => "Bangalore"}]
+  ##                        time: 2009-02-19 00:00:00 UTC
+  ##                      },
+  ##                      {..}
+  ##                    ]
+  ##        }
+  def self.read(params)
+
+    Rails.logger.info("Enter Account Read")
+
+    hash = {events: []}
+
+    if params[:account_id].blank? 
+      raise et("account.invalid_argument_in_read")
+    end
+
+    account = Account.find(params[:account_id])
+
+    puts "=============================="
+    raise et("account.invalid_account_id", id: params[:account_id]) if account.blank?
+
+    hash[:account] = {id: account._id, description: account.description}
+
+    if params[:events] == true
+      events = Event.includes(:actor, :app).where( account_id: params[:account_id], meta: false ).all
+      events.each do |attr|
+        hash[:events] << {
+                          app: {id: attr.app_id, description: attr.app.description},
+                          actor: {id: attr.actor_id, description: attr.actor.description}, 
+                          name: attr.name, properties: attr.properties, time: attr.created_at
+                         }
+      end
+    end
+
+    {:return => hash, :error => nil}  
+  rescue => e
+    Rails.logger.error("**** ERROR **** #{er(e)} #{$!.backtrace}")
+    {:return => {}, :error => e}  
+  end
+
+
   # new function to set the password
   def attempt_set_password(params)
     p = {}

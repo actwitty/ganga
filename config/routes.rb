@@ -21,10 +21,27 @@ Ganga::Application.routes.draw do
   post   '/submitRule' , :to => 'rules#submitRule'
   get '/rules/editRule' , :to => 'rules#editRule'
 
-  post  '/identify',    :to => 'actors#identify'
-  post  '/set',         :to => 'actors#set'
-  post  '/alias',       :to => 'actors#alias'
-  post  '/create',      :to => 'actors#create'
+  # Actor Api
+  post  '/actor/create',      :to => 'actors#create'
+  get   '/actor/read',        :to => 'actors#read'
+  post  '/actor/identify',    :to => 'actors#identify'
+  post  '/actor/set',         :to => 'actors#set'
+  post  '/actor/alias',       :to => 'actors#alias'
+
+
+  # App Api
+  post '/app/create',         :to => 'apps#create'
+  get  '/app/read',           :to => 'apps#read'
+  post '/app/update',         :to => 'apps#update'
+  post '/app/delete',         :to => 'apps#delete'
+
+  # Event Api
+  post '/event/create',       :to => 'events#create'
+
+  # Account Api
+  get  '/account/read',       :to => 'accounts#read'
+    
+
   
   match '/:locale' => 'base#index'                                    
   root :to => "base#index"

@@ -1,3 +1,5 @@
+require 'utility'
+
 class Actor
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -11,6 +13,13 @@ class Actor
 
   # Attributes
   validates_presence_of :account_id, :app_id
+  index({app_id: 1, _id: 1})
+
+  ## {
+  ##     "name" => "John Doe",
+  ##     "email" => "john@doe.com"
+  ## }
+  field       :description, type:    Hash,      :default => {} # can be empty 
 
   # Function  
 
@@ -23,13 +32,14 @@ class Actor
 
   # INPUT => 
   ## {
-  ##  :account_id => '1222343'       [MANDATORY]
-  ##  :app_id => "1234444',          [MANDATORY]
-  ##  :actor_id => "23232323",       [OPTIONAL] ## if not give anonymous actor is created and
+  ##   account_id:  '1222343'       [MANDATORY]
+  ##   app_id:  "1234444',          [MANDATORY]
+  ##   actor_id:  "23232323",       [OPTIONAL] ## if not give anonymous actor is created and
   ##                                            ## if uid is not already existing in app_id then
   ##                                            ## the uid is assigned to anonymous actor otherwise  
   ##                                            ## actor_id of assigned actor is return
-  ##  :uid => "john.doe@example.com" [MANDATORY]
+  ##   uid:  "john.doe@example.com" [MANDATORY]
+  ##   type:  "mobile"              [OPTIONAL]
   ## }
 
   # OUTPUT => {:return => actor_id, :error => nil}
@@ -64,8 +74,8 @@ class Actor
     else
       # create Identifier for the actor
       if identifier.blank?
-        identifier = Identifier.create!(account_id: params[:account_id], app_id: params[:app_id], actor_id: params[:actor_id], uid: params[:uid])
-        Rails.logger.info("Creating Identifier #{params[:uid]} for Anonymous actor")
+        identifier = Identifier.create!(account_id: params[:account_id], app_id: params[:app_id], actor_id: params[:actor_id], uid: params[:uid], type: params[:type])
+        Rails.logger.info("Creating Identifier #{params[:uid]} for actor #{params[:actor_id]}")
       else
         actor = Actor.find(params[:actor_id])
         
@@ -89,15 +99,60 @@ class Actor
 
 
   # NOTE
+  ## set the property of actor explicitly
+
+  # INPUT
+  ## {
+  ##  :account_id =>'2121121' [MANDATORY]
+  ##  :app_id => "1234444',   [MANDATORY]
+  ##  :actor_id => "1223343", [MANDATORY]  
+  ##  :properties => {        [MANDATORY]
+  ##      :email => "john.doe@example.com",
+  ##      :customer => {:address => {:city => "Bangalore"}}}
+  ## }
+
+  # OUTPUT => {:return => object, :error => nil}
+
+  def self.set(params)
+    Rails.logger.info("Enter Actor Set")
+
+    if params[:account_id].blank? or params[:app_id].blank? or params[:actor_id].blank? or params[:properties].blank?
+      raise et("actor.invalid_argument_in_set") 
+    end
+    
+    params[:name] = AppConstants.event_set_actor_property
+    params[:meta] =  true 
+
+    # save event
+    ret = Event.add!(params)
+    raise ret[:error] if !ret[:error].blank?
+
+    # save the properties of actor in description
+    actor = Actor.find(params[:actor_id])
+    desc = Utility.serialize_to(hash: params[:properties], serialize_to: "value")
+    desc.each do |k,v|
+      actor.description[k] = v
+    end
+
+    Rails.logger.info("Saving Actor Description")
+    actor.save!
+
+    {:return => actor, :error => nil}
+  rescue => e
+    Rails.logger.error("**** ERROR **** #{er(e)}")
+    {:return => false, :error => e}
+  end
+
+  # NOTE
   ## set a new identifier(alias) of actor
 
   # INPUT
   ## {
   ##   account_id: "123436456"       [MANDATORY]
   ##   app_id: "1234444',            [MANDATORY]
-  ##   actor_id: "1223343",          [MANDATORY]
   ##   uid: "john.doe@example.com",  [MANDATORY]
-  ##   identifier: "+1-9911231234"   [MANDATORY]
+  ##   new_uid: "+1-9911231234"      [MANDATORY]
+  ##   type:  "mobile"               [OPTIONAL]
   ## }
 
   # OUTPUT => {:return => true, :error => nil}
@@ -105,29 +160,109 @@ class Actor
     Rails.logger.info("Enter Actor Alias")
 
     if params[:account_id].blank? or params[:app_id].blank? or 
-          params[:actor_id].blank? or params[:uid].blank? or params[:identifier].blank?
+       params[:uid].blank? or params[:new_uid].blank?
       raise et("actor.invalid_argument_in_alias")
     end
 
     # check if this user exists already
     uid = Identifier.where(app_id: params[:app_id], uid: params[:uid] ).first
     raise et("actor.no_uid", uid: params[:uid], app_id: params[:app_id]) if uid.blank? 
-    raise et("actor.no_actor") if uid.actor_id != params[:actor_id]
 
-    # check if Identifier is already exists with this actor
-    a = Identifier.where(app_id: params[:app_id], uid: params[:identifier], actor_id: params[:actor_id]).first
+    # check if Identifier is already exists
+    a = Identifier.where(app_id: params[:app_id], uid: params[:new_uid]).first
     
     if a.blank?   
-      Identifier.create!(account_id: params[:account_id], app_id: params[:app_id], actor_id: params[:actor_id], uid: params[:identifier] )
+      Identifier.create!(account_id: params[:account_id], app_id: params[:app_id], actor_id: uid.actor_id, uid: params[:new_uid], type: params[:type] )
+    else
+      raise et("actor.identifier_already_exist", identifier: params[:new_uid], actor_id: a.actor_id) if uid.actor_id != a.actor_id
+      Rails.logger.info("#{params[:uid]} and #{params[:new_uid]} already aliased")
     end
 
     {:return => true, :error => nil}
   rescue => e
-    Rails.logger.error("**** ERROR **** #{er(e)}")
+    Rails.logger.error("**** ERROR **** #{er(e)} #{params.inspect}")
     {:return => false, :error => e}
   end
 
+  # NOTE
+  ## set a new identifier(alias) of actor
 
+  # INPUT
+  ## {
+  ##   account_id: "23232332"        [MANDATORY]
+  ##   app_id: "1234444',            [MANDATORY]
+  ##
+  ##   actor_id: "3433434",          [OPTIONAL] 
+  ##           OR
+  ##   identifiers: true or false    [OPTIONAL] # associated identifiers 
+  ##   events: true or false         [OPTIONAL] # events 
+  ## }
+
+  # OUTPUT => {
+  ##            account: {id: "232342343"}
+  ##            app: {id: "234324"}
+  ##
+  ##            actor: {id: "3433434", description:  {  "name": "John Doe",   "email": "john@doe.com" } }
+  ##            identifiers: [{"a@b.com" => "email"}, {"9999999" => "mobile"}, {"34433444" => "facebook_uid"}],
+  ##
+  ##            events: [
+  ##                      {
+  ##                         name: "sign_in", 
+  ##                         properties: [{"k" => "name", "v" => "alok"}, {"k" => "address[city]", "v" => "Bangalore"}]
+  ##                         time: 2009-02-19 00:00:00 UTC
+  ##                      },
+  ##                      {...}
+  ##                    ]
+  ##          }
+  def self.read(params)
+    Rails.logger.info("Enter Actor Read")
+
+    hash = {identifiers: [], events: [] }
+    actor_id = nil
+    actor = nil
+
+    if params[:account_id].blank? or params[:app_id].blank? or 
+      (params[:actor_id].blank? and params[:uid].blank?)
+      raise et("actor.invalid_argument_in_read")
+    end
+    
+    if params[:actor_id].blank? 
+      identifier = Identifier.where(app_id: params[:app_id], uid: params[:uid]).first
+      actor_id = identifier.actor_id if !identifier.blank?
+    else
+      # checks if app and actor are
+      actor = Actor.where(app_id: params[:app_id], id: params[:actor_id]).first   
+      actor_id = actor._id if !actor.blank?
+    end
+    
+    raise et("actor.no_actor") if actor_id.blank?  
+
+    actor = Actor.find(actor_id) if actor.blank?
+    raise et("actor.actor_id_is_not_existing", id: actor_id) if actor.blank?
+
+    hash[:account] = {id: actor.account_id}
+    hash[:app] = {id: actor.app_id} 
+    hash[:actor] = {id: actor_id}
+    hash[:actor][:description] = actor.description 
+    
+
+    if params[:identifiers] == true
+      ids = Identifier.where(actor_id: actor_id).all
+      ids.each {|attr| hash[:identifiers] << {attr.uid => attr.type}}
+      Rails.logger.info("Adding Identifiers")
+    end
+    
+    if params[:events] == true
+      events = Event.where(actor_id: actor_id, meta: false).all
+      events.each {|attr| hash[:events] << {name: attr.name, properties: attr.properties, time: attr.created_at}}
+      Rails.logger.info("Adding Events")
+    end
+
+    {:return => hash, :error => nil}    
+  rescue => e 
+    Rails.logger.error("**** ERROR **** #{er(e)}")
+    {:return => {}, :error => e}
+  end
 
   # NOTE
   ## Remaps an actor to already existing actor.

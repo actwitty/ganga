@@ -35,4 +35,38 @@ class AccountsController < ApplicationController
       end
     end
   end
+
+  # INPUT
+  ## {  
+  ##    :events => true or false         [OPTIONAL] # events 
+  ## }
+
+  # OUTPUT =>{ 
+  ##            account: {id: "445654654645", name: "Sudhanshu & Sons Chaddhi Wale", description: {subscription: "Free", authenticate_app: false}},
+  ##            events: [
+  ##                      {
+  ##                        app: {id: "343433433"}
+  ##                        actor: { id: "3433434", description: {"name":  "John Doe","email": "john@doe.com"}
+  ##          
+  ##                        name: "sign_in", 
+  ##                        properties: [{"k" => "name", "v" => "alok"}, {"k" => "address[city]", "v" => "Bangalore"}]
+  ##                        time: 2009-02-19 00:00:00 UTC
+  ##                      },
+  ##                      {..}
+  ##                    ]
+  ##        }
+  def read
+    Rails.logger.info("Enter Account read")
+
+    params[:account_id] = current_account._id if Rails.env != "test"
+    ret = Account.read(params)
+
+    raise ret[:error] if !ret[:error].blank?
+  
+    render json: ret[:return], status: 200      
+  rescue => e
+    Rails.logger.error("**** ERROR **** #{er(e)}")
+    render json: { errors: e.message}, status: 422
+  end
+
 end

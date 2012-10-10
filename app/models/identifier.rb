@@ -17,4 +17,7 @@ class Identifier
   index({uid: 1, actor_id: 1}, {unique: true})
   
   index(actor_id: 1)
+
+  field :type ,     type: String,    default: ""
+  index(type: 1)
 end

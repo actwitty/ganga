@@ -23,7 +23,7 @@ development: &default
       price:              1000
 
   # Fixed Events
-  event_set_actor_property: "set_actor_property"
+  event_set_actor_property: "__set_actor_property__"
 
   # Service Keys
   facebook_app_id:      '244515575666539'

@@ -6,6 +6,5 @@ FactoryGirl.define do
   	password "lemonyssecret"
   	password_confirmation { |u| u.password }
   	sequence(:name){|n| "Account Name #{n}" }
-  	sequence(:photo ){|n| "images/id_#{n}" }
   end
 end

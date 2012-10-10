@@ -16,7 +16,13 @@ class ActorsController < ApplicationController
   ##      :customer => {:address => {:city => "Bangalore"}}}
   ## }
 
-  # OUTPUT => {:return => actor_id, :error => nil}
+  # OUTPUT => {
+  ##             "id"=>"50742b0063fe85d42a000005",
+  ##             "account_id"=>"50742aff63fe85d42a000001", 
+  ##             "app_id"=>"50742b0063fe85d42a000003",
+  ##             "created_at"=>"2012-10-09T13:47:44Z", "updated_at"=>"2012-10-09T13:47:44Z",
+  ##             "description"=>{"customer[address][city]"=>"Bangalore", "email"=>"john.doe@example.com"}, 
+  ##          }
   def create
     Rails.logger.info("Enter Create Actor")
 
@@ -26,18 +32,26 @@ class ActorsController < ApplicationController
 
     raise et("actor.create_failed") if obj.blank?
 
+    params[:actor_id] = obj._id
+
     if !params[:properties].blank?
-      params[:name] = AppConstants.event_set_actor_property
-      ret = Event.add!(params)
+      ret = Actor.set(params)
+
       if !ret[:error].blank?
         Rails.logger.warn("^^^^ WARN ^^^^ #{ret[:error].message}")
       end
+
+      obj = ret[:return]
     end
 
-    render json: {object: obj}, status: 200 
+    hash = obj.reload.attributes
+    hash["id"] = hash["_id"]
+    hash.delete("_id")
+
+    render json: hash, status: 200 
   rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    render json: { errors: e , status: 422}
+    render json: { errors: e.message} , status: 422
   end
   # NOTE
   ## Uniqly identify an actor..
@@ -48,15 +62,17 @@ class ActorsController < ApplicationController
 
   # INPUT => 
   ## {
-  ##  :app_id => "1234444',          [MANDATORY]
-  ##  :actor_id => "23232323",       [OPTIONAL] ## if not give anonymous actor is created and
+  ##   app_id:    "1234444',          [MANDATORY]
+  ##   actor_id:  "23232323",       [OPTIONAL]  ## if not give anonymous actor is created and
   ##                                            ## if uid is not already existing in app_id then
   ##                                            ## the uid is assigned to anonymous actor otherwise  
   ##                                            ## actor_id of assigned actor is return
-  ##  :uid => "john.doe@example.com" [MANDATORY]
+  ##   uid:  "john.doe@example.com" [MANDATORY]
+  ##   type:  "mobile"              [OPTIONAL]
   ## }
 
-  # OUTPUT => {:return => actor_id, :error => nil}
+
+  # OUTPUT => {:actor_id => 1232323}
   def identify
     Rails.logger.info("Enter Actor Identify")
 
@@ -68,7 +84,7 @@ class ActorsController < ApplicationController
     render json: {actor_id: ret[:return]}, status: 200 
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    render json: { errors: e , status: 422}
+    render json: { errors: e.message} , status: 422
   end
 
   # NOTE
@@ -83,27 +99,32 @@ class ActorsController < ApplicationController
   ##      :customer => {:address => {:city => "Bangalore"}}}
   ## }
 
-  # OUTPUT => {status: true}
+  # OUTPUT => {
+  ##             "id"=>"50742b0063fe85d42a000005",
+  ##             "account_id"=>"50742aff63fe85d42a000001", 
+  ##             "app_id"=>"50742b0063fe85d42a000003",
+  ##             "created_at"=>"2012-10-09T13:47:44Z", "updated_at"=>"2012-10-09T13:47:44Z",
+  ##             "description"=>{"customer[address][city]"=>"Bangalore", "email"=>"john.doe@example.com"}, 
+  ##          }
+
 
   def set
     Rails.logger.info("Enter Actor Set")
 
-    if params[:actor_id].blank?
-      raise et("actor.invalid_argument_in_set") 
-    end
-
     params[:account_id] = current_account._id
-    params[:name] = AppConstants.event_set_actor_property
 
-    ret = Event.add!(params)
+    ret = Actor.set(params)
 
     raise ret[:error] if !ret[:error].blank?
 
-    render json: {status: ret[:return]}, status: 200
+    hash = ret[:return].attributes
+    hash["id"] = hash["_id"]
+    hash.delete("_id")
 
+    render json: hash, status: 200
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    render json: { errors: e , status: 422}
+    render json: { errors: e.message }, status: 422
   end
 
   # NOTE
@@ -112,12 +133,11 @@ class ActorsController < ApplicationController
   # INPUT
   ## {
   ##   app_id: "1234444',            [MANDATORY]
-  ##   actor_id: "1223343",          [MANDATORY]
   ##   uid: "john.doe@example.com",  [MANDATORY]
-  ##   identifier: "+1-9911231234"   [MANDATORY]
+  ##   new_uid: "+1-9911231234"   [MANDATORY]
   ## }
 
-  # OUTPUT => {:return => true, :error => nil}
+  # OUTPUT => {:status => true}
   def alias
     Rails.logger.info("Enter Actor Alias")
 
@@ -130,6 +150,52 @@ class ActorsController < ApplicationController
 
   rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    render json: { errors: e , status: 422}
+    render json: { errors: e.message} , status: 422
+  end
+
+  # NOTE
+  ## set a new identifier(alias) of actor
+
+  # INPUT
+  ## {
+  ##   app_id: "1234444',            [MANDATORY]
+  ##
+  ##   actor_id: "3433434",          [OPTIONAL] 
+  ##           OR
+  ##   uid: "john.doe@example.com",  [OPTIONAL] 
+  ##
+  ##   identifiers: true or false     [OPTIONAL] # associated identifiers 
+  ##   events: true or false         [OPTIONAL] # events  
+  ## }
+
+  # OUTPUT => {
+  ##            account: {id: "232342343"}
+  ##            app: {id: "234324"}
+  ##
+  ##            actor: {id: "3433434", description:  {  "name": "John Doe",   "email": "john@doe.com" } }
+  ##            identifiers: [{"a@b.com" => "email"}, {"9999999" => "mobile"}, {"34433444" => "facebook_uid"}],
+  ##
+  ##            events: [
+  ##                      {
+  ##                         name: "sign_in", 
+  ##                         properties: [{"k" => "name", "v" => "alok"}, {"k" => "address[city]", "v" => "Bangalore"}]
+  ##                         time: 2009-02-19 00:00:00 UTC
+  ##                      },
+  ##                      {...}
+  ##                    ]
+  ##          }
+  def read
+    Rails.logger.info("Enter Actor Read")
+
+    params[:account_id] = current_account._id
+    ret = Actor.read(params)
+
+    raise ret[:error] if !ret[:error].blank?
+
+    render json: ret[:return], status: 200
+
+  rescue => e 
+    Rails.logger.error("**** ERROR **** #{er(e)}")
+    render json: { errors: e.message} , status: 422
   end
 end

@@ -7,20 +7,26 @@ class Event
   # Relations
   belongs_to   :actor
   belongs_to   :app
-  belongs_to   :account, 		index: true
-  # embeds_many  :properties
+  belongs_to   :account
+  #embeds_many  :properties
   
   # Atrributes
   validates_presence_of :account_id, :app_id, :actor_id
   
-  field :name,      type: String,      default: ""
+  field :name,        type: String,      default: ""
   validates_presence_of  :name
-  index(app_id: -1, actor_id: -1, name: -1)
-  index(actor_id: -1, name: -1)
-  index(name: -1)
 
-  field :properties, type: Array, default: []
-  index('properties.key' => 1, 'properties.value' => 1)
+
+  field :meta,        type: Boolean,     default: false
+  index({app_id: -1, meta: -1})
+  index({actor_id: -1, meta: -1})
+  index({account_id: -1, meta: -1})
+
+  field :properties,  type: Array,      default: []
+  index({"properties.k" => -1, "properties.v" => -1})
+
+  index({updated_at: -1})
+  index({created_at: -1})
 
   # Callbacks
 
@@ -33,8 +39,9 @@ class Event
   ## {
   ##  :account_id => "343434",[MANDATORY]
   ##  :app_id => "1234444',   [MANDATORY]
-  ##  :actor_id => "1223343", [OPTIONAL]  #if not given, anonymous actor is created
-  ##  :name =>    "sign_up", [MANDATORY] # event name is case sensitive
+  ##  :actor_id => "1223343", [OPTIONAL]  # if not given, anonymous actor is created
+  ##  :name =>    "sign_up",  [MANDATORY] # event name is case sensitive
+  ##  :meta =>  true or false [OPTIONAL]  # true only for internal events like set actor property
   ##  :properties => {        [MANDATORY]
   ##      :email => "john.doe@example.com",
   ##      :customer => {:address => {:city => "Bangalore"}}}
@@ -42,15 +49,16 @@ class Event
 
   # OUTPUT => {:return => true, :error => nil}
   def self.add!(params)
-    Rails.logger.info("Enter Set Property of Actor")
+    Rails.logger.info("Enter Event Create")
     
-    if params[:account_id].blank? and params[:app_id].blank? or params[:name].blank? or params[:properties].blank?
+    if params[:account_id].blank? or params[:app_id].blank? or params[:name].blank? or params[:properties].blank?
       raise et("event.invalid_argument_in_event") 
     end
 
     # create anonymous actor if actor is blank
     if params[:actor_id].blank?
-      Actor.create!(account_id: params[:account_id], app_id: params[:app_id])
+      actor = Actor.create!(account_id: params[:account_id], app_id: params[:app_id])
+      params[:actor_id] = actor._id 
       Rails.logger.info("creating anonymous actor")
     end
 
@@ -58,7 +66,7 @@ class Event
     app = App.find(params[:app_id])
 
     # Build event 
-    e = new(account_id: params[:account_id], app_id: params[:app_id], actor_id: params[:actor_id], name: params[:name])
+    ev = new(account_id: params[:account_id], app_id: params[:app_id], actor_id: params[:actor_id], name: params[:name])
    
     # create properties of event
     serialized = Utility.serialize_to(hash: params[:properties], serialize_to: "value")   
@@ -67,21 +75,21 @@ class Event
     # add it to events object
     serialized.each do |k,v|
       #e.properties << Property.new(k: k, v: v)
-      e.properties << {k: k, v: v}
+      ev.properties << {k: k, v: v}
     end
-    # save event object
-    e.save!
 
-    puts e.inspect
-    puts e.properties.inspect
-    
+    ev.meta = true if params[:meta] == true
+
+    # save event object
+    ev.save!
+
     ret = app.update_schema(event: params[:name], properties: params[:properties])
      
     raise et("event.create_failed") unless ret[:error].blank?
 
-    {:return => true, :error => nil}  
+    {:return => ev, :error => nil}  
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    {:return => false, :error => e}
+    {:return => nil, :error => e}
   end
 end

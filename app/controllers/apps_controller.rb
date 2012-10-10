@@ -14,7 +14,27 @@ class AppsController < ApplicationController
   ##        :address => {:city => "Bangalore"}}
   ## }
 
-  # OUTPUT => {object json}
+  # OUTPUT => {
+  ##					  "_id"=>"5074143063fe853420000005", 
+  ##
+  ##						"account_id"=>"5074143063fe853420000001", 
+  ##
+  ##            "created_at"=>"2012-10-09T12:10:24Z", "updated_at"=>"2012-10-09T12:10:24Z",
+  ##
+  ##            "description"=>{"email"=>"john.doe@example.com", "customer"=>{"address"=>{"city"=>"Bangalore"}}, "domain"=>"http://example.com"}, 
+  ##
+  ##            "schema"=>{ ## EXAMPLE
+  ##                        properties: {
+  ##        															'customer[email]' => { 
+  ##                                															"String" => ["set_actor", "sign_up"] ,
+  ##                                															"Fixnum" => ["purchased", "sign_in"] 
+  ##                             															 }
+  ##      															}
+  ##      									events: {
+  ##        															'sign_up' => {"name" => String, "address[city]" => "String"}
+  ##      													} 
+  ##          						}
+  ##         }
 	def create
 		Rails.logger.info("Enter App Create")
 
@@ -24,10 +44,14 @@ class AppsController < ApplicationController
 	
 		obj = App.create!(account_id: current_account._id, description: params[:description])
 
-		render json: {object: obj}, status: 200			
+		hash = obj.attributes
+		hash["id"] = hash["_id"]
+		hash.delete("_id")
+
+	  render json: hash, status: 200			
 	rescue => e
-		Rails.logger.error("**** ERROR **** #{e.message}")
-		render json: { errors: e , status: 422}
+		Rails.logger.error("**** ERROR **** #{er(e)}")
+		render json: { errors: e.message} , status: 422
 	end
 
 
@@ -47,12 +71,12 @@ class AppsController < ApplicationController
 			raise et("app.invalid_argument_in_delete") 
 		end
 
-		App.where(_id: params[:app_id], account_id: current_account._id).destroy
+		App.where(account_id: current_account._id , _id: params[:app_id]).destroy
 
 		render json: {status: true}, status: 200			
 	rescue => e
-		Rails.logger.error("**** ERROR **** #{e.message}")
-		render json: { errors:  e, status: 422}
+		Rails.logger.error("**** ERROR **** #{er(e)}")
+		render json: { errors:  e.message}, status: 422
 	end
 
 
@@ -69,7 +93,27 @@ class AppsController < ApplicationController
   ##      :address => {:city => "Bangalore"}}
   ## }
 
-  # OUTPUT => {:return => true, :error => nil}
+  # OUTPUT => {
+  ##					  "_id"=>"5074143063fe853420000005", 
+  ##
+  ##						"account_id"=>"5074143063fe853420000001", 
+  ##
+  ##            "created_at"=>"2012-10-09T12:10:24Z", "updated_at"=>"2012-10-09T12:10:24Z",
+  ##
+  ##            "description"=>{"email"=>"john.doe@example.com", "customer"=>{"address"=>{"city"=>"Bangalore"}}, "domain"=>"http://example.com"}, 
+  ##
+  ##            "schema"=>{ ## EXAMPLE
+  ##                        properties: {
+  ##        															'customer[email]' => { 
+  ##                                															"String" => ["set_actor", "sign_up"], 
+  ##                                															"Fixnum" => ["purchased", "sign_in"] 
+  ##                             															 }
+  ##      															}
+  ##      									events: {
+  ##        															'sign_up' => {"name" => String, "address[city]" => "String"}
+  ##      													} 
+  ##          						}
+  ##         }
 	def update
 		Rails.logger.info("Enter App Update")
 		
@@ -78,10 +122,14 @@ class AppsController < ApplicationController
 
 		raise ret[:error] if !ret[:error].blank?
 
-		render json: {object: ret[:return]}, status: 200			
+		hash = ret[:return].attributes
+		hash["id"] = hash["_id"]
+		hash.delete("_id")
+
+		render json: hash, status: 200			
 	rescue => e
 		Rails.logger.error("**** ERROR **** #{er(e)}")
-		render json: { errors: e, status: 422}
+		render json: { errors: e.message}, status: 422
 	end	
 
 
@@ -90,22 +138,51 @@ class AppsController < ApplicationController
 
   # INPUT
   ## {  
-  ##  	:app_id => 123                [MANDATORY]
+  ##  	:app_id => 123      [MANDATORY]
+  ##    :events => true or false         [OPTIONAL] # events 
   ## }
 
-  # OUTPUT => {object json}
+  # OUTPUT =>{ 
+  ##            account: {id: "445654654645"},
+  ##
+  ##            app: {
+  ##                   id: "4545554654645", 
+  ##                   description: {"name": "my app", "domain": "http://myapp.com"}, 
+  ##                   schema: {
+  ##                             properties: {
+  ##                                           'customer[email]' => { 
+  ##                                                                   "String" => ["set_actor", "sign_up"],
+  ##                                                                   "Fixnum" => ["purchased", "sign_in"]
+  ##                                         }
+  ##                           
+  ##                             events: {
+  ##                                           'sign_up' => {"name" => String, "address[city]" => "String"}
+  ##                                     }
+  ##                           } 
+  ##                 }  
+  ##
+  ##            events: [
+  ##                      {
+  ##                        actor: { id: "3433434", description: {"name":  "John Doe","email": "john@doe.com"}
+  ##          
+  ##                        name: "sign_in", 
+  ##                        properties: [{"k" => "name", "v" => "alok"}, {"k" => "address[city]", "v" => "Bangalore"}]
+  ##                        time: 2009-02-19 00:00:00 UTC
+  ##                      },
+  ##                      {..}
+  ##                    ]
+  ##        }
 	def read
 		Rails.logger.info("Enter App read")
 
-		if  params[:app_id].blank?
-			raise et("app.invalid_argument_in_read") 
-		end
+		params[:account_id] = current_account._id
+		ret = App.read(params)
 		
-		obj = App.where(_id: params[:app_id], account_id: current_account._id).first
+		raise ret[:error] if !ret[:error].blank?
 
-		render json: {object: obj}, status: 200			
+		render json: ret[:return], status: 200			
 	rescue => e
-		Rails.logger.error("**** ERROR **** #{e.message}")
-		render json: { errors: e, status: 422}
+		Rails.logger.error("**** ERROR **** #{er(e)}")
+		render json: { errors: e.message}, status: 422
 	end
 end

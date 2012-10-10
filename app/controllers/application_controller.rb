@@ -15,11 +15,10 @@ class ApplicationController < ActionController::Base
   # NOTE - If app authentication enabled then do app sign in also 
   ##       otherwise account sign in is enough
   def authenticate_app! 	
-  	if !current_account.authenticate_app.blank?
+    puts current_account.inspect
+  	if !current_account[:description][:authenticate_app].blank?
   		Rails.logger.info("App authentication enabled")
   		# sign in into app or redirect to login page
-  	else
-  		authenticate_account!
   	end
   end
 

@@ -4,9 +4,12 @@ en:
     no_properties: 'No properties sent'
     wrong_actor: 'UID and actor id is not matching'
     no_actor:  'No Actor found'
-    no_uid:  '%{uid} does not exist in app id %{app_id}'
     already_in_use: "%{uid} is already in use"
     remap_failed: "Remapping failed!!"
     invalid_argument_in_identify: "Invalid agruments in Identify Actor" 
-    invalid_argument_in_set: "Invalid agruments in Set Actor Property"
-    invalid_argument_in_alias: "Invalid agruments in Alias Actor"
+    invalid_argument_in_set: "Invalid arguments in Set Actor Property"
+    invalid_argument_in_alias: "Invalid arguments in Alias Actor"
+    identifier_already_exist: "Identifier %{identifier} already aliased with other actor_id %{actor_id}"
+    no_uid:  '%{uid} does not exist in app id %{app_id}'
+    invalid_argument_in_read: "Invalid arguments in Read Actor"
+    actor_id_is_not_existing: "Actor ID %{id} is not mapping to any actor.. Please report to us"

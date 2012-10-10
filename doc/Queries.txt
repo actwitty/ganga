@@ -1,0 +1,18 @@
+Actor.where(app_id: params[:app_id], id: params[:actor_id])
+
+
+
+Identifier.where(app_id: params[:app_id], uid: params[:new_uid])
+Identifier.where(actor_id: actor_id)
+
+
+
+
+ Event.where(actor_id: actor_id)
+ Event.where("properties.k" => "customer[address][city]", "properties.v" => "Bangalore")
+ Event.where(app_id: params[:app_id], meta: params[:meta])
+ Event.includes(:actor).where(actor_id: actor_id, meta: false).all
+ Event.includes(:actor, :app).where( account_id: params[:account_id], meta: false ).all
+
+
+ App.where(_id: params[:app_id], account_id: current_account._id)
