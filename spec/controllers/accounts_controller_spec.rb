@@ -21,6 +21,7 @@ describe AccountsController do
                       system: {browser: "chrome", os: "linux"}
                     }
                 )
+      @actor.reload
     end
 
     it "should read the app detail" do
@@ -36,8 +37,11 @@ describe AccountsController do
 
       get 'read', {account_id: @account._id, events: true}
 
-      puts JSON.parse(response.body).inspect
+      h = JSON.parse(response.body)
+      puts h.inspect
+      h["events"].size.should eq(1)
       response.status.should eq(200)
+      puts Event.count
     end
   end
 end

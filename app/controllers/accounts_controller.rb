@@ -69,4 +69,8 @@ class AccountsController < ApplicationController
     render json: { errors: e.message}, status: 422
   end
 
+
+  def list_apps
+  end
+
 end

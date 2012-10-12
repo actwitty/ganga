@@ -108,7 +108,7 @@ class Account
     hash[:account] = {id: account._id, description: account.description}
 
     if params[:events] == true
-      events = Event.includes(:actor, :app).where( account_id: params[:account_id], meta: false ).all
+      events = Event.includes(:actor, :app).where( account_id: params[:account_id], meta: false ).limit(1)
       events.each do |attr|
         hash[:events] << {
                           app: {id: attr.app_id, description: attr.app.description},

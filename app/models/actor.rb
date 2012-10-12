@@ -150,6 +150,9 @@ class Actor
     params.delete(:properties)
 
     properties.each do |k,v|
+      # k is profile or system
+      k = k.to_s
+
       # save event
       params[:name] = AppConstants.send("event_set_actor_#{k.to_s}")
       params[:properties] = v
@@ -160,6 +163,7 @@ class Actor
 
       desc = Utility.serialize_to(hash: params[:properties], serialize_to: "value")    
 
+      # key is like "customer[address][city]", value is like "Bangalore"
       desc.each do |key,value|
         actor.description[k][key] = [] if actor.description[k][key].blank?
         actor.description[k][key] << value
