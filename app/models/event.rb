@@ -45,6 +45,7 @@ class Event
   ##  :properties => {        [MANDATORY]
   ##      :email => "john.doe@example.com",
   ##      :customer => {:address => {:city => "Bangalore"}}}
+  ##  :property_type => "profile" or "system" [OPTIONAL] ## it only comes from "set" property in Actor
   ## }
 
   # OUTPUT => {:return => true, :error => nil}
@@ -83,7 +84,7 @@ class Event
     # save event object
     ev.save!
 
-    ret = app.update_schema(event: params[:name], properties: params[:properties])
+    ret = app.update_schema(event: params[:name], properties: params[:properties], property_type: params[:property_type])
      
     raise et("event.create_failed") unless ret[:error].blank?
 

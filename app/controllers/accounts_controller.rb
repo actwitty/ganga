@@ -46,7 +46,7 @@ class AccountsController < ApplicationController
   ##            events: [
   ##                      {
   ##                        app: {id: "343433433"}
-  ##                        actor: { id: "3433434", description: {"name":  "John Doe","email": "john@doe.com"}
+  ##                        actor: {id: "3433434", description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}} }
   ##          
   ##                        name: "sign_in", 
   ##                        properties: [{"k" => "name", "v" => "alok"}, {"k" => "address[city]", "v" => "Bangalore"}]

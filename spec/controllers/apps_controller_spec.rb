@@ -93,11 +93,16 @@ describe AppsController do
 
       @actor = FactoryGirl.create(:actor, app_id: @app["id"], account_id: @app["account_id"])
 
-      Actor.set(account_id: @actor.account_id, app_id: @actor.app_id, actor_id: @actor._id, properties: { :email => "john.doe@example.com", :name => "hee",
-          :customer => {:address => {:city => "Bangalore", :place => "bilekahalli"}
-          }
-        })
+      Actor.set(account_id: @actor.account_id, app_id: @actor.app_id, actor_id: @actor._id, 
+        properties: { profile: { 
+                                  :email => "john.doe@example.com",
+                                  :customer => {:address => {:city => "Bangalore"}}
+                               }, 
+                      system: {browser: "chrome", os: "linux"}
+                    }
+                )
     end
+    
     it "should check arguments while app read" do
       get 'read', { events: false } 
       response.status.should eq(422)

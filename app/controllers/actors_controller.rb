@@ -6,14 +6,21 @@ class ActorsController < ApplicationController
 
 
   # NOTE
-  ## Creates an actor..
+  ## Creates an actor.. 
   
   # INPUT => 
   ## {
   ##  :app_id => "1234444',   [MANDATORY]
-  ##  :properties => {        [OPTIONAL]
-  ##      :email => "john.doe@example.com",
-  ##      :customer => {:address => {:city => "Bangalore"}}}
+  ##  :properties =>          [OPTIONAL] ## if present, then either system or profile property must be there
+  ##     {        
+  ##        profile: {
+  ##          :email => "john.doe@example.com",
+  ##          :customer => {:address => {:city => "Bangalore"}}}
+  ##        }
+  ##        system: {
+  ##          :browser => "chrome"
+  ##        }
+  ##     }
   ## }
 
   # OUTPUT => {
@@ -36,11 +43,7 @@ class ActorsController < ApplicationController
 
     if !params[:properties].blank?
       ret = Actor.set(params)
-
-      if !ret[:error].blank?
-        Rails.logger.warn("^^^^ WARN ^^^^ #{ret[:error].message}")
-      end
-
+      raise et("actor.create_failed_in_set_property") if !ret[:error].blank?
       obj = ret[:return]
     end
 
@@ -89,14 +92,25 @@ class ActorsController < ApplicationController
 
   # NOTE
   ## set the property of actor explicitly
+  ## It sets both System property of Actor and Profile Properties of actor
+  ## System Property - describes browser, location, OS etc auto extracted by rulebot script
+  ## Profile Property - describes property of actor which a business want to set like "gender", "dob" etc
 
   # INPUT
   ## {
+  ##  :type => "system" or "profile"
   ##  :app_id => "1234444',   [MANDATORY]
   ##  :actor_id => "1223343", [MANDATORY]  
-  ##  :properties => {        [MANDATORY]
-  ##      :email => "john.doe@example.com",
-  ##      :customer => {:address => {:city => "Bangalore"}}}
+  ##  :properties => {        [MANDATORY] ## either system or profile property must be there
+  ##     {        
+  ##        profile: {
+  ##          :email => "john.doe@example.com",
+  ##          :customer => {:address => {:city => "Bangalore"}}}
+  ##        }
+  ##        system: {
+  ##          :browser => "chrome"
+  ##        }
+  ##     }
   ## }
 
   # OUTPUT => {
@@ -172,7 +186,7 @@ class ActorsController < ApplicationController
   ##            account: {id: "232342343"}
   ##            app: {id: "234324"}
   ##
-  ##            actor: {id: "3433434", description:  {  "name": "John Doe",   "email": "john@doe.com" } }
+  ##            actor: {id: "3433434", description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}} }
   ##            identifiers: [{"a@b.com" => "email"}, {"9999999" => "mobile"}, {"34433444" => "facebook_uid"}],
   ##
   ##            events: [
