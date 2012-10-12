@@ -143,7 +143,7 @@ class App
     hash[:app] = {id: app._id, description: app.description}
 
     if params[:events] == true
-      events = Event.includes(:actor).where( app_id: params[:app_id], meta: false ).all
+      events = Event.includes(:actor).where( app_id: params[:app_id], meta: false ).limit(AppConstants.limit_events).desc(:_id)
       events.each do |attr|
         hash[:events] << { 
                             actor: {id: attr.actor_id, description: attr.actor.description}, 

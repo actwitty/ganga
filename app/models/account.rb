@@ -82,7 +82,7 @@ class Account
   ##            account: {id: "445654654645", name: "Sudhanshu & Sons Chaddhi Wale", description: {subscription: "Free", authenticate_app: false}},
   ##            events: [
   ##                      {
-  ##                        app: {id: "343433433"}
+  ##                        app: {id: "343433433", description: {"name": "my app", "domain": "http://myapp.com"}, }
   ##                        actor: {id: "3433434", description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}} }          
   ##                        name: "sign_in", 
   ##                        properties: [{"k" => "name", "v" => "alok"}, {"k" => "address[city]", "v" => "Bangalore"}]
@@ -108,7 +108,7 @@ class Account
     hash[:account] = {id: account._id, description: account.description}
 
     if params[:events] == true
-      events = Event.includes(:actor, :app).where( account_id: params[:account_id], meta: false ).limit(1)
+      events = Event.includes(:actor, :app).where( account_id: params[:account_id], meta: false ).limit(AppConstants.limit_events).desc(:_id)
       events.each do |attr|
         hash[:events] << {
                           app: {id: attr.app_id, description: attr.app.description},

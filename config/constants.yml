@@ -26,6 +26,9 @@ development: &default
   event_set_actor_profile: "__set_actor_profile__"
   event_set_actor_system:  "__set_actor_system__"
 
+  # Limits
+  limit_events:           100
+
   # Service Keys
   facebook_app_id:      '244515575666539'
   facebook_secret_key:  '2ce9532a07461bf35f2ea18b50ff2afa'
@@ -63,3 +66,6 @@ test:
   server_base:           'http://localhost:3000'
   mailchimp_key:         '1b16707a608bd76703eeb349cc45dfdb-us5'
   mailchimp_list:        'visitors_test'
+
+  # Limits
+  limit_events:           3

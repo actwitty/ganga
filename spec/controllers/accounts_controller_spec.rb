@@ -5,15 +5,11 @@ describe AccountsController do
 
   before(:each) do
     @account = FactoryGirl.create(:account)
-  end
 
-  describe "Account Read" do
-    before(:each) do
+    @app = FactoryGirl.create(:app, account_id: @account._id)
+    @actor = FactoryGirl.create(:actor, app_id: @app._id,  account_id: @account._id)
 
-      @app = FactoryGirl.create(:app, account_id: @account._id)
-      @actor = FactoryGirl.create(:actor, app_id: @app._id,  account_id: @account._id)
-
-      Actor.set(account_id: @actor.account_id, app_id: @actor.app_id, actor_id: @actor._id, 
+    Actor.set(account_id: @actor.account_id, app_id: @actor.app_id, actor_id: @actor._id, 
         properties: { profile: { 
                                   :email => "john.doe@example.com",
                                   :customer => {:address => {:city => "Bangalore"}}
@@ -21,8 +17,10 @@ describe AccountsController do
                       system: {browser: "chrome", os: "linux"}
                     }
                 )
-      @actor.reload
-    end
+    @actor.reload
+  end
+
+  describe "Account Read" do
 
     it "should read the app detail" do
 
@@ -39,9 +37,17 @@ describe AccountsController do
 
       h = JSON.parse(response.body)
       puts h.inspect
-      h["events"].size.should eq(1)
+      h["events"].size.should eq(3)
       response.status.should eq(200)
       puts Event.count
+    end
+  end
+
+  describe "List Apps" do
+    it "should list all the apps" do
+      get 'list_apps', {account_id: @account._id}
+      response.status.should eq(200)
+      puts JSON.parse(response.body).inspect
     end
   end
 end

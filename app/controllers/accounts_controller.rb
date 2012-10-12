@@ -36,6 +36,10 @@ class AccountsController < ApplicationController
     end
   end
 
+
+  #NOTE
+  ## Gives account information. Also will fetch events (latest 100) if event: true
+
   # INPUT
   ## {  
   ##    :events => true or false         [OPTIONAL] # events 
@@ -45,7 +49,7 @@ class AccountsController < ApplicationController
   ##            account: {id: "445654654645", name: "Sudhanshu & Sons Chaddhi Wale", description: {subscription: "Free", authenticate_app: false}},
   ##            events: [
   ##                      {
-  ##                        app: {id: "343433433"}
+  ##                        app: {id: "343433433", description: {"name": "my app", "domain": "http://myapp.com"}, }
   ##                        actor: {id: "3433434", description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}} }
   ##          
   ##                        name: "sign_in", 
@@ -70,7 +74,39 @@ class AccountsController < ApplicationController
   end
 
 
+  #NOTE
+  ## List apps 
+  
+  # INPUT
+  ## {  
+  ##   
+  ## }
+
+  # OUTPUT =>{ 
+  ##            events: [
+  ##                      {
+  ##                        app: {id: "343433433", description: {"name": "my app", "domain": "http://myapp.com"}, }
+  ##                      },
+  ##                      {..}
+  ##                    ]
+  ##        }
   def list_apps
+    Rails.logger.info("Enter Account => List Apps")
+
+    hash = { apps: []}
+
+    params[:account_id] = current_account._id if Rails.env != "test"
+
+    array = hash[:apps]
+
+    App.where(account_id: params[:account_id]).all.each do |attr|
+      array << {id: attr._id, description: attr.description, schema: attr.schema}  
+    end
+ 
+    render json: array, status: 200      
+  rescue => e
+    Rails.logger.error("**** ERROR **** #{er(e)}")
+    render json: { errors: e.message}, status: 422
   end
 
 end

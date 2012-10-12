@@ -289,7 +289,7 @@ class Actor
     end
     
     if params[:events] == true
-      events = Event.where(actor_id: actor_id, meta: false).all
+      events = Event.where(actor_id: actor_id, meta: false).limit(AppConstants.limit_events).desc(:_id)
       events.each {|attr| hash[:events] << {name: attr.name, properties: attr.properties, time: attr.created_at}}
       Rails.logger.info("Adding Events")
     end
