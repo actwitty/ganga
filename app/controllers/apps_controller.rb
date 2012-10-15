@@ -186,7 +186,5 @@ class AppsController < ApplicationController
 		render json: { errors: e.message}, status: 422
 	end
 
-  def all
-    
-  end
+
 end
