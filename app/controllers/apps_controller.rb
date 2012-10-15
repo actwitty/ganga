@@ -185,4 +185,8 @@ class AppsController < ApplicationController
 		Rails.logger.error("**** ERROR **** #{er(e)}")
 		render json: { errors: e.message}, status: 422
 	end
+
+  def all
+    
+  end
 end

@@ -1,30 +1,25 @@
-App.AccountController = Em.ObjectController.extend
-  init: ->    
-    #Set mixpanel to track every minute spent on the page
-    App.mixpanel.trackMinuteSpent
-    self = this 
-    $.ajax
-      type: "GET"
-      url: "/credentials.json"
-      contentType: "json"
-      dataType: "json"
-      data: {}
-      success: (data) ->
-        App.log App.DBG, "Received: " + JSON.stringify(data)
-        self.set('content', App.Account.create(data))  
+App.AccountController = Em.ObjectController.extend(
+  content: null  
+  url: "/credentials"   
+  load: ()->
+    controllerObj = this
+    controllerObj.set 'content', null
+    
+    success= (data) ->
+      account = App.Account.create(data)
+      
+      controllerObj.set 'content', account      
+      
+      App.get("router").send("credentialGetDone");
+    
+    error= () ->
+      App.get("router").send("credentialGetFailed");
+    
 
-        if typeof emberRouterContext is "undefined"
-          App.get("router").send "devisepageSwitchRoute"          
-        else
-          if data and data.logged_in is true
-            App.get("router").send "loginSwitchRoute"
-          else
-            App.get("router").send "mainpageSwitchRoute"
-                    
-
-      error: (xhr, textStatus, errorThrown) ->
-        $("#error").html xhr.responseText
-
+    App.getRequest controllerObj.url, {}, success, error
+    
+   update: () ->
+)
   
    
    

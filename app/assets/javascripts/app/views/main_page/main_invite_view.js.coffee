@@ -23,7 +23,7 @@ App.MainInviteView = Ember.View.extend
 
   addInviteAccount: (event, params) ->
     viewObj = this
-    viewObj.set 'isBusy', true 
+    @set 'isBusy', true 
     viewObj.set 'inviteError', 'reset' 
     App.log App.DBG,'AJAX: invite clicked'
   
@@ -33,34 +33,34 @@ App.MainInviteView = Ember.View.extend
     
     accountEmail = if emailInput.length then emailInput.attr('value')  else ""
     
-    #Post the invitation to the Rails server
-    $.ajax
-      type: "POST"
-      url: "/invite_request"
-      dataType: "json"
-      
-      #Allow for gmail style aliases (e.g. user+foo@example.com)
-      data:
-        "account[email]": accountEmail
-        authenticity_token: App.AUTH_TOKEN
-      success: (data) ->        
-        if data and data.processed and data.processed is "true"
-          App.log App.DBG,'AJAX: invite success'
-          viewObj.set 'inviteError', 'done'
 
-          App.mixpanel.userInviteSet accountEmail
-          App.kissmetrics.userInviteSet accountEmail
-        else
-          App.log App.ERR,'AJAX: invite failed with 200'
-          viewObj.set 'inviteError', 'error'          
-          viewObj.set 'errorString', 'An error occurred : ' + data.error_str if data.error_str
+    #Post the invitation to the Rails server
+    #Handle success
+    success = (data) ->
+      if data and data.processed and data.processed is "true"
+
+        App.log App.DBG,'AJAX: invite success'
+        viewObj.set 'inviteError', 'done'
         viewObj.set 'isBusy', false
-        
-      error: (jqXHR, textStatus, errorThrown) ->
-        App.log App.ERR,'AJAX: Failed invite status:' + jqXHR.status + ' error: ' + errorThrown 
-        viewObj.set 'inviteError', 'error'
+        # App.mixpanel.userInviteSet accountEmail
+        # App.kissmetrics.userInviteSet accountEmail
+      else
+
+        App.log App.ERR,'AJAX: invite failed with 200'
+        viewObj.set 'inviteError', 'error'          
+        viewObj.set 'errorString', 'An error occurred : ' + data.error_str if data.error_str
         viewObj.set 'isBusy', false
-        viewObj.set 'errorString', 'There is some error in reaching the server.'
+
+    error = () ->
+      viewObj.set 'inviteError', 'error'
+      viewObj.set 'isBusy', false
+      viewObj.set 'errorString', 'There is some error in reaching the server.'
+
+    #Handle failure
+    App.postRequest "/invite_request", {"account[email]": accountEmail}, success, error
+
+
+   
 
     false
 

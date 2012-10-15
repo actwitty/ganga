@@ -18,7 +18,7 @@
 //= require ember-rest
 //= require twitter/bootstrap
 //= require handlebars
-//= require ember
+
 //= require_self
 //= require ember_app
 App = Ember.Application.create( {
