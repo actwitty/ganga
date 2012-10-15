@@ -158,12 +158,19 @@ class AppsController < ApplicationController
   ##                             events: {
   ##                                           'sign_up' => {"name" => String, "address[city]" => "String"}
   ##                                     }
+  ##                             
+  ##                             actor:  {
+  ##                                         "gender" => String, "name" => "String"
+  ##                                     }  
+  ##                             system: {
+  ##                                         "location" => String, "page_view_time" => "String"
+  ##                                     }  
   ##                           } 
   ##                 }  
   ##
   ##            events: [
   ##                      {
-  ##                        actor: { id: "3433434", description: {"name":  "John Doe","email": "john@doe.com"}
+  ##                        actor: {id: "3433434", description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}} }
   ##          
   ##                        name: "sign_in", 
   ##                        properties: [{"k" => "name", "v" => "alok"}, {"k" => "address[city]", "v" => "Bangalore"}]

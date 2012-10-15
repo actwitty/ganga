@@ -40,6 +40,7 @@ Ganga::Application.routes.draw do
 
   # Account Api
   get  '/account/read',       :to => 'accounts#read'
+  get  '/account/list_apps',  :to => 'accounts#list_apps'
     
 
   

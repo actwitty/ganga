@@ -24,8 +24,16 @@ class App
   ##      events: {
   ##        'sign_up' => {"name" => String, "address[city]" => "String"}
   ##      }
+  ##
+  ##      actor:  {
+  ##                 "gender" => String, "name" => "String"
+  ##              }  
+  ##
+  ##      system: {
+  ##                 "location" => String, "page_view_time" => "String"
+  ##              }  
   ## }
-  field       :schema,      type:    Hash,      :default => { properties: {}, events: {}}
+  field       :schema,      type:    Hash,      :default => { properties: {}, events: {}, profile: {}, system: {}}
 
   ## {
   ##     "name" => "my app",
@@ -99,12 +107,19 @@ class App
   ##                             events: {
   ##                                           'sign_up' => {"name" => String, "address[city]" => "String"}
   ##                                     }
+  ##                             
+  ##                             actor:  {
+  ##                                         "gender" => String, "name" => "String"
+  ##                                     }  
+  ##                             system: {
+  ##                                         "location" => String, "page_view_time" => "String"
+  ##                                     }  
   ##                           } 
   ##                 }  
   ##
   ##            events: [
   ##                      {
-  ##                        actor: { id: "3433434", description: {"name":  "John Doe","email": "john@doe.com"}
+  ##                        actor: {id: "3433434", description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}} }
   ##          
   ##                        name: "sign_in", 
   ##                        properties: [{"k" => "name", "v" => "alok"}, {"k" => "address[city]", "v" => "Bangalore"}]
@@ -128,7 +143,7 @@ class App
     hash[:app] = {id: app._id, description: app.description}
 
     if params[:events] == true
-      events = Event.includes(:actor).where( app_id: params[:app_id], meta: false ).all
+      events = Event.includes(:actor).where( app_id: params[:app_id], meta: false ).limit(AppConstants.limit_events).desc(:_id)
       events.each do |attr|
         hash[:events] << { 
                             actor: {id: attr.actor_id, description: attr.actor.description}, 
@@ -154,6 +169,8 @@ class App
   ##                                   "address" => {"city" => { "name" =>  "Bangalore"}}
   ##                                 }
   ##                  }
+  ##   :property_type => nil or "system" or "actor" ## COMMENT => nil = normal events, "actor" = "actor properties", 
+  ##                                                                          "system" = "system properties of actor"
   ## }
 
   # OUTPUT => {:return => true, :error => nil}
@@ -163,14 +180,19 @@ class App
     skima = Utility.serialize_to(hash: params[:properties], serialize_to: "type")
 
     schema["events"][params[:event]] = {} if schema["events"][params[:event]].blank?
+
     event = schema["events"][params[:event]]
 
     skima.each do |k,v|
       schema["properties"][k] = {} if schema["properties"][k].blank?
       schema["properties"][k][v] = [] if schema["properties"][k][v].blank?
       schema["properties"][k][v] << params[:event]
+      
       event[k] = v
+
+      schema[params[:property_type].to_s][k] = v if !params[:property_type].blank?
     end
+
     save!
 
     {:return => true, :error => nil}
