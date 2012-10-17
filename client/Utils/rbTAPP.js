@@ -8,9 +8,9 @@ var rbTAPP = {
     *  Do following tasks
     *  1). create session
     *  2).
-    *  3). Fetch rules.
+    *  3). fetch rules.
     *  4). check status of last event, if pending, execute it.
-    *  5). 
+    *  5). fetch system properties if cache miss
     *  
     *  @return void
     */
@@ -23,6 +23,7 @@ var rbTAPP = {
       rbTRules.init();
 
       // Check status of last event, if pending, execute it.
+      
     }
 
     /** 
@@ -124,6 +125,7 @@ var rbTAPP = {
 
     /** 
     *  Create Session for current app/account id
+    *  FIXME : THIS NEEDS TO BE DISCUSSED AS WE ARE PLANNING TO HAVE A PROXY IN BETWEEN
     *  @return {string} sessionID 
     */ 
     createSession : function()
@@ -132,8 +134,57 @@ var rbTAPP = {
     },
 
 
-    
+    /** 
+    * Set System properties
+    * 
+    * @param {object} params Option based on which system property will be set
+    * @return void
+    */
+    setSystemProperty : function(params)
+    {
+      try {
+          rbtServerChannel.makeEventRequest("set_system_property", 
+                                        rbtServerChannel.url.setSystemProperty,
+                                        params,
+                                        { success: rbTServerResponse.setSystemProperty,
+                                          error  : rbtServerResponse.defaultError
+                                        });
+      } catch(e) {
+        rbTApp.reportError({"exception" : e.message,
+                            "message"   : "setting system properties failed",
+                            "data"      : rules
+                           });
+      }
+    },
 
+    /** 
+    * Set System properties
+    *  
+    * @return {object} system properties in the form of json
+    */
+    getSystemProperty : function()
+    {
+      return JSON.parse(rbTCookie.getCookie(rbTCookie.defaultCookie.system));
+    },
+
+
+    /** 
+    *  report error to rbt server
+    *  @param {object} params Error log message 
+    *  @return void
+    */ 
+    reportError : function(params)
+    {
+      try {
+          if (params.log) {
+            debug.error(params);
+          } else {
+            rbtServerChannel.reportError(params);
+          }
+      } catch(e) {
+        // FIXME what to do?
+      }
+    },  
 
     /* Business specific call */
     call : {
@@ -154,7 +205,12 @@ var rbTAPP = {
                                             error  : rbtServerResponse.defaultError
                                           });
         } catch(e) {
-      // FIXME what to do?
+          // FIXME what to do?
+          rbTApp.reportError({"exception" : e.message,
+                              "message"   : "business send event failed",
+                              "event"     : event,
+                              "data"      : params, 
+                             });
         }
       },
 
@@ -174,7 +230,10 @@ var rbTAPP = {
                                             error  : rbtServerResponse.defaultError
                                           });
         } catch(e) {
-          // FIXME what to do?
+          rbTApp.reportError({"exception" : e.message,
+                              "message"   : "business identify event failed",
+                              "data"      : params, 
+                             });
         }
       },
 
@@ -195,29 +254,15 @@ var rbTAPP = {
                                           });
         } catch(e) {
           // FIXME what to do?
+          rbTApp.reportError({"exception" : e.message,
+                              "message"   : "business set user property event failed",
+                              "event"     : event,
+                              "data"      : params, 
+                             });
         }
       },
 
-      /** 
-      * Req RBT server to set system property
-      * 
-      * @param {object} params Option based on which system property will be set
-      * @return void
-      */
-      setSystemProperty : function(params)
-      {
-        try {
-            rbtServerChannel.makeEventRequest("set_system_property", 
-                                          rbtServerChannel.url.setSystemProperty,
-                                          params,
-                                          { success: rbTServerResponse.setSystemProperty,
-                                            error  : rbtServerResponse.defaultError
-                                          });
-        } catch(e) {
-          // FIXME what to do?
-        }
-      },
-
+      
       /** 
       * ALIAS
       * 

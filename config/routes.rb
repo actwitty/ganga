@@ -16,10 +16,10 @@ Ganga::Application.routes.draw do
                                           :passwords => "accounts/passwords"
                                         }
   
-  get   '/credentials', :to => 'accounts#credentials'
-  get   '/category', :to => 'rules#category'
-  post   '/submitRule' , :to => 'rules#submitRule'
-  get '/rules/editRule' , :to => 'rules#editRule'
+  get   '/credentials',       :to => 'accounts#credentials'
+  get   '/category',          :to => 'rules#category'
+  post  '/submitRule' ,       :to => 'rules#submitRule'
+  get   '/rules/editRule' ,   :to => 'rules#editRule'
 
   # Actor Api
   post  '/actor/create',      :to => 'actors#create'

@@ -8,6 +8,7 @@ var rbTServerResponse = {
   defaultSuccessCallback : function()
   {
     // FIXME : what to do?
+    rbTDebug.log("Success callback : default server response");
   },
   /** 
   *  Handle default error callback if not mentioned explicitly
@@ -17,6 +18,7 @@ var rbTServerResponse = {
   defaultErrorCallback : function()
   {
     // FIXME : what to do?
+    rbTDebug.warn("Success callback : default server response");
   },
 
 
@@ -29,13 +31,16 @@ var rbTServerResponse = {
   { 
     try {
       if (respData) {
-        rbTCookie.setCookie("actor_id", respData);
-
+        rbTCookie.setCookie(rbTCookie.defaultCookies.actor, JSON.stringify(respData));
       } else {
-        // throw exception
+        throw "there is no data";
       }
     } catch(e) {
       // FIXME what to do?
+      rbTApp.reportError({"exception" : e.message,
+                          "message"   : "setting actor failed",
+                          "data"      : respData
+                        });
     }
   },
 
@@ -50,12 +55,16 @@ var rbTServerResponse = {
     // FIXME : check for which property to set
     try {
       if (respData) {
-        rbTCookie.setCookie("actor_property", respData);
+        rbTCookie.setCookie(rbTCookie.defaultCookies.actorprop, JSON.stringify(respData));
       } else {
-        // throw exception
+        throw "there is no data";
       }
     } catch(e) {
       // FIXME what to do?
+      rbTApp.reportError({"exception" : e.message,
+                          "message"   : "setting user property failed",
+                          "data"      : respData
+                        });
     }
   }, 
 
@@ -69,16 +78,18 @@ var rbTServerResponse = {
     // FIXME : check for which property to set
     try {
       if (respData) {
-        rbTCookie.setCookie("system_property", respData);
+        rbTCookie.setCookie(rbTCookie.defaultCookies.system, JSON.stringify(respData));
       } else {
-        // throw exception
+        throw "there is no data";
       }
     } catch(e) {
       // FIXME what to do?
+      rbTApp.reportError({"exception" : e.message,
+                          "message"   : "setting system property failed",
+                          "data"      : respData
+                        });
     }
   }, 
-
-
 
   /**
   * Handle event response from server
@@ -89,11 +100,15 @@ var rbTServerResponse = {
   {
     try {
       if(respData && respData.actor) {
-        rbTCookie.setCookie("actor", respData.actor);
+        rbTCookie.setCookie(rbTCookie.defaultCookies.actor, respData.actor);
       }
-      // FIXME : trigger rule
+      throw "there is no data";
     } catch(e) {
       // FIXME what to do?
+      rbTApp.reportError({"exception" : e.message,
+                          "message"   : "handling event failed",
+                          "data"      : respData
+                        });
     }
   },
 
@@ -108,9 +123,14 @@ var rbTServerResponse = {
     try {
       if(respData) {
         rbTRules.setRulesTable(respData);
+      } else {
+        throw "there is no data";
       }
     } catch(e) {
-      // FIXME what to do?
+      rbTApp.reportError({"exception" : e.message,
+                          "message"   : "setting rules failed",
+                          "data"      : respData
+                        });
     }
   },
 

@@ -11,13 +11,15 @@ var rbTCookie = {
   },
 
   // Just harcode names for some of the default cookies which we will be using
-  defaultCookie : {
-    "actorID" : rbTCookie.namePrefix + "actor_id",
+  defaultCookies : {
+    "actorid"    : rbTCookie.namePrefix + "actor_id",
+    "systemProp" : rbTCookie.namePrefix + "system_prop",
+    "actorProp"  : rbTCookie.namePrefix + "actor_prop",
   },
 
   /** Get RBT cookie string name.
-   * @param {string} cookieName
-   * @return string
+   *  @param {string} cookieName
+   *  @return string
    */
   name : function(cookieName)
   {
@@ -25,8 +27,8 @@ var rbTCookie = {
   },
 
   /** Get cookie string.
-   * @param {String} cookieName
-   * @return string
+   *  @param {String} cookieName
+   *  @return string
    */
   getCookie : function(cookieName)
   {
@@ -39,8 +41,8 @@ var rbTCookie = {
   },
 
   /** Check cookie existence
-   * @param {string} cookieName
-   * @return boolean
+   *  @param {string} cookieName
+   *  @return boolean
    */
   doesCookieExist : function(cookieName)
   {
@@ -51,7 +53,11 @@ var rbTCookie = {
         return false;
       }
     } catch(e) {
-
+      rbTApp.reportError({"exception" : e.message,
+                          "message"   : "cookie existence failed",
+                          "name"      : cookieName,
+                          "log"       : true, 
+                         });
     }
   }, 
 
@@ -82,6 +88,13 @@ var rbTCookie = {
         return document.cookie = cookieString;
     } catch(e) {
       // FIXME  what to do?
+      rbTApp.reportError({"exception" : e.message,
+                          "message"   : "cookie set failed",
+                          "name"      : cookieName,
+                          "value"     : cookieValue,
+                          "options"   : options
+                          "log"       : true, 
+                         });
     }
   },
 
@@ -98,6 +111,11 @@ var rbTCookie = {
         document.cookie = rbTCookie.name(cookieName) += "=; expires=" + cookieDate.toGMTString();
     } catch (e) {
       // FIXME what to do?
+      rbTApp.reportError({"exception" : e.message,
+                          "message"   : "cookie delete failed",
+                          "name"      : cookieName,
+                          "log"       : true, 
+                         });
     }
   },
 
@@ -117,7 +135,11 @@ var rbTCookie = {
         return now.toGMTString();     
       }
     } catch(e) {
-      // FIXME what to do?
+      rbTApp.reportError({"exception" : e.message,
+                          "message"   : "cookie hours to conversion failed",
+                          "data"      : cookieExpireHours,
+                          "log"       : true, 
+                         });
     }
   },
 
@@ -138,6 +160,10 @@ var rbTCookie = {
       }
     } catch(e) {
       // FIXME what to do?
+      rbTApp.reportError({"exception" : e.message,
+                          "message"   : "cookie flush all failed",
+                          "log"       : true, 
+                         });
     }
   },
 

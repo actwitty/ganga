@@ -7,9 +7,31 @@ var rbTRules = {
         {
           name  : "sample_name", 
           event : "sample_event",
+          action: {
+                  handler : {
+                      "id"    : "action id",
+                      "name"  : "name of action",
+                      "params": {},
+                  },
+          },
           rules : [
+                // event based condition
+                { 
+                  property : "",
+                  operator : "contains",
+                  value    : "83.samarth@gmail.com",
+                  connect  : "end", 
+                },
+                // actor_property based condition
                 {
-                  property : "83.samarth@gmail.com is my id",
+                  property : "$83.samarth@gmail.com",
+                  operator : "contains",
+                  value    : "83.samarth@gmail.com",
+                  connect  : "end", 
+                },
+                // system_property based condition
+                {
+                  property : "#83.samarth@gmail.com",
                   operator : "contains",
                   value    : "83.samarth@gmail.com",
                   connect  : "end", 
@@ -33,6 +55,7 @@ var rbTRules = {
                                           });
         } catch(e) {
           // FIXME what to do?
+          rbTApp.reportError({"exception" : e.message, "message":"rule initialization failed"});
         }
   },
   
@@ -70,17 +93,24 @@ var rbTRules = {
       return params;
     }
 
-    jQuery.each(rules, function(index, ruleList) {
-      ruleString = " ";
-      for (rule in ruleList.rules) {
-        ruleString = ruleString + "rbTRules.rule." + ruleList.rules[rule].operator + 
-                  ruleParams(ruleList.rules[rule]) + ruleConnect(ruleList.rules[rule]);
-      }
+    try {
+        jQuery.each(rules, function(index, ruleList) {
+          ruleString = " ";
+          for (rule in ruleList.rules) {
+            ruleString = ruleString + "rbTRules.rule." + ruleList.rules[rule].operator + 
+                    ruleParams(ruleList.rules[rule]) + ruleConnect(ruleList.rules[rule]);
+          }
 
-      rbTRules.ruleTable[ruleList.event] = { "name"       : ruleList.name,
+          rbTRules.ruleTable[ruleList.event] = { "name"       : ruleList.name,
                                              "ruleString" : ruleString,
-      };
-    });
+          };
+        });
+    } catch (e) {
+      rbTApp.reportError({"exception" : e.message,
+                          "message"   : "rule table setting failed",
+                          "rules"     : rules
+                        });
+    }
 
   },
 
@@ -100,7 +130,9 @@ var rbTRules = {
           var functionCode = prepareFunctionCode(rbTRules.ruleTable[event].ruleString);
           var ruleExecute = new Function(functionCode)();
     } catch (e) {
-
+      rbTApp.reportError({"exception" : e.message,
+                          "message":"rule execution on event failed" , 
+                          "event_name" : event});
     } 
   },
   
@@ -123,6 +155,11 @@ var rbTRules = {
         }
     } catch (e) {
         // FIXME :: something wrong with type conversion
+        rbTApp.reportError({"exception" : e.message,
+                            "message":"data type conversion on rule value failed" , 
+                            "property" : property,
+                            "value" : value,
+                           });
     }
   },
 
@@ -144,6 +181,11 @@ var rbTRules = {
       try {
         return a < rbTRules.valueDataType(a, b);
       } catch(e) {
+        rbTApp.reportError({"exception" : e.message,
+                            "message":"rule evaluation on lt failed" , 
+                            "property" : a,
+                            "value"    : b
+                           });
       }
     },
         
@@ -160,6 +202,11 @@ var rbTRules = {
       try {
         return a > rbTRules.valueDataType(a, b);
       } catch(e) {
+        rbTApp.reportError({"exception" : e.message,
+                            "message":"rule evaluation on gt failed" , 
+                            "property" : a,
+                            "value"    : b
+                           });
       }
     },
 
@@ -179,6 +226,11 @@ var rbTRules = {
         else
           return false;
       } catch(e) {
+        rbTApp.reportError({"exception" : e.message,
+                            "message":"rule evaluation on not_equal_to failed" , 
+                            "property" : a,
+                            "value"    : b
+                           });
             
       }
     },
@@ -196,7 +248,11 @@ var rbTRules = {
       try {
         return (a === rbTRules.valueDataType(a, b));
       } catch(e) {
-        
+        rbTApp.reportError({"exception" : e.message,
+                            "message":"rule evaluation on equal_to failed" , 
+                            "property" : a,
+                            "value"    : b
+                           });
       }
     },
 
@@ -216,7 +272,11 @@ var rbTRules = {
         else
           return false;
       } catch(e) {
-        
+        rbTApp.reportError({"exception" : e.message,
+                            "message":"rule evaluation on contains failed" , 
+                            "property" : a,
+                            "value"    : b
+                           });
       }
     },
 
@@ -236,6 +296,11 @@ var rbTRules = {
         else
           return false;
       } catch(e) {
+        rbTApp.reportError({"exception" : e.message,
+                            "message":"rule evaluation on starts_with failed" , 
+                            "property" : a,
+                            "value"    : b
+                           });
         
       }
     },
@@ -256,7 +321,11 @@ var rbTRules = {
         else
           return false;
       } catch(e) {
-        
+        rbTApp.reportError({"exception" : e.message,
+                            "message"   :"rule evaluation on ends_with failed" , 
+                            "property"  : a,
+                            "value"     : b
+                           });
       }
     },
 
@@ -273,7 +342,12 @@ var rbTRules = {
       try {
         return a >= rbTRules.valueDataType(a, b) && a <= rbTRules.valueDataType(a, c);
       } catch(e) {
-        
+        rbTApp.reportError({"exception" : e.message,
+                            "message"   :"rule evaluation on between failed" , 
+                            "property"  : a,
+                            "value"     : b,
+                            "value2"    : c
+                           });
       }
     },
 
@@ -286,7 +360,17 @@ var rbTRules = {
     */ 
     regex :  function(a, b)
     {
-
+      console.log("********************");
+      try {
+        regexp = new RegExp(b, 'gi');
+        return regexp.test(a);
+      } catch (e) {
+        rbTApp.reportError({"exception" : e.message,
+                            "message"   :"rule evaluation on regex failed" , 
+                            "property"  : a,
+                            "value"     : b
+                           });
+      }
     },
 
 

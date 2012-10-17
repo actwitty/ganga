@@ -9,6 +9,7 @@ var rbTServerChannel = {
     setUserProperty   : "",
     setSystemProperty : "",
     getRules          : "",
+    reportError       : "",
   },
 
   /* Default options for server request */
@@ -88,20 +89,28 @@ var rbTServerChannel = {
           }
     });
   },
-
-
+   
   /** 
-  *  Send event to server
-  *  @param {string} event
-  * 
+  *  Send error report to server
+  *  @param {object} params Error log message 
   *  @return void
-  */
-  fireEvent : function(event, params)
+  */ 
+  reportError : function(params)
   {
-    // FIXME : to add functionality
+    jQuery.ajax({
+          url: rbtServerChannel.url.reportError,
+          type: 'GET',
+          dataType: 'json',
+          contentType: 'application/json',
+          data: params,
+          success: function ( respData ) {
+              callback.success(respData);
+          },error:function(XMLHttpRequest,textStatus, errorThrown){ 
+              // todo : what to do??            
+              callback.error(); 
+          }
+    });
   },
-
-
 
   /** 
   *  Extend callback if not mentioned explicitly

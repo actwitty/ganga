@@ -1,21 +1,44 @@
 /* Rule Bot scope to handle systems variables */
 var rbTSystemVar = {
 
+  // All properties will be set here
   properties : {},
 
+  // To get all properties
+  allProperties : "browser_info,referrer_info,device_info,screen_info,viewport_info,locale_info,plugins_info,time_info",
 
   /** Initialize system variable script
    *  @return void
    */
   init : function()
   {
-    // Switch for testing purposes.
+    function isSystemVarDirty()
+    {
+      var sysVarInCookie = rbTCookie.getCookie(rbTCookie.defaultCookies.systemProp);
+      
+      if (!sysVarInCookie) {
+        return true; 
+      } else {
+        var currentSysVar = rbTSystemVar.getAllProperty();
+        return (sysVar == currentSysVar) ? false : true;
+      }
+    }
+
+    // session.js specific calls
     if (typeof(window.exports) === 'undefined'){
       session_fetch(window, document, navigator);
     } else {
       window.exports.session = session_fetch;
     }
+
+    if (isSystemVarDirty()) {
+      // Put current sys var in cookie and send it to server for update only if we have cookie miss 
+      var systemVars = rbTSystemVar.getAllProperty();
+      rbTSystemVar.setPropertyInCookie(systemVars);
+      rbTApp.setSystemProperty(systemVars);
+    }
   },
+
 
   /** Set system variable property
    *  @param {string} type
@@ -29,14 +52,115 @@ var rbTSystemVar = {
 
 
   /** Get system variable property
-   *  @param {string} type
-   *  
-   *  @return {object} value
+   *  Following supported
+   *  1). "browser_info"
+          return -> 
+          {
+             browser : browser_name,
+             os      : os_name,
+             version : version_number
+
+          }
+
+      2). "referrer_info"
+          return ->
+          {
+            host: "127.0.1.1"
+            path: "/~sammy/"
+            port: 80
+            protocol: "http:"
+          }
+      3). "device_info"
+          return ->
+          {
+            is_mobile: false
+            is_phone: false
+            is_tablet: false
+          } 
+      4). "screen_info"
+          return ->
+          {
+            height: 768,
+            width: 1366
+          }
+      5). "viewport_info"
+          return ->
+          {
+            height: 768,
+            width: 1366
+          }
+      6). "locale_info"
+          return ->
+          {
+            country: "us",
+            lang: "en
+          }
+      7). "plugins_info"
+          return ->
+          {
+            flash: true
+            java: false
+            quicktime: true
+            silverlight: false
+          }
+      8). "time_info"
+          return ->
+          {
+            observes_dst: false
+            tz_offset: 5.5
+          }
+   *
+   *   @param {string} type
+   *   @return {object} value
+   * 
    */
-  getProperty :  function(type)
+
+  getProperty : function(propertyTypes)
   {
-    return rbTSystemVar.properties.type;
-  }
+    var types = propertyTypes.split(",");
+    var propertyCnf = {};
+    for (var i = 0; i < types.length ; ++i) {
+      switch(types[i]) {
+      case "browser_info":
+          propertyCnf[types[i] = {types[i]:rbTSystemVar.properties.browser}; 
+          break;
+      case "referrer_info":
+          propertyCnf[types[i] = {types[i]:rbTSystemVar.properties.current_session.referrer_info}; 
+          break;
+      case "device_info" :
+          propertyCnf[types[i] = {types[i]:rbTSystemVar.properties.device}; 
+          break;
+      case "screen_info" :
+          propertyCnf[types[i] = {types[i]:rbTSystemVar.properties.device.screen}; 
+          break;
+      case "viewport_info" :
+          propertyCnf[types[i] = {types[i]:rbTSystemVar.properties.device.viewport}; 
+          break;
+      case "locale_info":
+          propertyCnf[types[i] = {types[i]:rbTSystemVar.properties.locale}; 
+          break;
+      case "plugins_info":
+          propertyCnf[types[i] = {types[i]:rbTSystemVar.properties.plugins}; 
+          break;
+      case "time_info":
+          propertyCnf[types[i] = {types[i]:rbTSystemVar.properties.time}; 
+          break;
+      }
+    }
+    return propertyCnf;
+  },
+
+  getAllProperty : function()
+  {
+    return rbTSystemVar.getProperty(rbTSystemVar.allProperties);
+  },
+
+  setPropertyInCookie : function(property)
+  {
+    rbTCookie.setCookie(rbtCookie.defaultCookies.systemProp, JSON.stringify(property));
+  },
+
+
 };
 
 
