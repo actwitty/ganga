@@ -12,9 +12,11 @@ describe ActorsController do
   describe "create actor" do
     it "should create actor properly" do
       post 'create', { app_id: @app._id,
-        properties: { :email => "john.doe@example.com",
-          :customer => {:address => {:city => "Bangalore"}
-          }
+                       properties: { profile: 
+                          {:email => "john.doe@example.com",
+                          :customer => {:address => {:city => {:geo =>{:lat => 23, :long => 34}, :name => "bangalore"}, :place => ["hello"]}}
+                          }, 
+                        system: {browser: "chrome", os: "linux"}
         }
       }
       puts JSON.parse(response.body).inspect
@@ -96,9 +98,12 @@ describe ActorsController do
     it "should set schema of actor" do
 
       post 'set', { app_id: @app._id, actor_id: @actor._id,
-        properties: { :email => "john.doe@example.com", :name => "hee",
-          :customer => {:address => {:city => "Bangalore", :place => "bilekahalli"}
-          }
+        properties: { profile: 
+          {
+            :email => "john.doe@example.com", :name => "hee",
+            :customer => {:address => {:city => "Bangalore", :place => "bilekahalli"}}, 
+          }, 
+          system: {browser: "chrome", os: "linux"}
         }
       }
       app = App.find(@app._id)
@@ -106,39 +111,58 @@ describe ActorsController do
       puts app.schema.inspect
 
       post 'set', { app_id: @app._id, actor_id: @actor._id,
-        properties: { :email => "john.doe@example.com",
-          :customer => {:address => {:city => {:geo =>{:lat => 23, :long => 34}, :name => "bangalore"}, :place => ["hello"]}
-          }
+        properties: { profile: 
+          {:email => "john.doe@example.com",
+          :customer => {:address => {:city => {:geo =>{:lat => 23, :long => 34}, :name => "bangalore"}, :place => ["hello"]}}
+          }, 
+          system: {browser: "chrome", os: "linux"}
         }
       }
       app = App.find(@app._id)
       app.schema["properties"].should_not be_blank
       puts app.schema.inspect
+
+      @actor.reload 
+      puts @actor.description
     end
 
     it "should populate event table " do
 
       post 'set', { app_id: @app._id, actor_id: @actor._id,
-        properties: { :email => "john.doe@example.com",
-          :customer => {:address => {:city => "Bangalore"}
-          }
-        }
+                    properties: { profile: { 
+                                    :email => "john.doe@example.com",
+                                    :customer => {:address => {:city => "Bangalore"}}
+                                  }, 
+                                  system: {browser: "chrome", os: "linux"}
+                    }
       }
       post 'set', { app_id: @app._id, actor_id: @actor._id,
-        properties: { :email => "mon.doe@example.com",
-          :customer => {:address => {:city => "Pune"}
-          }
-        }
+                    properties: { profile: { 
+                                    :email => "mon.doe@example.com",
+                                    :customer => {:address => {:city => "Pune"}}
+                                  }, 
+                                  system: {browser: "chrome", os: "windows"}
+                    }
       }
+
       post 'set', { app_id: @app._id, actor_id: @actor._id,
-        properties: { :email => "tom.doe@example.com",
-          :customer => {:address => {:city => "Bangalore"}
-          }
-        }
+                    properties: { profile: { 
+                                    :email => "tom.doe@example.com",
+                                    :customer => {:address => {:city => "Bangalore"}}
+                                  }, 
+                                  system: {browser: "chrome", os: "mac"}
+                    }
       }
+ 
       p = Event.where("properties.k" => "customer[address][city]", "properties.v" => "Bangalore").all
       p.size.should equal(2)
       puts p[0].inspect
+      @app.reload
+      puts @app.schema.inspect
+
+      Event.count.should eq(6)
+      @actor.reload 
+      puts @actor.description
     end
   end
 
@@ -146,11 +170,13 @@ describe ActorsController do
 
     before(:each) do
       post 'create', { app_id: @app._id,
-        properties: { :email => "john.doe@example.com",
-          :customer => {:address => {:city => "Bangalore"}
-          }
-        }
-      }
+                       properties: { profile: { 
+                                                  :email => "john.doe@example.com",
+                                                  :customer => {:address => {:city => "Bangalore"}}
+                                                }, 
+                                      system: {browser: "chrome", os: "linux"}
+                                    }
+                      }
 
       response.status.should eq(200)
 
@@ -204,7 +230,7 @@ describe ActorsController do
         properties: { :email => "mon.doe@example.com", :customer => {:address => {:city => "Pune"}}})
 
       Event.add!( account_id: @app.account_id, app_id: @app._id, actor_id: @actor._id, name: "sign_in",
-        properties: { :email => "tom.doe@example.com", :customer => {:address => {:city => "Bangalore"}}})
+        properties: { :email => "tom.doe@example.com", :customer => {:address => {:city => "Delkhi"}}})
 
       Actor.count.should eq(1)
       Event.count.should eq(3)
@@ -221,6 +247,8 @@ describe ActorsController do
 
       puts JSON.parse(response.body).inspect
       response.status.should eq(200)
+
+      e = Event.where(actor_id: @actor._id).gte("properties.v" => "Delti" )
     end
   end
 end

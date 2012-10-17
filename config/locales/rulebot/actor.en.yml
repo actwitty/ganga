@@ -13,3 +13,4 @@ en:
     no_uid:  '%{uid} does not exist in app id %{app_id}'
     invalid_argument_in_read: "Invalid arguments in Read Actor"
     actor_id_is_not_existing: "Actor ID %{id} is not mapping to any actor.. Please report to us"
+    create_failed_in_set_property: "Actor Create failed while updating property"

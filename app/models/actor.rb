@@ -15,11 +15,19 @@ class Actor
   validates_presence_of :account_id, :app_id
   index({app_id: 1, _id: 1})
 
+  # NOTE
+  ## all values of description hash is array, as an actor can have many values of same property
   ## {
-  ##     "name" => "John Doe",
-  ##     "email" => "john@doe.com"
+  ##     profile: {
+  ##        "name" => ["John Doe",]  
+  ##        "email" => ["john@doe.com"]
+  ##     },
+  ##     system: {
+  ##        "browser" => ["mozilla", "chrom"],
+  ##        "os" => ["mac", "ios"]
+  ##     }
   ## }
-  field       :description, type:    Hash,      :default => {} # can be empty 
+  field       :description, type:    Hash,      :default => {profile: {}, system:{}} # can be empty 
 
   # Function  
 
@@ -100,15 +108,26 @@ class Actor
 
   # NOTE
   ## set the property of actor explicitly
+  ## It sets both System property of Actor and Profile Properties of actor
+  ## System Property - describes browser, location, OS etc auto extracted by rulebot script
+  ## Profile Property - describes property of actor which a business want to set like "gender", "dob" etc
 
   # INPUT
   ## {
   ##  :account_id =>'2121121' [MANDATORY]
   ##  :app_id => "1234444',   [MANDATORY]
   ##  :actor_id => "1223343", [MANDATORY]  
-  ##  :properties => {        [MANDATORY]
-  ##      :email => "john.doe@example.com",
-  ##      :customer => {:address => {:city => "Bangalore"}}}
+  ##  :properties =>          [MANDATORY] ## either system or profile property must be there
+  ##     {        
+  ##        profile: {
+  ##          :email => "john.doe@example.com",
+  ##          :customer => {:address => {:city => "Bangalore"}}}
+  ##        }
+  ##        system: {
+  ##          :browser => "chrome"
+  ##        }
+  ##     }
+  ##
   ## }
 
   # OUTPUT => {:return => object, :error => nil}
@@ -116,22 +135,39 @@ class Actor
   def self.set(params)
     Rails.logger.info("Enter Actor Set")
 
-    if params[:account_id].blank? or params[:app_id].blank? or params[:actor_id].blank? or params[:properties].blank?
+    if params[:account_id].blank? or params[:app_id].blank? or 
+      params[:actor_id].blank? or 
+      ( params[:properties][:profile].blank? and params[:properties][:system].blank?)
       raise et("actor.invalid_argument_in_set") 
     end
     
-    params[:name] = AppConstants.event_set_actor_property
-    params[:meta] =  true 
+    params[:meta] =  true
 
-    # save event
-    ret = Event.add!(params)
-    raise ret[:error] if !ret[:error].blank?
-
-    # save the properties of actor in description
+    # First get the actor
     actor = Actor.find(params[:actor_id])
-    desc = Utility.serialize_to(hash: params[:properties], serialize_to: "value")
-    desc.each do |k,v|
-      actor.description[k] = v
+
+    properties = params[:properties]
+    params.delete(:properties)
+
+    properties.each do |k,v|
+      # k is profile or system
+      k = k.to_s
+
+      # save event
+      params[:name] = AppConstants.send("event_set_actor_#{k.to_s}")
+      params[:properties] = v
+      params[:property_type] = k
+      ret = Event.add!(params)
+
+      raise ret[:error] if !ret[:error].blank?
+
+      desc = Utility.serialize_to(hash: params[:properties], serialize_to: "value")    
+
+      # key is like "customer[address][city]", value is like "Bangalore"
+      desc.each do |key,value|
+        actor.description[k][key] = [] if actor.description[k][key].blank?
+        actor.description[k][key] << value
+      end
     end
 
     Rails.logger.info("Saving Actor Description")
@@ -202,7 +238,7 @@ class Actor
   ##            account: {id: "232342343"}
   ##            app: {id: "234324"}
   ##
-  ##            actor: {id: "3433434", description:  {  "name": "John Doe",   "email": "john@doe.com" } }
+  ##            actor: {id: "3433434", description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}} }
   ##            identifiers: [{"a@b.com" => "email"}, {"9999999" => "mobile"}, {"34433444" => "facebook_uid"}],
   ##
   ##            events: [
@@ -253,7 +289,7 @@ class Actor
     end
     
     if params[:events] == true
-      events = Event.where(actor_id: actor_id, meta: false).all
+      events = Event.where(actor_id: actor_id, meta: false).limit(AppConstants.limit_events).desc(:_id)
       events.each {|attr| hash[:events] << {name: attr.name, properties: attr.properties, time: attr.created_at}}
       Rails.logger.info("Adding Events")
     end

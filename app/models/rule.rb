@@ -7,6 +7,6 @@ class Rule
   # Relations
   embedded_in :app
   
-  # Atrributes
+  # Attributes
 
 end
