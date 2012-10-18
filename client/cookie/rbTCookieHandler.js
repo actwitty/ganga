@@ -7,14 +7,14 @@ var rbTCookie = {
     expire : 24 * 60 * 60 * 1000,  // in hours
     path : "/",
     domain : window.location.hostname,
-    secure: true;
+    secure: false,
   },
 
   // Just harcode names for some of the default cookies which we will be using
   defaultCookies : {
-    "actorid"    : rbTCookie.namePrefix + "actor_id",
-    "systemProp" : rbTCookie.namePrefix + "system_prop",
-    "actorProp"  : rbTCookie.namePrefix + "actor_prop",
+    "actorid"    : "actor_id",
+    "systemProp" : "system_prop",
+    "actorProp"  : "actor_prop",
   },
 
   /** Get RBT cookie string name.
@@ -61,6 +61,40 @@ var rbTCookie = {
     }
   }, 
 
+
+  /** Set cookie options.
+   * 
+   * @param {rbTCookie.defaultOptions} [options] set options
+   * @return string
+   */
+  cookieOptions : function(options) {
+    var cOptions = {};
+
+    function getExpDate(hours)
+    {
+      var expiryDate = new Date();
+      expiryDate.setTime(expiryDate.getTime()+(5 * hours));
+      return expiryDate.toGMTString();
+    }
+
+    if (!options) {
+      rbTCookie.defaultOptions.expire = getExpDate(rbTCookie.defaultOptions.expire);
+      return rbTCookie.defaultOptions;
+    }
+      
+
+    // Set options if passed else use default options.
+    cOptions.expire = options.expire || rbTCookie.defaultOptions.expire;
+    cOptions.path = options.path || rbTCookie.defaultOptions.path;
+    cOptions.domain = options.domain || rbTCookie.defaultOptions.domain;
+    cOptions.secure = options.secure || rbTCookie.defaultOptions.secure;  
+
+    cOptions.expire = getExpDate(cOptions.expire);
+
+    return cOptions;
+
+  },
+ 
   /** Set cookie with options passed as key:value pair.
    * 
    * @param {string} cookieName
@@ -72,27 +106,23 @@ var rbTCookie = {
   {
     try {
         var cookieString = rbTCookie.name(cookieName) + "=" + escape(cookieValue);
+        var cookieOptions =  rbTCookie.cookieOptions(options);
 
-        // Set options if passed else use default options.
-        options.expire = rbTCookie.hoursToExpireDate(options.expire) || rbTCookie.defaultOptions.expire;
-        options.path = options.path || rbTCookie.defaultOptions.path;
-        options.domain = options.domain || rbTCookie.defaultOptions.domain;
-        options.secure = options.secure || rbTCookie.defaultOptions.secure;
+        cookieString += "; expires=" + cookieOptions.expire;
+        cookieString += "; path=" + escape(cookieOptions.path);
+        cookieString += "; domain=" + escape(cookieOptions.domain);
 
-        cookieString += "; path=" + escape(path);
+        if (cookieOptions.secure) cookieString += "; secure";
         
-        cookieString += "; domain=" + escape(domain);
+        document.cookie = cookieString;
 
-        if (options.secure) cookieString += "; secure";
-
-        return document.cookie = cookieString;
     } catch(e) {
       // FIXME  what to do?
       rbTApp.reportError({"exception" : e.message,
                           "message"   : "cookie set failed",
                           "name"      : cookieName,
                           "value"     : cookieValue,
-                          "options"   : options
+                          "options"   : options,
                           "log"       : true, 
                          });
     }
@@ -103,12 +133,14 @@ var rbTCookie = {
    * @param {string} cookieName
    * @return void
    */
-  deleteCookie :  function(cookieName)
+  deleteCookie :  function(cookieName, options)
   {
     try {
-        var cookieDate = new Date ( );  // current date & time
-        cookieDate.setTime ( cookieDate.getTime() - 1 );
-        document.cookie = rbTCookie.name(cookieName) += "=; expires=" + cookieDate.toGMTString();
+        var cookieOptions =  rbTCookie.cookieOptions(options);
+        document.cookie = rbTCookie.name(cookieName) + "=" +
+                          "; path=" + cookieOptions.path +
+                          "; domain=" + cookieOptions.domain +
+                          "; expires=Thu, 01-Jan-70 00:00:01 GMT";
     } catch (e) {
       // FIXME what to do?
       rbTApp.reportError({"exception" : e.message,
@@ -120,30 +152,6 @@ var rbTCookie = {
   },
 
 
-  /** Return GTM date string of "now" + time to live
-   *
-   *  @param {integer} cookieExpireHours
-   *  @return string
-   */
-  hoursToExpireDate: function(cookieExpireHours)
-  {
-    try {
-      if (parseInt(cookieExpireHours) == 'NaN' ) return '';
-      else {
-        now = new Date();
-        now.setTime(now.getTime() + (parseInt(cookieExpireHours) * 60 * 60 * 1000));
-        return now.toGMTString();     
-      }
-    } catch(e) {
-      rbTApp.reportError({"exception" : e.message,
-                          "message"   : "cookie hours to conversion failed",
-                          "data"      : cookieExpireHours,
-                          "log"       : true, 
-                         });
-    }
-  },
-
-  
   /** Flush all cookie
    *
    *  @return void
@@ -153,9 +161,10 @@ var rbTCookie = {
     try {
       var cookies = document.cookie.split(";");
       for (var i = 0; i < cookies.length; i++) {   
-          var cookieName =  cookies[i].split("=");
-          if (cookieName[0].lastIndexOf(rbTCookie.namePrefix, 0) === 0) {
-            rbTCookie.deleteCookie(cookieName[0]);
+          var cookie =  cookies[i].split("=");
+          var cookieName = cookie[0].replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+          if (cookieName.lastIndexOf(rbTCookie.namePrefix, 0) === 0) {
+            rbTCookie.deleteCookie(cookieName.slice(rbTCookie.namePrefix.length, cookieName.length));
           }
       }
     } catch(e) {
