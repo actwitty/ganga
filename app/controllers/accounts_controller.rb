@@ -100,9 +100,10 @@ class AccountsController < ApplicationController
     array = hash[:apps]
 
     App.where(account_id: params[:account_id]).all.each do |attr|
-      array << {id: attr._id, description: attr.description, schema: attr.schema}  
+      array << {app_id: attr._id, account_id: current_account._id, description: attr.description, schema: attr.schema}  
     end
- 
+  
+    Rails.logger.info("#{array.inspect}") 
     render json: array, status: 200      
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
