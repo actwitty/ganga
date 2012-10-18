@@ -102,7 +102,8 @@ var rbTRules = {
           }
 
           rbTRules.ruleTable[ruleList.event] = { "name"       : ruleList.name,
-                                             "ruleString" : ruleString,
+                                                 "ruleString" : ruleString,
+                                                 "action"     : ruleList.action.handler,
           };
         });
     } catch (e) {
@@ -116,7 +117,7 @@ var rbTRules = {
 
   /**
   * Execute rules table for particular events
-  * @param (string) event The event for which we need to check rules.
+  * @param {string} event The event for which we need to check rules.
   * @return void
   */
   executeRulesOnEvent : function(event)
@@ -128,19 +129,24 @@ var rbTRules = {
 
     try {
           var functionCode = prepareFunctionCode(rbTRules.ruleTable[event].ruleString);
-          var ruleExecute = new Function(functionCode)();
+          var isRuleValid = new Function(functionCode)();
+          if (isRuleValid) {
+            rbTRules.invokeAction(event);
+          } 
     } catch (e) {
-      rbTApp.reportError({"exception" : e.message,
-                          "message":"rule execution on event failed" , 
-                          "event_name" : event});
+      rbTApp.reportError({"exception"  : e.message,
+                          "message"    : "rule execution on event failed" , 
+                          "event_name" : event,
+                          "rule_string": rbTRules.ruleTable[event].ruleString,
+                         });
     } 
   },
   
   /**
   *   Execute rules table for particular events
-  *   @param (string) property The property for which we need to operate upon
-  *   @param (string) value The value for which we need to operate upon
-  *   @return (object) value Converted value based on property data type
+  *   @param {string} property The property for which we need to operate upon
+  *   @param {string} value The value for which we need to operate upon
+  *   @return {object} value Converted value based on property data type
   */
   valueDataType : function(property, value)
   {
@@ -163,7 +169,56 @@ var rbTRules = {
     }
   },
 
-    
+  /**
+  * FIXME : check if this needs to be invoked in getRulesTable's server response
+  * Evaluate property value to a suitable sys or user property
+  * 
+  * @return {string} status Status of the event execution (no-pending, executed, error)
+  */
+  executeLastPendingEvent : function()
+  {
+    try {
+      if (var lastEvent = rbTCookie.getCookie("lastevent")) {
+        rbTRules.executeRulesOnEvent(lastEvent);
+      } else {
+        throw "no last event found"
+      }
+    } catch(e) {
+      rbTDebug.log("no last event found");
+    }
+  },
+
+  /**
+  * FIXME : enable this
+  * Evaluate property value to a suitable sys or user property
+  * 
+  */
+  evalProperty : function(ruleProperty)
+  {
+
+  },
+
+
+  /**
+  * Invoke the action on rule.
+  * @param {string} event The event for which we need to invoke action
+  * @return void
+  */
+  invokeAction : function(event)
+  {
+    try {
+      // Hand over action to templating engine for processing event action.
+      rbTTemplates.invoke(rbTRules.ruleTable[event].action);
+    } catch(e) {
+      rbTApp.reportError({"exception" : e.message,
+                          "message": "action could not be invoked" , 
+                          "event" : event,
+                         });
+    }
+  },
+
+
+  
 
   /* RULE FUNCTIONS */
   rule : 
@@ -177,7 +232,6 @@ var rbTRules = {
     */ 
     lt : function(a, b)
     {
-      console.log("********************"); 
       try {
         return a < rbTRules.valueDataType(a, b);
       } catch(e) {
@@ -198,7 +252,6 @@ var rbTRules = {
     */ 
     gt : function(a, b)
     {
-      console.log("********************");
       try {
         return a > rbTRules.valueDataType(a, b);
       } catch(e) {
@@ -219,7 +272,6 @@ var rbTRules = {
     */ 
     not_equal_to : function(a, b)
     {
-      console.log("********************"); 
       try {
         if (a !== rbTRules.valueDataType(a, b) )
           return true;
@@ -244,7 +296,6 @@ var rbTRules = {
     */ 
     equal_to : function(a, b)
     {
-      console.log("********************");
       try {
         return (a === rbTRules.valueDataType(a, b));
       } catch(e) {
@@ -265,7 +316,6 @@ var rbTRules = {
     */ 
     contains : function(a, b)
     {
-      console.log("********************");
       try {
         if (a.indexOf(rbTRules.valueDataType(a, b)) >= 0 )
           return true;
@@ -289,7 +339,6 @@ var rbTRules = {
     */ 
     starts_with : function(a, b)
     {
-      console.log("********************");
       try {
         if (a.match("^"+rbTRules.valueDataType(a, b)))
           return true;
@@ -314,7 +363,6 @@ var rbTRules = {
     */ 
     ends_with : function(a, b)
     {
-      console.log("********************");
       try {
         if (a.match(rbTRules.valueDataType(a, b)+"$"))
           return true;
@@ -338,7 +386,6 @@ var rbTRules = {
     */ 
     between: function(a, b, c)
     {
-      console.log("********************");
       try {
         return a >= rbTRules.valueDataType(a, b) && a <= rbTRules.valueDataType(a, c);
       } catch(e) {
@@ -360,7 +407,6 @@ var rbTRules = {
     */ 
     regex :  function(a, b)
     {
-      console.log("********************");
       try {
         regexp = new RegExp(b, 'gi');
         return regexp.test(a);
@@ -372,8 +418,6 @@ var rbTRules = {
                            });
       }
     },
-
-
   },
 
 };

@@ -101,8 +101,9 @@ var rbTServerResponse = {
     try {
       if(respData && respData.actor) {
         rbTCookie.setCookie(rbTCookie.defaultCookies.actor, respData.actor);
+      } else {
+        throw "there is no data";
       }
-      throw "there is no data";
     } catch(e) {
       // FIXME what to do?
       rbTApp.reportError({"exception" : e.message,

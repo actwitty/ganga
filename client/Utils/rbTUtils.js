@@ -6,26 +6,21 @@ var rbTUtils = {
     */
   includeJQIfNeeded : function() 
   {
-    /* loads jQuery if not already loaded, or if not a recent enough version */
-    function loadJQ() {
-        /* adds a link to jQuery to the head, instead of inline, so it validates */ 
-        var headElement = document.getElementsByTagName("head")[0];
-        linkElement=document.createElement("script");
-        linkElement.src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js";
-        linkElement.type="text/javascript";
-        headElement.appendChild(linkElement);
+    function includeJQ()
+    { 
+      rbTUtils.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js");
     }
-    
+
     if (typeof jQuery != 'undefined') {
         /* jQuery is already loaded... verify minimum version number of 1.6 and reload newer if needed */
         if (/1\.(0|1|2|3|4|5|6)\.(0|1)/.test(jQuery.fn.jquery) 
             || /^1.1/.test(jQuery.fn.jquery) 
             || /^1.2/.test(jQuery.fn.jquery)
             || /^1.3/.test(jQuery.fn.jquery)) {
-            rbTUtils.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js");
+            includeJQ();
         }
     } else {
-        rbTUtils.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js");
+        includeJQ();
     }
   },
 

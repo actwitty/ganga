@@ -20,7 +20,7 @@ var rbTSystemVar = {
         return true; 
       } else {
         var currentSysVar = rbTSystemVar.getAllProperty();
-        return (sysVar == currentSysVar) ? false : true;
+        return (sysVar === currentSysVar) ? false : true;
       }
     }
 
@@ -32,7 +32,8 @@ var rbTSystemVar = {
     }
 
     if (isSystemVarDirty()) {
-      // Put current sys var in cookie and send it to server for update only if we have cookie miss 
+      // Put current sys var in cookie and send it to server 
+      // for update only if we have cookie miss 
       var systemVars = rbTSystemVar.getAllProperty();
       rbTSystemVar.setPropertyInCookie(systemVars);
       rbTApp.setSystemProperty(systemVars);
@@ -112,7 +113,6 @@ var rbTSystemVar = {
    *
    *   @param {string} type
    *   @return {object} value
-   * 
    */
 
   getProperty : function(propertyTypes)
