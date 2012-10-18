@@ -1,7 +1,7 @@
 App.ProjectsController = Em.ArrayController.extend(
   content: []
-  selected: null  
-  url: "/apps/all"
+  selected: null    
+  url: "/account/list_apps"
   #########################################################
   translatePropertyName: (property) ->
     property.replace('][',".").replace("[",".").replace("]","")
@@ -49,18 +49,19 @@ App.ProjectsController = Em.ArrayController.extend(
   
   #########################################################
   loadAll: (data)->
-    content = @get 'content'
-    for project in apps
-      newProject = {}
-      newProject.id = project.id
-      newProject.name = project.description.name
-      newProject.domain = project.description.domain
-      newProject.schema = @loadSchema project.schema.properties
-      newProject.rules = @loadRules project.rules
+    content = @get 'content'    
+    if 'accounts' of data
+      for project in data.accounts      
+        content.pushObject App.Project.create(project)
 
-      projectData = App.Project.create(project)
-      content.pushObject projectData
-
+      if content.length > 0
+        firstProject = content.objectAt(0)
+        @set 'selected', firstProject
+        App.get("router").send("listProject");
+      else
+        App.get("router").send("bareBoneAccount")
+    else
+      App.get("router").send("bareBoneAccount")
       
 
   #########################################################
@@ -77,13 +78,28 @@ App.ProjectsController = Em.ArrayController.extend(
 
   #########################################################   
 
+  addNewProj: (obj)->
+    @get('content').pushObject(obj)
+    @set('selected', obj)
 
-  #########################################################
-   update: () -> 
+  #########################################################   
 
-  #########################################################
-   create: () -> 
+  deleteProj: (obj) ->
+    content = @get('content')    
+    content.removeObject(obj)    
+    obj.destroy()
+    
 
-  #########################################################
-   delete: () ->
+    if content.length > 0
+      firstProject = content.objectAt(0)
+      @set 'selected', firstProject
+      App.get("router").send("listProject");
+    else
+      @set 'selected', null
+      App.get("router").send("bareBoneAccount")  
+
+
+
+
+
 )

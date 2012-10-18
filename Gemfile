@@ -23,6 +23,7 @@ end
 # Add Jquery source gems for asset pipline
 gem 'jquery-rails', "1.0.19"
 gem 'fancybox-rails'
+gem 'jquery-tablesorter'
 gem 'handlebars_assets'
 gem 'ember-rails', :git => 'git://github.com/emberjs/ember-rails.git'
 gem 'ember-rest-rails'

@@ -8,16 +8,17 @@ App.Router = Ember.Router.extend
     #EVENTS
       initDone: (router, event) ->
         if App.inDevise is true
-          router.transitionTo('devisePage')
+          router.transitionTo('deviseState')
         else
           if App.isLoggedIn is true
             router.get('accountController').load()            
           else
-            router.transitionTo('mainPage')
-      credentialGetDone: (router, event) ->
-        router.transitionTo('loggedInPage')
+            router.transitionTo('landingState')
+      credentialGetDone: (router, event) ->        
+        router.transitionTo('loggedInState.index')
       credentialGetFailed:(router, event) ->
-        router.transitionTo('mainPage')
+        router.transitionTo('landingState')
+
     #STATES
     index: Ember.Route.extend
       #SETUP
@@ -27,7 +28,7 @@ App.Router = Ember.Router.extend
 
       #STATES
 
-    devisePage: Ember.Route.extend
+    deviseState: Ember.Route.extend
       #SETUP
       route: '/'
       connectOutlets: (router) ->
@@ -37,7 +38,7 @@ App.Router = Ember.Router.extend
       #EVENTS
       #STATES
 
-    mainPage: Ember.Route.extend
+    landingState: Ember.Route.extend (
       #SETUP
       route: '/'
       connectOutlets: (router) ->        
@@ -48,51 +49,71 @@ App.Router = Ember.Router.extend
       #EVENTS
 
       #STATES
-
-    loggedInPage  : Ember.Route.extend
+    )
+    loggedInState  : Ember.Route.extend
       #SETUP
-      route: '/home'      
+      route: '/'
 
-      connectOutlets: (router) ->        
-        homeController = router.get('homeController')
-        homeController.connectOutlet({name: 'homeSide',outletName: 'homeSideOutlet'} )
-        # homeController.connectOutlet({name: 'homeContentDefault',outletName: 'homeContentOutlet'} )
 
-      #EVENTS
+
+      #EVENTS  
+      bareBoneAccount: (router, event) ->
+        homeController = router.get('homeController')        
+        homeController.connectOutlet({name: 'bareBone',outletName: 'homeContentOutlet'} )
+
       newProject: (router, event) ->
+        editController = router.get('projectEditController')
+        editController.set('content', App.Project.create())
+        editController.set('isNew', true)
+        editController.resetStates()
+        homeController = router.get('homeController')
+        homeController.connectOutlet({name: 'projectEdit', outletName: 'homeContentOutlet'} )     
 
-      openProject: (router, event) ->
+      editProject: (router, event) ->        
+        # Context comes as argument
+        project = event.context
+        editController = router.get('projectEditController')
+        router.get('projectsController').set('selected', project)
+        editController.set('content', project)     
+        editController.set('isNew', false)
+        editController.resetStates()   
+        homeController = router.get('homeController')
+        homeController.connectOutlet({name: 'projectEdit', outletName: 'homeContentOutlet'} ) 
+        event.preventDefault()
 
-      editProject: (router, event) ->
 
+
+      deleteProject: (router, event) ->
+        editController = router.get('projectEditController')
+        editController.deleteProject()
+        
+
+
+      listProject: (router, event) ->        
+        homeController = router.get('homeController')
+        homeController.connectOutlet({name: 'projects', outletName: 'homeContentOutlet'} )
+
+
+      openProject: (router,events) ->
+        
       openEvents: (router, event) ->
 
       openReports: (router, event) ->
 
-
+      logoutEvent: (router, event) -> 
+     
 
       #STATES
-      newProject: Ember.Route.extend(
-          #SETUP
-          route: '/new'
-          connectOutlets: (router) ->
-            homeController = router.get('homeController')
-            projectEditController = router.get('projectEditController')
-            projectEditController.set 'content', App.Project.create()
-            projectEditController.set 'isNew', true  
+ 
+      index: Ember.Route.extend
+        route: '/'
+        connectOutlets: (router) ->          
+          router.get('applicationController').connectOutlet('home')        
+          homeController = router.get('homeController')
+          homeController.connectOutlet({name: 'homeSide', outletName: 'homeSideOutlet'} )
+          router.get('projectsController').load()
 
-            homeController.connectOutlet({name: 'projectEdit',outletName: 'homeContentOutlet'} )
-
-          #EVENTS
-          cancel: (router, event) ->
-
-          save: (router, event) ->
-          
-          #STATES
-
-
-        )
-      projectOpened: Ember.Route.extend(
+      projectOpenState: Ember.Route.extend(
         #SETUP
         route: "/project"
 
@@ -162,15 +183,10 @@ App.Router = Ember.Router.extend
       )
 
         
-      #EVENTS
-      logoutEvent: Ember.Route.transitionTo 'logout'
+   
+  
+   
 
-      index: Ember.Route.extend
-        route: '/'  
-      #STATES
-      logout: Ember.Route.extend
-        route: '/thankyou'
-        
         
 
       

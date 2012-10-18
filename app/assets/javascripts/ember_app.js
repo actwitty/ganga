@@ -1,5 +1,4 @@
 //= require_tree ./app/helpers
-//= require ./app/store
 //= require_tree ./app/models
 //= require_tree ./app/controllers
 //= require_tree ./app/views

@@ -1,22 +1,25 @@
 App.ProjectEditView = Ember.View.extend(
-  isNew = false
+  templateName: 'home_page/projects/project_edit'
+  showHelpInfo: true
+  
 
-  stateIsNew: (-> 
-    @get("isNew") is true
-  ).property("isNew")
+  showInfo: (-> 
+    @get("showHelpInfo") is true
+   ).property("showHelpInfo")
 
-  setStateNew: (-> 
-    @set "isNew", true
-  )
+  submitNewProject: (event) ->
+  	projController = App.router.get('projectEditController')
+  	projController.postProject()
+  	event.preventDefault()
 
-  submitProject: (->
-    isNewProject = @isNew
-    if isNewProject is true
-      # Code to create a new project must be invoked
-      App.log App.DBG, "Project is new submitted")
-    else
-      # Code to update the existing project must be invoked
-      App.log App.DBG,  "Project is old submitted"
+  updateProject: (event) ->
+  	projController = App.router.get('projectEditController')
+  	projController.postProject()
+  	event.preventDefault()
 
-  )
+
+  hideInfo: (event) ->
+  	@set 'showHelpInfo', false
+  	event.preventDefault()
+  
 )

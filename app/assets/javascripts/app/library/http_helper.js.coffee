@@ -51,3 +51,6 @@ App.postRequest = (req_url, req_data, req_success_cb, req_error_cb)->
       App.log App.ERR, "Received error with status " + status + " " + error + " for " + req_url
       if typeof req_error_cb isnt 'undefined'
         req_error_cb()  
+
+
+
