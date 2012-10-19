@@ -32,6 +32,7 @@ var rbTCookie = {
    */
   getCookie : function(cookieName)
   {
+    "use strict";
     var results = document.cookie.match ( '(^|;) ?' + rbTCookie.name(cookieName) + '=([^;]*)(;|$)' );
 
     if (results)
@@ -53,7 +54,7 @@ var rbTCookie = {
         return false;
       }
     } catch(e) {
-      rbTApp.reportError({"exception" : e.message,
+      rbTAPP.reportError({"exception" : e.message,
                           "message"   : "cookie existence failed",
                           "name"      : cookieName,
                           "log"       : true, 
@@ -68,6 +69,7 @@ var rbTCookie = {
    * @return string
    */
   cookieOptions : function(options) {
+    "use strict";
     var cOptions = {};
 
     function getExpDate(hours)
@@ -104,6 +106,7 @@ var rbTCookie = {
    */
   setCookie : function(cookieName, cookieValue, options)
   {
+    "use strict";
     try {
         var cookieString = rbTCookie.name(cookieName) + "=" + escape(cookieValue);
         var cookieOptions =  rbTCookie.cookieOptions(options);
@@ -118,7 +121,7 @@ var rbTCookie = {
 
     } catch(e) {
       // FIXME  what to do?
-      rbTApp.reportError({"exception" : e.message,
+      rbTAPP.reportError({"exception" : e.message,
                           "message"   : "cookie set failed",
                           "name"      : cookieName,
                           "value"     : cookieValue,
@@ -135,6 +138,7 @@ var rbTCookie = {
    */
   deleteCookie :  function(cookieName, options)
   {
+    "use strict";
     try {
         var cookieOptions =  rbTCookie.cookieOptions(options);
         document.cookie = rbTCookie.name(cookieName) + "=" +
@@ -143,7 +147,7 @@ var rbTCookie = {
                           "; expires=Thu, 01-Jan-70 00:00:01 GMT";
     } catch (e) {
       // FIXME what to do?
-      rbTApp.reportError({"exception" : e.message,
+      rbTAPP.reportError({"exception" : e.message,
                           "message"   : "cookie delete failed",
                           "name"      : cookieName,
                           "log"       : true, 
@@ -158,6 +162,7 @@ var rbTCookie = {
    */
   flushAllCookie: function() 
   {
+    "use strict";
     try {
       var cookies = document.cookie.split(";");
       for (var i = 0; i < cookies.length; i++) {   
@@ -169,7 +174,7 @@ var rbTCookie = {
       }
     } catch(e) {
       // FIXME what to do?
-      rbTApp.reportError({"exception" : e.message,
+      rbTAPP.reportError({"exception" : e.message,
                           "message"   : "cookie flush all failed",
                           "log"       : true, 
                          });

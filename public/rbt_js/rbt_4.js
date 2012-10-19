@@ -395,13 +395,11 @@ var rbTRules = {
   
   /**
   * Initialize Rules for business
-  * @param {object} params Parameters passing
   * @return void
   */
-  init : function(params)
+  init : function()
   {
     "use strict";
-    var params = params || "undefined";
     try {
           rbTServerChannel.makeGetRequest( rbTServerChannel.url.getRules,
                                            params,
@@ -975,18 +973,11 @@ var rbTServerChannel = {
   */  
   makeRequestData : function(event, reqData)
   {
-    if (!event) {
-      return {
-        "app_configs"  : rbTAPP.getConfigs(),  // mandatory
-        "request_data" : reqData,     
-      };
-    } else {
-      return {
-        "app_configs"  : rbTAPP.getConfigs(),  // mandatory
-        "event"        : event,                // mandatory 
-        "request_data" : reqData,     
-      };
-    }
+    return {
+      "app_configs"  : rbTAPP.getConfigs(),  // mandatory
+      "event"        : event,                // mandatory 
+      "request_data" : reqData,     
+    };
   },
 
   /** 
@@ -1032,8 +1023,7 @@ var rbTServerChannel = {
   createSession : function(url, callback)
   {
     "use strict";
-    var reqServerData = {"app_id" : rbTAPP.configs.appID, "account_id" : rbTAPP.configs.accountID};
-    callback = rbTServerChannel.extendCallbacks(callback);
+    reqServerData = {"app_id" : rbTAPP.configs.appID, "account_id" : rbTAPP.configs.accountID};
     jQuery.ajax({
           url: rbTServerChannel.url.createSession,
           type: 'GET',
@@ -1054,12 +1044,10 @@ var rbTServerChannel = {
   *   
   *  @return void
   */  
-  makeGetRequest : function(url, params, callback)
+  makeGetRequest : function(url, callback)
   {
     "use strict";
-    var reqServerData = rbTServerChannel.makeRequestData(undefined, params);
-    //var reqServerData = {"app_id" : rbTAPP.configs.appID, "account_id" : rbTAPP.configs.accountID};
-    callback = rbTServerChannel.extendCallbacks(callback);
+    reqServerData = {"app_id" : rbTAPP.configs.appID, "account_id" : rbTAPP.configs.accountID};
     jQuery.ajax({
           url: url,
           type: 'GET',
@@ -1083,7 +1071,6 @@ var rbTServerChannel = {
   reportError : function(params)
   {
     "use strict";
-    callback = rbTServerChannel.extendCallbacks(callback);
     jQuery.ajax({
           url: rbTServerChannel.url.reportError,
           type: 'GET',
@@ -1752,8 +1739,8 @@ var rbTUtils = {
     }
   },
 
-	parseURL: function(urlStr)
-	{
+  parseURL: function(urlStr)
+  {
       var a = document.createElement("a"), query = {};
       a.href = urlStr; queryStr = a.search.substr(1);
       // Disassemble query string
@@ -1776,9 +1763,9 @@ var rbTUtils = {
   },
     
   /** Embed any other script.
-	*
-	*	@return void
-	*/
+  *
+  * @return void
+  */
   embedScript: function(url)
   {
       var element  = document.createElement("script");

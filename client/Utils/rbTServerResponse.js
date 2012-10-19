@@ -1,5 +1,5 @@
 var rbTServerResponse = {
-  
+
   /** 
   *  Handle default success callback if not mentioned explicitly
   *   
@@ -29,6 +29,7 @@ var rbTServerResponse = {
   */
   setActor : function(respData)
   { 
+    "use strict";
     try {
       if (respData) {
         rbTCookie.setCookie(rbTCookie.defaultCookies.actor, JSON.stringify(respData));
@@ -37,7 +38,7 @@ var rbTServerResponse = {
       }
     } catch(e) {
       // FIXME what to do?
-      rbTApp.reportError({"exception" : e.message,
+      rbTAPP.reportError({"exception" : e.message,
                           "message"   : "setting actor failed",
                           "data"      : respData
                         });
@@ -52,6 +53,7 @@ var rbTServerResponse = {
   */
   setUserProperty : function(respData)
   {
+     "use strict";
     // FIXME : check for which property to set
     try {
       if (respData) {
@@ -61,7 +63,7 @@ var rbTServerResponse = {
       }
     } catch(e) {
       // FIXME what to do?
-      rbTApp.reportError({"exception" : e.message,
+      rbTAPP.reportError({"exception" : e.message,
                           "message"   : "setting user property failed",
                           "data"      : respData
                         });
@@ -75,6 +77,7 @@ var rbTServerResponse = {
   */
   setSystemProperty : function(respData)
   {
+    "use strict";
     // FIXME : check for which property to set
     try {
       if (respData) {
@@ -84,7 +87,7 @@ var rbTServerResponse = {
       }
     } catch(e) {
       // FIXME what to do?
-      rbTApp.reportError({"exception" : e.message,
+      rbTAPP.reportError({"exception" : e.message,
                           "message"   : "setting system property failed",
                           "data"      : respData
                         });
@@ -98,6 +101,8 @@ var rbTServerResponse = {
   */
   handleEvent : function(respData)
   {
+    "use strict";
+    "use strict";
     try {
       if(respData && respData.actor) {
         rbTCookie.setCookie(rbTCookie.defaultCookies.actor, respData.actor);
@@ -106,7 +111,7 @@ var rbTServerResponse = {
       }
     } catch(e) {
       // FIXME what to do?
-      rbTApp.reportError({"exception" : e.message,
+      rbTAPP.reportError({"exception" : e.message,
                           "message"   : "handling event failed",
                           "data"      : respData
                         });
@@ -121,6 +126,7 @@ var rbTServerResponse = {
   */
   setRules : function(respData)
   {
+    "use strict";
     try {
       if(respData) {
         rbTRules.setRulesTable(respData);
@@ -128,7 +134,7 @@ var rbTServerResponse = {
         throw "there is no data";
       }
     } catch(e) {
-      rbTApp.reportError({"exception" : e.message,
+      rbTAPP.reportError({"exception" : e.message,
                           "message"   : "setting rules failed",
                           "data"      : respData
                         });

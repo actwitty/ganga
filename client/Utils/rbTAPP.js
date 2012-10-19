@@ -2,6 +2,7 @@
 
 
 var rbTAPP = {
+    
 
     /* Main configs will be holded here */
     configs : {},
@@ -19,6 +20,7 @@ var rbTAPP = {
     */
     initialize : function()
     {
+      "use strict";
       // 1). includin jquery if need be
       //rbTUtils.includeJQIfNeeded();
 
@@ -145,6 +147,7 @@ var rbTAPP = {
     */ 
     getConfigs : function()
     {
+      "use strict";
       var cnf = {"app_id"  : rbTAPP.configs.appID,
                  "account_id" : rbTAPP.configs.accountID,  
                 }; 
@@ -178,6 +181,7 @@ var rbTAPP = {
     */
     setSystemProperty : function(params)
     {
+      "use strict";
       try {
           rbTServerChannel.makeEventRequest("set_system_property", 
                                         rbTServerChannel.url.setSystemProperty,
@@ -233,6 +237,7 @@ var rbTAPP = {
       */
       sendEvent : function(event, params)
       {
+        "use strict";
         try {
             rbTServerChannel.makeEventRequest(event, 
                                           rbTServerChannel.url.fireEvent,
@@ -258,6 +263,7 @@ var rbTAPP = {
       */
       identify : function(params)
       {
+        "use strict";
         try {
             rbTServerChannel.makeEventRequest("identify", 
                                           rbTServerChannel.url.identify,
@@ -281,6 +287,7 @@ var rbTAPP = {
       */
       setUserProperty : function(params)
       {
+        "use strict";
         try {
             rbTServerChannel.makeEventRequest("set_user_property", 
                                           rbTServerChannel.url.setUserProperty,
