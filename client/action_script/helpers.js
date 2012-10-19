@@ -78,7 +78,7 @@ rbT.extractDisplayPositionFromTemplName = function(templName){
 
 };
 
-//******************************************************************8
+//******************************************************************
 //check for the if templ position is occupied
 rbT.isTemplPosOccupied = function(pos){
    

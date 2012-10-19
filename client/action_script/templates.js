@@ -7,8 +7,8 @@ rbT.templateLib = {
 	 	  'bottombar.generic.twittershare':rbT.rbTemplBottombarGenericTwittershareHTML,
 	 	  'modal.generic.normal':rbT.rbTemplModalGenericNormalHTML,
 	 	  'bottombar.generic.normal':rbT.rbTemplBottombarGenericNormalHTML,
-	 	  'topbar.generic.twittershare':rbT.rbTemplTopbarGenericTwittershareHTML,
-
+	 	  'topbar.generic.twittershare':rbT.rbTemplTopbarGenericTwittershareHTML
+ 
  	 	 	 }; 
 
 
@@ -27,7 +27,7 @@ rbT.templateLib = {
 	 	 	 	 	 	 'rb.bottombar.generic.fblike.left.value.text',
 	 	 	 	 	 	 'rb.topbar.generic.fblike.button.link.ahref',
 	 	 	 	 	 	 'rb.bottombar.generic.fblike.right.value.text',
-	 	 	 	 	 	 'rb.action.bottombar.generic.fblike.help.ahref',
+	 	 	 	 	 	 'rb.action.bottombar.generic.fblike.help.ahref'
 	 	 	 	 	 ],
 	 	  'topbar.generic.normal':[
 	 	 	 	 	 	 'rb.topbar.generic.normal.text.style.color',
@@ -46,7 +46,7 @@ rbT.templateLib = {
 	 	 	 	 	 	 'rb.topbar.generic.normal.button.link.ahref',
 	 	 	 	 	 	 'rb.topbar.generic.normal.button.link.lable',
 	 	 	 	 	 	 'rb.topbar.generic.normal.right.value.text',
-	 	 	 	 	 	 'rb.action.topbar.generic.normal.help.ahref',
+	 	 	 	 	 	 'rb.action.topbar.generic.normal.help.ahref'
 	 	 	 	 	 ],
 	 	  'topbar.generic.twitterfollow':[
 	 	 	 	 	 	 'rb.topbar.generic.twfollow.text.style.color',
@@ -62,7 +62,7 @@ rbT.templateLib = {
 	 	 	 	 	 	 'rb.topbar.generic.twfollow.acount',
 	 	 	 	 	 	 'rb.topbar.generic.twfollow.acount',
 	 	 	 	 	 	 'rb.topbar.generic.twfollow.right.value.text',
-	 	 	 	 	 	 'rb.action.topbar.generic.twfollow.help.ahref',
+	 	 	 	 	 	 'rb.action.topbar.generic.twfollow.help.ahref'
 	 	 	 	 	 ],
 	 	  'bottombar.generic.twitterfollow':[
 	 	 	 	 	 	 'rb.bottombar.generic.twfollow.text.style.color',
@@ -78,7 +78,7 @@ rbT.templateLib = {
 	 	 	 	 	 	 'rb.bottombar.generic.twfollow.acount',
 	 	 	 	 	 	 'rb.bottombar.generic.twfollow.acount',
 	 	 	 	 	 	 'rb.bottombar.generic.twfollow.right.value.text',
-	 	 	 	 	 	 'rb.action.bottombar.generic.twfollow.help.ahref',
+	 	 	 	 	 	 'rb.action.bottombar.generic.twfollow.help.ahref'
 	 	 	 	 	 ],
 	 	  'topbar.generic.fblike':[
 	 	 	 	 	 	 'rb.topbar.generic.fblike.text.style.color',
@@ -92,7 +92,7 @@ rbT.templateLib = {
 	 	 	 	 	 	 'rb.topbar.generic.fblike.base.style.textalign',
 	 	 	 	 	 	 'rb.topbar.generic.fblike.left.value.text',
 	 	 	 	 	 	 'rb.topbar.generic.fblike.right.value.text',
-	 	 	 	 	 	 'rb.action.topbar.generic.fblike.help.ahref',
+	 	 	 	 	 	 'rb.action.topbar.generic.fblike.help.ahref'
 	 	 	 	 	 ],
 	 	  'bottombar.generic.twittershare':[
 	 	 	 	 	 	 'rb.bottombar.generic.twshare.text.style.color',
@@ -107,7 +107,7 @@ rbT.templateLib = {
 	 	 	 	 	 	 'rb.bottombar.generic.twshare.left.value.text',
 	 	 	 	 	 	 'rb.bottombar.generic.twshare.button.text.defaults',
 	 	 	 	 	 	 'rb.bottombar.generic.twshare.right.value.text',
-	 	 	 	 	 	 'rb.action.bottombar.generic.twshare.help.ahref',
+	 	 	 	 	 	 'rb.action.bottombar.generic.twshare.help.ahref'
 	 	 	 	 	 ],
 	 	  'modal.generic.normal':[
 	 	 	 	 	 	 'rb.modal.generic.normal.base.style.zIndex',
@@ -120,7 +120,7 @@ rbT.templateLib = {
 	 	 	 	 	 	 'rb.modal.generic.normal.pgraph.value.text',
 	 	 	 	 	 	 'rb.modal.generic.normal.img.value.src',
 	 	 	 	 	 	 'rb.modal.generic.normal.button.value.ahref',
-	 	 	 	 	 	 'rb.modal.generic.normal.button.value.lable',
+	 	 	 	 	 	 'rb.modal.generic.normal.button.value.lable'
 	 	 	 	 	 ],
 	 	  'bottombar.generic.normal':[
 	 	 	 	 	 	 'rb.bottombar.generic.normal.text.style.color',
@@ -139,7 +139,7 @@ rbT.templateLib = {
 	 	 	 	 	 	 'rb.bottombar.generic.normal.button.link.ahref',
 	 	 	 	 	 	 'rb.bottombar.generic.normal.button.link.lable',
 	 	 	 	 	 	 'rb.bottombar.generic.normal.right.value.text',
-	 	 	 	 	 	 'rb.action.bottombar.generic.normal.help.ahref',
+	 	 	 	 	 	 'rb.action.bottombar.generic.normal.help.ahref'
 	 	 	 	 	 ],
 	 	  'topbar.generic.twittershare':[
 	 	 	 	 	 	 'rb.topbar.generic.twshare.text.style.color',
@@ -154,8 +154,7 @@ rbT.templateLib = {
 	 	 	 	 	 	 'rb.topbar.generic.twshare.left.value.text',
 	 	 	 	 	 	 'rb.bottombar.generic.twshare.button.text.defaults',
 	 	 	 	 	 	 'rb.topbar.generic.twshare.right.value.text',
-	 	 	 	 	 	 'rb.action.topbar.generic.twshare.help.ahref',
-	 	 	 	 	 ],
-
+	 	 	 	 	 	 'rb.action.topbar.generic.twshare.help.ahref'
+	 	 	 	 	 ]
  	 	 	 	 }; 
  
