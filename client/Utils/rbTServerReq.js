@@ -26,9 +26,12 @@ var rbTServerChannel = {
   makeRequestData : function(event, reqData)
   {
     return {
-      "app_configs"  : rbTAPP.getConfigs(),  // mandatory
+
+      "app_id"  : rbTAPP.getAppID(),  // mandatory
+      "account_id"  : rbTAPP.getAccountID(),  // mandatory
+      // "actor_id" : rbTAPP.getConfigs(),
       "event"        : event,                // mandatory 
-      "request_data" : reqData,     
+      "properties" : reqData,     
     };
   },
 

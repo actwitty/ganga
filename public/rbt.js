@@ -400,7 +400,7 @@ var rbTRules = {
                                            });
         } catch(e) {
           // FIXME what to do?
-          rbTAPP.reportError({"exception" : e.message, "message":"rule initialization failed"});
+          rbTApp.reportError({"exception" : e.message, "message":"rule initialization failed"});
         }
   },
   
@@ -452,7 +452,7 @@ var rbTRules = {
           };
         });
     } catch (e) {
-      rbTAPP.reportError({"exception" : e.message,
+      rbTApp.reportError({"exception" : e.message,
                           "message"   : "rule table setting failed",
                           "rules"     : rules
                         });
@@ -479,7 +479,7 @@ var rbTRules = {
             rbTRules.invokeAction(event);
           } 
     } catch (e) {
-      rbTAPP.reportError({"exception"  : e.message,
+      rbTApp.reportError({"exception"  : e.message,
                           "message"    : "rule execution on event failed" , 
                           "event_name" : event,
                           "rule_string": rbTRules.ruleTable[event].ruleString,
@@ -506,7 +506,7 @@ var rbTRules = {
         }
     } catch (e) {
         // FIXME :: something wrong with type conversion
-        rbTAPP.reportError({"exception" : e.message,
+        rbTApp.reportError({"exception" : e.message,
                             "message":"data type conversion on rule value failed" , 
                             "property" : property,
                             "value" : value,
@@ -556,7 +556,7 @@ var rbTRules = {
       // Hand over action to templating engine for processing event action.
       rbTTemplates.invoke(rbTRules.ruleTable[event].action);
     } catch(e) {
-      rbTAPP.reportError({"exception" : e.message,
+      rbTApp.reportError({"exception" : e.message,
                           "message": "action could not be invoked" , 
                           "event" : event,
                          });
@@ -581,7 +581,7 @@ var rbTRules = {
       try {
         return a < rbTRules.valueDataType(a, b);
       } catch(e) {
-        rbTAPP.reportError({"exception" : e.message,
+        rbTApp.reportError({"exception" : e.message,
                             "message":"rule evaluation on lt failed" , 
                             "property" : a,
                             "value"    : b
@@ -601,7 +601,7 @@ var rbTRules = {
       try {
         return a > rbTRules.valueDataType(a, b);
       } catch(e) {
-        rbTAPP.reportError({"exception" : e.message,
+        rbTApp.reportError({"exception" : e.message,
                             "message":"rule evaluation on gt failed" , 
                             "property" : a,
                             "value"    : b
@@ -624,7 +624,7 @@ var rbTRules = {
         else
           return false;
       } catch(e) {
-        rbTAPP.reportError({"exception" : e.message,
+        rbTApp.reportError({"exception" : e.message,
                             "message":"rule evaluation on not_equal_to failed" , 
                             "property" : a,
                             "value"    : b
@@ -645,7 +645,7 @@ var rbTRules = {
       try {
         return (a === rbTRules.valueDataType(a, b));
       } catch(e) {
-        rbTAPP.reportError({"exception" : e.message,
+        rbTApp.reportError({"exception" : e.message,
                             "message":"rule evaluation on equal_to failed" , 
                             "property" : a,
                             "value"    : b
@@ -668,7 +668,7 @@ var rbTRules = {
         else
           return false;
       } catch(e) {
-        rbTAPP.reportError({"exception" : e.message,
+        rbTApp.reportError({"exception" : e.message,
                             "message":"rule evaluation on contains failed" , 
                             "property" : a,
                             "value"    : b
@@ -691,7 +691,7 @@ var rbTRules = {
         else
           return false;
       } catch(e) {
-        rbTAPP.reportError({"exception" : e.message,
+        rbTApp.reportError({"exception" : e.message,
                             "message":"rule evaluation on starts_with failed" , 
                             "property" : a,
                             "value"    : b
@@ -715,7 +715,7 @@ var rbTRules = {
         else
           return false;
       } catch(e) {
-        rbTAPP.reportError({"exception" : e.message,
+        rbTApp.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on ends_with failed" , 
                             "property"  : a,
                             "value"     : b
@@ -735,7 +735,7 @@ var rbTRules = {
       try {
         return a >= rbTRules.valueDataType(a, b) && a <= rbTRules.valueDataType(a, c);
       } catch(e) {
-        rbTAPP.reportError({"exception" : e.message,
+        rbTApp.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on between failed" , 
                             "property"  : a,
                             "value"     : b,
@@ -757,7 +757,7 @@ var rbTRules = {
         regexp = new RegExp(b, 'gi');
         return regexp.test(a);
       } catch (e) {
-        rbTAPP.reportError({"exception" : e.message,
+        rbTApp.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on regex failed" , 
                             "property"  : a,
                             "value"     : b
@@ -813,7 +813,7 @@ var rbTServerResponse = {
       }
     } catch(e) {
       // FIXME what to do?
-      rbTAPP.reportError({"exception" : e.message,
+      rbTApp.reportError({"exception" : e.message,
                           "message"   : "setting actor failed",
                           "data"      : respData
                         });
@@ -837,7 +837,7 @@ var rbTServerResponse = {
       }
     } catch(e) {
       // FIXME what to do?
-      rbTAPP.reportError({"exception" : e.message,
+      rbTApp.reportError({"exception" : e.message,
                           "message"   : "setting user property failed",
                           "data"      : respData
                         });
@@ -860,7 +860,7 @@ var rbTServerResponse = {
       }
     } catch(e) {
       // FIXME what to do?
-      rbTAPP.reportError({"exception" : e.message,
+      rbTApp.reportError({"exception" : e.message,
                           "message"   : "setting system property failed",
                           "data"      : respData
                         });
@@ -882,7 +882,7 @@ var rbTServerResponse = {
       }
     } catch(e) {
       // FIXME what to do?
-      rbTAPP.reportError({"exception" : e.message,
+      rbTApp.reportError({"exception" : e.message,
                           "message"   : "handling event failed",
                           "data"      : respData
                         });
@@ -904,7 +904,7 @@ var rbTServerResponse = {
         throw "there is no data";
       }
     } catch(e) {
-      rbTAPP.reportError({"exception" : e.message,
+      rbTApp.reportError({"exception" : e.message,
                           "message"   : "setting rules failed",
                           "data"      : respData
                         });
@@ -946,9 +946,12 @@ var rbTServerChannel = {
   makeRequestData : function(event, reqData)
   {
     return {
-      "app_configs"  : rbTAPP.getConfigs(),  // mandatory
+
+      "app_id"  : rbTAPP.getAppID(),  // mandatory
+      "account_id"  : rbTAPP.getAccountID(),  // mandatory
+      // "actor_id" : rbTAPP.getConfigs(),
       "event"        : event,                // mandatory 
-      "request_data" : reqData,     
+      "properties" : reqData,     
     };
   },
 
@@ -1112,7 +1115,7 @@ var rbTSystemVar = {
       // for update only if we have cookie miss 
       var systemVars = rbTSystemVar.getAllProperty();
       rbTSystemVar.setPropertyInCookie(systemVars);
-      rbTAPP.setSystemProperty(systemVars);
+      rbTApp.setSystemProperty(systemVars);
     }
   },
 
@@ -1851,7 +1854,7 @@ var rbTCookie = {
         return false;
       }
     } catch(e) {
-      rbTAPP.reportError({"exception" : e.message,
+      rbTApp.reportError({"exception" : e.message,
                           "message"   : "cookie existence failed",
                           "name"      : cookieName,
                           "log"       : true, 
@@ -1916,7 +1919,7 @@ var rbTCookie = {
 
     } catch(e) {
       // FIXME  what to do?
-      rbTAPP.reportError({"exception" : e.message,
+      rbTApp.reportError({"exception" : e.message,
                           "message"   : "cookie set failed",
                           "name"      : cookieName,
                           "value"     : cookieValue,
@@ -1941,7 +1944,7 @@ var rbTCookie = {
                           "; expires=Thu, 01-Jan-70 00:00:01 GMT";
     } catch (e) {
       // FIXME what to do?
-      rbTAPP.reportError({"exception" : e.message,
+      rbTApp.reportError({"exception" : e.message,
                           "message"   : "cookie delete failed",
                           "name"      : cookieName,
                           "log"       : true, 
@@ -1967,7 +1970,7 @@ var rbTCookie = {
       }
     } catch(e) {
       // FIXME what to do?
-      rbTAPP.reportError({"exception" : e.message,
+      rbTApp.reportError({"exception" : e.message,
                           "message"   : "cookie flush all failed",
                           "log"       : true, 
                          });
@@ -1996,8 +1999,8 @@ var rbTCookie = {
       // if everything seems fine, then set app/acc id and initialize rbTAPP.
       rbTAPP.setAppID(appid);
       rbTAPP.setAccountID(accid);
-      rbTUtils.includeJQIfNeeded();
       rbTAPP.initialize();
+      rbTUtils.includeJQIfNeeded();
     }
   } catch (e) {
     rbTAPP.reportError({"exception" : e.message, 

@@ -18,7 +18,7 @@ class EventsController < ApplicationController
   # OUTPUT => {status: true}
 
   def create
-    Rails.logger.info("Enter Event Create")
+    Rails.logger.info("Enter Event Create #{params.inspect}")
 
     params[:account_id] = current_account._id
     ret = Event.add!(params)
