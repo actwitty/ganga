@@ -1,0 +1,51 @@
+<style>
+
+  .rbTextValue
+   {
+     color:{{rb.topbar.generic.normal.text.style.color}};
+     font-size: {{rb.topbar.generic.normal.text.style.fontsize}};
+     text-shadow: {{rb.topbar.generic.normal.text.style.textshadow}};
+     font-family: {{rb.topbar.generic.normal.text.style.fontfamily}};
+   }
+
+  #actionTopbarGenericNormalButtonClick
+   {
+     font-size:{{rb.topbar.generic.normal.button.style.fontsize}};
+     background-color:{{rb.topbar.generic.normal.button.style.bgClor}};  
+     color :{{rb.topbar.generic.normal.button.style.color}};
+
+   }
+
+</style>
+
+<div id="rbTopbarGenericNormalBase" style="zIndex:{{rb.topbar.generic.normal.base.style.zIndex}};width:{{rb.topbar.generic.normal.base.style.width}};height:{{rb.topbar.generic.normal.base.style.height}};display:block; background-color:{{rb.topbar.generic.normal.base.style.bgColor}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 5px 5px 3px #888888;text-align:{{rb.topbar.generic.normal.base.style.textalign}};">
+
+  <p id="rbActionTopbarGenericNormalLeftClick" class="rbTextValue" style="display:inline;  position:relative; margin-left:20px; top:10px; margin-right:20px;">
+         {{rb.topbar.generic.normal.left.value.text}}  
+  </p> 
+  
+    
+  <a id="actionTopbarGenericNormalButtonClick" class ="rbClickable" style="display:inline;position:relative;top:10px;" href="{{rb.topbar.generic.normal.button.link.ahref}}"> {{rb.topbar.generic.normal.button.link.lable}} </a>
+   
+    
+
+  <p id="rbActionTopbarGenericNormalRightClick" class="rbTextValue" style="display:inline;  position:relative; margin-right:20px; top:10px; margin-left:20px;">
+         
+         {{rb.topbar.generic.normal.right.value.text}}  
+  </p>     
+   
+ <div id="rbaActionTopbarGenericNormalHelpClick" style="display:inline; position:absolute;right:30px;margin-left:20px;font-weight:bold;top:5px;"> 
+       
+            <a target="_blank" style= "text-decoration:none ;color:#FFFFFF;font-size:100%;" href="{{rb.action.topbar.generic.normal.help.ahref}}" >
+            ?
+            </a>   
+
+  </div>
+
+
+
+    <div id="rbActionTopbarGenericNormalCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; top:5px;right:10px;font-weight:bold;" >
+     X
+    </div> 
+
+</div>
