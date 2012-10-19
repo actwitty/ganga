@@ -1,10 +1,9 @@
 var rbTServerChannel = {
-  "use strict"
   
   /* All server url routes to be mapped here */
   url : {
     createSession     : "",
-    fireEvent         : "",
+    fireEvent         : "http://localhost:3000/event/create",
     identify          : "",
     setUserProperty   : "",
     setSystemProperty : "",
@@ -36,15 +35,15 @@ var rbTServerChannel = {
   /** 
   *  Make a request to server.
   *  @param {string} event
-  *  @param {rbtServerChannel.url} url
+  *  @param {rbTServerChannel.url} url
   *  @param {object} reqData
   *  @param {object} callback
   *  @return {object}
   */
   makeEventRequest :  function(event, url, reqData, callback)
   {
-    var reqServerData = rbtServerChannel.makeRequestData(event, reqData);
-    callback = rbtServerChannel.extendCallbacks(callback);
+    var reqServerData = rbTServerChannel.makeRequestData(event, reqData);
+    callback = rbTServerChannel.extendCallbacks(callback);
 
     jQuery.ajax({
           url: url,
@@ -72,11 +71,34 @@ var rbTServerChannel = {
   *   
   *  @return void
   */  
-  createSession : function(callback)
+  createSession : function(url, callback)
   {
     reqServerData = {"app_id" : rbTAPP.configs.appID, "account_id" : rbTAPP.configs.accountID};
     jQuery.ajax({
-          url: rbtServerChannel.url.createSession,
+          url: rbTServerChannel.url.createSession,
+          type: 'GET',
+          dataType: 'json',
+          contentType: 'application/json',
+          data: reqServerData,
+          success: function ( respData ) {
+              callback.success(respData);
+          },error:function(XMLHttpRequest,textStatus, errorThrown){ 
+              // todo : what to do??            
+              callback.error(); 
+          }
+    });
+  },
+
+  /** 
+  *  Request server to for getting data
+  *   
+  *  @return void
+  */  
+  makeGetRequest : function(url, callback)
+  {
+    reqServerData = {"app_id" : rbTAPP.configs.appID, "account_id" : rbTAPP.configs.accountID};
+    jQuery.ajax({
+          url: url,
           type: 'GET',
           dataType: 'json',
           contentType: 'application/json',
@@ -98,7 +120,7 @@ var rbTServerChannel = {
   reportError : function(params)
   {
     jQuery.ajax({
-          url: rbtServerChannel.url.reportError,
+          url: rbTServerChannel.url.reportError,
           type: 'GET',
           dataType: 'json',
           contentType: 'application/json',
@@ -119,8 +141,8 @@ var rbTServerChannel = {
   */  
   extendCallbacks : function(callback)
   {
-    callback.success = callback.success || rbtServerChannel.defaultOptions.success_callback;
-    callback.error   = callback.error || rbtServerChannel.defaultOptions.error_callback;
+    callback.success = callback.success || rbTServerChannel.defaultOptions.success_callback;
+    callback.error   = callback.error || rbTServerChannel.defaultOptions.error_callback;
     return callback;
   },
 

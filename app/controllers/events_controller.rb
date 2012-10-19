@@ -1,5 +1,5 @@
 class EventsController < ApplicationController
-	before_filter :authenticate_account!
+	#before_filter :authenticate_account!
   protect_from_forgery
 
 	# NOTE
