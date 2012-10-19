@@ -73,8 +73,7 @@ App.Router = Ember.Router.extend
         # Context comes as argument
         project = event.context
         editController = router.get('projectEditController')
-        router.get('projectsController').set('selected', project)
-        editController.set('content', project)     
+        router.get('projectsController').set('selected', project)          
         editController.set('isNew', false)
         editController.resetStates()   
         homeController = router.get('homeController')

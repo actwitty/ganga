@@ -1,0 +1,42 @@
+{{#if view.showInfo}}
+  <div class="message">
+    <a alt="close" class="close_button" {{action "hideInfo" target="App.projectEditView"}}></a>
+
+    <div class="message_text_container">
+      <h3> All Applications </h3>
+              You can manage your applications at this dashboard.            
+      </div>
+
+      <a href="/" class="info_btn_pos btn btn-info">
+        Learn more      
+      </a>
+  </div>
+{{/if}}
+<div class="proj_list"> 
+  <table id="appsTable" class="tablesorter"> 
+    <thead class="apps">
+      <tr class="apps"> 
+        <th>AppId</th> 
+        <th>Name</th> 
+        <th>Domain</th> 
+        <th>Email</th> 
+        <th>Created On</th> 
+        
+      </tr> 
+    </thead>
+    <tbody> 
+
+      {{#each project in controller.content}}        
+        <tr> 
+          <td>{{project.app_id}}</td> 
+          <td>{{project.description.name}}</td> 
+          <td>{{project.description.domain}}</td> 
+          <td>{{project.description.email}}</td> 
+          <td>{{project.created_time}}</td> 
+          <td><a class="edit_link" {{action editProject project  }}> Edit </a></td>           
+      </tr> 
+      
+      {{/each}}
+    </tbody>
+  </table>
+</div>

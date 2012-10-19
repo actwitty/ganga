@@ -9,6 +9,10 @@ App.ProjectEditController = Em.ObjectController.extend(
   createUrl: 'app/create' 
   deleteUrl: 'app/delete'
 
+  projectChanged: (->
+   @set('content',App.get('router.projectsController').get('selected'))
+  ).observes('App.router.projectsController.selected')
+
   resetStates: (->
   	@set 'isBusy', false
   	@set 'isError', false

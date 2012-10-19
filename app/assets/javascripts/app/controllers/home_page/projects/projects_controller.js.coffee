@@ -2,50 +2,7 @@ App.ProjectsController = Em.ArrayController.extend(
   content: []
   selected: null    
   url: "/account/list_apps"
-  #########################################################
-  translatePropertyName: (property) ->
-    property.replace('][',".").replace("[",".").replace("]","")
 
-  #########################################################
-  loadSchema: (schema) ->
-    
-    if typeof schema is "undefined"
-      return {}
-
-    propertySchema = {}
-    for property, details in schema.properties
-      propertyName = @translatePropertyName property
-      for type, events in details
-        propertySchema[propertyName] = type
-    return propertySchema
-
-  #########################################################
-  loadRules: (rules) ->
-    #define a new rule content
-    rulesContent = Ember.ArrayProxy.create(
-      content: []
-    )
-    
-    for rule of rules 
-
-      conditionContent = Ember.ArrayProxy.create(content: [])
-
-      (for condition of rule.conditions
-        newCondition = App.Condition.create(condition)
-        conditionContent.pushObject(newCondition)
-      )
-      
-
-      
-      newRule = App.Rule.Create(
-        name: rule.name
-        id: rule.id
-        conditions: rule.conditions
-      )
-      
-      ruleContent.pushObject(newRule)
-    
-    return ruleContent
   
   #########################################################
   loadAll: (data)->
