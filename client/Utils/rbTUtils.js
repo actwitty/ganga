@@ -9,6 +9,7 @@ var rbTUtils = {
     function includeJQ()
     { 
       rbTUtils.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js");
+      rbTUtils.waitForjQueryAlive();
     }
 
     if (typeof jQuery != 'undefined') {
@@ -26,7 +27,7 @@ var rbTUtils = {
 
 	parseURL: function(urlStr)
 	{
-      var a = doc.createElement("a"), query = {};
+      var a = document.createElement("a"), query = {};
       a.href = urlStr; queryStr = a.search.substr(1);
       // Disassemble query string
       if (queryStr != ''){
@@ -53,28 +54,45 @@ var rbTUtils = {
 	*/
   embedScript: function(url)
   {
-      var element  = doc.createElement("script");
+      var element  = document.createElement("script");
       element.type = "text/javascript";
       element.src  = url;
-      doc.getElementsByTagName("head")[0].appendChild(element);
+      document.getElementsByTagName("head")[0].appendChild(element);
+  },
+
+  /**
+  * Wait till jquery is alive.
+  */
+  waitForjQueryAlive : function() 
+  {
+      function checkJquery() 
+      {
+        if (!window.jQuery) {
+            window.setTimeout(checkJquery, 500);
+        } else {
+          // make RBT APP alive.
+          rbTAPP.wake_RBT_APP();
+        }
+      }
+      checkJquery();
   },
     
   // JSON
   JSON : {
-      parse: (win.JSON && win.JSON.parse) || function(data)
+      parse: (window.JSON && window.JSON.parse) || function(data)
       {
         if (typeof data !== "string" || !data) { 
-        	return null; 
+          return null; 
         }
         return (new Function("return " + data))();
       },
     
-      stringify: (win.JSON && win.JSON.stringify) || function(object) 
+      stringify: (window.JSON && window.JSON.stringify) || function(object) 
       {
         var type = typeof object;
         if (type !== "object" || object === null) {
           if (type === "string") {
-           	return '"' + object + '"'; 
+            return '"' + object + '"'; 
           }
         } else {
           var k, v, json = [],
@@ -86,9 +104,9 @@ var rbTUtils = {
             else if (type === "object" && v !== null)
               v = this.stringify(v);
             json.push((isArray ? "" : '"' + k + '":') + v);
-       		}
-     	  	return (isArray ? "[" : "{") + json.join(",") + (isArray ? "]" : "}");
-     		} 
+          }
+          return (isArray ? "[" : "{") + json.join(",") + (isArray ? "]" : "}");
+        } 
       } 
     },
     

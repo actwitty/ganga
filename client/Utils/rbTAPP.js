@@ -1,27 +1,4 @@
 
-/** Start Rule Bot APP 
-* @param {string} appid App ID for rulebot account
-* @param {string} accid Account ID for rulebot account
-* 
-* @return void
-*
-*/
-function StartRBTApp(appid,accid){
-  try {
-    if (!appid || !accid || appid="" || accid="") {
-      throw new Error("App-id, Account-ID are not mentioned")
-    } else {
-      // if everything seems fine, then set app/acc id and initialize rbTAPP.
-      rbTAPP.setAppID(appid);
-      rbTAPP.setAccountID(accid);
-      rbTAPP.initialize();
-    }
-  } catch (e) {
-    rbTApp.reportError({"exception" : e.message, 
-                        "message"   : "App initalization failed"
-                       });
-  }
-}(_rbTK[0][1], _rbTK[1][1]);
 
 
 var rbTAPP = {
@@ -43,7 +20,7 @@ var rbTAPP = {
     initialize : function()
     {
       // 1). includin jquery if need be
-      rbTUtils.includeJQIfNeeded();
+      //rbTUtils.includeJQIfNeeded();
 
       // 2). Create session Deferred till further discussion
       //rbTAPP.createSession();
@@ -56,7 +33,30 @@ var rbTAPP = {
 
       // 5). FIXME : Check status of last event, if pending, execute it.
       rbTRules.executeLastPendingEvent();
-    }
+    },
+
+    /**
+    * Check status of RBT APP
+    *
+    * @param {function} callback Callback function if rbTAPP is alive.
+    * @param {object} args Arguments with which callback will be called.
+    * @return void   
+    */
+    isrbTAlive :  function(callback, args)
+    {
+       if (rbTAPP.configs.status)
+           callback(args);
+       else
+           return false;
+    },  
+
+    /**
+    * Set RBT APP Status to true to signal app is alive
+    */
+    wake_RBT_APP : function()
+    {
+      rbTAPP.configs.status = true;
+    },
 
     /** 
     *  Set App Id
@@ -98,6 +98,8 @@ var rbTAPP = {
       //rbTAPP.configs.ActorID = id;
       rbTCookie.setCookie("actor_id", respData);
     },   
+
+
 
     /** 
     *  Get App ID
@@ -147,9 +149,10 @@ var rbTAPP = {
                  "account_id" : rbTAPP.configs.accountID,  
                 }; 
       
-      if (var actor_id = rbTCookie.getCookie(rbTCookie.defaultCookie.actorID))  {
+       var actor_id = rbTCookie.getCookie(rbTCookie.defaultCookies.actorID);
+       if (actor_id)  {
         cnf["actor_id"] = actor_id;
-      }
+       }
       return cnf;
     },  
 
@@ -162,8 +165,9 @@ var rbTAPP = {
     */ 
     createSession : function()
     {
-      rbtServerChannel.createSession({success:rbTAPP.setSessionID});
+      rbTServerChannel.createSession({success:rbTAPP.setSessionID});
     },
+
 
 
     /** 
@@ -175,14 +179,14 @@ var rbTAPP = {
     setSystemProperty : function(params)
     {
       try {
-          rbtServerChannel.makeEventRequest("set_system_property", 
-                                        rbtServerChannel.url.setSystemProperty,
+          rbTServerChannel.makeEventRequest("set_system_property", 
+                                        rbTServerChannel.url.setSystemProperty,
                                         params,
                                         { success: rbTServerResponse.setSystemProperty,
-                                          error  : rbtServerResponse.defaultError
+                                          error  : rbTServerResponse.defaultError
                                         });
       } catch(e) {
-        rbTApp.reportError({"exception" : e.message,
+        rbTAPP.reportError({"exception" : e.message,
                             "message"   : "setting system properties failed",
                             "data"      : rules
                            });
@@ -201,7 +205,7 @@ var rbTAPP = {
 
 
     /** 
-    *  report error to rbt server
+    *  report error to rbT server
     *  @param {object} params Error log message 
     *  @return void
     */ 
@@ -211,7 +215,7 @@ var rbTAPP = {
           if (params.log) {
             debug.error(params);
           } else {
-            rbtServerChannel.reportError(params);
+            rbTServerChannel.reportError(params);
           }
       } catch(e) {
         // FIXME what to do?
@@ -230,15 +234,15 @@ var rbTAPP = {
       sendEvent : function(event, params)
       {
         try {
-            rbtServerChannel.makeEventRequest(event, 
-                                          rbtServerChannel.url.fireEvent,
+            rbTServerChannel.makeEventRequest(event, 
+                                          rbTServerChannel.url.fireEvent,
                                           params,
                                           { success: rbTServerResponse.handleEvent,
-                                            error  : rbtServerResponse.defaultError
+                                            error  : rbTServerResponse.defaultError
                                           });
         } catch(e) {
           // FIXME what to do?
-          rbTApp.reportError({"exception" : e.message,
+          rbTAPP.reportError({"exception" : e.message,
                               "message"   : "business send event failed",
                               "event"     : event,
                               "data"      : params, 
@@ -255,14 +259,14 @@ var rbTAPP = {
       identify : function(params)
       {
         try {
-            rbtServerChannel.makeEventRequest("identify", 
-                                          rbtServerChannel.url.identify,
+            rbTServerChannel.makeEventRequest("identify", 
+                                          rbTServerChannel.url.identify,
                                           params,
                                           { success: rbTServerResponse.setActor,
-                                            error  : rbtServerResponse.defaultError
+                                            error  : rbTServerResponse.defaultError
                                           });
         } catch(e) {
-          rbTApp.reportError({"exception" : e.message,
+          rbTAPP.reportError({"exception" : e.message,
                               "message"   : "business identify event failed",
                               "data"      : params, 
                              });
@@ -278,15 +282,15 @@ var rbTAPP = {
       setUserProperty : function(params)
       {
         try {
-            rbtServerChannel.makeEventRequest("set_user_property", 
-                                          rbtServerChannel.url.setUserProperty,
+            rbTServerChannel.makeEventRequest("set_user_property", 
+                                          rbTServerChannel.url.setUserProperty,
                                           params,
                                           { success: rbTServerResponse.setUserProperty,
-                                            error  : rbtServerResponse.defaultError
+                                            error  : rbTServerResponse.defaultError
                                           });
         } catch(e) {
           // FIXME what to do?
-          rbTApp.reportError({"exception" : e.message,
+          rbTAPP.reportError({"exception" : e.message,
                               "message"   : "business set user property event failed",
                               "event"     : event,
                               "data"      : params, 

@@ -20,7 +20,7 @@ var rbTSystemVar = {
         return true; 
       } else {
         var currentSysVar = rbTSystemVar.getAllProperty();
-        return (sysVar === currentSysVar) ? false : true;
+        return (sysVarInCookie === currentSysVar) ? false : true;
       }
     }
 
@@ -122,28 +122,28 @@ var rbTSystemVar = {
     for (var i = 0; i < types.length ; ++i) {
       switch(types[i]) {
       case "browser_info":
-          propertyCnf[types[i] = {types[i]:rbTSystemVar.properties.browser}; 
+          propertyCnf[types[i]] =  rbTSystemVar.properties.browser; 
           break;
       case "referrer_info":
-          propertyCnf[types[i] = {types[i]:rbTSystemVar.properties.current_session.referrer_info}; 
+          propertyCnf[types[i]] =  rbTSystemVar.properties.current_session.referrer_info; 
           break;
       case "device_info" :
-          propertyCnf[types[i] = {types[i]:rbTSystemVar.properties.device}; 
+          propertyCnf[types[i]] =  rbTSystemVar.properties.device; 
           break;
       case "screen_info" :
-          propertyCnf[types[i] = {types[i]:rbTSystemVar.properties.device.screen}; 
+          propertyCnf[types[i]] =  rbTSystemVar.properties.device.screen; 
           break;
       case "viewport_info" :
-          propertyCnf[types[i] = {types[i]:rbTSystemVar.properties.device.viewport}; 
+          propertyCnf[types[i]] =  rbTSystemVar.properties.device.viewport; 
           break;
       case "locale_info":
-          propertyCnf[types[i] = {types[i]:rbTSystemVar.properties.locale}; 
+          propertyCnf[types[i]] =  rbTSystemVar.properties.locale; 
           break;
       case "plugins_info":
-          propertyCnf[types[i] = {types[i]:rbTSystemVar.properties.plugins}; 
+          propertyCnf[types[i]] =  rbTSystemVar.properties.plugins; 
           break;
       case "time_info":
-          propertyCnf[types[i] = {types[i]:rbTSystemVar.properties.time}; 
+          propertyCnf[types[i]] =  rbTSystemVar.properties.time; 
           break;
       }
     }
@@ -157,7 +157,7 @@ var rbTSystemVar = {
 
   setPropertyInCookie : function(property)
   {
-    rbTCookie.setCookie(rbtCookie.defaultCookies.systemProp, JSON.stringify(property));
+    rbTCookie.setCookie(rbTCookie.defaultCookies.systemProp, JSON.stringify(property));
   },
 
 
@@ -275,7 +275,7 @@ var session_fetch = (function(win, doc, nav)
     check_asynch();
 
 
-    /* set the properties in our rbt hash */
+    /* set the properties in our rbT hash */
     setrbTProperties = function() {
       for (property in unloaded_modules) {
         rbTSystemVar.setProperty(property, unloaded_modules[property] );

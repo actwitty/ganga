@@ -47,12 +47,11 @@ var rbTRules = {
   init : function()
   {
     try {
-          rbtServerChannel.makeEventRequest(event, 
-                                          rbtServerChannel.url.getRules,
-                                          params,
-                                          { success: rbTServerResponse.setRulesTable,
-                                            error  : rbtServerResponse.defaultError
-                                          });
+          rbTServerChannel.makeGetRequest( rbTServerChannel.url.getRules,
+                                           params,
+                                           { success: rbTServerResponse.setRulesTable,
+                                             error  : rbTServerResponse.defaultError
+                                           });
         } catch(e) {
           // FIXME what to do?
           rbTApp.reportError({"exception" : e.message, "message":"rule initialization failed"});
@@ -178,7 +177,8 @@ var rbTRules = {
   executeLastPendingEvent : function()
   {
     try {
-      if (var lastEvent = rbTCookie.getCookie("lastevent")) {
+      var lastEvent = rbTCookie.getCookie("lastevent");
+      if (lastEvent) {
         rbTRules.executeRulesOnEvent(lastEvent);
       } else {
         throw "no last event found"

@@ -12,7 +12,7 @@ var rbTCookie = {
 
   // Just harcode names for some of the default cookies which we will be using
   defaultCookies : {
-    "actorid"    : "actor_id",
+    "actorID"    : "actor_id",
     "systemProp" : "system_prop",
     "actorProp"  : "actor_prop",
   },
