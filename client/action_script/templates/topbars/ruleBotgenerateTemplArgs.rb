@@ -64,7 +64,15 @@ Dir.glob('*.html').each  do|fileName|
     m.length.times do |index|  
     m[index] = m[index].delete("{{")
     m[index]=  m[index].delete("}}")
-    m[index] = "\t \t \t \t \t \t " + "'" + m[index] + "'" + ","+ "\n" 
+    
+    if index!= (m.length-1)
+       m[index] = "\t \t \t \t \t \t " + "'" + m[index] + "'" + ","+ "\n" 
+    
+    elsif  index == (m.length-1)
+      m[index] = "\t \t \t \t \t \t " + "'" + m[index] + "'" + "\n" 
+
+    end  
+
     end 
     m= m.to_s
 
@@ -75,14 +83,11 @@ Dir.glob('*.html').each  do|fileName|
 
     templLibStr = templLibStr+ "\t \t  "+ templPropName + ":" + "rbT."+ origin + "HTML"+",\n"
 
-    puts tempArgsStr
-    puts templLibStr
-
 end	
 
-templLibStr = templLibStr + "\n \t \t \t }; \n\n\n\n "
+templLibStr = templLibStr.chop.chop  + "\n \n \t \t \t }; \n\n\n\n "
 
-tempArgsStr = tempArgsStr + "\n \t\ \t \t \t }; \n "
+tempArgsStr = tempArgsStr.chop.chop + "\n \t\ \t \t \t }; \n "
 
 
 templFinalStr = templLibStr + tempArgsStr
