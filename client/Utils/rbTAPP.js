@@ -2,7 +2,9 @@ var rbTAPP = {
     
 
     /* Main configs will be holded here */
-    configs : {},
+    configs : {
+      "status" : false
+    },
 
     
     /** 
@@ -12,6 +14,7 @@ var rbTAPP = {
     *  3). fetch rules.
     *  4). check status of last event, if pending, execute it.
     *  5). fetch system properties if cache miss
+    *  6). Allow Business to make calls
     *  
     *  @return void
     */
@@ -32,6 +35,8 @@ var rbTAPP = {
 
       // 5). FIXME : Check status of last event, if pending, execute it.
       rbTRules.executeLastPendingEvent();
+
+      rb = new RBT();
     },
 
     /**
@@ -43,6 +48,8 @@ var rbTAPP = {
     */
     isrbTAlive :  function(callback, args)
     {
+       return this.configs.status;
+       /*
        if (this.configs.status) {
           if (callback)
              callback(args);
@@ -50,6 +57,8 @@ var rbTAPP = {
        }
        else
            return false;
+      */
+
     },  
 
     /**
@@ -226,78 +235,5 @@ var rbTAPP = {
       } catch(e) {
         // FIXME what to do?
       }
-    },  
-
-    /* Business specific call */
-    call : {
-      /** 
-      * Send event to RBT server 
-      * 
-      * @param {string} event
-      * @param {object} [params]
-      * @return void
-      */
-      sendEvent : function(event, params)
-      {
-        "use strict";
-        if (!event || typeof(event) != "string" || event == "" ) {
-          return;
-        }
-        rbTServerChannel.makeEventRequest(event, 
-                                          rbTServerChannel.url.fireEvent,
-                                          params,
-                                          { success: rbTServerResponse.handleEvent,
-                                            error  : rbTServerResponse.defaultError
-                                          });
-      },
-
-      /** 
-      * Req RBT server to identify actor based on params
-      * 
-      * @param {object} params Option based on which actor will be identified
-      * @return void
-      */
-      identify : function(params)
-      {
-        "use strict";
-        rbTServerChannel.makeGetRequest(rbTServerChannel.url.identify,
-                                        params,
-                                        { success: rbTServerResponse.setActor,
-                                          error  : rbTServerResponse.defaultError
-                                        }
-                                       );
-      },
-
-      /** 
-      * Req RBT server to set current actor property
-      * 
-      * @param {object} params Option based on which actor property will be set
-      * @return void
-      */
-      setUserProperty : function(params)
-      {
-        "use strict";
-        rbTServerChannel.makeGetRequest( rbTServerChannel.url.setUserProperty,
-                                         params,
-                                         { success: rbTServerResponse.setUserProperty,
-                                           error  : rbTServerResponse.defaultError
-                                        });
-      },
-
-      
-      /** 
-      * ALIAS
-      * 
-      * @param {object} params Option based on which system property will be set
-      * @return void
-      */
-      alias : function(params)
-      {
-          // FIXME : what to do?
-      },
-
-
-    }, 
+    }
 };
-
-
