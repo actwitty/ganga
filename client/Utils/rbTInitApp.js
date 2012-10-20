@@ -14,7 +14,6 @@
       // if everything seems fine, then set app/acc id and initialize rbTAPP.
       rbTAPP.setAppID(appid);
       rbTAPP.setAccountID(accid);
-      rbTAPP.initialize();
       rbTUtils.includeJQIfNeeded();
     }
   } catch (e) {

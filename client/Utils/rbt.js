@@ -11,7 +11,7 @@ var rbTAPP = {
     
 
     /* Main configs will be holded here */
-    configs : {},
+    "configs" : {},
 
     
     /** 

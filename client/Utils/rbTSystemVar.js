@@ -20,7 +20,7 @@ var rbTSystemVar = {
       if (!sysVarInCookie) {
         return true; 
       } else {
-        var currentSysVar = rbTSystemVar.getAllProperty();
+        var currentSysVar = this.getAllProperty();
         return (sysVarInCookie === currentSysVar) ? false : true;
       }
     }
@@ -32,11 +32,11 @@ var rbTSystemVar = {
       window.exports.session = session_fetch;
     }
 
-    if (isSystemVarDirty()) {
+    if (isSystemVarDirty.call(this)) {
       // Put current sys var in cookie and send it to server 
       // for update only if we have cookie miss 
-      var systemVars = rbTSystemVar.getAllProperty();
-      rbTSystemVar.setPropertyInCookie(systemVars);
+      var systemVars = this.getAllProperty();
+      this.setPropertyInCookie(systemVars);
       rbTAPP.setSystemProperty(systemVars);
     }
   },
@@ -49,7 +49,7 @@ var rbTSystemVar = {
    */
   setProperty : function(type, value)
   {
-    rbTSystemVar.properties[type] = value;
+    this.properties[type] = value;
   },
 
 
@@ -124,28 +124,28 @@ var rbTSystemVar = {
     for (var i = 0; i < types.length ; ++i) {
       switch(types[i]) {
       case "browser_info":
-          propertyCnf[types[i]] =  rbTSystemVar.properties.browser; 
+          propertyCnf[types[i]] =  this.properties.browser; 
           break;
       case "referrer_info":
-          propertyCnf[types[i]] =  rbTSystemVar.properties.current_session.referrer_info; 
+          propertyCnf[types[i]] =  this.properties.current_session.referrer_info; 
           break;
       case "device_info" :
-          propertyCnf[types[i]] =  rbTSystemVar.properties.device; 
+          propertyCnf[types[i]] =  this.properties.device; 
           break;
       case "screen_info" :
-          propertyCnf[types[i]] =  rbTSystemVar.properties.device.screen; 
+          propertyCnf[types[i]] =  this.properties.device.screen; 
           break;
       case "viewport_info" :
-          propertyCnf[types[i]] =  rbTSystemVar.properties.device.viewport; 
+          propertyCnf[types[i]] =  this.properties.device.viewport; 
           break;
       case "locale_info":
-          propertyCnf[types[i]] =  rbTSystemVar.properties.locale; 
+          propertyCnf[types[i]] =  this.properties.locale; 
           break;
       case "plugins_info":
-          propertyCnf[types[i]] =  rbTSystemVar.properties.plugins; 
+          propertyCnf[types[i]] =  this.properties.plugins; 
           break;
       case "time_info":
-          propertyCnf[types[i]] =  rbTSystemVar.properties.time; 
+          propertyCnf[types[i]] =  this.properties.time; 
           break;
       }
     }
@@ -154,7 +154,7 @@ var rbTSystemVar = {
 
   getAllProperty : function()
   {
-    return rbTSystemVar.getProperty(rbTSystemVar.allProperties);
+    return this.getProperty(this.allProperties);
   },
 
   setPropertyInCookie : function(property)
@@ -278,12 +278,12 @@ var session_fetch = (function(win, doc, nav)
 
 
     /* set the properties in our rbT hash */
-    setrbTProperties = function() {
+    (function setrbTProperties() {
       for (property in unloaded_modules) {
         rbTSystemVar.setProperty(property, unloaded_modules[property] );
       }
-    }
-    setrbTProperties();
+    })();
+    //setrbTProperties();
   };
 
 

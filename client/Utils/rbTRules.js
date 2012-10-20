@@ -11,7 +11,7 @@ var rbTRules = {
                   handler : {
                       "id"    : "action id",
                       "name"  : "name of action",
-                      "params": {},
+                      "params": {}
                   },
           },
           rules : [
@@ -20,24 +20,24 @@ var rbTRules = {
                   property : "",
                   operator : "contains",
                   value    : "83.samarth@gmail.com",
-                  connect  : "end", 
+                  connect  : "end" 
                 },
                 // actor_property based condition
                 {
                   property : "$83.samarth@gmail.com",
                   operator : "contains",
                   value    : "83.samarth@gmail.com",
-                  connect  : "end", 
+                  connect  : "end" 
                 },
                 // system_property based condition
                 {
                   property : "#83.samarth@gmail.com",
                   operator : "contains",
                   value    : "83.samarth@gmail.com",
-                  connect  : "end", 
-                },
-              ],
-        },
+                  connect  : "end" 
+                }
+              ]
+        }
   ],
   
   /**
@@ -48,7 +48,7 @@ var rbTRules = {
   init : function(params)
   {
     "use strict";
-    var params = params || "undefined";
+    var params = params || "";
     try {
           rbTServerChannel.makeGetRequest( rbTServerChannel.url.getRules,
                                            params,
@@ -69,7 +69,7 @@ var rbTRules = {
   setRulesTable : function(rules)
   {
     "use strict";
-    rules = rbTRules.sample_json;
+    rules = this.sample_json;
     var ruleString = "";
 
 
@@ -104,10 +104,10 @@ var rbTRules = {
                     ruleParams(ruleList.rules[rule]) + ruleConnect(ruleList.rules[rule]);
           }
 
-          rbTRules.ruleTable[ruleList.event] = { "name"       : ruleList.name,
-                                                 "ruleString" : ruleString,
-                                                 "action"     : ruleList.action.handler,
-          };
+          this.ruleTable[ruleList.event] = { "name"       : ruleList.name,
+                                             "ruleString" : ruleString,
+                                             "action"     : ruleList.action.handler
+                                           };
         });
     } catch (e) {
       rbTAPP.reportError({"exception" : e.message,
@@ -133,16 +133,16 @@ var rbTRules = {
     }
 
     try {
-          var functionCode = prepareFunctionCode(rbTRules.ruleTable[event].ruleString);
+          var functionCode = prepareFunctionCode(this.ruleTable[event].ruleString);
           var isRuleValid = new Function(functionCode)();
           if (isRuleValid) {
-            rbTRules.invokeAction(event);
+            this.invokeAction(event);
           } 
     } catch (e) {
       rbTAPP.reportError({"exception"  : e.message,
                           "message"    : "rule execution on event failed" , 
                           "event_name" : event,
-                          "rule_string": rbTRules.ruleTable[event].ruleString,
+                          "rule_string": this.ruleTable[event].ruleString
                          });
     } 
   },
@@ -170,7 +170,7 @@ var rbTRules = {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"data type conversion on rule value failed" , 
                             "property" : property,
-                            "value" : value,
+                            "value" : value
                            });
     }
   },
@@ -187,7 +187,7 @@ var rbTRules = {
     try {
       var lastEvent = rbTCookie.getCookie("lastevent");
       if (lastEvent) {
-        rbTRules.executeRulesOnEvent(lastEvent);
+        this.executeRulesOnEvent(lastEvent);
       } else {
         throw "no last event found"
       }
@@ -216,11 +216,11 @@ var rbTRules = {
   {
     try {
       // Hand over action to templating engine for processing event action.
-      rbTTemplates.invoke(rbTRules.ruleTable[event].action);
+      rbTTemplates.invoke(this.ruleTable[event].action);
     } catch(e) {
       rbTAPP.reportError({"exception" : e.message,
                           "message": "action could not be invoked" , 
-                          "event" : event,
+                          "event" : event
                          });
     }
   },
@@ -242,7 +242,7 @@ var rbTRules = {
     {
       "use strict";
       try {
-        return a < rbTRules.valueDataType(a, b);
+        return a < this.valueDataType(a, b);
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on lt failed" , 
@@ -263,7 +263,7 @@ var rbTRules = {
     {
       "use strict";
       try {
-        return a > rbTRules.valueDataType(a, b);
+        return a > this.valueDataType(a, b);
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on gt failed" , 
@@ -284,7 +284,7 @@ var rbTRules = {
     {
       "use strict";
       try {
-        if (a !== rbTRules.valueDataType(a, b) )
+        if (a !== this.valueDataType(a, b) )
           return true;
         else
           return false;
@@ -309,7 +309,7 @@ var rbTRules = {
     {
       "use strict";
       try {
-        return (a === rbTRules.valueDataType(a, b));
+        return (a === this.valueDataType(a, b));
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on equal_to failed" , 
@@ -330,7 +330,7 @@ var rbTRules = {
     {
       "use strict";
       try {
-        if (a.indexOf(rbTRules.valueDataType(a, b)) >= 0 )
+        if (a.indexOf(this.valueDataType(a, b)) >= 0 )
           return true;
         else
           return false;
@@ -354,7 +354,7 @@ var rbTRules = {
     {
       "use strict";
       try {
-        if (a.match("^"+rbTRules.valueDataType(a, b)))
+        if (a.match("^"+this.valueDataType(a, b)))
           return true;
         else
           return false;
@@ -379,7 +379,7 @@ var rbTRules = {
     {
       "use strict";
       try {
-        if (a.match(rbTRules.valueDataType(a, b)+"$"))
+        if (a.match(this.valueDataType(a, b)+"$"))
           return true;
         else
           return false;
@@ -403,7 +403,7 @@ var rbTRules = {
     {
       "use strict";
       try {
-        return a >= rbTRules.valueDataType(a, b) && a <= rbTRules.valueDataType(a, c);
+        return a >= this.valueDataType(a, b) && a <= this.valueDataType(a, c);
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on between failed" , 
@@ -434,8 +434,8 @@ var rbTRules = {
                             "value"     : b
                            });
       }
-    },
-  },
+    }
+  }
 
 };
 

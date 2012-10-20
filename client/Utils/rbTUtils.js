@@ -7,7 +7,7 @@ var rbTUtils = {
   {
     function includeJQ()
     { 
-      rbTUtils.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js");
+      rbTUtils.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
       rbTUtils.waitForjQueryAlive();
     }
 
@@ -17,10 +17,10 @@ var rbTUtils = {
             || /^1.1/.test(jQuery.fn.jquery) 
             || /^1.2/.test(jQuery.fn.jquery)
             || /^1.3/.test(jQuery.fn.jquery)) {
-            includeJQ();
+            includeJQ.call(this);
         }
     } else {
-        includeJQ();
+        includeJQ.call(this);
     }
   },
 
@@ -48,15 +48,28 @@ var rbTUtils = {
   },
     
   /** Embed any other script.
-	*
-	*	@return void
+	* @param {string} url Script URL to load.
+  * @param {object} callback Function to call when script is loaded successfully.
+  * @param {object} params Callback initiated with param as arguments.
+  *	@return void
 	*/
-  embedScript: function(url)
+  embedScript: function(url, callback, params)
   {
-      var element  = document.createElement("script");
-      element.type = "text/javascript";
-      element.src  = url;
-      document.getElementsByTagName("head")[0].appendChild(element);
+      var scriptElement  = document.createElement("script");
+      scriptElement.type = "text/javascript";
+      scriptElement.src  = url;
+      document.getElementsByTagName("head")[0].appendChild(scriptElement);
+      scriptElement.onload = scriptElement.onreadystatechange = function() {
+        if(!this.readyState ||
+            this.readyState == "loaded" || 
+            this.readyState == "complete") {
+            rbTDebug.log("Script "+ url +"loaded successfully");
+            if (callback) {
+              var arg = params || "";
+              callback(arg);
+            }
+        }
+      }
   },
 
   /**
@@ -65,7 +78,7 @@ var rbTUtils = {
   waitForjQueryAlive : function() 
   {
       "use strict";
-      function checkJquery() 
+      function checkJquery()
       {
         if (!window.jQuery) {
             window.setTimeout(checkJquery, 500);
@@ -108,6 +121,6 @@ var rbTUtils = {
           return (isArray ? "[" : "{") + json.join(",") + (isArray ? "]" : "}");
         } 
       } 
-    },
+    }
     
 };

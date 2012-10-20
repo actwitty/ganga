@@ -2,19 +2,20 @@ var rbTServerChannel = {
   
   /* All server url routes to be mapped here */
   url : {
-    createSession     : "",
-    fireEvent         : "http://localhost:3000/event/create",
-    identify          : "",
-    setUserProperty   : "",
-    setSystemProperty : "",
-    getRules          : "",
-    reportError       : "",
+    "createSession"     : "",
+    "fireEvent"         : "http://localhost:3000/event/create",
+    "identify"          : "",
+    "setUserProperty"   : "",
+    "setSystemProperty" : "",
+    "getRules"          : "",
+    "reportError"       : "",
+    "roi"               : ""
   },
 
   /* Default options for server request */
   defaultOptions : {
     "success_callback" : rbTServerResponse.defaultSuccessCallback,
-    "error_callback"   : rbTServerResponse.defaultErrorCallback,
+    "error_callback"   : rbTServerResponse.defaultErrorCallback
   },
 
   /** 
@@ -25,35 +26,16 @@ var rbTServerChannel = {
   */  
   makeRequestData : function(event, reqData)
   {
-    /* 
-    if (!event) {
-      return {
-        "app_configs"  : rbTAPP.getConfigs(),  // mandatory
-        "request_data" : reqData,     
-      };
-    } else {
-      return {
-        "app_configs"  : rbTAPP.getConfigs(),  // mandatory
-        "event"        : event,                // mandatory 
-        "request_data" : reqData,     
-      };
-    }*/
-    if (!event) {
-      return {
-         "app_id"  : rbTAPP.getAppID(),  // mandatory
-         "account_id"  : rbTAPP.getAccountID(),  // mandatory
-         // "actor_id" : rbTAPP.getConfigs(),
-         "properties" : reqData,    
-      };
-    } else {
-      return {
-         "app_id"  : rbTAPP.getAppID(),  // mandatory
-         "account_id"  : rbTAPP.getAccountID(),  // mandatory
-         // "actor_id" : rbTAPP.getConfigs(),
-         "event"        : event,                // mandatory 
-         "properties" : reqData,    
-      };
-    }
+    var requestData = {};
+
+    requestData["app_id"] = rbTAPP.getAppID(); // mandatory
+    requestData["account_id"] = rbTAPP.getAccountID(); // mandatory
+   
+    if (event)
+      requestData["event"] = event;
+    if (reqData)
+      requestData["properties"] = reqData;
+    return requestData;
   },
 
   /** 
@@ -67,54 +49,40 @@ var rbTServerChannel = {
   makeEventRequest :  function(event, url, reqData, callback)
   {
     "use strict";
-    var reqServerData = rbTServerChannel.makeRequestData(event, reqData);
-    callback = rbTServerChannel.extendCallbacks(callback);
+    try {
+      var reqServerData = this.makeRequestData(event, reqData);
+      callback = this.extendCallbacks(callback);
 
-    jQuery.ajax({
-          url: url,
-          type: 'GET',
-          dataType: 'json',
-          contentType: 'application/json',
-          data: reqServerData,
-          beforeSend: function() {
-              // FIXME : add status to cookie
-              rbTCookie.setCookie("lastevent", event);
-          },
-          success: function ( respData ) {
-              callback.success(respData);
-              rbTCookie.deleteCookie("lastevent");
-          },
-          error:function(XMLHttpRequest,textStatus, errorThrown){ 
-              // todo : what to do??            
-              callback.error(); 
-          }
-    });
+      jQuery.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: reqServerData,
+            beforeSend: function() {
+                // FIXME : add status to cookie
+                rbTCookie.setCookie("lastevent", event);
+            },
+            success: function ( respData ) {
+                callback.success(respData);
+                rbTCookie.deleteCookie("lastevent");
+            },
+            error:function(XMLHttpRequest,textStatus, errorThrown){ 
+                // todo : what to do??            
+                callback.error(); 
+            }
+      });
+    } catch(e) {
+      rbTAPP.reportError({"exception" : e.message,
+                          "message"   :"server event request failed" , 
+                          "event"     : event,
+                          "reqData"   : JSON.stringify(reqData),
+                          "log"       : "error" 
+                         }); 
+    }
   },
 
-  /** 
-  *  Request server to create session
-  *   
-  *  @return void
-  */  
-  createSession : function(url, callback)
-  {
-    "use strict";
-    var reqServerData = {"app_id" : rbTAPP.configs.appID, "account_id" : rbTAPP.configs.accountID};
-    callback = rbTServerChannel.extendCallbacks(callback);
-    jQuery.ajax({
-          url: rbTServerChannel.url.createSession,
-          type: 'GET',
-          dataType: 'json',
-          contentType: 'application/json',
-          data: reqServerData,
-          success: function ( respData ) {
-              callback.success(respData);
-          },error:function(XMLHttpRequest,textStatus, errorThrown){ 
-              // todo : what to do??            
-              callback.error(); 
-          }
-    });
-  },
+ 
 
   /** 
   *  Request server to for getting data
@@ -124,24 +92,56 @@ var rbTServerChannel = {
   makeGetRequest : function(url, params, callback)
   {
     "use strict";
-    var reqServerData = rbTServerChannel.makeRequestData(undefined, params);
-    //var reqServerData = {"app_id" : rbTAPP.configs.appID, "account_id" : rbTAPP.configs.accountID};
-    callback = rbTServerChannel.extendCallbacks(callback);
-    jQuery.ajax({
-          url: url,
-          type: 'GET',
-          dataType: 'json',
-          contentType: 'application/json',
-          data: reqServerData,
-          success: function ( respData ) {
-              callback.success(respData);
-          },error:function(XMLHttpRequest,textStatus, errorThrown){ 
-              // todo : what to do??            
-              callback.error(); 
-          }
-    });
+    try {
+      var reqServerData = this.makeRequestData(undefined, params);
+      callback = this.extendCallbacks(callback);
+      jQuery.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: reqServerData,
+            success: function ( respData ) {
+                callback.success(respData);
+            },error:function(XMLHttpRequest,textStatus, errorThrown){ 
+                // todo : what to do??            
+                callback.error(); 
+            }
+      });
+    } catch(e) {
+      rbTAPP.reportError({"exception" : e.message,
+                          "message"   :"server request failed" , 
+                          "url"       : url,
+                          "log"       : "error" 
+                         });
+    }
   },
    
+   /** 
+  *  Request server to create session
+  *  FIXME : NEED TO KNOW HOW SESSION WILL BE CREATED, BASED ON THAT WE WILL REMOVE MULTIPLE AJAX 
+  *  @return void
+  */  
+  createSession : function(url, callback)
+  {
+    "use strict";
+    callback = this.extendCallbacks(callback);
+    this.makeGetRequest(url, null, callback);
+  }, 
+
+  /** 
+  *  Request server for ROI
+  *  @param {object} params Parameters to pass as payload for ROI.
+  *  @param {object} callback Defined callback for roi. 
+  *  @return void
+  */  
+  roi : function(params, callback)
+  {
+    "use strict";
+    var cb = this.extendCallbacks(callback);
+    this.makeGetRequest(this.url.roi, params, callback);
+  }, 
+
   /** 
   *  Send error report to server
   *  @param {object} params Error log message 
@@ -150,20 +150,9 @@ var rbTServerChannel = {
   reportError : function(params)
   {
     "use strict";
-    callback = rbTServerChannel.extendCallbacks(callback);
-    jQuery.ajax({
-          url: rbTServerChannel.url.reportError,
-          type: 'GET',
-          dataType: 'json',
-          contentType: 'application/json',
-          data: params,
-          success: function ( respData ) {
-              callback.success(respData);
-          },error:function(XMLHttpRequest,textStatus, errorThrown){ 
-              // todo : what to do??            
-              callback.error(); 
-          }
-    });
+    var callback = this.extendCallbacks(callback);
+    this.makeGetRequest(this.url.reportError, params, callback);
+    callback = this.extendCallbacks(callback);
   },
 
   /** 
@@ -174,11 +163,9 @@ var rbTServerChannel = {
   extendCallbacks : function(callback)
   {
     "use strict";
-    callback.success = callback.success || rbTServerChannel.defaultOptions.success_callback;
-    callback.error   = callback.error || rbTServerChannel.defaultOptions.error_callback;
+    callback.success = callback.success || this.defaultOptions.success_callback;
+    callback.error   = callback.error || this.defaultOptions.error_callback;
     return callback;
-  },
-
-  
+  }
 
 };
