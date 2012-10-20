@@ -7,14 +7,14 @@ var rbTCookie = {
     expire : 24 * 60 * 60 * 1000,  // in hours
     path : "/",
     domain : window.location.hostname,
-    secure: false,
+    secure: false
   },
 
   // Just harcode names for some of the default cookies which we will be using
   defaultCookies : {
     "actorID"    : "actor_id",
     "systemProp" : "system_prop",
-    "actorProp"  : "actor_prop",
+    "actorProp"  : "actor_prop"
   },
 
   /** Get RBT cookie string name.
@@ -23,7 +23,7 @@ var rbTCookie = {
    */
   name : function(cookieName)
   {
-    return rbTCookie.namePrefix + cookieName;
+    return this.namePrefix + cookieName;
   },
 
   /** Get cookie string.
@@ -33,7 +33,7 @@ var rbTCookie = {
   getCookie : function(cookieName)
   {
     "use strict";
-    var results = document.cookie.match ( '(^|;) ?' + rbTCookie.name(cookieName) + '=([^;]*)(;|$)' );
+    var results = document.cookie.match ( '(^|;) ?' + this.name(cookieName) + '=([^;]*)(;|$)' );
 
     if (results)
         return (unescape(results[2]));
@@ -48,7 +48,7 @@ var rbTCookie = {
   doesCookieExist : function(cookieName)
   {
     try {
-      if (document.cookie.indexOf(rbTCookie.name(cookieName)) >= 0) {
+      if (document.cookie.indexOf(this.name(cookieName)) >= 0) {
         return true;
       } else {
         return false;
@@ -57,7 +57,7 @@ var rbTCookie = {
       rbTAPP.reportError({"exception" : e.message,
                           "message"   : "cookie existence failed",
                           "name"      : cookieName,
-                          "log"       : true, 
+                          "log"       : true 
                          });
     }
   }, 
@@ -65,7 +65,7 @@ var rbTCookie = {
 
   /** Set cookie options.
    * 
-   * @param {rbTCookie.defaultOptions} [options] set options
+   * @param {this.defaultOptions} [options] set options
    * @return string
    */
   cookieOptions : function(options) {
@@ -80,16 +80,16 @@ var rbTCookie = {
     }
 
     if (!options) {
-      rbTCookie.defaultOptions.expire = getExpDate(rbTCookie.defaultOptions.expire);
-      return rbTCookie.defaultOptions;
+      this.defaultOptions.expire = getExpDate(this.defaultOptions.expire);
+      return this.defaultOptions;
     }
       
 
     // Set options if passed else use default options.
-    cOptions.expire = options.expire || rbTCookie.defaultOptions.expire;
-    cOptions.path = options.path || rbTCookie.defaultOptions.path;
-    cOptions.domain = options.domain || rbTCookie.defaultOptions.domain;
-    cOptions.secure = options.secure || rbTCookie.defaultOptions.secure;  
+    cOptions.expire = options.expire || this.defaultOptions.expire;
+    cOptions.path = options.path || this.defaultOptions.path;
+    cOptions.domain = options.domain || this.defaultOptions.domain;
+    cOptions.secure = options.secure || this.defaultOptions.secure;  
 
     cOptions.expire = getExpDate(cOptions.expire);
 
@@ -101,15 +101,15 @@ var rbTCookie = {
    * 
    * @param {string} cookieName
    * @param {string} cookieValue
-   * @param {rbTCookie.defaultOptions} [options] set options
+   * @param {this.defaultOptions} [options] set options
    * @return string
    */
   setCookie : function(cookieName, cookieValue, options)
   {
     "use strict";
     try {
-        var cookieString = rbTCookie.name(cookieName) + "=" + escape(cookieValue);
-        var cookieOptions =  rbTCookie.cookieOptions(options);
+        var cookieString = this.name(cookieName) + "=" + escape(cookieValue);
+        var cookieOptions =  this.cookieOptions(options);
 
         cookieString += "; expires=" + cookieOptions.expire;
         cookieString += "; path=" + escape(cookieOptions.path);
@@ -126,7 +126,7 @@ var rbTCookie = {
                           "name"      : cookieName,
                           "value"     : cookieValue,
                           "options"   : options,
-                          "log"       : true, 
+                          "log"       : true 
                          });
     }
   },
@@ -140,8 +140,8 @@ var rbTCookie = {
   {
     "use strict";
     try {
-        var cookieOptions =  rbTCookie.cookieOptions(options);
-        document.cookie = rbTCookie.name(cookieName) + "=" +
+        var cookieOptions =  this.cookieOptions(options);
+        document.cookie = this.name(cookieName) + "=" +
                           "; path=" + cookieOptions.path +
                           "; domain=" + cookieOptions.domain +
                           "; expires=Thu, 01-Jan-70 00:00:01 GMT";
@@ -150,7 +150,7 @@ var rbTCookie = {
       rbTAPP.reportError({"exception" : e.message,
                           "message"   : "cookie delete failed",
                           "name"      : cookieName,
-                          "log"       : true, 
+                          "log"       : true 
                          });
     }
   },
@@ -168,17 +168,17 @@ var rbTCookie = {
       for (var i = 0; i < cookies.length; i++) {   
           var cookie =  cookies[i].split("=");
           var cookieName = cookie[0].replace(/^\s\s*/, '').replace(/\s\s*$/, '');
-          if (cookieName.lastIndexOf(rbTCookie.namePrefix, 0) === 0) {
-            rbTCookie.deleteCookie(cookieName.slice(rbTCookie.namePrefix.length, cookieName.length));
+          if (cookieName.lastIndexOf(this.namePrefix, 0) === 0) {
+            this.deleteCookie(cookieName.slice(this.namePrefix.length, cookieName.length));
           }
       }
     } catch(e) {
       // FIXME what to do?
       rbTAPP.reportError({"exception" : e.message,
                           "message"   : "cookie flush all failed",
-                          "log"       : true, 
+                          "log"       : true 
                          });
     }
-  },
+  }
 
 };

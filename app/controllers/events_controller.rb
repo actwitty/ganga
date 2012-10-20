@@ -1,5 +1,5 @@
 class EventsController < ApplicationController
-	#before_filter :authenticate_account!
+	before_filter :authenticate_account!
   protect_from_forgery
 
 	# NOTE
@@ -20,7 +20,7 @@ class EventsController < ApplicationController
   def create
     Rails.logger.info("Enter Event Create #{params.inspect}")
 
-    params[:account_id] = '507be14e49f68a4627000001' #current_account._id
+    params[:account_id] = current_account._id
     ret = Event.add!(params)
 
     raise ret[:error] if !ret[:error].blank?

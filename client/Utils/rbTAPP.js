@@ -1,6 +1,3 @@
-
-
-
 var rbTAPP = {
     
 
@@ -46,8 +43,11 @@ var rbTAPP = {
     */
     isrbTAlive :  function(callback, args)
     {
-       if (rbTAPP.configs.status)
-           callback(args);
+       if (this.configs.status) {
+          if (callback)
+             callback(args);
+          return true;
+       }
        else
            return false;
     },  
@@ -57,7 +57,9 @@ var rbTAPP = {
     */
     wake_RBT_APP : function()
     {
-      rbTAPP.configs.status = true;
+      this.configs.status = true;
+      rbTDebug.log("Initializing RBT APP");
+      rbTAPP.initialize();
     },
 
     /** 
@@ -67,7 +69,7 @@ var rbTAPP = {
     */
     setAppID: function(id)
     {
-      rbTAPP.configs.appID = id;
+      this.configs.appID = id;
     },
 
     /** 
@@ -77,7 +79,7 @@ var rbTAPP = {
     */
     setAccountID : function(id)
     {
-      rbTAPP.configs.accountID = id;
+      this.configs.accountID = id;
     },
 
     /** 
@@ -87,7 +89,7 @@ var rbTAPP = {
     */
     setSessionID : function(id)
     {
-      rbTAPP.configs.sessionID = id;
+      this.configs.sessionID = id;
     },
 
     /** 
@@ -97,7 +99,7 @@ var rbTAPP = {
     */
     setActorID : function(id)
     {
-      //rbTAPP.configs.ActorID = id;
+      //this.configs.ActorID = id;
       rbTCookie.setCookie("actor_id", respData);
     },   
 
@@ -109,7 +111,7 @@ var rbTAPP = {
     */
     getAppID : function()
     {
-      return rbTAPP.configs.appID
+      return this.configs.appID
     },
 
     /** 
@@ -118,7 +120,7 @@ var rbTAPP = {
     */  
     getAccountID : function()
     {
-      return rbTAPP.configs.accountID;
+      return this.configs.accountID;
     },   
 
     /** 
@@ -127,7 +129,7 @@ var rbTAPP = {
     */  
     getSessionID : function()
     {
-      return rbTAPP.configs.sessionID;
+      return this.configs.sessionID;
     },
 
     /** 
@@ -137,7 +139,7 @@ var rbTAPP = {
     getActorID : function()
     {
       return rbTCookie.getCookie(rbTCookie.defaultCookie.actorID); 
-      //return rbTAPP.configs.actorID;
+      //return this.configs.actorID;
     },
 
 
@@ -148,8 +150,8 @@ var rbTAPP = {
     getConfigs : function()
     {
       "use strict";
-      var cnf = {"app_id"  : rbTAPP.configs.appID,
-                 "account_id" : rbTAPP.configs.accountID,  
+      var cnf = {"app_id"  : this.configs.appID,
+                 "account_id" : this.configs.accountID  
                 }; 
       
        var actor_id = rbTCookie.getCookie(rbTCookie.defaultCookies.actorID);
@@ -168,7 +170,7 @@ var rbTAPP = {
     */ 
     createSession : function()
     {
-      rbTServerChannel.createSession({success:rbTAPP.setSessionID});
+      rbTServerChannel.createSession({success:this.setSessionID});
     },
 
 
@@ -250,7 +252,7 @@ var rbTAPP = {
           rbTAPP.reportError({"exception" : e.message,
                               "message"   : "business send event failed",
                               "event"     : event,
-                              "data"      : params, 
+                              "data"      : params 
                              });
         }
       },
@@ -266,15 +268,15 @@ var rbTAPP = {
         "use strict";
         try {
             rbTServerChannel.makeEventRequest("identify", 
-                                          rbTServerChannel.url.identify,
-                                          params,
-                                          { success: rbTServerResponse.setActor,
-                                            error  : rbTServerResponse.defaultError
-                                          });
+                                              rbTServerChannel.url.identify,
+                                              params,
+                                              { success: rbTServerResponse.setActor,
+                                                error  : rbTServerResponse.defaultError
+                                             });
         } catch(e) {
           rbTAPP.reportError({"exception" : e.message,
                               "message"   : "business identify event failed",
-                              "data"      : params, 
+                              "data"      : params 
                              });
         }
       },
@@ -300,7 +302,7 @@ var rbTAPP = {
           rbTAPP.reportError({"exception" : e.message,
                               "message"   : "business set user property event failed",
                               "event"     : event,
-                              "data"      : params, 
+                              "data"      : params 
                              });
         }
       },

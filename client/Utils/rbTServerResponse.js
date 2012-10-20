@@ -32,12 +32,14 @@ var rbTServerResponse = {
     "use strict";
     try {
       if (respData) {
+        // FIXME :: Flush and reset all cookies if there is a change in actor.
+        // WAITING AS THERE ARE SOME CHANGES IN BACKEND.
         rbTCookie.setCookie(rbTCookie.defaultCookies.actor, JSON.stringify(respData));
+
       } else {
         throw "there is no data";
       }
     } catch(e) {
-      // FIXME what to do?
       rbTAPP.reportError({"exception" : e.message,
                           "message"   : "setting actor failed",
                           "data"      : respData
@@ -62,7 +64,6 @@ var rbTServerResponse = {
         throw "there is no data";
       }
     } catch(e) {
-      // FIXME what to do?
       rbTAPP.reportError({"exception" : e.message,
                           "message"   : "setting user property failed",
                           "data"      : respData
@@ -86,7 +87,6 @@ var rbTServerResponse = {
         throw "there is no data";
       }
     } catch(e) {
-      // FIXME what to do?
       rbTAPP.reportError({"exception" : e.message,
                           "message"   : "setting system property failed",
                           "data"      : respData
@@ -110,7 +110,6 @@ var rbTServerResponse = {
         throw "there is no data";
       }
     } catch(e) {
-      // FIXME what to do?
       rbTAPP.reportError({"exception" : e.message,
                           "message"   : "handling event failed",
                           "data"      : respData
@@ -139,7 +138,7 @@ var rbTServerResponse = {
                           "data"      : respData
                         });
     }
-  },
+  }
 
 
 };
