@@ -8,7 +8,9 @@ App.ProjectsController = Em.ArrayController.extend(
   loadAll: (data)->
     content = @get 'content'    
     if 'accounts' of data
-      for project in data.accounts      
+      for project in data.accounts 
+        #TODO: remove this
+        project.rules = App.sampleRule     
         content.pushObject App.Project.create(project)
 
       if content.length > 0

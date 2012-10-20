@@ -73,7 +73,7 @@ App.Router = Ember.Router.extend
         # Context comes as argument
         project = event.context
         editController = router.get('projectEditController')
-        router.get('projectsController').set('selected', project)          
+        router.get('projectsController').set('selected', project)
         editController.set('isNew', false)
         editController.resetStates()   
         homeController = router.get('homeController')
@@ -93,13 +93,20 @@ App.Router = Ember.Router.extend
         homeController.connectOutlet({name: 'projects', outletName: 'homeContentOutlet'} )
 
 
-      showProjectRules: (router,events) ->
-        # Context comes as argument
+      showProjectRules: (router,event) ->   
         project = event.context
+        router.get('projectsController').set('selected', project)
         homeController = router.get('homeController')
         homeController.connectOutlet({name: 'rules', outletName: 'homeContentOutlet'} )        
-        
-      showProjectEvents: (router, event) ->
+        event.preventDefault()
+
+      editRules: (router, event) ->
+        # Context comes as argument
+        rule = event.context
+        ruleController = router.get('rulesController')
+        ruleController.set 'selected', rule
+        homeController = router.get('homeController')
+        homeController.connectOutlet( {name: 'conditions', outletName: 'homeContentOutlet'} )
 
       openReports: (router, event) ->
 

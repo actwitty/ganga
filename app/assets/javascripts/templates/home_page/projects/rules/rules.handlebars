@@ -24,8 +24,13 @@
         <div class="entry">
           <div class="description">
 
-            <div class='title'>
-              {{rule.name}}
+            <div class='title' {{action "editRules" rule}}>
+
+              {{#if rule.name}}
+                {{rule.name}}
+              {{else}}
+                unnamed rule
+              {{/if}}              
             </div>
             <div class="sub">
               <div class=small>
@@ -46,7 +51,7 @@
 
           </div>
 
-          <div class="delete" {{action "deleteRule" target="App.deleteRule"}}> delete this rule </div>
+          <div class="delete" {{action "deleteRule" rule}}> delete this rule </div>
 
         </div>
       {{/each}}
@@ -58,7 +63,7 @@
 
     {{#if view.showInfo}}
       <div class="message">
-          <a alt="close" class="close_button" {{action "hideInfo" target="App.projectEditView"}}></a>
+          <a alt="close" class="close_button" {{action "hideInfo" target="App.rulesView"}}></a>
 
           <div class="message_text_container">
               <h3> Configure the rules for this app </h3>
