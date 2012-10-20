@@ -190,19 +190,19 @@ var rbTAPP = {
     setSystemProperty : function(params)
     {
       "use strict";
-      try {
-          rbTServerChannel.makeEventRequest("set_system_property", 
-                                        rbTServerChannel.url.setSystemProperty,
-                                        params,
-                                        { success: rbTServerResponse.setSystemProperty,
-                                          error  : rbTServerResponse.defaultError
-                                        });
-      } catch(e) {
-        rbTAPP.reportError({"exception" : e.message,
-                            "message"   : "setting system properties failed",
-                            "data"      : rules
-                           });
+      if (params) {
+          rbTServerChannel.makeGetRequest( rbTServerChannel.url.setSystemProperty,
+                                           params,
+                                           { success: rbTServerResponse.setSystemProperty,
+                                             error  : rbTServerResponse.defaultError
+                                           }
+                                          );
+      } else {
+          rbTAPP.reportError({"message"   : "System params could not be found, report error",
+                              "data"      : params
+                             });
       }
+
     },
 
     /** 
@@ -246,21 +246,15 @@ var rbTAPP = {
       sendEvent : function(event, params)
       {
         "use strict";
-        try {
-            rbTServerChannel.makeEventRequest(event, 
+        if (!event || typeof(event) != "string" || event == "" ) {
+          return;
+        }
+        rbTServerChannel.makeEventRequest(event, 
                                           rbTServerChannel.url.fireEvent,
                                           params,
                                           { success: rbTServerResponse.handleEvent,
                                             error  : rbTServerResponse.defaultError
                                           });
-        } catch(e) {
-          // FIXME what to do?
-          rbTAPP.reportError({"exception" : e.message,
-                              "message"   : "business send event failed",
-                              "event"     : event,
-                              "data"      : params 
-                             });
-        }
       },
 
       /** 
@@ -272,19 +266,12 @@ var rbTAPP = {
       identify : function(params)
       {
         "use strict";
-        try {
-            rbTServerChannel.makeEventRequest("identify", 
-                                              rbTServerChannel.url.identify,
-                                              params,
-                                              { success: rbTServerResponse.setActor,
-                                                error  : rbTServerResponse.defaultError
-                                             });
-        } catch(e) {
-          rbTAPP.reportError({"exception" : e.message,
-                              "message"   : "business identify event failed",
-                              "data"      : params 
-                             });
-        }
+        rbTServerChannel.makeGetRequest(rbTServerChannel.url.identify,
+                                        params,
+                                        { success: rbTServerResponse.setActor,
+                                          error  : rbTServerResponse.defaultError
+                                        }
+                                       );
       },
 
       /** 
@@ -296,21 +283,11 @@ var rbTAPP = {
       setUserProperty : function(params)
       {
         "use strict";
-        try {
-            rbTServerChannel.makeEventRequest("set_user_property", 
-                                          rbTServerChannel.url.setUserProperty,
-                                          params,
-                                          { success: rbTServerResponse.setUserProperty,
-                                            error  : rbTServerResponse.defaultError
-                                          });
-        } catch(e) {
-          // FIXME what to do?
-          rbTAPP.reportError({"exception" : e.message,
-                              "message"   : "business set user property event failed",
-                              "event"     : event,
-                              "data"      : params 
-                             });
-        }
+        rbTServerChannel.makeGetRequest( rbTServerChannel.url.setUserProperty,
+                                         params,
+                                         { success: rbTServerResponse.setUserProperty,
+                                           error  : rbTServerResponse.defaultError
+                                        });
       },
 
       
@@ -558,6 +535,15 @@ var rbTRules = {
   */
   evalProperty : function(ruleProperty)
   {
+    if (!ruleProperty)
+      return "";
+
+    var startCh = ruleProperty.charAt(0);
+
+    var propType = (startCh == "$") ? "actor"  : (
+                   (startCh == "#") ? "system" : "open");
+    // FIXME : Currently we do not know the structure of response we will get.
+    // Based on that we need to process further.
 
   },
 
@@ -583,7 +569,10 @@ var rbTRules = {
 
   
 
-  /* RULE FUNCTIONS */
+  /* 
+     RULE FUNCTIONS 
+     We should be having try-catch in all rule functions.
+  */
   rule : 
   {
     /**
@@ -597,7 +586,8 @@ var rbTRules = {
     {
       "use strict";
       try {
-        return a < this.valueDataType(a, b);
+        var prop = this.evalProperty(a);
+        return prop < this.valueDataType(prop, b);
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on lt failed" , 
@@ -618,7 +608,8 @@ var rbTRules = {
     {
       "use strict";
       try {
-        return a > this.valueDataType(a, b);
+        var prop = this.evalProperty(a);
+        return prop > this.valueDataType(prop, b);
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on gt failed" , 
@@ -639,7 +630,8 @@ var rbTRules = {
     {
       "use strict";
       try {
-        if (a !== this.valueDataType(a, b) )
+        var prop = this.evalProperty(a);
+        if (prop !== this.valueDataType(prop, b) )
           return true;
         else
           return false;
@@ -664,7 +656,8 @@ var rbTRules = {
     {
       "use strict";
       try {
-        return (a === this.valueDataType(a, b));
+        var prop = this.evalProperty(a);
+        return (prop === this.valueDataType(prop, b));
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on equal_to failed" , 
@@ -685,7 +678,8 @@ var rbTRules = {
     {
       "use strict";
       try {
-        if (a.indexOf(this.valueDataType(a, b)) >= 0 )
+        var prop = this.evalProperty(a);
+        if (prop.indexOf(this.valueDataType(prop, b)) >= 0 )
           return true;
         else
           return false;
@@ -709,7 +703,8 @@ var rbTRules = {
     {
       "use strict";
       try {
-        if (a.match("^"+this.valueDataType(a, b)))
+        var prop = this.evalProperty(a);
+        if (prop.match("^"+this.valueDataType(prop, b)))
           return true;
         else
           return false;
@@ -734,7 +729,8 @@ var rbTRules = {
     {
       "use strict";
       try {
-        if (a.match(this.valueDataType(a, b)+"$"))
+        var prop = this.evalProperty(a);
+        if (prop.match(this.valueDataType(prop, b)+"$"))
           return true;
         else
           return false;
@@ -758,7 +754,8 @@ var rbTRules = {
     {
       "use strict";
       try {
-        return a >= this.valueDataType(a, b) && a <= this.valueDataType(a, c);
+        var prop = this.evalProperty(a);
+        return prop >= this.valueDataType(prop, b) && a <= this.valueDataType(prop, c);
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on between failed" , 
@@ -780,8 +777,9 @@ var rbTRules = {
     {
       "use strict";
       try {
+        var prop = this.evalProperty(a);
         regexp = new RegExp(b, 'gi');
-        return regexp.test(a);
+        return regexp.test(prop);
       } catch (e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on regex failed" , 
@@ -1015,11 +1013,14 @@ var rbTServerChannel = {
                 rbTCookie.setCookie("lastevent", event);
             },
             success: function ( respData ) {
-                callback.success(respData);
                 rbTCookie.deleteCookie("lastevent");
+                // FIXME : Currently we do not know the format of response we will get from server.
+                if (respData && respData.actor) { 
+                  rbTServerResponse.setActor(respData.actor);
+                  callback.success(respData);
+                }
             },
             error:function(XMLHttpRequest,textStatus, errorThrown){ 
-                // todo : what to do??            
                 callback.error(); 
             }
       });
@@ -1788,6 +1789,9 @@ var rbTUtils = {
 	*/
   embedScript: function(url, callback, params)
   {
+      if (!url || typeof(url) == "string" || url == "")
+        return;
+      
       var scriptElement  = document.createElement("script");
       scriptElement.type = "text/javascript";
       scriptElement.src  = url;

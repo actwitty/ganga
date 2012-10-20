@@ -203,6 +203,15 @@ var rbTRules = {
   */
   evalProperty : function(ruleProperty)
   {
+    if (!ruleProperty)
+      return "";
+
+    var startCh = ruleProperty.charAt(0);
+
+    var propType = (startCh == "$") ? "actor"  : (
+                   (startCh == "#") ? "system" : "open");
+    // FIXME : Currently we do not know the structure of response we will get.
+    // Based on that we need to process further.
 
   },
 
@@ -228,7 +237,10 @@ var rbTRules = {
 
   
 
-  /* RULE FUNCTIONS */
+  /* 
+     RULE FUNCTIONS 
+     We should be having try-catch in all rule functions.
+  */
   rule : 
   {
     /**
@@ -242,7 +254,8 @@ var rbTRules = {
     {
       "use strict";
       try {
-        return a < this.valueDataType(a, b);
+        var prop = this.evalProperty(a);
+        return prop < this.valueDataType(prop, b);
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on lt failed" , 
@@ -263,7 +276,8 @@ var rbTRules = {
     {
       "use strict";
       try {
-        return a > this.valueDataType(a, b);
+        var prop = this.evalProperty(a);
+        return prop > this.valueDataType(prop, b);
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on gt failed" , 
@@ -284,7 +298,8 @@ var rbTRules = {
     {
       "use strict";
       try {
-        if (a !== this.valueDataType(a, b) )
+        var prop = this.evalProperty(a);
+        if (prop !== this.valueDataType(prop, b) )
           return true;
         else
           return false;
@@ -309,7 +324,8 @@ var rbTRules = {
     {
       "use strict";
       try {
-        return (a === this.valueDataType(a, b));
+        var prop = this.evalProperty(a);
+        return (prop === this.valueDataType(prop, b));
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on equal_to failed" , 
@@ -330,7 +346,8 @@ var rbTRules = {
     {
       "use strict";
       try {
-        if (a.indexOf(this.valueDataType(a, b)) >= 0 )
+        var prop = this.evalProperty(a);
+        if (prop.indexOf(this.valueDataType(prop, b)) >= 0 )
           return true;
         else
           return false;
@@ -354,7 +371,8 @@ var rbTRules = {
     {
       "use strict";
       try {
-        if (a.match("^"+this.valueDataType(a, b)))
+        var prop = this.evalProperty(a);
+        if (prop.match("^"+this.valueDataType(prop, b)))
           return true;
         else
           return false;
@@ -379,7 +397,8 @@ var rbTRules = {
     {
       "use strict";
       try {
-        if (a.match(this.valueDataType(a, b)+"$"))
+        var prop = this.evalProperty(a);
+        if (prop.match(this.valueDataType(prop, b)+"$"))
           return true;
         else
           return false;
@@ -403,7 +422,8 @@ var rbTRules = {
     {
       "use strict";
       try {
-        return a >= this.valueDataType(a, b) && a <= this.valueDataType(a, c);
+        var prop = this.evalProperty(a);
+        return prop >= this.valueDataType(prop, b) && a <= this.valueDataType(prop, c);
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on between failed" , 
@@ -425,8 +445,9 @@ var rbTRules = {
     {
       "use strict";
       try {
+        var prop = this.evalProperty(a);
         regexp = new RegExp(b, 'gi');
-        return regexp.test(a);
+        return regexp.test(prop);
       } catch (e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on regex failed" , 

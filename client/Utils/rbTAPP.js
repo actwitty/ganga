@@ -184,19 +184,19 @@ var rbTAPP = {
     setSystemProperty : function(params)
     {
       "use strict";
-      try {
-          rbTServerChannel.makeEventRequest("set_system_property", 
-                                        rbTServerChannel.url.setSystemProperty,
-                                        params,
-                                        { success: rbTServerResponse.setSystemProperty,
-                                          error  : rbTServerResponse.defaultError
-                                        });
-      } catch(e) {
-        rbTAPP.reportError({"exception" : e.message,
-                            "message"   : "setting system properties failed",
-                            "data"      : rules
-                           });
+      if (params) {
+          rbTServerChannel.makeGetRequest( rbTServerChannel.url.setSystemProperty,
+                                           params,
+                                           { success: rbTServerResponse.setSystemProperty,
+                                             error  : rbTServerResponse.defaultError
+                                           }
+                                          );
+      } else {
+          rbTAPP.reportError({"message"   : "System params could not be found, report error",
+                              "data"      : params
+                             });
       }
+
     },
 
     /** 
@@ -240,21 +240,15 @@ var rbTAPP = {
       sendEvent : function(event, params)
       {
         "use strict";
-        try {
-            rbTServerChannel.makeEventRequest(event, 
+        if (!event || typeof(event) != "string" || event == "" ) {
+          return;
+        }
+        rbTServerChannel.makeEventRequest(event, 
                                           rbTServerChannel.url.fireEvent,
                                           params,
                                           { success: rbTServerResponse.handleEvent,
                                             error  : rbTServerResponse.defaultError
                                           });
-        } catch(e) {
-          // FIXME what to do?
-          rbTAPP.reportError({"exception" : e.message,
-                              "message"   : "business send event failed",
-                              "event"     : event,
-                              "data"      : params 
-                             });
-        }
       },
 
       /** 
@@ -266,19 +260,12 @@ var rbTAPP = {
       identify : function(params)
       {
         "use strict";
-        try {
-            rbTServerChannel.makeEventRequest("identify", 
-                                              rbTServerChannel.url.identify,
-                                              params,
-                                              { success: rbTServerResponse.setActor,
-                                                error  : rbTServerResponse.defaultError
-                                             });
-        } catch(e) {
-          rbTAPP.reportError({"exception" : e.message,
-                              "message"   : "business identify event failed",
-                              "data"      : params 
-                             });
-        }
+        rbTServerChannel.makeGetRequest(rbTServerChannel.url.identify,
+                                        params,
+                                        { success: rbTServerResponse.setActor,
+                                          error  : rbTServerResponse.defaultError
+                                        }
+                                       );
       },
 
       /** 
@@ -290,21 +277,11 @@ var rbTAPP = {
       setUserProperty : function(params)
       {
         "use strict";
-        try {
-            rbTServerChannel.makeEventRequest("set_user_property", 
-                                          rbTServerChannel.url.setUserProperty,
-                                          params,
-                                          { success: rbTServerResponse.setUserProperty,
-                                            error  : rbTServerResponse.defaultError
-                                          });
-        } catch(e) {
-          // FIXME what to do?
-          rbTAPP.reportError({"exception" : e.message,
-                              "message"   : "business set user property event failed",
-                              "event"     : event,
-                              "data"      : params 
-                             });
-        }
+        rbTServerChannel.makeGetRequest( rbTServerChannel.url.setUserProperty,
+                                         params,
+                                         { success: rbTServerResponse.setUserProperty,
+                                           error  : rbTServerResponse.defaultError
+                                        });
       },
 
       
