@@ -1,0 +1,80 @@
+
+{{#if controller.content.length}}
+    {{#if view.showInfo}}
+      <div class="message">
+          <a alt="close" class="close_button" {{action "hideInfo" target="App.projectEditView"}}></a>
+
+          <div class="message_text_container">
+              <h3> Configure the rules for this app </h3>
+              Pick and edit rules or define new rule
+
+          </div>
+
+          <a href="/" class="info_btn_pos btn btn-info">
+              Learn more      
+          </a>
+      </div>
+    {{/if}}
+
+    <div class="rule_list">
+      <h3> {{controller.content.length}} Rules are configured for the application </h3>
+      {{#each rule in controller.content}}   
+
+        
+        <div class="entry">
+          <div class="description">
+
+            <div class='title'>
+              {{rule.name}}
+            </div>
+            <div class="sub">
+              <div class=small>
+                trigger
+              </div>
+              <div class='action'>
+                {{rule.action}}
+              </div>
+              <div class=small>
+                on
+              </div>
+
+              <div class='event'>
+                {{rule.event}}
+              </div>          
+            </div>
+
+
+          </div>
+
+          <div class="delete" {{action "deleteRule" target="App.deleteRule"}}> delete this rule </div>
+
+        </div>
+      {{/each}}
+    
+    </div>
+
+
+{{else}}
+
+    {{#if view.showInfo}}
+      <div class="message">
+          <a alt="close" class="close_button" {{action "hideInfo" target="App.projectEditView"}}></a>
+
+          <div class="message_text_container">
+              <h3> Configure the rules for this app </h3>
+              There are no rules set for this application
+
+          </div>
+
+          <a href="/" class="info_btn_pos btn btn-info">
+              Learn more      
+          </a>
+      </div>
+    {{/if}}
+    <div class="bare_bone_box">
+        <div class="btn_box">
+            <a class="btn btn-large btn-primary" {{action createRule}}> Create Rules </a>
+        </div>
+    </div>
+    
+{{/if}}

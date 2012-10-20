@@ -1,0 +1,81 @@
+{{#if view.showInfo}}
+	<div class="message">
+		<a alt="close" class="close_button" {{action "hideInfo" target="App.projectEditView"}}></a>
+
+		<div class="message_text_container">
+			<h3> Configure an Application </h3>
+            	You can configure your application to get an App ID
+            	The app is tied to a domain name.            
+    	</div>
+
+    	<a href="/" class="info_btn_pos btn btn-info">
+    		Learn more    	
+    	</a>
+	</div>
+{{/if}}
+
+
+{{#if controller.isNew}}
+	<div/>
+{{else}}
+	<div class="del_btn_box">
+		<div class="del_btn">
+			<a class="btn btn-mini" {{action "deleteProject" }}>Delete</a>
+		</div>
+	</div>
+{{/if}}
+
+<div class="new_proj">
+	<div class="single">
+		<div class="label_div">
+			App Name:
+		</div>
+		<div class="input_div">
+			{{view App.RequiredAFTextField valueBinding="description.name" placeholder="App Name" name="App Name"}}
+		</div>
+	</div>
+
+	<div class="single">
+		<div class="label_div">
+			App Domain:
+		</div>
+		<div class="input_div">		
+			{{view App.RequiredTextField valueBinding="description.domain" placeholder="App Domain" name="App Domain"}}
+		</div>
+	</div>
+
+
+	<div class="single">
+		<div class="label_div">
+			App Email:
+		</div>
+		<div class="input_div">				
+			{{view App.NonRequiredTextField valueBinding="description.email" placeholder="Admin Email" name="App Admin Email"}}
+		</div>
+	</div>
+
+	<div class="single">
+		<div class="label_div">
+			App Address:
+		</div>
+		<div class="input_div">	
+			{{view App.NonRequiredTextField valueBinding="description.address" placeholder="Address" name="Address"}}
+		</div>
+	</div>
+
+	<div class="single">
+		{{#if controller.isNew}}
+			<div class="input-prepend">   
+     			<a class='btn btn-large btn-primary edit_btns'  {{action "submitNewProject" target="App.projectEditView"}} > Create App</a>   
+    		</div>
+		{{else}}
+			<a class='btn btn-large btn-primary edit_btns'   {{action "updateProject" target="App.projectEditView"}} > Update App</a>  
+
+		{{/if}}
+
+		<a class='btn btn-large btn-inverse edit_btns'  {{action "listProject" }} > Cancel </a>  		
+	</div>
+</div>
+{{#if controller.stateIsBusy}}
+  <div class="busy_div" > </div>
+{{/if}}

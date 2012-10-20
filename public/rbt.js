@@ -975,6 +975,37 @@ var rbTServerChannel = {
   */  
   makeRequestData : function(event, reqData)
   {
+<<<<<<< HEAD
+    /* 
+    if (!event) {
+      return {
+        "app_configs"  : rbTAPP.getConfigs(),  // mandatory
+        "request_data" : reqData,     
+      };
+    } else {
+      return {
+        "app_configs"  : rbTAPP.getConfigs(),  // mandatory
+        "event"        : event,                // mandatory 
+        "request_data" : reqData,     
+      };
+    }*/
+    if (!event) {
+      return {
+         "app_id"  : rbTAPP.getAppID(),  // mandatory
+         "account_id"  : rbTAPP.getAccountID(),  // mandatory
+         // "actor_id" : rbTAPP.getConfigs(),
+         "properties" : reqData,    
+      };
+    } else {
+      return {
+         "app_id"  : rbTAPP.getAppID(),  // mandatory
+         "account_id"  : rbTAPP.getAccountID(),  // mandatory
+         // "actor_id" : rbTAPP.getConfigs(),
+         "name"        : event,                // mandatory 
+         "properties" : reqData,    
+      };
+    }
+=======
     var requestData = {};
 
     requestData["app_id"] = rbTAPP.getAppID(); // mandatory
@@ -985,6 +1016,7 @@ var rbTServerChannel = {
     if (reqData)
       requestData["properties"] = reqData;
     return requestData;
+>>>>>>> 2537852c42ccb4889bd7dcf15d9a65ef617dc76a
   },
 
   /** 
@@ -998,6 +1030,30 @@ var rbTServerChannel = {
   makeEventRequest :  function(event, url, reqData, callback)
   {
     "use strict";
+<<<<<<< HEAD
+    var reqServerData = rbTServerChannel.makeRequestData(event, reqData);
+    callback = rbTServerChannel.extendCallbacks(callback);
+
+    jQuery.ajax({
+          url: url,
+          type: 'GET',
+          dataType: 'json',
+          //contentType: 'application/json',
+          data: reqServerData,
+          beforeSend: function() {
+              // FIXME : add status to cookie
+              rbTCookie.setCookie("lastevent", event);
+          },
+          success: function ( respData ) {
+              callback.success(respData);
+              rbTCookie.deleteCookie("lastevent");
+          },
+          error:function(XMLHttpRequest,textStatus, errorThrown){ 
+              // todo : what to do??            
+              callback.error(); 
+          }
+    });
+=======
     try {
       var reqServerData = this.makeRequestData(event, reqData);
       callback = this.extendCallbacks(callback);
@@ -1032,6 +1088,7 @@ var rbTServerChannel = {
                           "log"       : "error" 
                          }); 
     }
+>>>>>>> 2537852c42ccb4889bd7dcf15d9a65ef617dc76a
   },
 
  
@@ -1758,8 +1815,8 @@ var rbTUtils = {
     }
   },
 
-	parseURL: function(urlStr)
-	{
+  parseURL: function(urlStr)
+  {
       var a = document.createElement("a"), query = {};
       a.href = urlStr; queryStr = a.search.substr(1);
       // Disassemble query string
@@ -1782,12 +1839,19 @@ var rbTUtils = {
   },
     
   /** Embed any other script.
+<<<<<<< HEAD
+  *
+  * @return void
+  */
+  embedScript: function(url)
+=======
 	* @param {string} url Script URL to load.
   * @param {object} callback Function to call when script is loaded successfully.
   * @param {object} params Callback initiated with param as arguments.
   *	@return void
 	*/
   embedScript: function(url, callback, params)
+>>>>>>> 2537852c42ccb4889bd7dcf15d9a65ef617dc76a
   {
       if (!url || typeof(url) == "string" || url == "")
         return;
@@ -2079,3 +2143,6 @@ var rbTCookie = {
                        });
   }
 })(_rbTK[0][1], _rbTK[1][1]);
+
+
+rbTAPP.call.sendEvent('complex', {foo:12,bar:42, baz:{a:'some string', b:'some other string'}});

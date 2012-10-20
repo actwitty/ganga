@@ -10,7 +10,7 @@ files = ["rbTAPP.js",
 	     "rbTInitApp.js"
 		]
 
-OUTPUT_FILE = "/home/sammy/actwitty/ganga/public/rbt.js"
+OUTPUT_FILE = "/home/sudhanshu/work/source/ganga/public/rbt.js"
 
 rbt_file = File.new(OUTPUT_FILE,"w")
 

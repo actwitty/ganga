@@ -1,5 +1,4 @@
-App.ConditionsController = Ember.ArrayController.extend(
-  ruleControllerBinding: "App.rulesController"
+App.ConditionsController = Ember.ArrayController.extend(  
   content: []
   selected: null
 

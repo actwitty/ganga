@@ -7,7 +7,4 @@ App.HomeView = Ember.View.extend
   
   didInsertElement: (->
    	@_super()   	  
-   	console.log('------------------------------------')
-   	console.log(@projects)
-   	console.log('------------------------------------')
   )
