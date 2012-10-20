@@ -84,10 +84,8 @@ App.RulesController = Em.ArrayController.extend(
   loadRules: ->
     project = App.get('router.projectsController').get('selected')
     #TODO: Remove this constant hack later  @get('selected')
-    rules = App.sampleRule 
-    content = @get 'content'
-    for rule in rules
-      content.pushObject(App.Rule.create(rule))
+    @set 'content', project.get('hasManyRules')
+    
 
 
   #########################################################

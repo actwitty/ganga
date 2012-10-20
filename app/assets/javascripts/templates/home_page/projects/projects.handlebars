@@ -28,11 +28,11 @@
 
       {{#each project in controller.content}}        
         <tr style='cursor:pointer;'>  
-          <td {{action showProjectRules project}}>{{project.app_id}}</td> 
-          <td {{action showProjectRules project}}>{{project.description.name}}</td> 
-          <td {{action showProjectRules project}}>{{project.description.domain}}</td> 
-          <td {{action showProjectRules project}}>{{project.description.email}}</td> 
-          <td {{action showProjectRules project}}>{{project.created_time}}</td> 
+          <td {{action showProjectRules project }}>{{project.app_id}}</td> 
+          <td {{action showProjectRules project }}>{{project.description.name}}</td> 
+          <td {{action showProjectRules project }}>{{project.description.domain}}</td> 
+          <td {{action showProjectRules project }}>{{project.description.email}}</td> 
+          <td {{action showProjectRules project }}>{{project.created_time}}</td> 
           <td><a class="edit_link" {{action editProject project  }}> Edit </a></td>           
       </tr> 
       

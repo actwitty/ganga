@@ -14,5 +14,11 @@ App.RulesView = Ember.View.extend(
   hideInfo: (event) ->
   	@set 'showHelpInfo', false
   	event.preventDefault()
+
+  deleteRule: (event) ->
+    rule = event.context
+    App.get('router.rulesController.selected')
+
+    event.preventDefault()    
   
 )
