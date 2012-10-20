@@ -55,6 +55,9 @@ var rbTUtils = {
 	*/
   embedScript: function(url, callback, params)
   {
+      if (!url || typeof(url) == "string" || url == "")
+        return;
+      
       var scriptElement  = document.createElement("script");
       scriptElement.type = "text/javascript";
       scriptElement.src  = url;

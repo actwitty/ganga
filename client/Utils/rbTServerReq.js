@@ -69,11 +69,14 @@ var rbTServerChannel = {
                 rbTCookie.setCookie("lastevent", event);
             },
             success: function ( respData ) {
-                callback.success(respData);
                 rbTCookie.deleteCookie("lastevent");
+                // FIXME : Currently we do not know the format of response we will get from server.
+                if (respData && respData.actor) { 
+                  rbTServerResponse.setActor(respData.actor);
+                  callback.success(respData);
+                }
             },
             error:function(XMLHttpRequest,textStatus, errorThrown){ 
-                // todo : what to do??            
                 callback.error(); 
             }
       });
