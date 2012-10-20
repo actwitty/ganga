@@ -1,5 +1,4 @@
 var rbTUtils = {
-
   /** Initialize jquery if needed be
     *  @return void
     *
@@ -65,6 +64,7 @@ var rbTUtils = {
   */
   waitForjQueryAlive : function() 
   {
+      "use strict";
       function checkJquery() 
       {
         if (!window.jQuery) {

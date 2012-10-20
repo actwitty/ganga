@@ -1,9 +1,9 @@
-App.RulesController = Em.ObjectController.extend(
- 
+App.RulesController = Em.ArrayController.extend(
+
   content: []
   selected: null
   events: []
-
+  
   
   #########################################################
   translatePropertyName: (property) ->
@@ -14,8 +14,12 @@ App.RulesController = Em.ObjectController.extend(
   loadSchema: ->
     project = App.get('router.projectsController').get('selected')
     rule = @get('selected')
-    
-    if typeof schema is 'undefined'
+    schema = @get('schema')
+
+    App.log App.DBG, 'Loading schema for ---'
+    console.log project
+
+    if rule isnt null
 
       event = rule.get 'event'
 
@@ -57,6 +61,7 @@ App.RulesController = Em.ObjectController.extend(
                'scope': 'system'
         props.push(prop) 
 
+      console.log schema
       rule.set 'schema', schema
 
   #########################################################
@@ -70,27 +75,43 @@ App.RulesController = Em.ObjectController.extend(
       if "events" of project.schema
         event_p = project.schema.events[event]
 
-    for k,v of system_p      
+    for k,v of event_p      
       events.push k
     @set 'events', events
 
 
   #########################################################
   loadRules: ->
-    #TODO
+    project = App.get('router.projectsController').get('selected')
+    #TODO: Remove this constant hack later  @get('selected')
+    rules = App.sampleRule 
+    content = @get 'content'
+    for rule in rules
+      content.pushObject(App.Rule.create(rule))
 
+
+  #########################################################
   reloadSchema: (->
     rule = @selected
     rule.set('schema', null)
     @loadSchema()
   ).observes('selected.event')
 
+  #########################################################
   # Get triggered on the selection of project changes
   projectChanged: (->
+
+    @set 'content', []
+    @set 'selected', null
+
     project =  App.get('router.projectsController').get('selected')
-    @loadSchema()
+    console.log(this)    
+    # @loadSchema() only when a rule is selected
     @loadEvents()
-    # loadRules(data)
+    @loadRules()
   ).observes('App.router.projectsController.selected')
+
+
 )
+
 

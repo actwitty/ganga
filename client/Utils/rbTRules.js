@@ -42,10 +42,13 @@ var rbTRules = {
   
   /**
   * Initialize Rules for business
+  * @param {object} params Parameters passing
   * @return void
   */
-  init : function()
+  init : function(params)
   {
+    "use strict";
+    var params = params || "undefined";
     try {
           rbTServerChannel.makeGetRequest( rbTServerChannel.url.getRules,
                                            params,
@@ -54,7 +57,7 @@ var rbTRules = {
                                            });
         } catch(e) {
           // FIXME what to do?
-          rbTApp.reportError({"exception" : e.message, "message":"rule initialization failed"});
+          rbTAPP.reportError({"exception" : e.message, "message":"rule initialization failed"});
         }
   },
   
@@ -65,6 +68,7 @@ var rbTRules = {
   */
   setRulesTable : function(rules)
   {
+    "use strict";
     rules = rbTRules.sample_json;
     var ruleString = "";
 
@@ -106,7 +110,7 @@ var rbTRules = {
           };
         });
     } catch (e) {
-      rbTApp.reportError({"exception" : e.message,
+      rbTAPP.reportError({"exception" : e.message,
                           "message"   : "rule table setting failed",
                           "rules"     : rules
                         });
@@ -121,6 +125,8 @@ var rbTRules = {
   */
   executeRulesOnEvent : function(event)
   {
+    //"use strict";
+
     function prepareFunctionCode(ruleString) 
     {
       return 'if (' + ruleString + ') { return true; } else { return false;}';
@@ -133,7 +139,7 @@ var rbTRules = {
             rbTRules.invokeAction(event);
           } 
     } catch (e) {
-      rbTApp.reportError({"exception"  : e.message,
+      rbTAPP.reportError({"exception"  : e.message,
                           "message"    : "rule execution on event failed" , 
                           "event_name" : event,
                           "rule_string": rbTRules.ruleTable[event].ruleString,
@@ -149,6 +155,7 @@ var rbTRules = {
   */
   valueDataType : function(property, value)
   {
+    "use strict";
     // We are expecting only 2 types i.e string or number
     try {
         if (typeof property === "string") {
@@ -160,7 +167,7 @@ var rbTRules = {
         }
     } catch (e) {
         // FIXME :: something wrong with type conversion
-        rbTApp.reportError({"exception" : e.message,
+        rbTAPP.reportError({"exception" : e.message,
                             "message":"data type conversion on rule value failed" , 
                             "property" : property,
                             "value" : value,
@@ -176,6 +183,7 @@ var rbTRules = {
   */
   executeLastPendingEvent : function()
   {
+    "use strict";
     try {
       var lastEvent = rbTCookie.getCookie("lastevent");
       if (lastEvent) {
@@ -210,7 +218,7 @@ var rbTRules = {
       // Hand over action to templating engine for processing event action.
       rbTTemplates.invoke(rbTRules.ruleTable[event].action);
     } catch(e) {
-      rbTApp.reportError({"exception" : e.message,
+      rbTAPP.reportError({"exception" : e.message,
                           "message": "action could not be invoked" , 
                           "event" : event,
                          });
@@ -232,10 +240,11 @@ var rbTRules = {
     */ 
     lt : function(a, b)
     {
+      "use strict";
       try {
         return a < rbTRules.valueDataType(a, b);
       } catch(e) {
-        rbTApp.reportError({"exception" : e.message,
+        rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on lt failed" , 
                             "property" : a,
                             "value"    : b
@@ -252,10 +261,11 @@ var rbTRules = {
     */ 
     gt : function(a, b)
     {
+      "use strict";
       try {
         return a > rbTRules.valueDataType(a, b);
       } catch(e) {
-        rbTApp.reportError({"exception" : e.message,
+        rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on gt failed" , 
                             "property" : a,
                             "value"    : b
@@ -272,13 +282,14 @@ var rbTRules = {
     */ 
     not_equal_to : function(a, b)
     {
+      "use strict";
       try {
         if (a !== rbTRules.valueDataType(a, b) )
           return true;
         else
           return false;
       } catch(e) {
-        rbTApp.reportError({"exception" : e.message,
+        rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on not_equal_to failed" , 
                             "property" : a,
                             "value"    : b
@@ -296,10 +307,11 @@ var rbTRules = {
     */ 
     equal_to : function(a, b)
     {
+      "use strict";
       try {
         return (a === rbTRules.valueDataType(a, b));
       } catch(e) {
-        rbTApp.reportError({"exception" : e.message,
+        rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on equal_to failed" , 
                             "property" : a,
                             "value"    : b
@@ -316,13 +328,14 @@ var rbTRules = {
     */ 
     contains : function(a, b)
     {
+      "use strict";
       try {
         if (a.indexOf(rbTRules.valueDataType(a, b)) >= 0 )
           return true;
         else
           return false;
       } catch(e) {
-        rbTApp.reportError({"exception" : e.message,
+        rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on contains failed" , 
                             "property" : a,
                             "value"    : b
@@ -339,13 +352,14 @@ var rbTRules = {
     */ 
     starts_with : function(a, b)
     {
+      "use strict";
       try {
         if (a.match("^"+rbTRules.valueDataType(a, b)))
           return true;
         else
           return false;
       } catch(e) {
-        rbTApp.reportError({"exception" : e.message,
+        rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on starts_with failed" , 
                             "property" : a,
                             "value"    : b
@@ -363,13 +377,14 @@ var rbTRules = {
     */ 
     ends_with : function(a, b)
     {
+      "use strict";
       try {
         if (a.match(rbTRules.valueDataType(a, b)+"$"))
           return true;
         else
           return false;
       } catch(e) {
-        rbTApp.reportError({"exception" : e.message,
+        rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on ends_with failed" , 
                             "property"  : a,
                             "value"     : b
@@ -386,10 +401,11 @@ var rbTRules = {
     */ 
     between: function(a, b, c)
     {
+      "use strict";
       try {
         return a >= rbTRules.valueDataType(a, b) && a <= rbTRules.valueDataType(a, c);
       } catch(e) {
-        rbTApp.reportError({"exception" : e.message,
+        rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on between failed" , 
                             "property"  : a,
                             "value"     : b,
@@ -407,11 +423,12 @@ var rbTRules = {
     */ 
     regex :  function(a, b)
     {
+      "use strict";
       try {
         regexp = new RegExp(b, 'gi');
         return regexp.test(a);
       } catch (e) {
-        rbTApp.reportError({"exception" : e.message,
+        rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on regex failed" , 
                             "property"  : a,
                             "value"     : b

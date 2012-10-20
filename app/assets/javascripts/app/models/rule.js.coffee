@@ -3,5 +3,7 @@ App.Rule = Ember.Object.extend(
  name: null
  event: null
  conditions: null
+ action: null
+ action_param: null
  
 )

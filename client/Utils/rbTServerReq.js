@@ -25,14 +25,35 @@ var rbTServerChannel = {
   */  
   makeRequestData : function(event, reqData)
   {
-    return {
-
-      "app_id"  : rbTAPP.getAppID(),  // mandatory
-      "account_id"  : rbTAPP.getAccountID(),  // mandatory
-      // "actor_id" : rbTAPP.getConfigs(),
-      "event"        : event,                // mandatory 
-      "properties" : reqData,     
-    };
+    /* 
+    if (!event) {
+      return {
+        "app_configs"  : rbTAPP.getConfigs(),  // mandatory
+        "request_data" : reqData,     
+      };
+    } else {
+      return {
+        "app_configs"  : rbTAPP.getConfigs(),  // mandatory
+        "event"        : event,                // mandatory 
+        "request_data" : reqData,     
+      };
+    }*/
+    if (!event) {
+      return {
+         "app_id"  : rbTAPP.getAppID(),  // mandatory
+         "account_id"  : rbTAPP.getAccountID(),  // mandatory
+         // "actor_id" : rbTAPP.getConfigs(),
+         "properties" : reqData,    
+      };
+    } else {
+      return {
+         "app_id"  : rbTAPP.getAppID(),  // mandatory
+         "account_id"  : rbTAPP.getAccountID(),  // mandatory
+         // "actor_id" : rbTAPP.getConfigs(),
+         "event"        : event,                // mandatory 
+         "properties" : reqData,    
+      };
+    }
   },
 
   /** 

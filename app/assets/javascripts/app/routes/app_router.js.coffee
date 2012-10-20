@@ -93,9 +93,13 @@ App.Router = Ember.Router.extend
         homeController.connectOutlet({name: 'projects', outletName: 'homeContentOutlet'} )
 
 
-      openProject: (router,events) ->
+      showProjectRules: (router,events) ->
+        # Context comes as argument
+        project = event.context
+        homeController = router.get('homeController')
+        homeController.connectOutlet({name: 'rules', outletName: 'homeContentOutlet'} )        
         
-      openEvents: (router, event) ->
+      showProjectEvents: (router, event) ->
 
       openReports: (router, event) ->
 

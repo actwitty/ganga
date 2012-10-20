@@ -12,6 +12,7 @@ var rbTSystemVar = {
    */
   init : function()
   {
+    "use strict";
     function isSystemVarDirty()
     {
       var sysVarInCookie = rbTCookie.getCookie(rbTCookie.defaultCookies.systemProp);
@@ -36,7 +37,7 @@ var rbTSystemVar = {
       // for update only if we have cookie miss 
       var systemVars = rbTSystemVar.getAllProperty();
       rbTSystemVar.setPropertyInCookie(systemVars);
-      rbTApp.setSystemProperty(systemVars);
+      rbTAPP.setSystemProperty(systemVars);
     }
   },
 
@@ -117,6 +118,7 @@ var rbTSystemVar = {
 
   getProperty : function(propertyTypes)
   {
+    "use strict";
     var types = propertyTypes.split(",");
     var propertyCnf = {};
     for (var i = 0; i < types.length ; ++i) {

@@ -1,6 +1,7 @@
 
 
 
+
 /****************************[[rbTAPP.js]]*************************************/ 
 
 
@@ -8,8 +9,7 @@
 
 
 var rbTAPP = {
-    
-
+    "use strict";
     /* Main configs will be holded here */
     configs : {},
 
@@ -26,7 +26,6 @@ var rbTAPP = {
     */
     initialize : function()
     {
-      "use strict";
       // 1). includin jquery if need be
       //rbTUtils.includeJQIfNeeded();
 
@@ -153,7 +152,6 @@ var rbTAPP = {
     */ 
     getConfigs : function()
     {
-      "use strict";
       var cnf = {"app_id"  : rbTAPP.configs.appID,
                  "account_id" : rbTAPP.configs.accountID,  
                 }; 
@@ -187,7 +185,6 @@ var rbTAPP = {
     */
     setSystemProperty : function(params)
     {
-      "use strict";
       try {
           rbTServerChannel.makeEventRequest("set_system_property", 
                                         rbTServerChannel.url.setSystemProperty,
@@ -243,7 +240,6 @@ var rbTAPP = {
       */
       sendEvent : function(event, params)
       {
-        "use strict";
         try {
             rbTServerChannel.makeEventRequest(event, 
                                           rbTServerChannel.url.fireEvent,
@@ -269,7 +265,6 @@ var rbTAPP = {
       */
       identify : function(params)
       {
-        "use strict";
         try {
             rbTServerChannel.makeEventRequest("identify", 
                                           rbTServerChannel.url.identify,
@@ -293,7 +288,6 @@ var rbTAPP = {
       */
       setUserProperty : function(params)
       {
-        "use strict";
         try {
             rbTServerChannel.makeEventRequest("set_user_property", 
                                           rbTServerChannel.url.setUserProperty,
@@ -395,13 +389,10 @@ var rbTRules = {
   
   /**
   * Initialize Rules for business
-  * @param {object} params Parameters passing
   * @return void
   */
-  init : function(params)
+  init : function()
   {
-    "use strict";
-    var params = params || "undefined";
     try {
           rbTServerChannel.makeGetRequest( rbTServerChannel.url.getRules,
                                            params,
@@ -421,7 +412,6 @@ var rbTRules = {
   */
   setRulesTable : function(rules)
   {
-    "use strict";
     rules = rbTRules.sample_json;
     var ruleString = "";
 
@@ -478,8 +468,6 @@ var rbTRules = {
   */
   executeRulesOnEvent : function(event)
   {
-    //"use strict";
-
     function prepareFunctionCode(ruleString) 
     {
       return 'if (' + ruleString + ') { return true; } else { return false;}';
@@ -508,7 +496,6 @@ var rbTRules = {
   */
   valueDataType : function(property, value)
   {
-    "use strict";
     // We are expecting only 2 types i.e string or number
     try {
         if (typeof property === "string") {
@@ -536,7 +523,6 @@ var rbTRules = {
   */
   executeLastPendingEvent : function()
   {
-    "use strict";
     try {
       var lastEvent = rbTCookie.getCookie("lastevent");
       if (lastEvent) {
@@ -593,7 +579,6 @@ var rbTRules = {
     */ 
     lt : function(a, b)
     {
-      "use strict";
       try {
         return a < rbTRules.valueDataType(a, b);
       } catch(e) {
@@ -614,7 +599,6 @@ var rbTRules = {
     */ 
     gt : function(a, b)
     {
-      "use strict";
       try {
         return a > rbTRules.valueDataType(a, b);
       } catch(e) {
@@ -635,7 +619,6 @@ var rbTRules = {
     */ 
     not_equal_to : function(a, b)
     {
-      "use strict";
       try {
         if (a !== rbTRules.valueDataType(a, b) )
           return true;
@@ -660,7 +643,6 @@ var rbTRules = {
     */ 
     equal_to : function(a, b)
     {
-      "use strict";
       try {
         return (a === rbTRules.valueDataType(a, b));
       } catch(e) {
@@ -681,7 +663,6 @@ var rbTRules = {
     */ 
     contains : function(a, b)
     {
-      "use strict";
       try {
         if (a.indexOf(rbTRules.valueDataType(a, b)) >= 0 )
           return true;
@@ -705,7 +686,6 @@ var rbTRules = {
     */ 
     starts_with : function(a, b)
     {
-      "use strict";
       try {
         if (a.match("^"+rbTRules.valueDataType(a, b)))
           return true;
@@ -730,7 +710,6 @@ var rbTRules = {
     */ 
     ends_with : function(a, b)
     {
-      "use strict";
       try {
         if (a.match(rbTRules.valueDataType(a, b)+"$"))
           return true;
@@ -754,7 +733,6 @@ var rbTRules = {
     */ 
     between: function(a, b, c)
     {
-      "use strict";
       try {
         return a >= rbTRules.valueDataType(a, b) && a <= rbTRules.valueDataType(a, c);
       } catch(e) {
@@ -776,7 +754,6 @@ var rbTRules = {
     */ 
     regex :  function(a, b)
     {
-      "use strict";
       try {
         regexp = new RegExp(b, 'gi');
         return regexp.test(a);
@@ -799,7 +776,7 @@ var rbTRules = {
 
 
 var rbTServerResponse = {
-
+  
   /** 
   *  Handle default success callback if not mentioned explicitly
   *   
@@ -829,7 +806,6 @@ var rbTServerResponse = {
   */
   setActor : function(respData)
   { 
-    "use strict";
     try {
       if (respData) {
         rbTCookie.setCookie(rbTCookie.defaultCookies.actor, JSON.stringify(respData));
@@ -853,7 +829,6 @@ var rbTServerResponse = {
   */
   setUserProperty : function(respData)
   {
-     "use strict";
     // FIXME : check for which property to set
     try {
       if (respData) {
@@ -877,7 +852,6 @@ var rbTServerResponse = {
   */
   setSystemProperty : function(respData)
   {
-    "use strict";
     // FIXME : check for which property to set
     try {
       if (respData) {
@@ -901,8 +875,6 @@ var rbTServerResponse = {
   */
   handleEvent : function(respData)
   {
-    "use strict";
-    "use strict";
     try {
       if(respData && respData.actor) {
         rbTCookie.setCookie(rbTCookie.defaultCookies.actor, respData.actor);
@@ -926,7 +898,6 @@ var rbTServerResponse = {
   */
   setRules : function(respData)
   {
-    "use strict";
     try {
       if(respData) {
         rbTRules.setRulesTable(respData);
@@ -975,35 +946,11 @@ var rbTServerChannel = {
   */  
   makeRequestData : function(event, reqData)
   {
-    /* 
-    if (!event) {
-      return {
-        "app_configs"  : rbTAPP.getConfigs(),  // mandatory
-        "request_data" : reqData,     
-      };
-    } else {
-      return {
-        "app_configs"  : rbTAPP.getConfigs(),  // mandatory
-        "event"        : event,                // mandatory 
-        "request_data" : reqData,     
-      };
-    }*/
-    if (!event) {
-      return {
-         "app_id"  : rbTAPP.getAppID(),  // mandatory
-         "account_id"  : rbTAPP.getAccountID(),  // mandatory
-         // "actor_id" : rbTAPP.getConfigs(),
-         "properties" : reqData,    
-      };
-    } else {
-      return {
-         "app_id"  : rbTAPP.getAppID(),  // mandatory
-         "account_id"  : rbTAPP.getAccountID(),  // mandatory
-         // "actor_id" : rbTAPP.getConfigs(),
-         "name"        : event,                // mandatory 
-         "properties" : reqData,    
-      };
-    }
+    return {
+      "app_configs"  : rbTAPP.getConfigs(),  // mandatory
+      "event"        : event,                // mandatory 
+      "request_data" : reqData,     
+    };
   },
 
   /** 
@@ -1016,7 +963,6 @@ var rbTServerChannel = {
   */
   makeEventRequest :  function(event, url, reqData, callback)
   {
-    "use strict";
     var reqServerData = rbTServerChannel.makeRequestData(event, reqData);
     callback = rbTServerChannel.extendCallbacks(callback);
 
@@ -1024,7 +970,7 @@ var rbTServerChannel = {
           url: url,
           type: 'GET',
           dataType: 'json',
-          //contentType: 'application/json',
+          contentType: 'application/json',
           data: reqServerData,
           beforeSend: function() {
               // FIXME : add status to cookie
@@ -1048,9 +994,7 @@ var rbTServerChannel = {
   */  
   createSession : function(url, callback)
   {
-    "use strict";
-    var reqServerData = {"app_id" : rbTAPP.configs.appID, "account_id" : rbTAPP.configs.accountID};
-    callback = rbTServerChannel.extendCallbacks(callback);
+    reqServerData = {"app_id" : rbTAPP.configs.appID, "account_id" : rbTAPP.configs.accountID};
     jQuery.ajax({
           url: rbTServerChannel.url.createSession,
           type: 'GET',
@@ -1071,12 +1015,9 @@ var rbTServerChannel = {
   *   
   *  @return void
   */  
-  makeGetRequest : function(url, params, callback)
+  makeGetRequest : function(url, callback)
   {
-    "use strict";
-    var reqServerData = rbTServerChannel.makeRequestData(undefined, params);
-    //var reqServerData = {"app_id" : rbTAPP.configs.appID, "account_id" : rbTAPP.configs.accountID};
-    callback = rbTServerChannel.extendCallbacks(callback);
+    reqServerData = {"app_id" : rbTAPP.configs.appID, "account_id" : rbTAPP.configs.accountID};
     jQuery.ajax({
           url: url,
           type: 'GET',
@@ -1099,8 +1040,6 @@ var rbTServerChannel = {
   */ 
   reportError : function(params)
   {
-    "use strict";
-    callback = rbTServerChannel.extendCallbacks(callback);
     jQuery.ajax({
           url: rbTServerChannel.url.reportError,
           type: 'GET',
@@ -1123,7 +1062,6 @@ var rbTServerChannel = {
   */  
   extendCallbacks : function(callback)
   {
-    "use strict";
     callback.success = callback.success || rbTServerChannel.defaultOptions.success_callback;
     callback.error   = callback.error || rbTServerChannel.defaultOptions.error_callback;
     return callback;
@@ -1151,7 +1089,6 @@ var rbTSystemVar = {
    */
   init : function()
   {
-    "use strict";
     function isSystemVarDirty()
     {
       var sysVarInCookie = rbTCookie.getCookie(rbTCookie.defaultCookies.systemProp);
@@ -1257,7 +1194,6 @@ var rbTSystemVar = {
 
   getProperty : function(propertyTypes)
   {
-    "use strict";
     var types = propertyTypes.split(",");
     var propertyCnf = {};
     for (var i = 0; i < types.length ; ++i) {
@@ -1744,6 +1680,7 @@ var session_fetch = (function(win, doc, nav)
 
 
 var rbTUtils = {
+
   /** Initialize jquery if needed be
     *  @return void
     *
@@ -1769,8 +1706,8 @@ var rbTUtils = {
     }
   },
 
-  parseURL: function(urlStr)
-  {
+	parseURL: function(urlStr)
+	{
       var a = document.createElement("a"), query = {};
       a.href = urlStr; queryStr = a.search.substr(1);
       // Disassemble query string
@@ -1793,9 +1730,9 @@ var rbTUtils = {
   },
     
   /** Embed any other script.
-  *
-  * @return void
-  */
+	*
+	*	@return void
+	*/
   embedScript: function(url)
   {
       var element  = document.createElement("script");
@@ -1809,7 +1746,6 @@ var rbTUtils = {
   */
   waitForjQueryAlive : function() 
   {
-      "use strict";
       function checkJquery() 
       {
         if (!window.jQuery) {
@@ -1895,7 +1831,6 @@ var rbTCookie = {
    */
   getCookie : function(cookieName)
   {
-    "use strict";
     var results = document.cookie.match ( '(^|;) ?' + rbTCookie.name(cookieName) + '=([^;]*)(;|$)' );
 
     if (results)
@@ -1932,7 +1867,6 @@ var rbTCookie = {
    * @return string
    */
   cookieOptions : function(options) {
-    "use strict";
     var cOptions = {};
 
     function getExpDate(hours)
@@ -1969,7 +1903,6 @@ var rbTCookie = {
    */
   setCookie : function(cookieName, cookieValue, options)
   {
-    "use strict";
     try {
         var cookieString = rbTCookie.name(cookieName) + "=" + escape(cookieValue);
         var cookieOptions =  rbTCookie.cookieOptions(options);
@@ -2001,7 +1934,6 @@ var rbTCookie = {
    */
   deleteCookie :  function(cookieName, options)
   {
-    "use strict";
     try {
         var cookieOptions =  rbTCookie.cookieOptions(options);
         document.cookie = rbTCookie.name(cookieName) + "=" +
@@ -2025,7 +1957,6 @@ var rbTCookie = {
    */
   flushAllCookie: function() 
   {
-    "use strict";
     try {
       var cookies = document.cookie.split(";");
       for (var i = 0; i < cookies.length; i++) {   
@@ -2066,8 +1997,8 @@ var rbTCookie = {
       // if everything seems fine, then set app/acc id and initialize rbTAPP.
       rbTAPP.setAppID(appid);
       rbTAPP.setAccountID(accid);
-      rbTAPP.initialize();
       rbTUtils.includeJQIfNeeded();
+      rbTAPP.initialize();
     }
   } catch (e) {
     rbTAPP.reportError({"exception" : e.message, 
@@ -2075,6 +2006,3 @@ var rbTCookie = {
                        });
   }
 })(_rbTK[0][1], _rbTK[1][1]);
-
-
-rbTAPP.call.sendEvent('complex', {foo:12,bar:42, baz:{a:'some string', b:'some other string'}});

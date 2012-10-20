@@ -2,7 +2,7 @@ App.ProjectsController = Em.ArrayController.extend(
   content: []
   selected: null    
   url: "/account/list_apps"
-
+  
   
   #########################################################
   loadAll: (data)->

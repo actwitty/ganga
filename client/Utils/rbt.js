@@ -8,6 +8,7 @@
 
 
 var rbTAPP = {
+    
 
     /* Main configs will be holded here */
     configs : {},
@@ -25,6 +26,7 @@ var rbTAPP = {
     */
     initialize : function()
     {
+      "use strict";
       // 1). includin jquery if need be
       //rbTUtils.includeJQIfNeeded();
 
@@ -151,6 +153,7 @@ var rbTAPP = {
     */ 
     getConfigs : function()
     {
+      "use strict";
       var cnf = {"app_id"  : rbTAPP.configs.appID,
                  "account_id" : rbTAPP.configs.accountID,  
                 }; 
@@ -184,6 +187,7 @@ var rbTAPP = {
     */
     setSystemProperty : function(params)
     {
+      "use strict";
       try {
           rbTServerChannel.makeEventRequest("set_system_property", 
                                         rbTServerChannel.url.setSystemProperty,
@@ -239,6 +243,7 @@ var rbTAPP = {
       */
       sendEvent : function(event, params)
       {
+        "use strict";
         try {
             rbTServerChannel.makeEventRequest(event, 
                                           rbTServerChannel.url.fireEvent,
@@ -264,6 +269,7 @@ var rbTAPP = {
       */
       identify : function(params)
       {
+        "use strict";
         try {
             rbTServerChannel.makeEventRequest("identify", 
                                           rbTServerChannel.url.identify,
@@ -287,6 +293,7 @@ var rbTAPP = {
       */
       setUserProperty : function(params)
       {
+        "use strict";
         try {
             rbTServerChannel.makeEventRequest("set_user_property", 
                                           rbTServerChannel.url.setUserProperty,
@@ -392,15 +399,16 @@ var rbTRules = {
   */
   init : function()
   {
+    "use strict";
     try {
-          rbtServerChannel.makeGetRequest( rbtServerChannel.url.getRules,
+          rbTServerChannel.makeGetRequest( rbTServerChannel.url.getRules,
                                            params,
                                            { success: rbTServerResponse.setRulesTable,
-                                             error  : rbtServerResponse.defaultError
+                                             error  : rbTServerResponse.defaultError
                                            });
         } catch(e) {
           // FIXME what to do?
-          rbTApp.reportError({"exception" : e.message, "message":"rule initialization failed"});
+          rbTAPP.reportError({"exception" : e.message, "message":"rule initialization failed"});
         }
   },
   
@@ -411,6 +419,7 @@ var rbTRules = {
   */
   setRulesTable : function(rules)
   {
+    "use strict";
     rules = rbTRules.sample_json;
     var ruleString = "";
 
@@ -452,7 +461,7 @@ var rbTRules = {
           };
         });
     } catch (e) {
-      rbTApp.reportError({"exception" : e.message,
+      rbTAPP.reportError({"exception" : e.message,
                           "message"   : "rule table setting failed",
                           "rules"     : rules
                         });
@@ -467,6 +476,8 @@ var rbTRules = {
   */
   executeRulesOnEvent : function(event)
   {
+    //"use strict";
+
     function prepareFunctionCode(ruleString) 
     {
       return 'if (' + ruleString + ') { return true; } else { return false;}';
@@ -479,7 +490,7 @@ var rbTRules = {
             rbTRules.invokeAction(event);
           } 
     } catch (e) {
-      rbTApp.reportError({"exception"  : e.message,
+      rbTAPP.reportError({"exception"  : e.message,
                           "message"    : "rule execution on event failed" , 
                           "event_name" : event,
                           "rule_string": rbTRules.ruleTable[event].ruleString,
@@ -495,6 +506,7 @@ var rbTRules = {
   */
   valueDataType : function(property, value)
   {
+    "use strict";
     // We are expecting only 2 types i.e string or number
     try {
         if (typeof property === "string") {
@@ -506,7 +518,7 @@ var rbTRules = {
         }
     } catch (e) {
         // FIXME :: something wrong with type conversion
-        rbTApp.reportError({"exception" : e.message,
+        rbTAPP.reportError({"exception" : e.message,
                             "message":"data type conversion on rule value failed" , 
                             "property" : property,
                             "value" : value,
@@ -522,6 +534,7 @@ var rbTRules = {
   */
   executeLastPendingEvent : function()
   {
+    "use strict";
     try {
       var lastEvent = rbTCookie.getCookie("lastevent");
       if (lastEvent) {
@@ -556,7 +569,7 @@ var rbTRules = {
       // Hand over action to templating engine for processing event action.
       rbTTemplates.invoke(rbTRules.ruleTable[event].action);
     } catch(e) {
-      rbTApp.reportError({"exception" : e.message,
+      rbTAPP.reportError({"exception" : e.message,
                           "message": "action could not be invoked" , 
                           "event" : event,
                          });
@@ -578,10 +591,11 @@ var rbTRules = {
     */ 
     lt : function(a, b)
     {
+      "use strict";
       try {
         return a < rbTRules.valueDataType(a, b);
       } catch(e) {
-        rbTApp.reportError({"exception" : e.message,
+        rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on lt failed" , 
                             "property" : a,
                             "value"    : b
@@ -598,10 +612,11 @@ var rbTRules = {
     */ 
     gt : function(a, b)
     {
+      "use strict";
       try {
         return a > rbTRules.valueDataType(a, b);
       } catch(e) {
-        rbTApp.reportError({"exception" : e.message,
+        rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on gt failed" , 
                             "property" : a,
                             "value"    : b
@@ -618,13 +633,14 @@ var rbTRules = {
     */ 
     not_equal_to : function(a, b)
     {
+      "use strict";
       try {
         if (a !== rbTRules.valueDataType(a, b) )
           return true;
         else
           return false;
       } catch(e) {
-        rbTApp.reportError({"exception" : e.message,
+        rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on not_equal_to failed" , 
                             "property" : a,
                             "value"    : b
@@ -642,10 +658,11 @@ var rbTRules = {
     */ 
     equal_to : function(a, b)
     {
+      "use strict";
       try {
         return (a === rbTRules.valueDataType(a, b));
       } catch(e) {
-        rbTApp.reportError({"exception" : e.message,
+        rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on equal_to failed" , 
                             "property" : a,
                             "value"    : b
@@ -662,13 +679,14 @@ var rbTRules = {
     */ 
     contains : function(a, b)
     {
+      "use strict";
       try {
         if (a.indexOf(rbTRules.valueDataType(a, b)) >= 0 )
           return true;
         else
           return false;
       } catch(e) {
-        rbTApp.reportError({"exception" : e.message,
+        rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on contains failed" , 
                             "property" : a,
                             "value"    : b
@@ -685,13 +703,14 @@ var rbTRules = {
     */ 
     starts_with : function(a, b)
     {
+      "use strict";
       try {
         if (a.match("^"+rbTRules.valueDataType(a, b)))
           return true;
         else
           return false;
       } catch(e) {
-        rbTApp.reportError({"exception" : e.message,
+        rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on starts_with failed" , 
                             "property" : a,
                             "value"    : b
@@ -709,13 +728,14 @@ var rbTRules = {
     */ 
     ends_with : function(a, b)
     {
+      "use strict";
       try {
         if (a.match(rbTRules.valueDataType(a, b)+"$"))
           return true;
         else
           return false;
       } catch(e) {
-        rbTApp.reportError({"exception" : e.message,
+        rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on ends_with failed" , 
                             "property"  : a,
                             "value"     : b
@@ -732,10 +752,11 @@ var rbTRules = {
     */ 
     between: function(a, b, c)
     {
+      "use strict";
       try {
         return a >= rbTRules.valueDataType(a, b) && a <= rbTRules.valueDataType(a, c);
       } catch(e) {
-        rbTApp.reportError({"exception" : e.message,
+        rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on between failed" , 
                             "property"  : a,
                             "value"     : b,
@@ -753,11 +774,12 @@ var rbTRules = {
     */ 
     regex :  function(a, b)
     {
+      "use strict";
       try {
         regexp = new RegExp(b, 'gi');
         return regexp.test(a);
       } catch (e) {
-        rbTApp.reportError({"exception" : e.message,
+        rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on regex failed" , 
                             "property"  : a,
                             "value"     : b
@@ -775,7 +797,7 @@ var rbTRules = {
 
 
 var rbTServerResponse = {
-  
+
   /** 
   *  Handle default success callback if not mentioned explicitly
   *   
@@ -805,6 +827,7 @@ var rbTServerResponse = {
   */
   setActor : function(respData)
   { 
+    "use strict";
     try {
       if (respData) {
         rbTCookie.setCookie(rbTCookie.defaultCookies.actor, JSON.stringify(respData));
@@ -813,7 +836,7 @@ var rbTServerResponse = {
       }
     } catch(e) {
       // FIXME what to do?
-      rbTApp.reportError({"exception" : e.message,
+      rbTAPP.reportError({"exception" : e.message,
                           "message"   : "setting actor failed",
                           "data"      : respData
                         });
@@ -828,6 +851,7 @@ var rbTServerResponse = {
   */
   setUserProperty : function(respData)
   {
+     "use strict";
     // FIXME : check for which property to set
     try {
       if (respData) {
@@ -837,7 +861,7 @@ var rbTServerResponse = {
       }
     } catch(e) {
       // FIXME what to do?
-      rbTApp.reportError({"exception" : e.message,
+      rbTAPP.reportError({"exception" : e.message,
                           "message"   : "setting user property failed",
                           "data"      : respData
                         });
@@ -851,6 +875,7 @@ var rbTServerResponse = {
   */
   setSystemProperty : function(respData)
   {
+    "use strict";
     // FIXME : check for which property to set
     try {
       if (respData) {
@@ -860,7 +885,7 @@ var rbTServerResponse = {
       }
     } catch(e) {
       // FIXME what to do?
-      rbTApp.reportError({"exception" : e.message,
+      rbTAPP.reportError({"exception" : e.message,
                           "message"   : "setting system property failed",
                           "data"      : respData
                         });
@@ -874,6 +899,8 @@ var rbTServerResponse = {
   */
   handleEvent : function(respData)
   {
+    "use strict";
+    "use strict";
     try {
       if(respData && respData.actor) {
         rbTCookie.setCookie(rbTCookie.defaultCookies.actor, respData.actor);
@@ -882,7 +909,7 @@ var rbTServerResponse = {
       }
     } catch(e) {
       // FIXME what to do?
-      rbTApp.reportError({"exception" : e.message,
+      rbTAPP.reportError({"exception" : e.message,
                           "message"   : "handling event failed",
                           "data"      : respData
                         });
@@ -897,6 +924,7 @@ var rbTServerResponse = {
   */
   setRules : function(respData)
   {
+    "use strict";
     try {
       if(respData) {
         rbTRules.setRulesTable(respData);
@@ -904,7 +932,7 @@ var rbTServerResponse = {
         throw "there is no data";
       }
     } catch(e) {
-      rbTApp.reportError({"exception" : e.message,
+      rbTAPP.reportError({"exception" : e.message,
                           "message"   : "setting rules failed",
                           "data"      : respData
                         });
@@ -962,6 +990,7 @@ var rbTServerChannel = {
   */
   makeEventRequest :  function(event, url, reqData, callback)
   {
+    "use strict";
     var reqServerData = rbTServerChannel.makeRequestData(event, reqData);
     callback = rbTServerChannel.extendCallbacks(callback);
 
@@ -993,6 +1022,7 @@ var rbTServerChannel = {
   */  
   createSession : function(url, callback)
   {
+    "use strict";
     reqServerData = {"app_id" : rbTAPP.configs.appID, "account_id" : rbTAPP.configs.accountID};
     jQuery.ajax({
           url: rbTServerChannel.url.createSession,
@@ -1016,6 +1046,7 @@ var rbTServerChannel = {
   */  
   makeGetRequest : function(url, callback)
   {
+    "use strict";
     reqServerData = {"app_id" : rbTAPP.configs.appID, "account_id" : rbTAPP.configs.accountID};
     jQuery.ajax({
           url: url,
@@ -1039,6 +1070,7 @@ var rbTServerChannel = {
   */ 
   reportError : function(params)
   {
+    "use strict";
     jQuery.ajax({
           url: rbTServerChannel.url.reportError,
           type: 'GET',
@@ -1061,6 +1093,7 @@ var rbTServerChannel = {
   */  
   extendCallbacks : function(callback)
   {
+    "use strict";
     callback.success = callback.success || rbTServerChannel.defaultOptions.success_callback;
     callback.error   = callback.error || rbTServerChannel.defaultOptions.error_callback;
     return callback;
@@ -1088,6 +1121,7 @@ var rbTSystemVar = {
    */
   init : function()
   {
+    "use strict";
     function isSystemVarDirty()
     {
       var sysVarInCookie = rbTCookie.getCookie(rbTCookie.defaultCookies.systemProp);
@@ -1096,7 +1130,7 @@ var rbTSystemVar = {
         return true; 
       } else {
         var currentSysVar = rbTSystemVar.getAllProperty();
-        return (sysVar === currentSysVar) ? false : true;
+        return (sysVarInCookie === currentSysVar) ? false : true;
       }
     }
 
@@ -1112,7 +1146,7 @@ var rbTSystemVar = {
       // for update only if we have cookie miss 
       var systemVars = rbTSystemVar.getAllProperty();
       rbTSystemVar.setPropertyInCookie(systemVars);
-      rbTApp.setSystemProperty(systemVars);
+      rbTAPP.setSystemProperty(systemVars);
     }
   },
 
@@ -1193,6 +1227,7 @@ var rbTSystemVar = {
 
   getProperty : function(propertyTypes)
   {
+    "use strict";
     var types = propertyTypes.split(",");
     var propertyCnf = {};
     for (var i = 0; i < types.length ; ++i) {
@@ -1351,7 +1386,7 @@ var session_fetch = (function(win, doc, nav)
     check_asynch();
 
 
-    /* set the properties in our rbt hash */
+    /* set the properties in our rbT hash */
     setrbTProperties = function() {
       for (property in unloaded_modules) {
         rbTSystemVar.setProperty(property, unloaded_modules[property] );
@@ -1679,7 +1714,6 @@ var session_fetch = (function(win, doc, nav)
 
 
 var rbTUtils = {
-
   /** Initialize jquery if needed be
     *  @return void
     *
@@ -1745,6 +1779,7 @@ var rbTUtils = {
   */
   waitForjQueryAlive : function() 
   {
+      "use strict";
       function checkJquery() 
       {
         if (!window.jQuery) {
@@ -1830,6 +1865,7 @@ var rbTCookie = {
    */
   getCookie : function(cookieName)
   {
+    "use strict";
     var results = document.cookie.match ( '(^|;) ?' + rbTCookie.name(cookieName) + '=([^;]*)(;|$)' );
 
     if (results)
@@ -1851,7 +1887,7 @@ var rbTCookie = {
         return false;
       }
     } catch(e) {
-      rbTApp.reportError({"exception" : e.message,
+      rbTAPP.reportError({"exception" : e.message,
                           "message"   : "cookie existence failed",
                           "name"      : cookieName,
                           "log"       : true, 
@@ -1866,6 +1902,7 @@ var rbTCookie = {
    * @return string
    */
   cookieOptions : function(options) {
+    "use strict";
     var cOptions = {};
 
     function getExpDate(hours)
@@ -1902,6 +1939,7 @@ var rbTCookie = {
    */
   setCookie : function(cookieName, cookieValue, options)
   {
+    "use strict";
     try {
         var cookieString = rbTCookie.name(cookieName) + "=" + escape(cookieValue);
         var cookieOptions =  rbTCookie.cookieOptions(options);
@@ -1916,7 +1954,7 @@ var rbTCookie = {
 
     } catch(e) {
       // FIXME  what to do?
-      rbTApp.reportError({"exception" : e.message,
+      rbTAPP.reportError({"exception" : e.message,
                           "message"   : "cookie set failed",
                           "name"      : cookieName,
                           "value"     : cookieValue,
@@ -1933,6 +1971,7 @@ var rbTCookie = {
    */
   deleteCookie :  function(cookieName, options)
   {
+    "use strict";
     try {
         var cookieOptions =  rbTCookie.cookieOptions(options);
         document.cookie = rbTCookie.name(cookieName) + "=" +
@@ -1941,7 +1980,7 @@ var rbTCookie = {
                           "; expires=Thu, 01-Jan-70 00:00:01 GMT";
     } catch (e) {
       // FIXME what to do?
-      rbTApp.reportError({"exception" : e.message,
+      rbTAPP.reportError({"exception" : e.message,
                           "message"   : "cookie delete failed",
                           "name"      : cookieName,
                           "log"       : true, 
@@ -1956,6 +1995,7 @@ var rbTCookie = {
    */
   flushAllCookie: function() 
   {
+    "use strict";
     try {
       var cookies = document.cookie.split(";");
       for (var i = 0; i < cookies.length; i++) {   
@@ -1967,7 +2007,7 @@ var rbTCookie = {
       }
     } catch(e) {
       // FIXME what to do?
-      rbTApp.reportError({"exception" : e.message,
+      rbTAPP.reportError({"exception" : e.message,
                           "message"   : "cookie flush all failed",
                           "log"       : true, 
                          });

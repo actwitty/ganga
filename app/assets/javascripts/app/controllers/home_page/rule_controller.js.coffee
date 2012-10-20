@@ -1,4 +1,4 @@
-App.RulesController = Ember.ArrayController.extend(
+App.OldRulesController = Ember.ArrayController.extend(
   ruleControllerBinding: "App.projectsController"
   content: []
   selected: null

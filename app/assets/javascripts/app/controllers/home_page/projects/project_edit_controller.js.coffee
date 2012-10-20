@@ -13,12 +13,12 @@ App.ProjectEditController = Em.ObjectController.extend(
    @set('content',App.get('router.projectsController').get('selected'))
   ).observes('App.router.projectsController.selected')
 
-  resetStates: (->
+  resetStates: ->
   	@set 'isBusy', false
   	@set 'isError', false
   	@set 'isSuccess', false
 
-  )
+  
 
   stateIsBusy: (-> 
     @get("isBusy") is true
@@ -31,6 +31,8 @@ App.ProjectEditController = Em.ObjectController.extend(
   stateIsSuccess: (->
     @get("isSuccess") is true
   ).property("isSuccess")
+
+
   deleteProject: ->
     @set 'isBusy', true
 
@@ -42,8 +44,7 @@ App.ProjectEditController = Em.ObjectController.extend(
 
       # Success callback -------------------------
       success= (data) ->
-        console.log data
-        
+       
         if data.status is true          
           projsController = App.router.get('projectsController')
           content = controllerObj.get('content')

@@ -395,13 +395,11 @@ var rbTRules = {
   
   /**
   * Initialize Rules for business
-  * @param {object} params Parameters passing
   * @return void
   */
-  init : function(params)
+  init : function()
   {
     "use strict";
-    var params = params || "undefined";
     try {
           rbTServerChannel.makeGetRequest( rbTServerChannel.url.getRules,
                                            params,
@@ -975,35 +973,11 @@ var rbTServerChannel = {
   */  
   makeRequestData : function(event, reqData)
   {
-    /* 
-    if (!event) {
-      return {
-        "app_configs"  : rbTAPP.getConfigs(),  // mandatory
-        "request_data" : reqData,     
-      };
-    } else {
-      return {
-        "app_configs"  : rbTAPP.getConfigs(),  // mandatory
-        "event"        : event,                // mandatory 
-        "request_data" : reqData,     
-      };
-    }*/
-    if (!event) {
-      return {
-         "app_id"  : rbTAPP.getAppID(),  // mandatory
-         "account_id"  : rbTAPP.getAccountID(),  // mandatory
-         // "actor_id" : rbTAPP.getConfigs(),
-         "properties" : reqData,    
-      };
-    } else {
-      return {
-         "app_id"  : rbTAPP.getAppID(),  // mandatory
-         "account_id"  : rbTAPP.getAccountID(),  // mandatory
-         // "actor_id" : rbTAPP.getConfigs(),
-         "name"        : event,                // mandatory 
-         "properties" : reqData,    
-      };
-    }
+    return {
+      "app_configs"  : rbTAPP.getConfigs(),  // mandatory
+      "event"        : event,                // mandatory 
+      "request_data" : reqData,     
+    };
   },
 
   /** 
@@ -1024,7 +998,7 @@ var rbTServerChannel = {
           url: url,
           type: 'GET',
           dataType: 'json',
-          //contentType: 'application/json',
+          contentType: 'application/json',
           data: reqServerData,
           beforeSend: function() {
               // FIXME : add status to cookie
@@ -1049,8 +1023,7 @@ var rbTServerChannel = {
   createSession : function(url, callback)
   {
     "use strict";
-    var reqServerData = {"app_id" : rbTAPP.configs.appID, "account_id" : rbTAPP.configs.accountID};
-    callback = rbTServerChannel.extendCallbacks(callback);
+    reqServerData = {"app_id" : rbTAPP.configs.appID, "account_id" : rbTAPP.configs.accountID};
     jQuery.ajax({
           url: rbTServerChannel.url.createSession,
           type: 'GET',
@@ -1071,12 +1044,10 @@ var rbTServerChannel = {
   *   
   *  @return void
   */  
-  makeGetRequest : function(url, params, callback)
+  makeGetRequest : function(url, callback)
   {
     "use strict";
-    var reqServerData = rbTServerChannel.makeRequestData(undefined, params);
-    //var reqServerData = {"app_id" : rbTAPP.configs.appID, "account_id" : rbTAPP.configs.accountID};
-    callback = rbTServerChannel.extendCallbacks(callback);
+    reqServerData = {"app_id" : rbTAPP.configs.appID, "account_id" : rbTAPP.configs.accountID};
     jQuery.ajax({
           url: url,
           type: 'GET',
@@ -1100,7 +1071,6 @@ var rbTServerChannel = {
   reportError : function(params)
   {
     "use strict";
-    callback = rbTServerChannel.extendCallbacks(callback);
     jQuery.ajax({
           url: rbTServerChannel.url.reportError,
           type: 'GET',
@@ -2075,6 +2045,3 @@ var rbTCookie = {
                        });
   }
 })(_rbTK[0][1], _rbTK[1][1]);
-
-
-rbTAPP.call.sendEvent('complex', {foo:12,bar:42, baz:{a:'some string', b:'some other string'}});

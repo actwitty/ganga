@@ -5,7 +5,9 @@ App.Condition = Ember.Object.extend(
   operation: null
   value1: null
   value2: null
+  connect: null
 
+  
   operation_choices: (->  	
   	type = @type
   	App.operationsPermission[type]
