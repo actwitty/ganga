@@ -2,11 +2,11 @@ class Accounts::RegistrationsController < Devise::RegistrationsController
 
 # POST /resource
   def invite_account_request
+
     build_resource
     email = resource.email
     status = 'false'   
     response_json = {}
-    
     #Set default password and a default username
     resource.password = Random.rand(100000...999999) 
     resource.password_confirmation = resource.password 

@@ -1,5 +1,7 @@
 /* Main code */
 /* The global Rulebot scope */
+"use strict";
+
 var rbT = { inited: false};
 
 rbT.init = function(){
@@ -10,15 +12,32 @@ rbT.init = function(){
 };
 
 rbT.getTemplateHTMLByNameInternal = function(name){
-		console.log(name);
-	if (rbT.templateLib.hasOwnProperty(name) ){
+	console.log(name);
+    
+   var templPos = rbT.extractDisplayPositionFromTemplName(name);
 
-		var html = rbT.templateLib[name];
-		return html;
-	}else{
+   console.log(templPos);
+   
+   var checkforPosAvl = rbT.isTemplPosOccupied(templPos);
+
+   console.log(checkforPosAvl);
+
+
+   if(!checkforPosAvl)
+   {
+
+		if (rbT.templateLib.hasOwnProperty(name) ){
+  
+			var html = rbT.templateLib[name];
+			return html;
+		}else{
 		rbT.sendErrorToRBServer("unsupported template " + name);
 		return "";
-	}
+		}
+	}else{
+			rbT.sendErrorToRBServer("Template Position Occupied " + name);
+		return "";
+	}	
 };
 
 
@@ -28,7 +47,6 @@ rbT.getTemplateApplyVarsInternal = function(html,vars){
 		for (var key in vars) {
 			var value = vars[key];
 			var replaceKey = rbT.keyPrefix + key + rbT.keySuffix;
-			console.log(replaceKey);
 			html = html.replace(replaceKey, value);
 		}
 		return html;	
@@ -52,7 +70,11 @@ rbT.isTemplateGoodToApplyInternal = function(html){
 rbT.applyHtmltoPageInternal = function(html){
 
 	if(html.length){
-	 document.body.innerHTML = document.body.innerHTML+html;
+
+
+	 jQuery('body').append(html);
+
+	// document.body.innerHTML = document.body.innerHTML+html;
 
 	}else{
 
@@ -66,3 +88,8 @@ rbT.enableClickHandlingInternal = function(){
 	rbT.eventHandler.init();
 };
 
+
+rbT.enableTimeOutHadnlingInternal= function(templateName,timerValue){
+   
+    rbT.eventHandler.timeOutHandler(templateName,timerValue);
+};

@@ -1,1 +1,0 @@
-App.HomeSideBarDefaultController = Ember.Controller.extend()

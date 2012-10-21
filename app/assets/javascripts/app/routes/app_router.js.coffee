@@ -6,29 +6,29 @@ App.Router = Ember.Router.extend
     
     #SETUP
     #EVENTS
-    loginSwitchRoute: Ember.Route.transitionTo 'loggedIn'
-    mainpageSwitchRoute: Ember.Route.transitionTo 'mainPage'
-    devisepageSwitchRoute: Ember.Route.transitionTo 'devisePage'
+      initDone: (router, event) ->
+        if App.inDevise is true
+          router.transitionTo('deviseState')
+        else
+          if App.isLoggedIn is true
+            router.get('accountController').load()            
+          else
+            router.transitionTo('landingState')
+      credentialGetDone: (router, event) ->        
+        router.transitionTo('loggedInState.index')
+      credentialGetFailed:(router, event) ->
+        router.transitionTo('landingState')
+
     #STATES
     index: Ember.Route.extend
-      route: '/'  
-
-    mainPage: Ember.Route.extend
       #SETUP
-
-      route: '/'
-      connectOutlets: (router) ->
-        router.get('applicationController').connectOutlet('main')
-        mainController = router.get('mainController')
-        mainController.connectOutlet({name: 'mainTopbar',outletName: 'mainTopBarOutlet'} )
-        mainController.connectOutlet({name: 'mainInvite',outletName: 'mainInviteBoxOutlet'} )
-
-        
-        
+      route: '/'  
       #EVENTS
+
+
       #STATES
 
-    devisePage: Ember.Route.extend
+    deviseState: Ember.Route.extend
       #SETUP
       route: '/'
       connectOutlets: (router) ->
@@ -37,88 +37,166 @@ App.Router = Ember.Router.extend
         deviseController.connectOutlet({name: 'deviseTopbar',outletName: 'deviseTopBarOutlet'} )
       #EVENTS
       #STATES
-    loggedIn  : Ember.Route.extend
+
+    landingState: Ember.Route.extend (
       #SETUP
-      route: '/home'
-
+      route: '/'
+      connectOutlets: (router) ->        
+        router.get('applicationController').connectOutlet('main')
+        mainController = router.get('mainController')
+        mainController.connectOutlet({name: 'mainTopbar',outletName: 'mainTopBarOutlet'} )
+        mainController.connectOutlet({name: 'mainInvite',outletName: 'mainInviteBoxOutlet'} )
       #EVENTS
-      connectOutlets: (router) ->
-        router.get('applicationController').connectOutlet('home')
+
+      #STATES
+    )
+    loggedInState  : Ember.Route.extend
+      #SETUP
+      route: '/'
+
+
+
+      #EVENTS  
+      bareBoneAccount: (router, event) ->
+        homeController = router.get('homeController')        
+        homeController.connectOutlet({name: 'bareBone',outletName: 'homeContentOutlet'} )
+
+      newProject: (router, event) ->
+        editController = router.get('projectEditController')
+        editController.set('content', App.Project.create())
+        editController.set('isNew', true)
+        editController.resetStates()
         homeController = router.get('homeController')
-        homeController.connectOutlet({name: 'homeSideBarDefault',outletName: 'homeSideBarOutlet'} )
-        homeController.connectOutlet({name: 'homeContentDefault',outletName: 'homeContentOutlet'} )
+        homeController.connectOutlet({name: 'projectEdit', outletName: 'homeContentOutlet'} )     
 
-      editRule: (router, event) ->
-        router.get("rulesController").init()
-        router.get("rulesController").loadAPresetRule()   
+      editProject: (router, event) ->        
+        # Context comes as argument
+        project = event.context
+        editController = router.get('projectEditController')
+        router.get('projectsController').set('selected', project)
+        editController.set('isNew', false)
+        editController.resetStates()   
+        homeController = router.get('homeController')
+        homeController.connectOutlet({name: 'projectEdit', outletName: 'homeContentOutlet'} ) 
+        event.preventDefault()
 
-        router.get("addRuleButtonController").connectOutlet
-                                                        name: "submitRuleButton"
-                                                        outletName: "submitRuleButonOutlet" 
 
-        router.transitionTo "creatingRule"
-       
-      
-      openRule: Ember.Route.transitionTo("creatingRule") 
 
-      ruleSubmittedSuccess: Ember.Route.transitionTo("submittedRule")
+      deleteProject: (router, event) ->
+        editController = router.get('projectEditController')
+        editController.deleteProject()
+        
+
+
+      listProject: (router, event) ->        
+        homeController = router.get('homeController')
+        homeController.connectOutlet({name: 'projects', outletName: 'homeContentOutlet'} )
+
+
+      showProjectRules: (router,event) ->   
+        project = event.context
+        router.get('projectsController').set('selected', project)
+        homeController = router.get('homeController')
+        homeController.connectOutlet({name: 'rules', outletName: 'homeContentOutlet'} )        
+        event.preventDefault()
+
+      editRules: (router, event) ->
+        # Context comes as argument
+        rule = event.context
+        ruleController = router.get('rulesController')
+        ruleController.set 'selected', rule
+        homeController = router.get('homeController')
+        homeController.connectOutlet( {name: 'conditions', outletName: 'homeContentOutlet'} )
+
+      openReports: (router, event) ->
+
+      logoutEvent: (router, event) -> 
+     
 
       #STATES
-      creatingRule: Ember.Route.extend(
-        
-        #SETUP
-        route: "/rule"
-
-        #EVENTS
-        connectOutlets: (router) ->
-          router.get("rulesController").get('content')
-          homeContentDefaultController = router.get("homeContentDefaultController")
-          homeContentDefaultController.connectOutlet "addRuleButton"
-          addRuleButtonController = router.get("addRuleButtonController")
-          addRuleButtonController.connectOutlet "rules"
-        
-        addRule: (router) ->
-          ruleController = router.get("rulesController")
-          ruleController.addNewCategory()
-          router.get("addRuleButtonController").connectOutlet
-            name: "submitRuleButton"
-            outletName: "submitRuleButonOutlet"
-  
-      )
-
-      submittedRule: Ember.Route.extend(
-        
-        #SETUP
-        route: "/success"
-
-        #EVENTS
-        connectOutlets: (router) ->
-          homeContentDefaultController = router.get("homeContentDefaultController")
-          homeContentDefaultController.connectOutlet "ruleSubSuccess"
-
-          
-          
-        addAnotherRule: (router) ->
-          router.get("rulesController").init()
-          router.transitionTo "creatingRule"  
-
-        #STATES
-
-      )
-
-      
-
-
-        
-      #EVENTS
-      logoutEvent: Ember.Route.transitionTo 'logout'
-
+ 
       index: Ember.Route.extend
-        route: '/'  
-      #STATES
-      logout: Ember.Route.extend
-        route: '/thankyou'
+        route: '/'
+        connectOutlets: (router) ->          
+          router.get('applicationController').connectOutlet('home')        
+          homeController = router.get('homeController')
+          homeController.connectOutlet({name: 'homeSide', outletName: 'homeSideOutlet'} )
+          router.get('projectsController').load()
+
+      projectOpenState: Ember.Route.extend(
+        #SETUP
+        route: "/project"
+
+        #EVENTS
+
         
+        
+        #STATES       
+        creatingRule: Ember.Route.extend(
+          
+          #SETUP
+          route: "/rule"
+
+          #EVENTS
+          connectOutlets: (router) ->
+            router.get("rulesController").get('content')
+            homeContentDefaultController = router.get("homeContentDefaultController")
+            homeContentDefaultController.connectOutlet "addRuleButton"
+            addRuleButtonController = router.get("addRuleButtonController")
+            addRuleButtonController.connectOutlet "rules"
+          
+          addRule: (router) ->
+            ruleController = router.get("rulesController")
+            ruleController.addNewCategory()
+            router.get("addRuleButtonController").connectOutlet
+              name: "submitRuleButton"
+              outletName: "submitRuleButonOutlet"
+
+          editRule: (router, event) ->
+            router.get("rulesController").init()
+            router.get("rulesController").loadAPresetRule()   
+
+            router.get("addRuleButtonController").connectOutlet
+                                                            name: "submitRuleButton"
+                                                            outletName: "submitRuleButonOutlet" 
+
+            router.transitionTo "creatingRule"
+           
+          
+          openRule: Ember.Route.transitionTo("creatingRule") 
+
+          ruleSubmittedSuccess: Ember.Route.transitionTo("submittedRule")
+        
+        )
+
+        submittedRule: Ember.Route.extend(
+          
+          #SETUP
+          route: "/success"
+
+          #EVENTS
+          connectOutlets: (router) ->
+            homeContentDefaultController = router.get("homeContentDefaultController")
+            homeContentDefaultController.connectOutlet "ruleSubSuccess"
+
+            
+            
+          addAnotherRule: (router) ->
+            router.get("rulesController").init()
+            router.transitionTo "creatingRule"  
+
+          #STATES
+
+        )
+
+      
+      )
+
+        
+   
+  
+   
+
         
 
       

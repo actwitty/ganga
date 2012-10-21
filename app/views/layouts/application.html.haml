@@ -9,7 +9,8 @@
 
     %meta{'http-equiv' => 'X-UA-Compatible', :content => 'IE=edge,chrome=1'}
     %meta{"http-equiv"=>"Content-Type", :content=>"text/html; charset=utf-8"}/    
-    = javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery?
+    
+
 
   /* Only in the production mode */
   -if  Rails.env.production?
@@ -21,7 +22,9 @@
   %body  
     = render 'layouts/messages'
     #rulebotEmberBase
-
+    -if !current_account.nil?
+      :javascript
+        var loggedInAccountID = '#{current_account.id}';
     = yield
 
     /* Only in the production mode */

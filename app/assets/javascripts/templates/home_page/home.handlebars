@@ -1,27 +1,70 @@
-
-
-
 <div class="home_wrapper">
   <div class="home_wide_wrapper">
    <!-- Header Bar -->
     <div class="home_header">
 
+
       <!-- Header Bar Project Menu -->
-      <div class="home_project_menu">
-          <div class="menu_option">
-              RuleBot
+      <div class="proj_menu">
+          <div class="selected">              
+            {{view.projects.description.name}}              
           </div>
-          <div class="arrow">          
+          <div class="more">          
+          </div>
+          <div class="inner_box">
+            <a></a>
+            <a href="" class="selected">
+              <span class="project_name">RuleBot</span>
+            </a>                        
+            <a class="create_new"> New App </a>
           </div>
       </div>
+
+      
+
       <!-- Header Bar Project Menu Ends -->
       <!-- Menu divider -->
       <div class="menu_divider"></div>
+
+      <!-- Right side menu -->
+      <div class="user">
+        <div class="label">
+          <div class="label_wrapper">
+            <div class="name">
+              {{ view.account.name }}
+            </div>
+            <div id="arrow">
+            </div>
+          </div>
+        </div>
+        <div class="body resize" style="width: 152px; display: none; ">
+          <div id="body_wrapper">
+            <div id="logout_button">              
+            </div>
+            <a id="logout" href="/logout/">
+              Sign out
+            </a>
+          </div>
+        </div>
+      </div>
+      <!-- Other Menus -->
+      <div id="home_user_menu">
+        <a id="account_link" href="/account/">
+          Account
+        </a>
+        <a href="/docs/">
+          Help Center
+        </a>
+        <a href="javascript:olark('api.box.expand');">
+          Live Chat
+        </a>
+      </div>
+      <!-- End the right side menu -->
     </div>
     <!-- Header Bar Ends -->
     <div class="home_main_box">
       <div class="home_side_deck">
-        {{outlet homeSideBarOutlet}}
+        {{outlet homeSideOutlet}}
       </div>
       <div class="home_content">
         {{outlet homeContentOutlet}}

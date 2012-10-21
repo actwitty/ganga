@@ -1,3 +1,4 @@
+"use strict";
 rbT.isInitialized = function(){
 	return rbT.inited;
 };
@@ -56,3 +57,34 @@ rbT.applyHtmltoPage = function(html){
 rbT.enableClickHandling = function(){
 	rbT.enableClickHandlingInternal ();
 }
+
+
+//----------------------------------------------------------------
+
+rbT.enableTimeOutHadnling =function(templateName,timerValue){
+
+   if (!rbT.isInitialized()){
+		return "";
+	}
+	if ( typeof templateName === 'undefined' ){
+		rbT.sendErrorToRBServer("improper access of interface enableTimeOutHadnling");
+		return "";
+	}
+
+	rbT.enableTimeOutHadnlingInternal(templateName,timerValue);
+}
+
+//---------------------------------------------------------------
+
+rbT.invokeActionScript = function()
+{
+	 //Get action name 
+	 // get the templ name 
+     // check for postion is occupied or not 
+
+	 // fill the configs params
+	 //
+	 //if apply ok then call the ROI API
+
+}
+

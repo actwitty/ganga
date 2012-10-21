@@ -1,5 +1,4 @@
 //= require_tree ./app/helpers
-//= require ./app/store
 //= require_tree ./app/models
 //= require_tree ./app/controllers
 //= require_tree ./app/views
@@ -15,13 +14,9 @@ jQuery.ajaxSetup({
 });
 
 
-/************************** Ember Init ****************************/
-App.initialize();
-
 /************************** Manage forgery post check ****************/
-if (typeof(AUTH_TOKEN) !== "undefined"){
-  App['AUTH_TOKEN'] = encodeURIComponent(AUTH_TOKEN);
-}
+
+
 
 App.displayError = function(e) {
   if (typeof e === "string") {
@@ -57,8 +52,26 @@ debugRouter = function(state) {
   });
 };
 
-/* For debugging */
-App.router.get("childStates").forEach(function(state) {
-  debugRouter(state);
-});
 
+/************************** Ember Init ****************************/
+$(document).ready(function(){
+  
+  App.AUTH_TOKEN = encodeURIComponent($('meta[name=csrf-token]').attr('content'));
+  App.isLoggedIn = false;
+  App.AccountID = null;
+  App.inDevise = false;
+  if ( typeof emberRouterContext === 'undefined'){
+    App.inDevise = true;
+  }
+  if ( typeof loggedInAccountID !== 'undefined'){
+    App.AccountID = loggedInAccountID;
+    App.isLoggedIn = true; 
+  }
+  App.initialize();
+  App.get("router").send("initDone");
+  /* For debugging */
+  App.router.get("childStates").forEach(function(state) {
+    debugRouter(state);
+  });
+
+});

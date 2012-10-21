@@ -1,41 +1,26 @@
 App.Rule = Ember.Object.extend(
-  category: null
-  type: null
-  operator: null
-  value: null
-  connect: null
-  ifCompTextBox: false
-  ifValueTextBox: true
-  orSelected: true
-  andSelected: false
-  operator_choices: null
-  value_choices: null
-  category_choices: null
+ id: null
+ name: null
+ event: null 
+ action: null
+ action_param: null
 
-  setOperatorChoices: (comparators) ->
-    @set "operator_choices", comparators
+ hasManyConditions: []
+  
+init: ->
+  @_super
+  conditions = @get 'conditions'  
+  hasManyConditions = []
+  if typeof conditions isnt 'undefined'
+    for condition in conditions
+      hasManyConditions.pushObject(App.Condition.create(condition)) 
+  @set 'hasManyConditions', hasManyConditions
+      
+  
 
-  setDefaultsValues: (defaults) ->
-    @set "value_choices", defaults
 
-  setCategoryChoices: (categories) ->
-    @set "category_choices", categories
 
-  setOperator: (operator) ->
-    @set "operator", operator
+   
 
-  setCategory: (category) ->
-    @set "category", category
-
-  setConnect: (connect) ->
-    @set "connect", connect
-
-  setdefault: (value) ->
-    @set "value", value
-
-  setifCompTextBox: (value) ->
-    @set "ifCompTextBox", value
-
-  setifValueTextBox: (value) ->
-    @set "ifValueTextBox", value
+ 
 )
