@@ -8,7 +8,9 @@ var rbTAPP = {
     
 
     /* Main configs will be holded here */
-    configs : {},
+    configs : {
+      "status" : false
+    },
 
     
     /** 
@@ -18,6 +20,7 @@ var rbTAPP = {
     *  3). fetch rules.
     *  4). check status of last event, if pending, execute it.
     *  5). fetch system properties if cache miss
+    *  6). Allow Business to make calls
     *  
     *  @return void
     */
@@ -38,6 +41,8 @@ var rbTAPP = {
 
       // 5). FIXME : Check status of last event, if pending, execute it.
       rbTRules.executeLastPendingEvent();
+
+      rb = new RBT();
     },
 
     /**
@@ -49,6 +54,8 @@ var rbTAPP = {
     */
     isrbTAlive :  function(callback, args)
     {
+       return this.configs.status;
+       /*
        if (this.configs.status) {
           if (callback)
              callback(args);
@@ -56,6 +63,8 @@ var rbTAPP = {
        }
        else
            return false;
+      */
+
     },  
 
     /**
@@ -232,81 +241,8 @@ var rbTAPP = {
       } catch(e) {
         // FIXME what to do?
       }
-    },  
-
-    /* Business specific call */
-    call : {
-      /** 
-      * Send event to RBT server 
-      * 
-      * @param {string} event
-      * @param {object} [params]
-      * @return void
-      */
-      sendEvent : function(event, params)
-      {
-        "use strict";
-        if (!event || typeof(event) != "string" || event == "" ) {
-          return;
-        }
-        rbTServerChannel.makeEventRequest(event, 
-                                          rbTServerChannel.url.fireEvent,
-                                          params,
-                                          { success: rbTServerResponse.handleEvent,
-                                            error  : rbTServerResponse.defaultError
-                                          });
-      },
-
-      /** 
-      * Req RBT server to identify actor based on params
-      * 
-      * @param {object} params Option based on which actor will be identified
-      * @return void
-      */
-      identify : function(params)
-      {
-        "use strict";
-        rbTServerChannel.makeGetRequest(rbTServerChannel.url.identify,
-                                        params,
-                                        { success: rbTServerResponse.setActor,
-                                          error  : rbTServerResponse.defaultError
-                                        }
-                                       );
-      },
-
-      /** 
-      * Req RBT server to set current actor property
-      * 
-      * @param {object} params Option based on which actor property will be set
-      * @return void
-      */
-      setUserProperty : function(params)
-      {
-        "use strict";
-        rbTServerChannel.makeGetRequest( rbTServerChannel.url.setUserProperty,
-                                         params,
-                                         { success: rbTServerResponse.setUserProperty,
-                                           error  : rbTServerResponse.defaultError
-                                        });
-      },
-
-      
-      /** 
-      * ALIAS
-      * 
-      * @param {object} params Option based on which system property will be set
-      * @return void
-      */
-      alias : function(params)
-      {
-          // FIXME : what to do?
-      },
-
-
-    }, 
+    }
 };
-
-
 
 
 
@@ -975,37 +911,6 @@ var rbTServerChannel = {
   */  
   makeRequestData : function(event, reqData)
   {
-<<<<<<< HEAD
-    /* 
-    if (!event) {
-      return {
-        "app_configs"  : rbTAPP.getConfigs(),  // mandatory
-        "request_data" : reqData,     
-      };
-    } else {
-      return {
-        "app_configs"  : rbTAPP.getConfigs(),  // mandatory
-        "event"        : event,                // mandatory 
-        "request_data" : reqData,     
-      };
-    }*/
-    if (!event) {
-      return {
-         "app_id"  : rbTAPP.getAppID(),  // mandatory
-         "account_id"  : rbTAPP.getAccountID(),  // mandatory
-         // "actor_id" : rbTAPP.getConfigs(),
-         "properties" : reqData,    
-      };
-    } else {
-      return {
-         "app_id"  : rbTAPP.getAppID(),  // mandatory
-         "account_id"  : rbTAPP.getAccountID(),  // mandatory
-         // "actor_id" : rbTAPP.getConfigs(),
-         "name"        : event,                // mandatory 
-         "properties" : reqData,    
-      };
-    }
-=======
     var requestData = {};
 
     requestData["app_id"] = rbTAPP.getAppID(); // mandatory
@@ -1016,7 +921,6 @@ var rbTServerChannel = {
     if (reqData)
       requestData["properties"] = reqData;
     return requestData;
->>>>>>> 2537852c42ccb4889bd7dcf15d9a65ef617dc76a
   },
 
   /** 
@@ -1030,34 +934,9 @@ var rbTServerChannel = {
   makeEventRequest :  function(event, url, reqData, callback)
   {
     "use strict";
-<<<<<<< HEAD
-    var reqServerData = rbTServerChannel.makeRequestData(event, reqData);
-    callback = rbTServerChannel.extendCallbacks(callback);
-
-    jQuery.ajax({
-          url: url,
-          type: 'GET',
-          dataType: 'json',
-          //contentType: 'application/json',
-          data: reqServerData,
-          beforeSend: function() {
-              // FIXME : add status to cookie
-              rbTCookie.setCookie("lastevent", event);
-          },
-          success: function ( respData ) {
-              callback.success(respData);
-              rbTCookie.deleteCookie("lastevent");
-          },
-          error:function(XMLHttpRequest,textStatus, errorThrown){ 
-              // todo : what to do??            
-              callback.error(); 
-          }
-    });
-=======
     try {
       var reqServerData = this.makeRequestData(event, reqData);
       callback = this.extendCallbacks(callback);
-
       jQuery.ajax({
             url: url,
             type: 'GET',
@@ -1088,7 +967,6 @@ var rbTServerChannel = {
                           "log"       : "error" 
                          }); 
     }
->>>>>>> 2537852c42ccb4889bd7dcf15d9a65ef617dc76a
   },
 
  
@@ -1144,6 +1022,24 @@ var rbTServerChannel = {
   *  @param {object} callback Defined callback for roi. 
   *  @return void
   */  
+  makeGetRequest : function(url, callback)
+  {
+    reqServerData = {"app_id" : rbTAPP.configs.appID, "account_id" : rbTAPP.configs.accountID};
+    jQuery.ajax({
+          url: url,
+          type: 'GET',
+          dataType: 'json',
+          contentType: 'application/json',
+          data: reqServerData,
+          success: function ( respData ) {
+              callback.success(respData);
+          },error:function(XMLHttpRequest,textStatus, errorThrown){ 
+              // todo : what to do??            
+              callback.error(); 
+          }
+    });
+  },
+   
   roi : function(params, callback)
   {
     "use strict";
@@ -1798,8 +1694,8 @@ var rbTUtils = {
   {
     function includeJQ()
     { 
-      rbTUtils.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
-      rbTUtils.waitForjQueryAlive();
+      this.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
+      this.waitForjQueryAlive();
     }
 
     if (typeof jQuery != 'undefined') {
@@ -1839,21 +1735,14 @@ var rbTUtils = {
   },
     
   /** Embed any other script.
-<<<<<<< HEAD
-  *
-  * @return void
-  */
-  embedScript: function(url)
-=======
-	* @param {string} url Script URL to load.
+  * @param {string} url Script URL to load.
   * @param {object} callback Function to call when script is loaded successfully.
   * @param {object} params Callback initiated with param as arguments.
-  *	@return void
-	*/
+  * @return void
+  */
   embedScript: function(url, callback, params)
->>>>>>> 2537852c42ccb4889bd7dcf15d9a65ef617dc76a
   {
-      if (!url || typeof(url) == "string" || url == "")
+      if (!url || typeof(url) != "string" || url == "")
         return;
       
       var scriptElement  = document.createElement("script");
@@ -2007,7 +1896,7 @@ var rbTCookie = {
     function getExpDate(hours)
     {
       var expiryDate = new Date();
-      expiryDate.setTime(expiryDate.getTime()+(5 * hours));
+      expiryDate.setTime(expiryDate.getTime()+(30 * hours)); // default day is set to 30
       return expiryDate.toGMTString();
     }
 
@@ -2116,6 +2005,100 @@ var rbTCookie = {
 };
 
 
+/****************************[[rbTBusiness.js]]*************************************/ 
+
+
+/* MAIN BUSINESS SPECIFIC CALLS */
+var RBT = function()
+{
+  this._appID = rbTAPP.getAppID();
+  this._accountID = rbTAPP.getAccountID();
+  this._status = rbTAPP.isrbTAlive();
+};
+
+
+/** 
+* Tell whether RBT app is alive
+* 
+* @return {boolean} status
+*/
+RBT.prototype.isAlive = function()
+{
+  this._status = rbTAPP.isrbTAlive();
+  return this._status;
+};
+
+
+/** 
+* Send event to RBT server 
+* 
+* @param {string} event
+* @param {object} [params]
+* @return void
+*/
+RBT.prototype.sendEvent = function(event, params)
+{
+  "use strict";
+  if (!event || typeof(event) != "string" || event == "" ) {
+    return;
+  }
+  rbTServerChannel.makeEventRequest(event, 
+                                    rbTServerChannel.url.fireEvent,
+                                    params,
+                                    { success: rbTServerResponse.handleEvent,
+                                      error  : rbTServerResponse.defaultError
+                                    });
+};
+
+/** 
+* Req RBT server to identify actor based on params
+* 
+* @param {object} params Option based on which actor will be identified
+* @return void
+*/
+RBT.prototype.identify = function(params)
+{
+  "use strict";
+  rbTServerChannel.makeGetRequest(rbTServerChannel.url.identify,
+                                params,
+                                { success: rbTServerResponse.setActor,
+                                  error  : rbTServerResponse.defaultError
+                                }
+                               );
+};
+
+
+
+/** 
+* Req RBT server to set current actor property
+* 
+* @param {object} params Option based on which actor property will be set
+* @return void
+*/
+RBT.prototype.setUserProperty = function(params)
+{
+  "use strict";
+  rbTServerChannel.makeGetRequest( rbTServerChannel.url.setUserProperty,
+                                   params,
+                                   { success: rbTServerResponse.setUserProperty,
+                                     error  : rbTServerResponse.defaultError
+                                  });
+};
+
+
+/** 
+* ALIAS
+* 
+* @param {object} params Option based on which system property will be set
+* @return void
+*/
+RBT.prototype.alias = function(params)
+{
+    // FIXME : what to do?
+};
+
+
+
 /****************************[[rbTInitApp.js]]*************************************/ 
 
 
@@ -2144,5 +2127,5 @@ var rbTCookie = {
   }
 })(_rbTK[0][1], _rbTK[1][1]);
 
-
-rbTAPP.call.sendEvent('complex', {foo:12,bar:42, baz:{a:'some string', b:'some other string'}});
+var rb = new RBT();
+rb.isAlive();

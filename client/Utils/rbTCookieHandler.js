@@ -75,7 +75,7 @@ var rbTCookie = {
     function getExpDate(hours)
     {
       var expiryDate = new Date();
-      expiryDate.setTime(expiryDate.getTime()+(5 * hours));
+      expiryDate.setTime(expiryDate.getTime()+(30 * hours)); // default day is set to 30
       return expiryDate.toGMTString();
     }
 

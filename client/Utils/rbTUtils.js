@@ -7,8 +7,8 @@ var rbTUtils = {
   {
     function includeJQ()
     { 
-      rbTUtils.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
-      rbTUtils.waitForjQueryAlive();
+      this.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
+      this.waitForjQueryAlive();
     }
 
     if (typeof jQuery != 'undefined') {
@@ -55,7 +55,7 @@ var rbTUtils = {
 	*/
   embedScript: function(url, callback, params)
   {
-      if (!url || typeof(url) == "string" || url == "")
+      if (!url || typeof(url) != "string" || url == "")
         return;
       
       var scriptElement  = document.createElement("script");
