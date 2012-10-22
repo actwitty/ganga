@@ -11,8 +11,8 @@ App.Project = Ember.Object.extend(
   init: ->
     @_super  
     hasManyRules = []     
-    rules = @get 'rules'    
-    if typeof rules isnt 'undefined'
+    rules = @get 'rules'       
+    if rules isnt null
       for rule in rules
         hasManyRules.pushObject(App.Rule.create(rule)) 
     @set 'hasManyRules', hasManyRules

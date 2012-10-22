@@ -28,6 +28,7 @@ App.Router = Ember.Router.extend
 
       #STATES
 
+    # DEVISE STATE STARTS HERE
     deviseState: Ember.Route.extend
       #SETUP
       route: '/'
@@ -37,8 +38,10 @@ App.Router = Ember.Router.extend
         deviseController.connectOutlet({name: 'deviseTopbar',outletName: 'deviseTopBarOutlet'} )
       #EVENTS
       #STATES
+    # DEVISE STATE ENDS HERE
 
-    landingState: Ember.Route.extend (
+    # LANDING STATE STARTS HERE
+    landingState: Ember.Route.extend 
       #SETUP
       route: '/'
       connectOutlets: (router) ->        
@@ -49,72 +52,53 @@ App.Router = Ember.Router.extend
       #EVENTS
 
       #STATES
-    )
+    # LANDING STATE ENDS HERE
+    
+    # LOGGED IN STATE STARTS HERE
     loggedInState  : Ember.Route.extend
       #SETUP
       route: '/'
 
-
-
       #EVENTS  
+      # event -------------------------------------------
       bareBoneAccount: (router, event) ->
-        homeController = router.get('homeController')        
-        homeController.connectOutlet({name: 'bareBone',outletName: 'homeContentOutlet'} )
+        router.transitionTo('loggedInState.bareBoneAccountState') 
 
+      # event -------------------------------------------
       newProject: (router, event) ->
+        event.preventDefault()
         editController = router.get('projectEditController')
         editController.set('content', App.Project.create())
-        editController.set('isNew', true)
-        editController.resetStates()
-        homeController = router.get('homeController')
-        homeController.connectOutlet({name: 'projectEdit', outletName: 'homeContentOutlet'} )     
-
-      editProject: (router, event) ->        
-        # Context comes as argument
-        project = event.context
-        editController = router.get('projectEditController')
-        router.get('projectsController').set('selected', project)
-        editController.set('isNew', false)
-        editController.resetStates()   
-        homeController = router.get('homeController')
-        homeController.connectOutlet({name: 'projectEdit', outletName: 'homeContentOutlet'} ) 
-        event.preventDefault()
-
-
-
+        router.transitionTo('loggedInState.newProjectState')
+        
+      # event -------------------------------------------
       deleteProject: (router, event) ->
         editController = router.get('projectEditController')
         editController.deleteProject()
+        event.preventDefault()
+        
+      # event -------------------------------------------
+      listProject: (router, event) ->          
+        router.transitionTo('loggedInState.listProjectState')    
         
 
-
-      listProject: (router, event) ->        
-        homeController = router.get('homeController')
-        homeController.connectOutlet({name: 'projects', outletName: 'homeContentOutlet'} )
-
-
-      showProjectRules: (router,event) ->   
+      # event -------------------------------------------
+      showProjectRules: (router, event) ->   
         project = event.context
         router.get('projectsController').set('selected', project)
-        homeController = router.get('homeController')
-        homeController.connectOutlet({name: 'rules', outletName: 'homeContentOutlet'} )        
+        router.transitionTo('loggedInState.projectConfigState.showRulesState')
         event.preventDefault()
 
-      editRules: (router, event) ->
-        # Context comes as argument
-        rule = event.context
-        ruleController = router.get('rulesController')
-        ruleController.set 'selected', rule
-        homeController = router.get('homeController')
-        homeController.connectOutlet( {name: 'conditions', outletName: 'homeContentOutlet'} )
-
+      # event -------------------------------------------
       openReports: (router, event) ->
 
+      # event -------------------------------------------
       logoutEvent: (router, event) -> 
-     
+        #TODO: Trigger logout and transition to loggedout
+        router.transitionTo('loggedOutState') 
 
       #STATES
- 
+      #state -------------------------------------
       index: Ember.Route.extend
         route: '/'
         connectOutlets: (router) ->          
@@ -122,75 +106,112 @@ App.Router = Ember.Router.extend
           homeController = router.get('homeController')
           homeController.connectOutlet({name: 'homeSide', outletName: 'homeSideOutlet'} )
           router.get('projectsController').load()
+      #state -------------------------------------
+      bareBoneAccountState: Ember.Route.extend
+        route: '/getstarted'
+        connectOutlets: (router) ->
+          homeController = router.get('homeController')        
+          homeController.connectOutlet({name: 'bareBone',outletName: 'homeContentOutlet'} )
 
-      projectOpenState: Ember.Route.extend(
+      #state -------------------------------------
+      newProjectState: Ember.Route.extend
+        route: '/new'
+        connectOutlets: (router) ->          
+          editController = router.get('projectEditController') 
+          editController.set('isNew', true)
+          editController.resetStates()
+          homeController = router.get('homeController')
+          homeController.connectOutlet({name: 'projectEdit', outletName: 'homeContentOutlet'} )
+      #state -------------------------------------
+      editProjectState: Ember.Route.extend
+        #SETUP
+        route: '/edit'
+        connectOutlets: (router) ->
+          editController = router.get('projectEditController') 
+          editController.set('isNew', false)
+          editController.resetStates()   
+          homeController = router.get('homeController')
+          homeController.connectOutlet({name: 'projectEdit', outletName: 'homeContentOutlet'} ) 
+
+      #state -------------------------------------
+      listProjectState: Ember.Route.extend
+        #SETUP
+        route: '/list'
+        connectOutlets: (router) ->          
+          homeController = router.get('homeController')
+          homeController.connectOutlet({name: 'projects', outletName: 'homeContentOutlet'} )
+
+
+        #EVENTS
+        #event ----------------------------------------
+        editProject: (router, event) ->        
+          # Context comes as argument
+          project = event.context
+          editController = router.get('projectEditController')
+          router.get('projectsController').set('selected', project)  
+          router.transitionTo('loggedInState.editProjectState')        
+          event.preventDefault()
+
+      #-------------------------------------
+      projectConfigState: Ember.Route.extend
         #SETUP
         route: "/project"
 
         #EVENTS
 
-        
-        
         #STATES       
-        creatingRule: Ember.Route.extend(
-          
+        #state in project -----------------------
+        showRulesState: Ember.Route.extend
           #SETUP
-          route: "/rule"
-
+          route: '/rules'
+          connectOutlets: (router, event) ->
+            homeController = router.get('homeController')
+            homeController.connectOutlet({name: 'rules', outletName: 'homeContentOutlet'} )        
+         
           #EVENTS
-          connectOutlets: (router) ->
-            router.get("rulesController").get('content')
-            homeContentDefaultController = router.get("homeContentDefaultController")
-            homeContentDefaultController.connectOutlet "addRuleButton"
-            addRuleButtonController = router.get("addRuleButtonController")
-            addRuleButtonController.connectOutlet "rules"
-          
-          addRule: (router) ->
-            ruleController = router.get("rulesController")
-            ruleController.addNewCategory()
-            router.get("addRuleButtonController").connectOutlet
-              name: "submitRuleButton"
-              outletName: "submitRuleButonOutlet"
-
-          editRule: (router, event) ->
-            router.get("rulesController").init()
-            router.get("rulesController").loadAPresetRule()   
-
-            router.get("addRuleButtonController").connectOutlet
-                                                            name: "submitRuleButton"
-                                                            outletName: "submitRuleButonOutlet" 
-
-            router.transitionTo "creatingRule"
-           
-          
-          openRule: Ember.Route.transitionTo("creatingRule") 
-
-          ruleSubmittedSuccess: Ember.Route.transitionTo("submittedRule")
-        
-        )
-
-        submittedRule: Ember.Route.extend(
-          
-          #SETUP
-          route: "/success"
-
-          #EVENTS
-          connectOutlets: (router) ->
-            homeContentDefaultController = router.get("homeContentDefaultController")
-            homeContentDefaultController.connectOutlet "ruleSubSuccess"
-
-            
-            
-          addAnotherRule: (router) ->
-            router.get("rulesController").init()
-            router.transitionTo "creatingRule"  
+          # event -------------------------------------------
+          editRules: (router, event) ->
+            # Context comes as argument
+            rule = event.context        
+            rulesController = router.get('rulesController')
+            rulesController.set 'selected', rule
+            router.transitionTo('editRuleConditionsState')
+            event.preventDefault()
 
           #STATES
 
-        )
+          editRuleConditionsState: Ember.Route.extend
+            #SETUP
+            route: '/edit'
+            connectOutlets: (router, event) ->
+              homeController = router.get('homeController')
+              homeController.connectOutlet( {name: 'conditions', outletName: 'homeContentOutlet'} )
+
+            #EVENTS
+
+              #STATES
+              
+
+          
+        
+        #STATES       
+    # LOGGED IN STATE ENDS HERE
+
+    # LOGGED OUT STATE STARTS HERE
+    loggedOutState  : Ember.Route.extend
+      #SETUP
+      route: "/thanks"
+      connectOutlets: (router, event) ->
+        applicationController = router.get('applicationController')
+        
+      #EVENTS
+      #STATES
+    # LOGGED OUT STATE ENDS HERE
+
+
 
       
-      )
+      
 
         
    

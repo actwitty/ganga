@@ -1,22 +1,17 @@
-App.ConditionsController = Ember.ArrayController.extend(  
+App.ConditionsController = Ember.ArrayController.extend
   content: []  
 
-  loadContents: (->
-    @set 'content', []
-    @set 'selected', null
-    content = @get 'content'
-    selected = @getPath("ruleController.selected")
-    conditionContent = selected.get 'conditions'
-    
-    if conditionContent.get 'length' > 0
-      for condition in conditionContent
-        newCondition = App.Condition.ctreate(condition)
-        content.pushObject newCondition
-    else
-      newCondition = App.Condition.ctreate()
-      content.pushObject newCondition
+  loadConditions: (->
+    @set 'content', []    
 
-    @set "content", conditionContent
-  ).observes("ruleController.selected")
+    rule = App.get "router.rulesController.selected"
+    if rule isnt null
+      conditions = rule.get 'hasManyConditions'
+    
+      if conditions.length > 0
+        @set 'content', conditions
+      else
+        content = @get 'content'      
+        content.pushObject App.Condition.ctreate()    
+  ).observes("App.router.rulesController.selected")
   
-)

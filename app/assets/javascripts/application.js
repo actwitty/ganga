@@ -17,10 +17,14 @@
 //= require ember
 //= require ember-rest
 //= require twitter/bootstrap
+//= require select2
+//= require bootstrap-colorpicker	
+//= require bootstrap-datepicker/core
+//= require dataTables/jquery.dataTables
+//= require dataTables/jquery.dataTables.bootstrap
 //= require handlebars
 //= require jquery-tablesorter
 //= require fancybox
-
 //= require_self
 //= require ember_app
 App = Ember.Application.create( {

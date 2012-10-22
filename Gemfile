@@ -23,6 +23,10 @@ end
 # Add Jquery source gems for asset pipline
 gem 'jquery-rails', "1.0.19"
 gem 'fancybox-rails'
+gem "select2-rails"
+gem 'jquery-datatables-rails'
+gem 'bootstrap-colorpicker-rails'
+gem 'bootstrap-datepicker-rails'
 gem 'jquery-tablesorter'
 gem 'handlebars_assets'
 gem 'ember-rails', :git => 'git://github.com/emberjs/ember-rails.git'

@@ -13,6 +13,19 @@
       </a>
   </div>
 {{/if}}
+
+
+
+<select id='rule_event_config' class='bootstrap_select2' style:'300px'>
+  {{#each event in view.rules.events}}    
+    {{#ifequal view.rules.selected.event event}}
+      <option selected>{{event}}</option>
+    {{else}}
+      <option >{{event}}</option>
+    {{/ifequal}}
+  {{/each}}
+</select>
+<script>$("#rule_event_config").select2();</script>
 {{#if controller.content.length}}
 
 {{/if}}
