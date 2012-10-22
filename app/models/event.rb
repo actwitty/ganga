@@ -61,6 +61,9 @@ class Event
       actor = Actor.create!(account_id: params[:account_id], app_id: params[:app_id])
       params[:actor_id] = actor._id 
       Rails.logger.info("creating anonymous actor")
+    else
+      actor = Actor.where(_id: params[:actor_id], app_id: params[:app_id]).first
+      raise et("event.invalid_actor_id") if actor.blank?
     end
 
     #get app object

@@ -37,9 +37,8 @@ Ganga::Application.routes.draw do
   
 
   # Event Api
-  #post '/event/create',       :to => 'events#create'
-  match '/event/create',       :to => 'events#create'
-
+  get '/event/create',        :to => 'events#create'
+ 
   # Account Api
   get  '/account/read',       :to => 'accounts#read'
   get  '/account/list_apps',  :to => 'accounts#list_apps'

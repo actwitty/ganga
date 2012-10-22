@@ -9,13 +9,34 @@ class EventsController < ApplicationController
   ## {
   ##  :app_id => "1234444',   [MANDATORY]
   ##  :actor_id => "1223343", [OPTIONAL]  #if not given, anonymous actor is created
-  ##  :event =>    "sign_up", [MANDATORY] # event name is case sensitive
+  ##  :name =>    "sign_up", [MANDATORY] # event name is case sensitive
   ##  :properties => {        [MANDATORY]
   ##      :email => "john.doe@example.com",
   ##      :customer => {:address => {:city => "Bangalore"}}}
   ## }
 
-  # OUTPUT => {status: true}
+  # OUTPUT => {
+  ##              "id"=>"50838a5e63fe85d820000005", 
+  ##
+  ##              "account_id"=>"50838a5e63fe85d820000004", 
+  ##
+  ##              "actor_id"=>"50838a5e63fe85d820000003",
+  ##
+  ##              "app_id"=>"50838a5e63fe85d820000002",
+  ##             
+  ##              "meta"=>false,
+  ##              
+  ##              "name"=>"sign_up", 
+  ##
+  ##              "properties"=>[
+  ##                              {"k"=>"customer[address][place]", "v"=>["hello"]}, 
+  ##                              {"k"=>"customer[address][city][name]", "v"=>"bangalore"},
+  ##                              {"k"=>"customer[address][city][geo][long]", "v"=>"34"},
+  ##                              {"k"=>"customer[address][city][geo][lat]", "v"=>"23"},
+  ##                              {"k"=>"email", "v"=>"john.doe@example.com"}
+  ##                            ], 
+  ##              "updated_at"=>"2012-10-21T05:38:38Z",   "created_at"=>"2012-10-21T05:38:38Z",
+  ##          }
 
   def create
     Rails.logger.info("Enter Event Create #{params.inspect}")
@@ -25,10 +46,14 @@ class EventsController < ApplicationController
 
     raise ret[:error] if !ret[:error].blank?
 
-    render json: {status: ret[:return]}, status: 200
+    hash = ret[:return].attributes
+    hash["id"] = hash["_id"]
+    hash.delete("_id")
+
+    render json: hash, status: 200
 
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    render json: { errors: e , status: 422}
+    render json: {errors: e.message}, status: 422
   end
 end
