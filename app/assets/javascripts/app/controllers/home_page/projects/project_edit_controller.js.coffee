@@ -84,8 +84,7 @@ App.ProjectEditController = Em.ObjectController.extend(
       controllerObj.set 'isBusy', false
       controllerObj.set 'isError', false
       
-    content = @get 'content'
-    console.log content.filterData()
+    content = @get 'content'    
     App.postRequest url, content.filterData(), success, error
   
  )

@@ -3,6 +3,7 @@ App.RulesController = Em.ArrayController.extend(
   content: []
   selected: null
   events: []
+  schema: null
   
   
   #########################################################
@@ -14,10 +15,7 @@ App.RulesController = Em.ArrayController.extend(
   loadSchema: ->
     project = App.get('router.projectsController').get('selected')
     rule = @get('selected')
-    schema = @get('schema')
-
-    App.log App.DBG, 'Loading schema for ---'
-    console.log project
+    schema = project.get('schema')
 
     if rule isnt null
 
@@ -39,7 +37,7 @@ App.RulesController = Em.ArrayController.extend(
 
       for k,v of event_p      
         prop = 
-               'key': translatePropertyName(k)
+               'key': @translatePropertyName(k)
                'actual': k
                'type': v
                'scope': 'event'
@@ -47,7 +45,7 @@ App.RulesController = Em.ArrayController.extend(
 
       for k,v of actor_p      
         prop = 
-               'key': translatePropertyName(k)
+               'key': @translatePropertyName(k)
                'actual': k
                'type': v
                'scope': 'actor'
@@ -55,14 +53,13 @@ App.RulesController = Em.ArrayController.extend(
         
       for k,v of system_p      
         prop = 
-               'key': translatePropertyName(k)
+               'key': @translatePropertyName(k)
                'actual': k
                'type': v
                'scope': 'system'
         props.push(prop) 
 
-      console.log schema
-      rule.set 'schema', schema
+      @set 'schema', schema
 
   #########################################################
 
@@ -70,22 +67,22 @@ App.RulesController = Em.ArrayController.extend(
     events = []
     @set 'events', events
     project = App.get('router.projectsController').get('selected')
-    event_p = undefined
+    event_p = {}
+
+
     if "schema" of project
       if "events" of project.schema
-        event_p = project.schema.events[event]
+        event_p = project.schema.events
 
-    for k,v of event_p      
+    for k,v of event_p 
       events.push k
-    @set 'events', events
-
+    @set 'events', events    
+        
 
   #########################################################
   loadRules: ->
     project = App.get('router.projectsController').get('selected')
-    #TODO: Remove this constant hack later  @get('selected')
-    @set 'content', project.get('hasManyRules')
-    
+    @set 'content', project.get('hasManyRules')   
 
 
   #########################################################
@@ -102,8 +99,7 @@ App.RulesController = Em.ArrayController.extend(
     @set 'content', []
     @set 'selected', null
 
-    project =  App.get('router.projectsController').get('selected')
-    console.log(this)    
+    project =  App.get('router.projectsController').get('selected')    
     # @loadSchema() only when a rule is selected
     @loadEvents()
     @loadRules()
