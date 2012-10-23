@@ -56,6 +56,10 @@ class Event
       raise et("event.invalid_argument_in_event") 
     end
 
+    #get app object
+    app = App.find(params[:app_id])
+    raise et("event.invalid_app_id") if app.account_id.to_s != params[:account_id]
+
     # create anonymous actor if actor is blank
     if params[:actor_id].blank?
       actor = Actor.create!(account_id: params[:account_id], app_id: params[:app_id])
@@ -64,10 +68,7 @@ class Event
     else
       actor = Actor.where(_id: params[:actor_id], app_id: params[:app_id]).first
       raise et("event.invalid_actor_id") if actor.blank?
-    end
-
-    #get app object
-    app = App.find(params[:app_id])
+    end    
 
     # Build event 
     ev = new(account_id: params[:account_id], app_id: params[:app_id], actor_id: params[:actor_id], name: params[:name])

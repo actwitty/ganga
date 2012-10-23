@@ -62,7 +62,7 @@ class AccountsController < ApplicationController
   def read
     Rails.logger.info("Enter Account read")
 
-    params[:account_id] = current_account._id if Rails.env != "test"
+    params[:account_id] = current_account._id if Rails.env != "test" or params[:account_id].blank?
     ret = Account.read(params)
 
     raise ret[:error] if !ret[:error].blank?

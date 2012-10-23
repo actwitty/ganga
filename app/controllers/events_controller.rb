@@ -41,7 +41,7 @@ class EventsController < ApplicationController
   def create
     Rails.logger.info("Enter Event Create #{params.inspect}")
 
-    params[:account_id] = current_account._id
+    params[:account_id] = current_account._id if Rails.env != "test" or params[:account_id].blank?
     ret = Event.add!(params)
 
     raise ret[:error] if !ret[:error].blank?

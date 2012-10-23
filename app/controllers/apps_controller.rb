@@ -47,7 +47,7 @@ class AppsController < ApplicationController
 		hash = obj.attributes
 		hash["id"] = hash["_id"]
 		hash.delete("_id")
-    
+
 	  render json: hash, status: 200			
 	rescue => e
 		Rails.logger.error("**** ERROR **** #{er(e)}")
