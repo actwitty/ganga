@@ -933,16 +933,10 @@ var rbTServerChannel = {
   */
   makeEventRequest :  function(event, url, reqData, callback)
   {
-<<<<<<< HEAD
-    var reqServerData = rbTServerChannel.makeRequestData(event, reqData);
-    callback = rbTServerChannel.extendCallbacks(callback);
-=======
     "use strict";
     try {
       var reqServerData = this.makeRequestData(event, reqData);
       callback = this.extendCallbacks(callback);
->>>>>>> 2537852c42ccb4889bd7dcf15d9a65ef617dc76a
-
       jQuery.ajax({
             url: url,
             type: 'GET',
