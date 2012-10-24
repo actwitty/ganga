@@ -1,7 +1,25 @@
 var rbTRules = {
 
+  ruleTable : {},
 
-  ruleTable : {}, 
+  operations : { 
+                  'gtn': 'greater than',
+                  'ltn': 'lesser than',
+                  'eql': 'equal to',
+                  'swh': 'starts with',
+                  'ewh': 'ends with',
+                  'cns': 'contains',
+                  'btn': 'between',
+                  'rgx': 'regex',
+                  'dag': 'days ago',
+                  'drg': 'date range',
+                  'set': 'set'
+  },
+  "permissions" : {
+          'String': [ 'eql', 'swh','ewh','cns','rgx','set' ],
+          'Date': [ 'gtn','ltn','eql','dag','drg','set' ],  
+          'Number': [ 'gtn','ltn','eql','btn','rgx','set'] 
+  },
 
   sample_json : [
         {
@@ -19,26 +37,26 @@ var rbTRules = {
           conditions : [
                 // event based condition
                 { 
-                  property: 'person[email]',
-                  negation: 'true',
-                  operation: 'ew',
-                  value1: '@gmail.com',
+                  property: "#customer.email",
+                  negation: 'false',
+                  operation: 'eql',
+                  value1: 'gmail.com',
                   connect: 'and' 
                 },
                 // actor_property based condition
                 {
-                  property: 'person[counter]',
+                  property: "$customer.val1",
                   negation: 'false',
-                  operation: 'gt',
-                  value1: 5,
+                  operation: 'gtn',
+                  value1: 2,
                   connect: 'and' 
                 },
                 // system_property based condition
                 {
-                  property: 'person[counter]',
+                  property: "#customer.val2",
                   negation: 'false',
-                  operation: 'gt',
-                  value1: 5
+                  operation: 'gtn',
+                  value1: 3
                 }
               ]
         }
@@ -103,16 +121,16 @@ var rbTRules = {
     try {
         jQuery.each(rules, function(index, ruleList) {
           ruleString = " ";
-          for (rule in ruleList.conditions) {
-            ruleString = ruleString + "rbTRules.rule." + ruleList.rules[rule].operator + 
-                    ruleParams(ruleList.rules[rule]) + ruleConnect(ruleList.rules[rule]);
+          for (var rule in ruleList.conditions) {
+            ruleString = ruleString + "rbTRules.rule." + ruleList.conditions[rule].operation + 
+                    ruleParams(ruleList.conditions[rule]) + ruleConnect(ruleList.conditions[rule]);
           }
 
-          this.ruleTable[ruleList.event] = { "name"         : ruleList.name,
-                                             "ruleString"   : ruleString,
-                                             "action"       : ruleList.action,
-                                             "action_param" : ruleList.action_param
-                                           };
+          rbTRules.ruleTable[ruleList.event] = { "name"         : ruleList.name,
+                                                 "ruleString"   : ruleString,
+                                                 "action"       : ruleList.action,
+                                                 "action_param" : ruleList.action_param
+                                               };
         });
     } catch (e) {
       rbTAPP.reportError({"exception" : e.message,
@@ -134,6 +152,7 @@ var rbTRules = {
 
     function prepareFunctionCode(ruleString) 
     {
+      $("#rulestring").text(ruleString);
       return 'if (' + ruleString + ') { return true; } else { return false;}';
     }
 
@@ -141,8 +160,11 @@ var rbTRules = {
           var functionCode = prepareFunctionCode(this.ruleTable[event].ruleString);
           var isRuleValid = new Function(functionCode)();
           if (isRuleValid) {
+            $("#result").text("RULES PASSED");
             this.invokeAction(event);
-          } 
+          } else {
+            $("#result").text("RULES FAILED");
+          }
     } catch (e) {
       rbTAPP.reportError({"exception"  : e.message,
                           "message"    : "rule execution on event failed" , 
@@ -152,6 +174,7 @@ var rbTRules = {
     } 
   },
   
+
   /**
   *   Execute rules table for particular events
   *   @param {string} property The property for which we need to operate upon
@@ -161,13 +184,14 @@ var rbTRules = {
   valueDataType : function(property, value)
   {
     "use strict";
-    // We are expecting only 2 types i.e string or number
+    // We are expecting only 3 types i.e string or number or date
+    var dt = this.getDataType(property);
     try {
-        if (typeof property === "string") {
+        if (dt === "String") {
           return value.toString();
-        } else if(typeof property === "number") {
+        } else if(dt === "Number") {
           return parseFloat(value);
-        } else if(Object.prototype.toString.call(date) === '[object Date]') {
+        } else if(dt === "Date") {
           return new Date(value);
         }
     } catch (e) {
@@ -204,8 +228,8 @@ var rbTRules = {
   /**
   * FIXME : enable this
   * Evaluate property value to a suitable sys or user property
-  * 
-  */
+  * @param {string} rule property For which we need to evaluate data type
+   */
   evalProperty : function(ruleProperty)
   {
     if (!ruleProperty)
@@ -215,9 +239,13 @@ var rbTRules = {
 
     var propType = (startCh == "$") ? "actor"  : (
                    (startCh == "#") ? "system" : "open");
+
     // FIXME : Currently we do not know the structure of response we will get.
     // Based on that we need to process further.
 
+    var p = ruleProperty.slice(1,ruleProperty.length);
+    var value = eval("RBT."+p);
+    return value;
   },
 
 
@@ -230,13 +258,23 @@ var rbTRules = {
   {
     try {
       // Hand over action to templating engine for processing event action.
-      rbTTemplates.invoke(this.ruleTable[event].action, this.ruleTable[event].action_param);
+      //rbTTemplates.invoke(this.ruleTable[event].action, this.ruleTable[event].action_param);
     } catch(e) {
       rbTAPP.reportError({"exception" : e.message,
                           "message": "action could not be invoked" , 
                           "event" : event
                          });
     }
+  },
+
+  /**
+  * Check the data type of object
+  * @param {string} negation status
+  * @return boolean !negate status
+  */  
+  getDataType : function(a)
+  {
+    return Object.prototype.toString.call(a).split("]")[0].split(" ")[1];
   },
 
   /**
@@ -247,6 +285,45 @@ var rbTRules = {
   isNegate :  function(x)
   {
     return (x === "true") ? false : true; 
+  },
+
+  /**
+  * Check the validity of the rule based on permitted operations on data type
+  * @param {string} t Type of rule applying.
+  * @param {string} a Rule property
+  * @param {string} b Rule value 1
+  * @param {string} [c] Rule value 2
+  * @return boolean validity
+  */
+  isValidRule : function(t,a,b,c)
+  {
+    if (!a || !b)
+      return false;
+    var propDT = this.getDataType(this.evalProperty(a));
+
+    var v1DT = this.getDataType(b);
+    if (c)
+      var v2DT = this.getDataType(c);
+
+    var v2DT = v2DT || v1DT;
+
+    if (!this.permissions[propDT] || this.permissions[propDT].indexOf(t) < 0)
+      return false;
+    
+    if (propDT === "String" && (v1DT!=propDT || v2DT!=propDT)) {
+      return false;
+    } else if (propDT === "Number" && (parseFloat(b) === "NaN" || (c && parseFloat(c) === "NaN"))) {
+      return false;
+    } else if (propDT === "Date") {
+      var v1Date = new Date(b);
+      if (c)
+        var v2Date = new Date(c);
+      v2Date = v2Date || v1Date;
+      if (v1Date.toString() === "Invalid Date" || v2Date.toString() === "Invalid Date")
+        return false;
+    }
+    
+    return true; 
   },
 
   /* 
@@ -262,12 +339,14 @@ var rbTRules = {
     * 
     * @return {boolean} Validity based on rule
     */ 
-    lt : function(x,a,b)
+    ltn : function(x,a,b)
     {
       "use strict";
       try {
-        var prop = this.evalProperty(a);
-        return ((prop < this.valueDataType(prop, b)) && this.isNegate(x) );
+        if (!rbTRules.isValidRule("ltn",a,b))
+          return false;
+        var prop = rbTRules.evalProperty(a);
+        return ((prop < rbTRules.valueDataType(prop, b)) && rbTRules.isNegate(x) );
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on lt failed" , 
@@ -284,12 +363,14 @@ var rbTRules = {
     * 
     * @return {boolean} Validity based on rule
     */ 
-    gt : function(x,a,b)
+    gtn : function(x,a,b)
     {
       "use strict";
       try {
-        var prop = this.evalProperty(a);
-        return ((prop > this.valueDataType(prop, b)) && this.isNegate(x) );
+        if (!rbTRules.isValidRule("gtn",a,b))
+          return false;
+        var prop = rbTRules.evalProperty(a);
+        return ((prop > rbTRules.valueDataType(prop, b)) && rbTRules.isNegate(x) );
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on gt failed" , 
@@ -311,11 +392,13 @@ var rbTRules = {
     {
       "use strict";
       try {
-        var prop = this.evalProperty(a);
-        if (prop !== this.valueDataType(prop, b) )
-          return (true && this.isNegate(x) );
+        if (!rbTRules.isValidRule("ltn",a,b))
+          return false;
+        var prop = rbTRules.evalProperty(a);
+        if (prop !== rbTRules.valueDataType(prop, b) )
+          return (true && rbTRules.isNegate(x) );
         else
-          return (false && this.isNegate(x) );
+          return (false && rbTRules.isNegate(x) );
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on not_equal_to failed" , 
@@ -334,12 +417,14 @@ var rbTRules = {
     * 
     * @return {boolean} Validity based on rule
     */ 
-    equal_to : function(x,a,b)
+    eql : function(x,a,b)
     {
       "use strict";
       try {
-        var prop = this.evalProperty(a);
-        return ((prop === this.valueDataType(prop, b)) && this.isNegate(x) );
+        if (!rbTRules.isValidRule("eql",a,b))
+          return false;
+        var prop = rbTRules.evalProperty(a);
+        return ((prop === rbTRules.valueDataType(prop, b)) && rbTRules.isNegate(x) );
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on equal_to failed" , 
@@ -357,15 +442,17 @@ var rbTRules = {
     * 
     * @return {boolean} Validity based on rule
     */ 
-    contains : function(x,a,b)
+    cns : function(x,a,b)
     {
       "use strict";
       try {
-        var prop = this.evalProperty(a);
-        if (prop.indexOf(this.valueDataType(prop, b)) >= 0 )
-          return (true && this.isNegate(x) );
+        if (!rbTRules.isValidRule("cns",a,b))
+          return false;
+        var prop = rbTRules.evalProperty(a);
+        if (prop.indexOf(rbTRules.valueDataType(prop, b)) >= 0 )
+          return (true && rbTRules.isNegate(x) );
         else
-          return (false && this.isNegate(x) );
+          return (false && rbTRules.isNegate(x) );
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on contains failed" , 
@@ -383,22 +470,23 @@ var rbTRules = {
     * 
     * @return {boolean} Validity based on rule
     */ 
-    starts_with : function(x,a,b)
+    swh : function(x,a,b)
     {
       "use strict";
       try {
-        var prop = this.evalProperty(a);
-        if (prop.match("^"+this.valueDataType(prop, b)))
-          return (true && this.isNegate(x) );
+        if (!rbTRules.isValidRule("swh",a,b))
+          return false;
+        var prop = rbTRules.evalProperty(a);
+        if (prop.match("^"+rbTRules.valueDataType(prop, b)))
+          return (true && rbTRules.isNegate(x) );
         else
-          return (false && this.isNegate(x) );
+          return (false && rbTRules.isNegate(x) );
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on starts_with failed" , 
                             "property" : a,
                             "value"    : b
                            });
-        
       }
     },
 
@@ -410,15 +498,17 @@ var rbTRules = {
     * 
     * @return {boolean} Validity based on rule
     */ 
-    ends_with : function(x,a,b)
+    ewh : function(x,a,b)
     {
       "use strict";
       try {
-        var prop = this.evalProperty(a);
-        if (prop.match(this.valueDataType(prop, b)+"$"))
-          return (true && this.isNegate(x) );
+        if (!rbTRules.isValidRule("ewh",a,b))
+          return false;
+        var prop = rbTRules.evalProperty(a);
+        if (prop.match(rbTRules.valueDataType(prop, b)+"$"))
+          return (true && rbTRules.isNegate(x) );
         else
-          return (false && this.isNegate(x) );
+          return (false && rbTRules.isNegate(x) );
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on ends_with failed" , 
@@ -436,12 +526,14 @@ var rbTRules = {
     * @param {string} c Rule value2
     * @return {boolean} Validity based on rule
     */ 
-    between: function(x,a,b,c)
+    btn: function(x,a,b,c)
     {
       "use strict";
       try {
-        var prop = this.evalProperty(a);
-        return prop >= this.valueDataType(prop, b) && a <= this.valueDataType(prop, c)  && this.isNegate(x) ;
+        if (!rbTRules.isValidRule("btn",a,b,c))
+          return false;
+        var prop = rbTRules.evalProperty(a);
+        return prop >= rbTRules.valueDataType(prop, b) && a <= rbTRules.valueDataType(prop, c)  && rbTRules.isNegate(x) ;
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on between failed" , 
@@ -459,13 +551,91 @@ var rbTRules = {
     * @param {string} b Rule value
     * @return {boolean} Validity based on rule
     */ 
-    regex :  function(x,a,b)
+    rgx :  function(x,a,b)
     {
       "use strict";
       try {
-        var prop = this.evalProperty(a);
+        if (!rbTRules.isValidRule("rgx",a,b))
+          return false;
+        var prop = rbTRules.evalProperty(a);
         regexp = new RegExp(b, 'gi');
-        return ( regexp.test(prop) && this.isNegate(x) ) ;
+        return ( regexp.test(prop) && rbTRules.isNegate(x) ) ;
+      } catch (e) {
+        rbTAPP.reportError({"exception" : e.message,
+                            "message"   :"rule evaluation on regex failed" , 
+                            "property"  : a,
+                            "value"     : b
+                           });
+      }
+    },
+
+    /**
+    * Rule to check for days ago condition
+    * @param {string} x negation status
+    * @param {string} a Rule property
+    * @param {string} b Rule value
+    * @return {boolean} Validity based on rule
+    */
+    dag : function(x,a,b)
+    {
+      "use strict";
+      try {
+        if (!rbTRules.isValidRule("dag",a,b))
+          return false;
+        var prop = rbTRules.evalProperty(a);
+        regexp = new RegExp(b, 'gi');
+        return ( regexp.test(prop) && rbTRules.isNegate(x) ) ;
+      } catch (e) {
+        rbTAPP.reportError({"exception" : e.message,
+                            "message"   :"rule evaluation on regex failed" , 
+                            "property"  : a,
+                            "value"     : b
+                           });
+      }
+    },
+
+    /**
+    * Rule to check for date range condition
+    * @param {string} x negation status
+    * @param {string} a Rule property
+    * @param {string} b Rule value Date range1
+    * @param {string} c Rule value Date range2
+    * @return {boolean} Validity based on rule
+    */
+    drg: function(x,a,b,c)
+    {
+      "use strict";
+      try {
+        if (!rbTRules.isValidRule("drg",a,b,c))
+          return false;
+        var prop = rbTRules.evalProperty(a);
+        regexp = new RegExp(b, 'gi');
+        return ( regexp.test(prop) && rbTRules.isNegate(x) ) ;
+      } catch (e) {
+        rbTAPP.reportError({"exception" : e.message,
+                            "message"   :"rule evaluation on regex failed" , 
+                            "property"  : a,
+                            "value"     : b
+                           });
+      }
+    },
+
+    /**
+    * Rule to check for set to condition
+    * @param {string} x negation status
+    * @param {string} a Rule property
+    * @param {string} b Rule value
+    * @return {boolean} Validity based on rule
+    */
+    set : function(x,a,b)
+    {
+      "use strict";
+      try {
+        if (!rbTRules.isValidRule("set",a,b))
+          return false;
+        var prop = rbTRules.evalProperty(a);
+        regexp = new RegExp(b, 'gi');
+        return ( regexp.test(prop) && rbTRules.isNegate(x) ) ;
       } catch (e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on regex failed" , 
@@ -477,4 +647,3 @@ var rbTRules = {
   }
 
 };
-
