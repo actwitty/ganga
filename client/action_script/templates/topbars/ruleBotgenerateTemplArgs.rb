@@ -23,13 +23,18 @@ Dir.glob('*.html').each  do|fileName|
 		file.each {|line| str = str.concat(line)}
 	end
 
-	str = str.concat("'")
 
   strfinalforJs = str.delete("\n")
 
-  regTest = /\=\%\%[\w.\:\/\s\#\@]*\%\%/ 
+  regTest = /\=\%\%[\w.\:\/\s\#\@\-\']*\%\%/ 
+
+  regForSingleQuote = /'/
 
   strfinalforJs= strfinalforJs.gsub(regTest, "") 
+
+  strfinalforJs = strfinalforJs.gsub(regForSingleQuote, "\\\\\'") 
+
+  strfinalforJs = strfinalforJs.concat("'")
 
   tempStrLibClientJs = tempStrLibClientJs + strfinalforJs
 
@@ -39,7 +44,7 @@ Dir.glob('*.html').each  do|fileName|
 
   end  
 
-   reg = /\{\{[\w.\=\%\:\/\s\#\@]*\}\}/
+   reg = /\{\{[\w.\=\%\:\/\s\#\@\-\']*\}\}/
    
    m = str.scan(reg)
   
@@ -89,6 +94,8 @@ Dir.glob('*.html').each  do|fileName|
       
       defaults =  rtest[0].delete("%")
       defaults =  defaults.delete("=")
+      defaults = defaults.gsub(regForSingleQuote, "\\\\\'") 
+
 
     end
 
