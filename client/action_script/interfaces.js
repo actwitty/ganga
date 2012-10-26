@@ -76,7 +76,7 @@ rbT.enableTimeOutHadnling =function(templateName,timerValue){
 
 //---------------------------------------------------------------
 
-rbT.invokeActionScript = function(actionParams)
+rbT.invokeActionScript = function(action,actionParams)
 {
 
 	if ( typeof actionParams === 'undefined' ){
@@ -85,7 +85,7 @@ rbT.invokeActionScript = function(actionParams)
 	}
 
 	else{
-          rbT.invokeActionScriptInternal(actionParams); 
+          rbT.invokeActionScriptInternal(action,actionParams); 
 	}
 
 	
