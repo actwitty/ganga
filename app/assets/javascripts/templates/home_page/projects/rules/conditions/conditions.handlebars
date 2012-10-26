@@ -14,18 +14,45 @@
   </div>
 {{/if}}
 
+<div class="rule_edit">
+
+  <div class="name_box">
+    <h3> Rule Name </h3>
+    {{view App.RequiredAFTextField valueBinding="view.rules.selected.name" placeholder="Rule name" name="Rule Name"}}
+  </div>
 
 
-<select id='rule_event_config' class='bootstrap_select2' style:'300px'>
-  {{#each event in view.rules.events}}    
-    {{#ifequal view.rules.selected.event event}}
-      <option selected>{{event}}</option>
-    {{else}}
-      <option >{{event}}</option>
-    {{/ifequal}}
-  {{/each}}
-</select>
-<script>$("#rule_event_config").select2();</script>
-{{#if controller.content.length}}
+  <div class="event_box">
+    <h3> Trigger Event </h3>
+    <select class="select2Props evt_sel" >
+  
+      {{#each event in view.rules.events}}    
+        {{#ifequal view.rules.selected.event event}}
+          <option  selected>{{event}}</option>
+        {{else}}
+          <option >{{event}}</option>
+        {{/ifequal}}
+      {{/each}}
 
-{{/if}}
+    </select>
+  </div>
+
+  
+  {{template "home_page/projects/rules/conditions/condition_lister"}}
+
+  {{template "home_page/projects/rules/conditions/actions"}}
+  
+  <div class="commands_box" >
+    <div class="commands">
+      <div class='cmd_btn btn btn-large' {{action "cancelRuleEdit" }}> 
+        Cancel
+      </div>
+      <div class='cmd_btn btn btn-large btn-success' {{action "saveRuleEdit" }}> 
+        Save
+      </div>
+    </div>
+  </div>
+
+
+</div>
+

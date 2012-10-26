@@ -4,23 +4,19 @@ App.Rule = Ember.Object.extend(
  event: null 
  action: null
  action_param: null
+ conditions: null
 
  hasManyConditions: []
   
 init: ->
-  @_super
-  conditions = @get 'conditions'  
+  @_super  
   hasManyConditions = []
-  if typeof conditions isnt 'undefined'
+  conditions = @get 'conditions'
+  if conditions isnt null
     for condition in conditions
       hasManyConditions.pushObject(App.Condition.create(condition)) 
-  @set 'hasManyConditions', hasManyConditions
-      
-  
-
-
-
-   
+  @set 'hasManyConditions', hasManyConditions   
+    
 
  
 )
