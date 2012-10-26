@@ -5,13 +5,18 @@ tempArgsStr = "rbT.templateArgs = {\n"
 templFinalStr = ""
 templPropName = ""
 
+
+
 Dir.glob('*.html').each  do|fileName|
 
 	origin= File.basename(fileName,File.extname(fileName))
 
 	destFileName = origin + ".js"
 
-    str = "rbT.".concat(origin).concat("HTML").concat("='")
+
+  tempStrLibClientJs = "rbT.".concat(origin).concat("HTML").concat("='")
+
+  str = ""
    
   File.open(fileName) do|file|
 		
@@ -20,15 +25,21 @@ Dir.glob('*.html').each  do|fileName|
 
 	str = str.concat("'")
 
-  str = str.delete("\n")
+  strfinalforJs = str.delete("\n")
+
+  regTest = /\=\%\%[\w.\:\/\s\#\@]*\%\%/ 
+
+  strfinalforJs= strfinalforJs.gsub(regTest, "") 
+
+  tempStrLibClientJs = tempStrLibClientJs + strfinalforJs
 
   File.open(destFileName, 'w') do |f2|  
 
-  f2.puts str
+  f2.puts tempStrLibClientJs
 
   end  
 
-   reg = /\{\{[\w.]*\}\}/
+   reg = /\{\{[\w.\=\%\:\/\s\#\@]*\}\}/
    
    m = str.scan(reg)
   
@@ -65,11 +76,32 @@ Dir.glob('*.html').each  do|fileName|
     m[index] = m[index].delete("{{")
     m[index]=  m[index].delete("}}")
     
-    if index!= (m.length-1)
-       m[index] = "\t \t \t \t \t \t " + "'" + m[index] + "'" + ","+ "\n" 
+    regVar = /[a-z A-Z]*/
+    
+    defaults = ""
+    
+    rtest = m[index].scan(regTest)
+    
+
+    m[index]= m[index].gsub(regTest, "") 
+    
+    if rtest[0] 
+      
+      defaults =  rtest[0].delete("%")
+      defaults =  defaults.delete("=")
+
+    end
+
+
+    varString = m[index].scan(regVar)
+    
+
+
+   if index!= (m.length-1)
+       m[index] = "\t \t \t \t \t \t " +  '{'+'key:' +"'" + m[index] + "'" + ','+ 'value:'+"'#{defaults}'}"+","+"\n" 
     
     elsif  index == (m.length-1)
-      m[index] = "\t \t \t \t \t \t " + "'" + m[index] + "'" + "\n" 
+      m[index] = "\t \t \t \t \t \t " + '{' + 'key:'+ "'" + m[index] + "'" + ','+ 'value:'+"'#{defaults}'}"+ ","+"\n" 
 
     end  
 
@@ -79,9 +111,10 @@ Dir.glob('*.html').each  do|fileName|
     m = "[\n" + m + "\t \t \t \t \t ],\n"
     
     m = "\t \t  "+ templPropName + ":" + m
+
     tempArgsStr = tempArgsStr + m
 
-    templLibStr = templLibStr+ "\t \t  "+ templPropName + ":" + "rbT."+ origin + "HTML"+",\n"
+    templLibStr = templLibStr+ "\t \t  "+ templPropName + ":" + "'#{origin}HTML'" + ",\n"
 
 end	
 

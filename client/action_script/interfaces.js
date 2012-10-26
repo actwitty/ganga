@@ -76,15 +76,18 @@ rbT.enableTimeOutHadnling =function(templateName,timerValue){
 
 //---------------------------------------------------------------
 
-rbT.invokeActionScript = function()
+rbT.invokeActionScript = function(actionParams)
 {
-	 //Get action name 
-	 // get the templ name 
-     // check for postion is occupied or not 
 
-	 // fill the configs params
-	 //
-	 //if apply ok then call the ROI API
+	if ( typeof actionParams === 'undefined' ){
+		rbT.sendErrorToRBServer("Invalid params in rule Json");
+		return "";
+	}
 
+	else{
+          rbT.invokeActionScriptInternal(actionParams); 
+	}
+
+	
 }
 

@@ -2,6 +2,7 @@
 
 rbT.eventHandler = {
 	
+ //**************************************************************************************** 
 	init: function(){
 
 		var eles = document.getElementsByClassName('rbClickable');
@@ -11,11 +12,11 @@ rbT.eventHandler = {
 			eles[i].onclick= rbT.eventHandler.clickListner;
 
 		}
-			
-                  },
+ },
 
+//************************************************************************************************8
 
-	//this function for the capturing the event from the clicks
+//this function for the capturing the event from the clicks
 	clickListner : function(evt){
         
 
@@ -25,155 +26,59 @@ rbT.eventHandler = {
 
 		var ele = document.getElementById(id);
 
+    var idMatch = id.match(/[A-Z][a-z]*/g);
 
+ 
 
-		rbT.eventHandler.clickHandles[id](ele,evt);
-		
-		evt.preventDefault();
-	},
+   if (idMatch[3])
+   {
+     if ( idMatch[3] == 'Close')
+     {
+        rbT.eventHandler.closeTempl(idMatch);
+     }
+  
+    else if ( idMatch[3] == 'Roi' )
+    {
+         rbT.eventHandler.roiFromTemplClick(idMatch);
+
+    }
+
+  }
+  else{
+          rbT.sendErrorToRBServer(" Close or ROI Click is Not valid ");
+
+  }
+
+       evt.preventDefault();
+
 	
+  },
 	
+//*****************************************************************************************************	
+ clickHandles: {
 
-	clickHandles: {
+   //TODO
 	
-		'rbActionBottombarGenericFblikeCloseClick' : function(ele,evt){
-			var id = ele.getAttribute("id");
-
-			var Base = document.getElementById("rbBottombarGenericFblikeBase");
-
-			Base.parentNode.removeChild(Base);
-
-			rbT.templatesDisplayLockFlags['rbT.bottom.displayLock'] = false;
-
-		},
-
-		'rbActionBottombarGenericNormalCloseClick' : function(ele,evt){
-			var id = ele.getAttribute("id");
-
-			var Base = document.getElementById("rbBottombarGenericNormalBase");
-
-			Base.parentNode.removeChild(Base);
-
-			rbT.templatesDisplayLockFlags['rbT.bottom.displayLock'] = false;
-
-		},
-		'rbActionBottombarGenericTwfollowCloseClick' : function(ele,evt){
-			var id = ele.getAttribute("id");
-
-			var Base = document.getElementById("rbBottombarGenericTwfollowBase");
-
-			Base.parentNode.removeChild(Base);
-
-			rbT.templatesDisplayLockFlags['rbT.bottom.displayLock'] = false;
-
-		},
-		'rbActionBottombarGenericTwshareCloseClick' : function(ele,evt){
-			var id = ele.getAttribute("id");
-
-			var Base = document.getElementById("rbBottombarGenericTwshareBase");
-
-			Base.parentNode.removeChild(Base);
-
-			rbT.templatesDisplayLockFlags['rbT.bottom.displayLock'] = false;
-
-		},
-		'rbActionTopbarGenericFblikeCloseClick' : function(ele,evt){
-      		var id = ele.getAttribute("id");
-
-      		var Base = document.getElementById("rbTopbarGenericFblikeBase");
-
-      		Base.parentNode.removeChild(Base);
-
-      		rbT.templatesDisplayLockFlags['rbT.top.displayLock'] = false;
-
-    	},
-
-    	'rbActionTopbarGenericNormalCloseClick' : function(ele,evt){
-      		
-      		var id = ele.getAttribute("id");
-
-      		var ele = document.getElementById("rbTopbarGenericNormalBase");
-
-      		ele.parentNode.removeChild(ele);
-
-     		 rbT.templatesDisplayLockFlags['rbT.top.displayLock'] = false;
-
-    	},
-    	'rbActionTopbarGenericTwfollowCloseClick' : function(ele,evt){
-      		var id = ele.getAttribute("id");
-
-      		var Base = document.getElementById("rbTopbarGenericTwfollowBase");
-
-     		 Base.parentNode.removeChild(Base);
-
-      		rbT.templatesDisplayLockFlags['rbT.top.displayLock'] = false;
-
-    	},
-    	
-    	'rbActionTopbarGenericTwshareCloseClick' : function(ele,evt){
-      		var id = ele.getAttribute("id");
-
-      		var Base = document.getElementById("rbTopbarGenericTwshareBase");
-
-      		Base.parentNode.removeChild(Base);
-
-      		rbT.templatesDisplayLockFlags['rbT.top.displayLock'] = false;
-
-    	},
-      
-
-      'rbModalGenericNormalClose' : function(ele,evt){
-       var id = ele.getAttribute("id");
-
-       var Base = document.getElementById("rbModalGenericNormalBase");
-       var transBlock = document.getElementById("rbModalGenericNormalTransblock");
-
-       Base.parentNode.removeChild(Base);
-       transBlock.parentNode.removeChild(transBlock);
-
-
-
-       rbT.templatesDisplayLockFlags['rbT.modal.displayLock'] = false;
-
-      },
-
-      'rbModalGenericNormalBtn' : function(ele,evt){
-
-       //TODO send to server 
-
-       var link = evt.target.href;
-
-
-        console.log("rbModalGenericNormalBtn");
-
-        //window.open(link, "_self");
-
-
-      },
-      
-
-
-
-
 	},
 
+//*******************************************************************************************************
 
-   timeOutHandler : function (tempalteName , timerValue)
+  timeOutHandler : function (tempalteName , timerValue)
 	{
 
        rbT.templTimer['rbT.templ.displaytimer'] = setInterval(function(){rbT.eventHandler.timerDeleteTempl
-       	(tempalteName)},timerValue); 
+       (tempalteName)},timerValue); 
        
-    },
+  },
 
-
-   timerDeleteTempl:function(tempalteName)
-   {
+//******************************************************************************************************
+  timerDeleteTempl:function(tempalteName)
+  {
 
        var tempMatch = tempalteName.match(/[a-z]*/g);
 
-       id = "rb" + rbT.capitaliseFirstLetter(tempMatch[0])+rbT.capitaliseFirstLetter(tempMatch[2])+
-            rbT.capitaliseFirstLetter(tempMatch[4])+"Base";
+       id = "rb" + rbT.makeFirstLetterCapital(tempMatch[0])+rbT.makeFirstLetterCapital(tempMatch[2])+
+            rbT.makeFirstLetterCapital(tempMatch[4])+"BaseContainer";
         
         rbT.setTemplatesDisplayLockFlags(tempMatch[0],false);
         
@@ -181,7 +86,8 @@ rbT.eventHandler = {
 
          if( typeof Base === 'undefined')
          {
-         	 //TODO Report to server
+         	  rbT.sendErrorToRBServer("Not able to find template Base for timeout Delete ");
+
          }
 
          else
@@ -192,7 +98,60 @@ rbT.eventHandler = {
          }	
 
 
-   }
+  },
+
+  //***********************************************************************************************************
+
+   closeTempl:function(idMatch){
+
+
+      
+     console.log(idMatch);
+
+      if(idMatch[0] == 'Topbar' || idMatch[0] == 'Bottombar' )
+
+     {   
+
+         var id= "rb" + idMatch[0]+idMatch[1]+idMatch[2]+"BaseContainer";
+
+
+     }
+
+     else if(idMatch[0] == 'Modal')
+     {
+
+         var id = "rb" + idMatch[0]+idMatch[1]+idMatch[2]+"BaseContainer";
+         var transId = "rb" + idMatch[0]+idMatch[1]+idMatch[2]+"TranblockContainer";
+         var transBase = document.getElementById(transId);
+         transBase.parentNode.removeChild(transBase);
+     } 
+
+
+      var Base = document.getElementById(id);
+
+      
+      if(Base)
+      {
+         Base.parentNode.removeChild(Base);
+
+         rbT.setTemplatesDisplayLockFlags(rbT.makeFirstLetterSmall(idMatch[0]),false);
+         
+      }else{
+            rbT.sendErrorToRBServer("Not able to find template Base for Normal X Delete ");
+
+      }
+
+
+  },
+
+//******************************************************************************************************
+  
+  roiFromTemplClick:function(idMatch){
+
+    //TODO
+
+  },  
+ 
 
 
 
