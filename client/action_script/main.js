@@ -4,6 +4,8 @@
 
 var rbT = { inited: false};
 
+//************************************************************************************
+
 rbT.init = function(){
 	rbT.keyPrefix = "{{";
 	rbT.keySuffix = "}}";
@@ -11,43 +13,34 @@ rbT.init = function(){
 
 };
 
+//******************************************************************************************
+
 rbT.getTemplateHTMLByNameInternal = function(name){
-	console.log(name);
+	
     
-   var templPos = rbT.extractDisplayPositionFromTemplName(name);
-
-   console.log(templPos);
-   
-   var checkforPosAvl = rbT.isTemplPosOccupied(templPos);
-
-   console.log(checkforPosAvl);
-
-
-   if(!checkforPosAvl)
-   {
-
-		if (rbT.templateLib.hasOwnProperty(name) ){
+        if (rbT.templateLib.hasOwnProperty(name) ){
   
-			var html = rbT.templateLib[name];
-			return html;
+			var html = rbT[rbT.templateLib[name]];
+
+			console.log(html);
+
+            return html;
 		}else{
 		rbT.sendErrorToRBServer("unsupported template " + name);
 		return "";
 		}
-	}else{
-			rbT.sendErrorToRBServer("Template Position Occupied " + name);
-		return "";
-	}	
+	
 };
-
+//*******************************************************************************************
 
 rbT.getTemplateApplyVarsInternal = function(html,vars){
 	//TODO: check instanceOf
 	if(html.length){
 		for (var key in vars) {
-			var value = vars[key];
-			var replaceKey = rbT.keyPrefix + key + rbT.keySuffix;
-			html = html.replace(replaceKey, value);
+			var value = vars[key]; 
+			var tempVarToBeReplaced = value.key
+            var replaceKey = rbT.keyPrefix + tempVarToBeReplaced + rbT.keySuffix;
+			html = html.replace(replaceKey, value.value);
 		}
 		return html;	
 	}else{
@@ -56,16 +49,23 @@ rbT.getTemplateApplyVarsInternal = function(html,vars){
 	}
 
 };
+//***************************************************************************************
 
 rbT.isTemplateGoodToApplyInternal = function(html){
 
-	var nMatched = html.match(/(\{\{[\w\.]*\}\})/g)
-	if (nMatched > 0){
+	nMatched = ""
+	var nMatched = html.match(/(\{\{[\w.]*\}\})/g)
+	
+
+	if (nMatched != null){
 		rbT.sendErrorToRBServer("Not all variables in templates were replaced");
 		return false;
 	}
+
 	return true;
 };
+
+//**************************************************************************************
 
 rbT.applyHtmltoPageInternal = function(html){
 
@@ -83,13 +83,77 @@ rbT.applyHtmltoPageInternal = function(html){
 	 }
 };
 
-
+//***********************************************************************************
 rbT.enableClickHandlingInternal = function(){
 	rbT.eventHandler.init();
 };
 
-
+//***************************************************************************************
 rbT.enableTimeOutHadnlingInternal= function(templateName,timerValue){
    
     rbT.eventHandler.timeOutHandler(templateName,timerValue);
 };
+
+//*************************************************************************************
+rbT.invokeActionScriptInternal=function(action,actionParams){
+
+      //TODO get the OS version here based on that action display
+
+      var templateName = action;
+       
+      var pos= extractDisplayPositionFromTemplName(templateName);
+
+      var isPosOccupied = rbT.isTemplPosOccupied(pos);
+
+      if(isPosOccupied)
+      {
+
+          rbT.sendErrorToRBServer("Postion Occupied by Another Template");
+      }
+      else
+      {
+          var html = rbT.getTemplateHTMLByName(templateName);
+          
+          
+          if(pos =='modal')
+          {
+               for (var key in actionParams) {
+			    var value = vars[key]; 
+			    if( 'rb.f.nr.transBlockZindex' == value.key)
+			    {
+				  value.value =  rbT.findZIndex();
+			    }
+			    else if( 'rb.f.nr.baseZindex' == value.key)
+			    {
+				  value.value =  rbT.findZIndex()+5;
+			    }
+             
+		       }
+         }
+          else{
+                
+            for (var key in actionParams) {
+			   var value = vars[key]; 
+			   if( 'rb.f.nr.baseZindex' == value.key)
+			  {
+				value.value =  rbT.findZIndex()+5;
+			  }
+             
+		    } 
+		  }        
+
+          html = rbT.getTemplateApplyVars(html, actionParams);
+  
+         console.log(html);
+
+         if (rbT.isTemplateGoodToApply(html)){
+           rbT.applyHtmltoPage(html);
+           rbT.enableClickHandling();
+           //rbT.enableTimeOutHadnling('topbar.generic.normal',10000);
+		   rbT.setTemplatesDisplayLockFlags(pos,true);
+
+
+         }
+      }	
+
+};	 

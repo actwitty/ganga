@@ -1,47 +1,57 @@
-OPERATIONS = {
-	"String" => [""],
-	"Fixnum" => [],
-	"Boolean" => [],
-
-}
 
 
-Clause = {
+CLAUSE = 
   {
-    event: "sign_in", 
-    rules:
+    "sign_in" => 
     [
       {
         name: "Sign-in-test",
-        condition:
+        conditions:
       	[ 
-      	  { context: "Event", type: "String",  k: "user_name" op: "contains", v: "hello", con: "AND"},
-      	  { context: "Event", type: "String",  k: "email" op: "ends_with", v: "gmail.com", con: ""}
-      	]
-        action: { owner: "client", handler: "notification" }
-      }, 
-      {}
+      	  { context: "Event", type: "String",  k: "email", no: false, op: "contains", v: "gmail.com", con: "AND"},
+      	  { context: "Event", type: "String",  k: "email", no: true, op: "ends_with", v: "gmail.com", con: ""}
+      	],
+        action: { owner: "ruby", handler: "notification" }
+      }
     ]
-  },
+  }
+
+OPERATIONS = {
+  "ruby" => {
+      "String" => {"contains" => "str_regex", "ends_with" => "str_regex", "gte" => "str_equality"},
+  }
 }
 
-
-def server_query(params)
-  if params[:condition][:context] == "Event"
-  if params[:condition][:context] == "Actor"
-    .where()
-  end
-end
-
-def ruby_query(params)
-end
+NEGATE = {true: '!', false: ""}
 
 def execute(params)
-  raise "rule empty" if params[:rule].nil? or params[:rule].empty? 
-  params[:rule][:condition].each do |attr|
-    return if attr[:actor][:owner] == "client"
-    send("#{attr[:actor][:owner]}_query", {event: params[:event], actor: params[:actor], condition: condition})
+  #raise "rule empty" if params[:rule].nil? or params[:rule].empty? 
+
+  CLAUSE["sign_in"].each do |rule|
+    conditions = rule[:conditions]
+    owner = rule[:action][:owner]
+    conditions.each  do |condition|
+      type = condition[:type]
+      op = condition[:op]
+      handler = OPERATIONS[owner][type][op]
+      result = send(handler, params[:event], condition)
+      puts "yay" if result
+    end
   end
 rescue => e
   puts "**** ERROR **** #{e.message}"
 end
+
+def str_regex(event, condition)
+  op = condition[:op]
+
+  if op == "contains"
+    return eval(NEGATE[condition[:not]]) (event[condition[:k].to_sym] =~ /#{condition[:v]}/ )
+  end
+end
+
+def str_equality(event, condition)
+end
+
+
+execute(event: {email: "alok@gmail.com"})

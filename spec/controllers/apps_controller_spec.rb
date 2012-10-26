@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'json'
 
 describe AppsController do
   login_account
@@ -6,7 +7,7 @@ describe AppsController do
   before(:each) do
     @account = FactoryGirl.create(:account)
     @wrong_app = FactoryGirl.create(:app)
-  end
+  end  
 
   describe "create app" do
     it "should check attributes before creating app" do
@@ -34,17 +35,20 @@ describe AppsController do
                                       :domain => "http://example.com"
                                     }
                      }
+
       @app = JSON.parse(response.body)
       response.status.should eq(200)
     end
-    it "should not delete wrong app" do
-      post 'delete', {app_id: @wrong_app._id}
-      App.count.should eq(2)
-    end
+  
 
     it "should delete app" do
       post 'delete', {app_id: @app["id"]}
       App.count.should eq(1)
+    end
+
+    it "should not delete wrong app" do
+      post 'delete', {app_id: @wrong_app._id}
+      App.count.should eq(2)
     end
   end  
 

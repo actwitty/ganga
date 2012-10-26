@@ -57,9 +57,18 @@ rbT.setTemplatesDisplayLockFlags=function(pos,value)
 //************************************************
 //function returns the string making capital letter the first letter
 
-rbT.capitaliseFirstLetter=function(string)
+rbT.makeFirstLetterCapital=function(string)
 {
     return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
+
+////************************************************
+//function returns the string making capital letter the first letter
+
+rbT.makeFirstLetterSmall=function(string)
+{
+    return string.charAt(0).toLowerCase() + string.slice(1);
 };
 
 
@@ -165,8 +174,3 @@ rbT.sendErrorToRBServer = function(string){
 };
 
 
-rbT.foo = function (val)
-{
-   rbT.foo.staticProperty = "flag";
-
-}

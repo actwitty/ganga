@@ -2,38 +2,38 @@
 
   .rbTextValue
    {
-     color:{{rb.bottombar.generic.normal.text.style.color}};
-     font-size: {{rb.bottombar.generic.normal.text.style.fontsize}};
-     text-shadow: {{rb.bottombar.generic.normal.text.style.textshadow}};
-     font-family: {{rb.bottombar.generic.normal.text.style.fontfamily}};
+     color:{{rb.t.cr.textColor =%%#333%%}};
+     font-size: {{rb.t.nr.textFontsize=%%15%%}}px;
+     font-family: {{rb.t.ft.textFontfamily=%%Arial%%}};
+     font-weight: bold;
    }
 
-  #actionBottombarGenericNormalButtonClick
-   {
-     font-size:{{rb.bottombar.generic.normal.button.style.fontsize}};
-     background-color:{{rb.bottombar.generic.normal.button.style.bgColor}};  
-     color :{{rb.bottombar.generic.normal.button.style.color}};
 
-   }
+
 
 </style>
-<div id="rbBottombarGenericNormalBase" style="zIndex:{{rb.bottombar.generic.normal.base.style.zIndex}};width:{{rb.bottombar.generic.normal.base.style.width}};height:{{rb.bottombar.generic.normal.base.style.height}};display:block; background-color:{{rb.bottombar.generic.normal.base.style.bgColor}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 5px -5px 3px #888888;text-align:{{rb.bottombar.generic.normal.base.style.textalign}};">
 
-  <p id="rbActionBottombarGenericNormalLeftClick" class = "rbTextValue" style="display:inline;  position:relative; margin-left:20px; top:10px; margin-right:20px;">
-         {{rb.bottombar.generic.normal.left.value.text}}  
-  </p> 
+<div id="rbBottombarGenericNormalBaseContainer" style="zIndex:{{rb.f.nr.baseZindex=%%100%%}};width:{{rb.t.nr.baseWidth=%%100%%}}%;height:{{rb.t.nr.baseHeight=%%40%%}}px;display:block; background-color:{{rb.t.cr.baseBgColor=%%#DCDCDC%%}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 2px -2px 2px #888888;text-align:{{rb.t.an.baseTextalign=%%center%%}};">
+
+   <div id="rbBottombarGenericNormalLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">
+         {{rb.t.sg.textLeft=%%Hello Hello%%}}  
+   </div> 
+
   
-<a id="actionBottombarGenericNormalButtonClick" class ="rbClickable" style="display:inline;position:relative;top:10px;" href="{{rb.bottombar.generic.normal.button.link.ahref}}"> {{rb.bottombar.generic.normal.button.link.lable}} </a>
-    
 
-  <p id="rbActionBottombarGenericNormalRightClick" class = "rbTextValue"  style="display:inline;  position:relative; margin-right:20px; top:10px; margin-left:20px;">
+<a id="rbBottombarGenericNormalRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:10px;width:80px;left:42%;margin-right:20px;height:25px; border-radius:5px;text-decoration:none; font-size:{{rb.t.nr.btnFontSize=%%14%%}}px;
+     background-color:{{rb.t.cr.btnBgColor=%%#548AC7%%}};text-shadow: 0px -1px 0px #29588D;  
+     color :{{rb.t.cr.btnColor=%%white%%}};text-align:center;border:1px solid #305580;padding-top:3px" href="{{rb.t.ul.btnLink=%%http://www.google.com%%}}"> {{rb.t.sg.btnLable=%%Click%%}} </a>
+
+    
+  <div id="rbBottombarGenericNormalRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">
          
-         {{rb.bottombar.generic.normal.right.value.text}}  
-  </p>     
+         {{rb.t.sg.textRight=%%Hello Hello%%}}  
+   </div>
    
- <div id="rbActionBottombarGenericNormalHelpClick" class="rbClickable" style="display:inline; position:absolute;bottom:5x;right:30px;margin-left:20px;color:#FFFFFF;font-weight:bold;"> 
+ <div  style="display:inline; position:absolute;right:30px; bottom:5px;margin-left:20px;font-weight:bold;"> 
        
-            <a target="_blank" style= "text-decoration:none ; " href="{{rb.action.bottombar.generic.normal.help.ahref}}" >
+            <a id="rbBottombarGenericNormalRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none;color:#333" href="{{rb.t.ul.helpLink=%%http://www.rulebot.com%%}}" >
             ?
             </a>   
 
@@ -41,7 +41,7 @@
 
 
 
-    <div id="rbActionBottombarGenericNormalCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; bottom:5px;right:10px;font-weight:bold;" >
+    <div id="rbBottombarGenericNormalCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#333; bottom:5px;right:10px;font-weight:bold;" >
      X
     </div> 
 

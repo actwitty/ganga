@@ -1,6 +1,6 @@
 <style>
 
-#rbModalGenericNormalTransblock 
+#rbModalGenericNormalTranblockContainer 
 {    
       visibility: visible;   
       position: fixed;    
@@ -9,12 +9,12 @@
       width:100%;     
       height:100%; 
       background-color:black;    
-      z-index:{{rb.modal.generic.normal.base.style.zIndex}};
+      z-index:{{rb.f.nr.transBlockZindex=%%1000%%}};
       opacity:0.6;
       filter:alpha(opacity=60);
 }
 
-#rbModalGenericNormalBase
+#rbModalGenericNormalBaseContainer
 {    
       visibility: visible;   
       position: fixed;    
@@ -22,18 +22,19 @@
       top: 0px;     
       width:100%;     
       height:100%;
-      z-index:2; 
+      z-index:{{rb.f.nr.baseZindex=%%1005%%}}; 
 }
 
 
 
-#rbModalGenericNormalSub
+#rbModalGenericNormalSubsubContainer
         {    
              width:500px; 
 	           height: 300px;
-             background-color:{{rb.modal.generic.normal.sub.style.bgColor}};  
-             border:5px solid green;   
+             background-color:{{rb.t.cr.baseBgColor=%%white%%}};  
+             border:4px solid #a3a3a3;   
              position: fixed;
+             border-radius:5px;
              top : 30%;
              left : 30%;
         }
@@ -43,40 +44,47 @@
 
 
 
-<div id="rbModalGenericNormalTransblock">
+<div id="rbModalGenericNormalTranblockContainer">
 </div>
 
- <div id="rbModalGenericNormalBase">	
-	<div id="rbModalGenericNormalSub">
+ <div id="rbModalGenericNormalBaseContainer">	
+	<div id="rbModalGenericNormalSubContainer">
 
-		<div id="rbModalGenericNormalSubSub"  style="postion:relative;">
+		<div id="rbModalGenericNormalSubsubContainer"  style="postion:relative;">
            
-           <div style="top:2%;left:3%;position:absolute;color:{{rb.modal.generic.normal.head.style.color}};width:70%; height:14%;font-size:{{rb.modal.generic.normal.head.style.fontSize}}; font-weight:bold; overflow:hidden;"> 
+           
+           <div style="top:0px;width:100%;height:18%;left:0px;background-color:{{rb.t.cr.headingBgColor=%%#e7e7e7%%}};">
 
-              {{rb.modal.generic.normal.head.value.text}}
+           <div style="top:0%;left:0 %;position:absolute;color:{{rb.t.cr.modalHeadingColor=%%#525252%%}};width:70%; height:14%;font-size:{{rb.t.nr.modalHeadingFontsize=%%20%%}}px;font-family:{{rb.t.ft.headingFontfamily=%%Arial%%}}; overflow:hidden;border-top-left-radius:5px;border-top-right-radius:5px;padding:5px;text-shadow:1px 1px {{rb.t.cr.modalHeadingTextShadow#6e6e6e}};"> 
+
+              {{rb.t.sg.modalHeadingText=%%This is the Heading %%}}
 
            </div>
 
-           	<div style="top:18%;left:3%;position:absolute;color:{{rb.modal.generic.normal.pgraph.style.color}};width:70%;height:65%;overflow:hidden;font-size:{{rb.modal.generic.normal.pgraph.style.fontSize}};text-align:left;">
+          <div id="rbModalGenericNormalCloseClick" class="rbClickable"  style="top:1%;right:1%;position:absolute;color:black;font-weight:bold; padding:2px;">
+            X
+          </div>  
 
-           	    {{rb.modal.generic.normal.pgraph.value.text}}
+          </div>
+
+           	<div style="top:22%;left:0%;position:absolute;color:{{rb.t.cr.modalTextColor=%%#525252%%}};width:70%;height:65%;overflow:hidden;font-size:{{rb.t.nr.modalTextFontsize=%%12%%}}px;font-family:{{rb.t.ft.textFontfamily=%%Arial%%}};text-align:left;border-bottom-left-radius:5px;border-bottom-right-radius:5px;padding:5px;">
+
+           	    {{rb.t.sg.modalText=%%Hello Hello Hello Hello Hello hello heello bjashsdgfsdhvfhsdvcfhsdvhcsd hvhvchjsdvchjsdvchjvsdchvsdhvcjhsdvjvh %%}}
               
            	 </div>
 
-             <div style="top:18%;right:5%;width:15%;height:20%;position:absolute;overflow:hidden">
-              <img src="{{rb.modal.generic.normal.img.value.src}}" alt="image"\>
+             <div style="top:30%;right:5%;width:15%;height:20%;position:absolute;overflow:hidden">
+              <img src="{{rb.t.sg.modalImgPath=%%../../../images/rails.png%%}}" alt="image"\>
 
              </div> 
 
-			    <div id="rbModalGenericNormalClose" class="rbClickable"  style="top:1%;right:1%;position:absolute;background-color:#0099FF;color:white;font-weight:bold; padding:2px;">
-			      X
-          </div>	
+			   
 
-            <button   style="bottom:2%;right:2%;position:absolute;color:white;width:75px;height:25px;background-color:#33CC99;text-align:center;">
+            <button   style="bottom:2%;right:2%;position:absolute;color:white;width:75px;height:25px;text-align:center;background-color:{{rb.t.cr.buttonBgColor=%%#3B5998%%}};border-radius:5px;padding-top:2px;border:1px solid #305580 ;font-weight: bold;">
 
-               <a  id="rbModalGenericNormalBtn" class="rbClickable" href= "{{rb.modal.generic.normal.button.value.ahref}}" target="_self" class="rbClickable" >
+               <a  id="rbModalGenericNormalRoiButton" class="rbClickable" style="text-decoration:none;color:white;" href= "{{rb.t.ul.modalBtnLink=%%http://www.google.com%%}}" target="_self" class="rbClickable" >
 
-                {{rb.modal.generic.normal.button.value.lable}}
+                {{rb.t.sg.modalBtnLable=%%Click%%}}
 
                </a> 
 

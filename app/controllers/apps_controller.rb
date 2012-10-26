@@ -15,7 +15,7 @@ class AppsController < ApplicationController
   ## }
 
   # OUTPUT => {
-  ##					  "app_id"=>"5074143063fe853420000005", 
+  ##					  "id"=>"5074143063fe853420000005", 
   ##
   ##						"account_id"=>"5074143063fe853420000001", 
   ##
@@ -45,10 +45,9 @@ class AppsController < ApplicationController
 		obj = App.create!(account_id: current_account._id, description: params[:description])
 
 		hash = obj.attributes
-		hash["app_id"] = hash["_id"]
+		hash["id"] = hash["_id"]
 		hash.delete("_id")
 
-    
 	  render json: hash, status: 200			
 	rescue => e
 		Rails.logger.error("**** ERROR **** #{er(e)}")
@@ -193,6 +192,4 @@ class AppsController < ApplicationController
 		Rails.logger.error("**** ERROR **** #{er(e)}")
 		render json: { errors: e.message}, status: 422
 	end
-
-
 end

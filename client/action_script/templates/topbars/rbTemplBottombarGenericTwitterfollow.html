@@ -1,37 +1,39 @@
 <style>
 .rbTextValue
-   {
-     color:{{rb.bottombar.generic.twfollow.text.style.color}};
-     font-size: {{rb.bottombar.generic.twfollow.text.style.fontsize}};
-     text-shadow: {{rb.bottombar.generic.twfollow.text.style.textshadow}};
-     font-family: {{rb.bottombar.generic.twfollow.text.style.fontfamily}};
+  {
+     color:{{rb.t.cr.textColor =%%white%%}};
+     font-size: {{rb.t.nr.textFontsize=%%17%%}}px;
+     text-shadow: 1px 1px {{rb.t.cr.textShadow=%%black%%}};
+     font-family: {{rb.t.ft.textFontfamily=%%Arial%%}};
+     text-shadow: 0 -1px 0 #007AA6;
+     font-weight: bold;
    }
 
 </style> 
 
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
-<div id="rbBottombarGenericTwfollowBase" style="zIndex:{{rb.bottombar.generic.twfollow.base.style.zIndex}};width:{{rb.bottombar.generic.twfollow.base.style.width}};height:{{rb.bottombar.generic.twfollow.base.style.height}};display:block; background-color:{{rb.bottombar.generic.twfollow.base.style.bgColor}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 5px -5px 3px #888888;text-align:{{rb.bottombar.generic.twfollow.base.style.textalign}};">
+<div id="rbBottombarGenericTwfollowBaseContainer" style="zIndex:{{rb.f.nr.baseZindex=%%1000%%}};width:{{rb.t.nr.baeWidth=%%100%%}}%;height:{{rb.t.nr.baseHeight=%%50%%}}px;display:block; background-color:{{rb.t.cr.baeBgColor=%%#0B8AB8%%}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 2px -2px 2px #888888;text-align:{{rb.t.an.baseTextalign=%%center%%}};">
    
-   <p id="rbActionBottombarGenericTwfollowLeftClick" class="rbTextValue" style="display:inline;  position:relative; margin-left:20px; top:10px; margin-right:20px;">
+    <div id="rbBottombarGenericTwfollowLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">
+         {{rb.t.sg.textLeft=%%Hello Hello%%}}  
+   </div> 
 
-         {{rb.bottombar.generic.twfollow.left.value.text}}  
-   </p> 
-
-   <div id="rbActionBottombarGenericTwfollowButtonClick" class ="rbClickable" style="display:inline;position:relative;top:10px;">
+   <div id="rbBottombarGenericTwfollowRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;left:42%;margin-right:20px;">
      
     
-               <a  data-show-count="false" data-button = "blue" class="twitter-follow-button" href="https://twitter.com/{{rb.bottombar.generic.twfollow.acount}}">Follow {{rb.bottombar.generic.twfollow.acount}}</a>
+               <a  data-show-count="false" data-button = "blue" class="twitter-follow-button" href="https://twitter.com/{{rb.t.sg.twitterAccount=%%@actwitty%%}}" data-size="large">Follow {{rb.t.sg.twitterAccount=%%@actwitty%%}} </a>
    
     </div>
    
-   <p id="rbActionBottombarGenericTwfollowRightClick" class="rbTextValue"  style="display:inline;  position:relative; margin-right:20px; top:10px; margin-left:20px;">
-         {{rb.bottombar.generic.twfollow.right.value.text}}  
-   </p> 
+    <div id="rbBottombarGenericTwfollowRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:52%; width:40%;overflow:hidden;">
+         
+         {{rb.t.sg.textRight=%%Hello Hello%%}}  
+   </div> 
 
-    <div id="rbActionBottombarGenericTwfollowHelpClick" class="rbClickable" style="display:inline; position:absolute;bottom:5px;right:30px;margin-left:20px;color:#FFFFFF;font-weight:bold;"> 
+    <div  style="display:inline; position:absolute;bottom:5px;right:30px;margin-left:20px;font-weight:bold;"> 
        
-            <a target="_blank" style= "text-decoration:none ; " href="{{rb.action.bottombar.generic.twfollow.help.ahref}}" >
+            <a id="rbBottombarGenericTwfollowRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none ;color:#FFFFFF " href="{{rb.t.ul.helpLink=%%http://www.rulebot.com%%}}" >
             ?
             </a>   
 
@@ -39,7 +41,7 @@
 
 
 
-    <div id="rbActionBottombarGenericTwfollowCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; bottom:5px;right:10px;font-weight:bold;" >
+    <div id="rbBottombarGenericTwfollowCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; bottom:5px;right:10px;font-weight:bold;" >
      X
      </div> 
 
