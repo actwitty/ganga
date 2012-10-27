@@ -17,11 +17,13 @@ rbT.init = function(){
 
 rbT.getTemplateHTMLByNameInternal = function(name){
 	
-   console.log(name);
     
         if (rbT.templateLib.hasOwnProperty(name) ){
   
 			var html = rbT[rbT.templateLib[name]];
+
+			console.log(html);
+
             return html;
 		}else{
 		rbT.sendErrorToRBServer("unsupported template " + name);

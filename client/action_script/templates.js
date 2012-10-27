@@ -1,6 +1,7 @@
 rbT.templateLib = {
 	 	  'bottombar.generic.fblike':'rbTemplBottombarGenericFblikeHTML',
 	 	  'topbar.generic.normal':'rbTemplTopbarGenericNormalHTML',
+	 	  'chat.generic.normal':'rbTemplChatGenericNormalHTML',
 	 	  'topbar.generic.twitterfollow':'rbTemplTopbarGenericTwitterfollowHTML',
 	 	  'bottombar.generic.twitterfollow':'rbTemplBottombarGenericTwitterfollowHTML',
 	 	  'topbar.generic.fblike':'rbTemplTopbarGenericFblikeHTML',
@@ -45,6 +46,9 @@ rbT.templateLib = {
 	 	 	 	 	 	 {key:'rb.t.sg.btnLable',value:'Click'},
 	 	 	 	 	 	 {key:'rb.t.sg.textRight',value:'Hello Hello'},
 	 	 	 	 	 	 {key:'rb.t.ul.helpLink',value:'http://www.rulebot.com'},
+	 	 	 	 	 ],
+	 	  'chat.generic.normal':[
+	 	 	 	 	 	 {key:'rb.t.sg.olarkIdentity',value:'\'6679-845-10-6199\''},
 	 	 	 	 	 ],
 	 	  'topbar.generic.twitterfollow':[
 	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'white'},
@@ -111,14 +115,19 @@ rbT.templateLib = {
 	 	 	 	 	 	 {key:'rb.f.nr.transBlockZindex',value:'1000'},
 	 	 	 	 	 	 {key:'rb.f.nr.baseZindex',value:'1005'},
 	 	 	 	 	 	 {key:'rb.t.cr.baseBgColor',value:'white'},
+	 	 	 	 	 	 {key:'rb.t.cr.headingBgColor',value:'#e7e7e7'},
 	 	 	 	 	 	 {key:'rb.t.cr.modalHeadingColor',value:'#525252'},
 	 	 	 	 	 	 {key:'rb.t.nr.modalHeadingFontsize',value:'20'},
+	 	 	 	 	 	 {key:'rb.t.ft.headingFontfamily',value:'Arial'},
+	 	 	 	 	 	 {key:'rb.t.cr.modalHeadingTextShadow#6e6e6e',value:''},
 	 	 	 	 	 	 {key:'rb.t.sg.modalHeadingText',value:'This is the Heading '},
 	 	 	 	 	 	 {key:'rb.t.cr.modalTextColor',value:'#525252'},
 	 	 	 	 	 	 {key:'rb.t.nr.modalTextFontsize',value:'12'},
+	 	 	 	 	 	 {key:'rb.t.ft.textFontfamily',value:'Arial'},
 	 	 	 	 	 	 {key:'rb.t.sg.modalText',value:'Hello Hello Hello Hello Hello hello heello bjashsdgfsdhvfhsdvcfhsdvhcsd hvhvchjsdvchjsdvchjvsdchvsdhvcjhsdvjvh '},
 	 	 	 	 	 	 {key:'rb.t.sg.modalImgPath',value:'../../../images/rails.png'},
-	 	 	 	 	 	 {key:'rb.t.ul.modalBtnLink',value:''},
+	 	 	 	 	 	 {key:'rb.t.cr.buttonBgColor',value:'#3B5998'},
+	 	 	 	 	 	 {key:'rb.t.ul.modalBtnLink',value:'http://www.google.com'},
 	 	 	 	 	 	 {key:'rb.t.sg.modalBtnLable',value:'Click'},
 	 	 	 	 	 ],
 	 	  'bottombar.generic.normal':[

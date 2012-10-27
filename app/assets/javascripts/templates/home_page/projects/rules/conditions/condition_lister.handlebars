@@ -1,0 +1,99 @@
+  <div class="conditions_box">
+
+    <h3> Trigger Condition </h3>
+    
+    {{#each condition in controller.content}}
+
+      <div class="entry">
+        <div class="delete" {{action "deleteCondition" condition target="App.conditionsView"}}> </div>
+        <div class="property">  <!-- Start of the main property select box -->
+          <select class='select2Props property_sel' {{action "changedProperty" condition target="App.conditionsView"}}>
+            <optgroup label="{{getvalue view.rules.selected.event}} Properties"> 
+              {{#each property in view.rules.eventSchema}}   
+                {{#ifequal property.actual condition.property}}
+                  <option  value="{{getvalue property.actual}}" selected >{{property.key}}</option>
+                {{else}}
+                  <option value="{{getvalue property.actual}}" >{{property.key}}</option>
+                {{/ifequal}}
+              {{/each}}
+            </optgroup> 
+
+            <optgroup label="System Properties"> 
+              {{#each property in view.rules.systemSchema}}   
+                {{#ifequal property.actual condition.property}}
+                  <option  value="{{getvalue property.actual}}" selected >{{property.key}}</option>
+                {{else}}
+                  <option value="{{getvalue property.actual}}" >{{property.key}}</option>
+                {{/ifequal}}
+              {{/each}}
+            </optgroup>
+
+            <optgroup label="User Properties"> 
+              {{#each property in view.rules.actorSchema}}   
+                {{#ifequal property.actual condition.property}}
+                  <option  value="{{getvalue property.actual}}" selected >{{property.key}}</option>
+                {{else}}
+                  <option value="{{getvalue property.actual}}" >{{property.key}}</option>
+                {{/ifequal}}
+              {{/each}}
+            </optgroup>       
+          </select>
+        </div>   <!-- End of the main property select box -->
+
+        <div class="negation">  <!-- Start of the negation select box -->
+          <select class='select2Props negation_sel' {{action "changedNegation" condition target="App.conditionsView"}}>
+              {{#each negation in App.negationValues}}                   
+                {{#ifequal negation.key condition.negation}}
+                  <option  value="{{getvalue negation.key}}" selected >{{negation.value}}</option>
+                {{else}}
+                 <option  value="{{getvalue negation.key}}" >{{negation.value}}</option>
+                {{/ifequal}}
+              {{/each}}
+          </select>
+        </div>  <!-- End of the negation select box -->
+
+
+        <div class="operation">  <!-- Start of the operation select box -->
+          <select class='select2Props operation_sel' {{action "changeOperation" condition target="App.conditionsView"}}>              
+              {{#each operation in condition.operation_choices}}                   
+                {{#ifequal operation condition.operation}}
+                  <option  value="{{operation}}" selected>{{getOperaitonDescription operation}}</option>
+                {{else}}
+                 <option  value="{operation}}">{{getOperaitonDescription operation}}</option>
+                {{/ifequal}}
+              {{/each}}
+          </select>
+        </div>  <!-- End of the operation select box -->
+
+        {{#isShowOne condition.operation}}
+           <div class="rule_val">
+            {{view App.RequiredAFTextField valueBinding="condition.value1" placeholder="Value" class="input_box" }}
+          </div>
+        {{/isShowOne}}
+
+        {{#isShowTwo condition.operation}}
+          <div class="rule_val">
+             {{view App.RequiredAFTextField valueBinding="condition.value2" placeholder="Value" class="input_box"}}
+          </div>
+        {{/isShowTwo}}
+
+
+        <div class="type">  <!-- Start of the operation select box -->
+          <select class='select2Props type_sel' {{action "changeDataType" condition target="App.conditionsView"}}>              
+              {{#each type in App.dataTypes}}  
+                {{#ifequal type.key condition.type}}
+                  <option  value="{{getvalue type.key}}" selected>{{type.value}}</option>
+                {{else}}
+                 <option  value="{getvalue type.key}}">{{type.value}}</option>
+                {{/ifequal}}
+              {{/each}}
+          </select>
+        </div>  <!-- End of the operation select box -->
+
+      </div> <!-- End of Condition Entry Box -->
+
+
+    {{/each}}
+    <div class="add_line" {{action "addNewCondition" condition target="App.conditionsView"}}> </div>
+    <div class="add"> </div>
+  </div>  <!-- Conditions Main box end here -->

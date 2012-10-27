@@ -13,10 +13,7 @@ jQuery.ajaxSetup({
   'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript")}
 });
 
-
 /************************** Manage forgery post check ****************/
-
-
 
 App.displayError = function(e) {
   if (typeof e === "string") {
@@ -75,3 +72,7 @@ $(document).ready(function(){
   });
 
 });
+/*******************************************************************/
+
+
+/*******************************************************************/
