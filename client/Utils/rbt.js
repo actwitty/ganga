@@ -40,7 +40,7 @@ var rbTAPP = {
       rbTSystemVar.init();
 
       // 5). FIXME : Check status of last event, if pending, execute it.
-      rbTRules.executeLastPendingEvent();
+      //rbTRules.executeLastPendingEvent();
 
       window.rb = new RBT();
     },
@@ -72,7 +72,7 @@ var rbTAPP = {
     */
     wake_RBT_APP : function()
     {
-      this.configs.status = true;
+      rbTAPP.configs.status = true;
       rbTDebug.log("Initializing RBT APP");
       rbTAPP.initialize();
     },
@@ -233,11 +233,10 @@ var rbTAPP = {
     reportError : function(params)
     {
       try {
-          if (params.log) {
-            debug.error(params);
-          } else {
+          if (params.log) 
+            rbTDebug.error(params);
+          if (params.server) 
             rbTServerChannel.reportError(params);
-          }
       } catch(e) {
         // FIXME what to do?
       }
@@ -278,6 +277,17 @@ window.rbTDebug=(function(){var i=this,b=Array.prototype.slice,d=i.console,h={},
 /****************************[[rbTRules.js]]*************************************/ 
 
 
+var TEST_RBT_RULE_JSON = {"customer":{
+                        "email":"gmail.com",
+                        "val1":123,
+                        "val2":321,
+                        "swh":"actwitty",
+                        "ewh":"actwitty",
+                        "cns":"actwitty",
+                        "drg":"3/3/2011"
+                      }
+          };
+
 var rbTRules = {
 
   ruleTable : {},
@@ -306,14 +316,26 @@ var rbTRules = {
           id: '1010101010',
           name  : "sample_name", 
           event : "sample_event",
-          action: "topbar",
+          action: "topbar.generic.normal",
           action_param :
-                  {
-                    text: "A quickbrown fox jumps over a lazy dog",
-                    href: "http://www.google.com",
-                    color: "#333333",
-                    width: "50"
-                  },
+                  [
+                     {key:'rb.t.cr.textColor ',value:'#333'},
+                     {key:'rb.t.nr.textFontsize',value:'15'},
+                     {key:'rb.t.ft.textFontfamily',value:'Arial'},
+                     {key:'rb.f.nr.baseZindex',value:'100'},
+                     {key:'rb.t.nr.baseWidth',value:'100'},
+                     {key:'rb.t.nr.baseHeight',value:'40'},
+                     {key:'rb.t.cr.baseBgColor',value:'#DCDCDC'},
+                     {key:'rb.t.an.baseTextalign',value:'center'},
+                     {key:'rb.t.sg.textLeft',value:'Hello Hello Hello Hello'},
+                     {key:'rb.t.nr.btnFontSize',value:'14'},
+                     {key:'rb.t.cr.btnBgColor',value:'#548AC7'},
+                     {key:'rb.t.cr.btnColor',value:'white'},
+                     {key:'rb.t.ul.btnLink',value:'http://www.google.com'},
+                     {key:'rb.t.sg.btnLable',value:'Click'},
+                     {key:'rb.t.sg.textRight',value:'Hello Hello'},
+                     {key:'rb.t.ul.helpLink',value:'http://www.rulebot.com'},
+                  ],
           conditions : [
                 // event based condition
                 { 
@@ -387,16 +409,20 @@ var rbTRules = {
   {
     "use strict";
     var params = params || "";
-    try {
+    // COMMENTING FOR TIME BEING TILL WE HAVE RULES API UP
+    /*try {
           rbTServerChannel.makeGetRequest( rbTServerChannel.url.getRules,
                                            params,
                                            { success: rbTServerResponse.setRulesTable,
                                              error  : rbTServerResponse.defaultError
-                                           });
-        } catch(e) {
-          // FIXME what to do?
-          rbTAPP.reportError({"exception" : e.message, "message":"rule initialization failed"});
-        }
+                                           },
+                                           "noasync"
+                                         );
+    } catch(e) {
+      // FIXME what to do?
+      rbTAPP.reportError({"exception" : e.message, "message":"rule initialization failed"});
+    }*/
+    rbTRules.setRulesTable("");
   },
   
 
@@ -560,7 +586,7 @@ var rbTRules = {
     // Based on that we need to process further.
 
     var p = ruleProperty.slice(1,ruleProperty.length);
-    var value = eval("RBT."+p);
+    var value = eval("TEST_RBT_RULE_JSON."+p);
     if (!type)
         return value;
     if (type === "String")
@@ -582,6 +608,7 @@ var rbTRules = {
     try {
       // Hand over action to templating engine for processing event action.
       //rbTTemplates.invoke(this.ruleTable[event].action, this.ruleTable[event].action_param);
+      rbT.invokeActionScript(this.ruleTable[event].action, this.ruleTable[event].action_param);
     } catch(e) {
       rbTAPP.reportError({"exception" : e.message,
                           "message": "action could not be invoked" , 
@@ -1060,7 +1087,6 @@ var rbTServerResponse = {
   handleEvent : function(respData)
   {
     "use strict";
-    "use strict";
     try {
       if(respData && respData.actor) {
         rbTCookie.setCookie(rbTCookie.defaultCookies.actor, respData.actor);
@@ -1141,7 +1167,7 @@ var rbTServerChannel = {
     if (event)
       requestData["event"] = event;
     if (reqData)
-      requestData["properties"] = reqData;
+      requestData["properties"] = rbJSON.typify(reqData);
     return requestData;
   },
 
@@ -1163,7 +1189,6 @@ var rbTServerChannel = {
             url: url,
             type: 'GET',
             dataType: 'json',
-            contentType: 'application/json',
             data: reqServerData,
             beforeSend: function() {
                 // FIXME : add status to cookie
@@ -1171,6 +1196,9 @@ var rbTServerChannel = {
             },
             success: function ( respData ) {
                 rbTCookie.deleteCookie("lastevent");
+                // FIXME :: ADDED ONLY TO TEST CLIENT SIDE
+                rbTRules.executeRulesOnEvent(event);
+
                 // FIXME : Currently we do not know the format of response we will get from server.
                 if (respData && respData.actor) { 
                   rbTServerResponse.setActor(respData.actor);
@@ -1178,7 +1206,11 @@ var rbTServerChannel = {
                 }
             },
             error:function(XMLHttpRequest,textStatus, errorThrown){ 
+                // FIXME :: ADDED ONLY TO TEST CLIENT SIDE
+                rbTRules.executeRulesOnEvent(event);
+
                 callback.error(); 
+                
             }
       });
     } catch(e) {
@@ -1198,14 +1230,20 @@ var rbTServerChannel = {
   *   
   *  @return void
   */  
-  makeGetRequest : function(url, params, callback)
+  makeGetRequest : function(url, params, callback, async)
   {
     "use strict";
     try {
       var reqServerData = this.makeRequestData(undefined, params);
       callback = this.extendCallbacks(callback);
+      if (async && async === "noasync")
+        var asyncSt = false;
+      else 
+        var asyncSt = true;
+
       jQuery.ajax({
             url: url,
+            async: asyncSt,
             type: 'GET',
             dataType: 'json',
             contentType: 'application/json',
@@ -1221,7 +1259,8 @@ var rbTServerChannel = {
       rbTAPP.reportError({"exception" : e.message,
                           "message"   :"server request failed" , 
                           "url"       : url,
-                          "log"       : "error" 
+                          "log"       : true,
+                          "server"    : true
                          });
     }
   },
@@ -1239,29 +1278,10 @@ var rbTServerChannel = {
   }, 
 
   /** 
-  *  Request server for ROI
-  *  @param {object} params Parameters to pass as payload for ROI.
-  *  @param {object} callback Defined callback for roi. 
+  *  Send ROI to server
+  *  @param {object} params 
   *  @return void
-  */  
-  makeGetRequest : function(url, callback)
-  {
-    reqServerData = {"app_id" : rbTAPP.configs.appID, "account_id" : rbTAPP.configs.accountID};
-    jQuery.ajax({
-          url: url,
-          type: 'GET',
-          dataType: 'json',
-          contentType: 'application/json',
-          data: reqServerData,
-          success: function ( respData ) {
-              callback.success(respData);
-          },error:function(XMLHttpRequest,textStatus, errorThrown){ 
-              // todo : what to do??            
-              callback.error(); 
-          }
-    });
-  },
-   
+  */      
   roi : function(params, callback)
   {
     "use strict";
@@ -2322,6 +2342,125 @@ RBT.prototype.alias = function(params)
 
 
 
+/****************************[[rbJSON.js]]*************************************/ 
+
+
+var rbJSON = {
+
+  "rb" : {},
+  "header" : "rbJSON.rb",
+  "state" : [],
+
+  /**
+  * Get Type of the object
+  * @params {object} a Object.
+  * @return {string} data type of the object.
+  */
+  getType : function (a)
+  {
+    return Object.prototype.toString.call(a).split("]")[0].split(" ")[1]
+  },
+
+
+  /**
+  * Get the current path of the json typify parse.
+  *
+  * @return {string} Path of object keys.
+  */
+  currentPath : function()
+  {
+    var rState = rbJSON.state;
+    var st = rbJSON.header;
+    for (var i=0 ; i < rState.length ; ++i) {
+      if (rState[i].type === "Array") {
+        st = st + "." + rState[i].key;
+      } else if (rState[i].type === "Object") {
+        if (rState[i-1] && rState[i-1].type === "Array")
+          st = st + "[" + rState[i].key + "]";
+        else
+          st = st + "." + rState[i].key;
+      }
+    }
+    return st;
+  },
+
+
+  /**
+  * Create new JSON typify object
+  * @param {string} type Type of an object to be created.
+  */
+  createNewObj : function(type)
+  {
+    var st = rbJSON.currentPath();
+    if (!eval(st)) {
+      if (type === "Array")
+          eval(st+"=[];");
+      else 
+          eval(st+"={};");
+    }
+  },
+
+  /**
+  * Add typified key,value pair to an object.
+  * @param {string} key Object key.
+  * @param {object} value Object value.
+  * @param {string} type Object type.
+  */
+  addValueToObj : function(key, value, type)
+  {
+    if (type === "Array" || type === "Object")
+      var extKey = rbJSON.currentPath() + ((type === "Array") ? "["+key+"]" : "." + key);
+    else
+      var extKey = rbJSON.currentPath() + "." + key;
+
+    var type = typeof(value);
+    var str = extKey+'={type:"'+type+'",value:"'+value+'"};';
+    eval(str);
+  },
+
+  /**
+  * Extend JSON object to get it typified with {type:"data-type",value:"data-value"}
+  * @param {object} obj Object to be typified.
+  *
+  */
+  extend : function(obj)
+  { 
+    for (var key in obj)
+    {
+      if (obj.hasOwnProperty(key)) {
+          var type = rbJSON.getType(obj[key]); 
+          if (type === "Object" || type === "Array" ) {
+            rbJSON.state.push({"type":type,"key":key});
+            rbJSON.createNewObj(type);
+            rbJSON.extend(obj[key]);
+          } else {
+            var pType = (rbJSON.state.length) ? rbJSON.state[rbJSON.state.length-1].type : "";
+            rbJSON.addValueToObj(key,obj[key], pType);
+          }
+      }
+    }
+    rbJSON.state.pop();
+    return;
+  },
+
+
+  /**
+  * Main function to start typifying object. 
+  * @param {object} obj  Object to be typified.
+  * 
+  * @return {object} Typified Object.
+  */
+  typify : function(obj)
+  {
+    rbJSON.rb = {};
+    rbJSON.state = [];
+    rbJSON.extend(obj);
+    return rbJSON.rb;
+  }
+
+};
+
+
 /****************************[[rbTInitApp.js]]*************************************/ 
 
 
@@ -2349,3 +2488,25 @@ RBT.prototype.alias = function(params)
                        });
   }
 })(_rbTK[0][1], _rbTK[1][1]);
+
+
+
+function testGanga()
+{
+  rb.sendEvent("sample_event",{"a":101});
+}
+
+function waitForRBT()
+{
+  if(!rbTAPP.isrbTAlive())
+  {
+    window.setTimeout(waitForRBT, 500);
+  }
+  else
+  {
+    testGanga();
+  }
+}
+
+waitForRBT();
+

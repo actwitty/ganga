@@ -34,7 +34,7 @@ var rbTAPP = {
       rbTSystemVar.init();
 
       // 5). FIXME : Check status of last event, if pending, execute it.
-      rbTRules.executeLastPendingEvent();
+      //rbTRules.executeLastPendingEvent();
 
       window.rb = new RBT();
     },
@@ -227,11 +227,10 @@ var rbTAPP = {
     reportError : function(params)
     {
       try {
-          if (params.log) {
-            debug.error(params);
-          } else {
+          if (params.log) 
+            rbTDebug.error(params);
+          if (params.server) 
             rbTServerChannel.reportError(params);
-          }
       } catch(e) {
         // FIXME what to do?
       }

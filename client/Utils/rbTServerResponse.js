@@ -102,7 +102,6 @@ var rbTServerResponse = {
   handleEvent : function(respData)
   {
     "use strict";
-    "use strict";
     try {
       if(respData && respData.actor) {
         rbTCookie.setCookie(rbTCookie.defaultCookies.actor, respData.actor);

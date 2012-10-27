@@ -34,7 +34,7 @@ var rbTServerChannel = {
     if (event)
       requestData["event"] = event;
     if (reqData)
-      requestData["properties"] = reqData;
+      requestData["properties"] = rbJSON.typify(reqData);
     return requestData;
   },
 
@@ -63,6 +63,9 @@ var rbTServerChannel = {
             },
             success: function ( respData ) {
                 rbTCookie.deleteCookie("lastevent");
+                // FIXME :: ADDED ONLY TO TEST CLIENT SIDE
+                rbTRules.executeRulesOnEvent(event);
+
                 // FIXME : Currently we do not know the format of response we will get from server.
                 if (respData && respData.actor) { 
                   rbTServerResponse.setActor(respData.actor);
@@ -70,7 +73,11 @@ var rbTServerChannel = {
                 }
             },
             error:function(XMLHttpRequest,textStatus, errorThrown){ 
+                // FIXME :: ADDED ONLY TO TEST CLIENT SIDE
+                rbTRules.executeRulesOnEvent(event);
+
                 callback.error(); 
+                
             }
       });
     } catch(e) {
@@ -119,7 +126,8 @@ var rbTServerChannel = {
       rbTAPP.reportError({"exception" : e.message,
                           "message"   :"server request failed" , 
                           "url"       : url,
-                          "log"       : "error" 
+                          "log"       : true,
+                          "server"    : true
                          });
     }
   },
@@ -136,7 +144,11 @@ var rbTServerChannel = {
     this.makeGetRequest(url, null, callback);
   }, 
 
-     
+  /** 
+  *  Send ROI to server
+  *  @param {object} params 
+  *  @return void
+  */      
   roi : function(params, callback)
   {
     "use strict";
