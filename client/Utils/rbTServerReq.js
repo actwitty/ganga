@@ -56,7 +56,6 @@ var rbTServerChannel = {
             url: url,
             type: 'GET',
             dataType: 'json',
-            contentType: 'application/json',
             data: reqServerData,
             beforeSend: function() {
                 // FIXME : add status to cookie
@@ -91,14 +90,20 @@ var rbTServerChannel = {
   *   
   *  @return void
   */  
-  makeGetRequest : function(url, params, callback)
+  makeGetRequest : function(url, params, callback, async)
   {
     "use strict";
     try {
       var reqServerData = this.makeRequestData(undefined, params);
       callback = this.extendCallbacks(callback);
+      if (async && async === "noasync")
+        var asyncSt = false;
+      else 
+        var asyncSt = true;
+
       jQuery.ajax({
             url: url,
+            async: asyncSt,
             type: 'GET',
             dataType: 'json',
             contentType: 'application/json',
@@ -131,30 +136,7 @@ var rbTServerChannel = {
     this.makeGetRequest(url, null, callback);
   }, 
 
-  /** 
-  *  Request server for ROI
-  *  @param {object} params Parameters to pass as payload for ROI.
-  *  @param {object} callback Defined callback for roi. 
-  *  @return void
-  */  
-  makeGetRequest : function(url, callback)
-  {
-    reqServerData = {"app_id" : rbTAPP.configs.appID, "account_id" : rbTAPP.configs.accountID};
-    jQuery.ajax({
-          url: url,
-          type: 'GET',
-          dataType: 'json',
-          contentType: 'application/json',
-          data: reqServerData,
-          success: function ( respData ) {
-              callback.success(respData);
-          },error:function(XMLHttpRequest,textStatus, errorThrown){ 
-              // todo : what to do??            
-              callback.error(); 
-          }
-    });
-  },
-   
+     
   roi : function(params, callback)
   {
     "use strict";

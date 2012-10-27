@@ -9,11 +9,12 @@ files = ["rbTAPP.js",
 	     "rbTCookieHandler.js",
 	     "rbTBusiness.js",
 	     "rbTInitApp.js",
+	     "rbJSON.js"
 		]
 
-#OUTPUT_FILE = "/home/sammy/actwitty/ganga/public/rbt.js"
+OUTPUT_FILE = "/home/sammy/actwitty/ganga/public/rbt.js"
 
-OUTPUT_FILE = "rbt.js"
+#OUTPUT_FILE = "rbt.js"
 
 rbt_file = File.new(OUTPUT_FILE,"w")
 

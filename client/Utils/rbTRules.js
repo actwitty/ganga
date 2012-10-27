@@ -107,16 +107,20 @@ var rbTRules = {
   {
     "use strict";
     var params = params || "";
-    try {
+    // COMMENTING FOR TIME BEING TILL WE HAVE RULES API UP
+    /*try {
           rbTServerChannel.makeGetRequest( rbTServerChannel.url.getRules,
                                            params,
                                            { success: rbTServerResponse.setRulesTable,
                                              error  : rbTServerResponse.defaultError
-                                           });
-        } catch(e) {
-          // FIXME what to do?
-          rbTAPP.reportError({"exception" : e.message, "message":"rule initialization failed"});
-        }
+                                           },
+                                           "noasync"
+                                         );
+    } catch(e) {
+      // FIXME what to do?
+      rbTAPP.reportError({"exception" : e.message, "message":"rule initialization failed"});
+    }*/
+    rbTRules.setRulesTable("");
   },
   
 
