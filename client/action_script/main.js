@@ -99,9 +99,11 @@ rbT.invokeActionScriptInternal=function(action,actionParams){
 
       //TODO get the OS version here based on that action display
 
+      rbT.init();
+      
       var templateName = action;
        
-      var pos= extractDisplayPositionFromTemplName(templateName);
+      var pos= rbT.extractDisplayPositionFromTemplName(templateName);
 
       var isPosOccupied = rbT.isTemplPosOccupied(pos);
 
@@ -118,7 +120,7 @@ rbT.invokeActionScriptInternal=function(action,actionParams){
           if(pos =='modal')
           {
                for (var key in actionParams) {
-			    var value = vars[key]; 
+			    var value = actionParams[key]; 
 			    if( 'rb.f.nr.transBlockZindex' == value.key)
 			    {
 				  value.value =  rbT.findZIndex();
@@ -133,7 +135,7 @@ rbT.invokeActionScriptInternal=function(action,actionParams){
           else{
                 
             for (var key in actionParams) {
-			   var value = vars[key]; 
+			   var value = actionParams[key]; 
 			   if( 'rb.f.nr.baseZindex' == value.key)
 			  {
 				value.value =  rbT.findZIndex()+5;
