@@ -34,9 +34,9 @@ var rbTAPP = {
       rbTSystemVar.init();
 
       // 5). FIXME : Check status of last event, if pending, execute it.
-      rbTRules.executeLastPendingEvent();
+      //rbTRules.executeLastPendingEvent();
 
-      rb = new RBT();
+      window.rb = new RBT();
     },
 
     /**
@@ -66,7 +66,7 @@ var rbTAPP = {
     */
     wake_RBT_APP : function()
     {
-      this.configs.status = true;
+      rbTAPP.configs.status = true;
       rbTDebug.log("Initializing RBT APP");
       rbTAPP.initialize();
     },
@@ -227,13 +227,24 @@ var rbTAPP = {
     reportError : function(params)
     {
       try {
-          if (params.log) {
-            debug.error(params);
-          } else {
+          if (params.log) 
+            rbTDebug.error(params);
+          if (params.server) 
             rbTServerChannel.reportError(params);
-          }
       } catch(e) {
         // FIXME what to do?
       }
+    },
+
+    /** 
+    *  Preprocess params with datatype.
+    *  @param {object} params Error log message. 
+    *  @return {object} params with added data types.
+    */
+    preprocessParams : function(params)
+    {
+      
+
+      
     }
 };

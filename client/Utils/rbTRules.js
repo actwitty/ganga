@@ -1,3 +1,14 @@
+var TEST_RBT_RULE_JSON = {"customer":{
+                        "email":"gmail.com",
+                        "val1":123,
+                        "val2":321,
+                        "swh":"actwitty",
+                        "ewh":"actwitty",
+                        "cns":"actwitty",
+                        "drg":"3/3/2011"
+                      }
+          };
+
 var rbTRules = {
 
   ruleTable : {},
@@ -26,14 +37,26 @@ var rbTRules = {
           id: '1010101010',
           name  : "sample_name", 
           event : "sample_event",
-          action: "topbar",
+          action: "topbar.generic.normal",
           action_param :
-                  {
-                    text: "A quickbrown fox jumps over a lazy dog",
-                    href: "http://www.google.com",
-                    color: "#333333",
-                    width: "50"
-                  },
+                  [
+                     {key:'rb.t.cr.textColor ',value:'#333'},
+                     {key:'rb.t.nr.textFontsize',value:'15'},
+                     {key:'rb.t.ft.textFontfamily',value:'Arial'},
+                     {key:'rb.f.nr.baseZindex',value:'100'},
+                     {key:'rb.t.nr.baseWidth',value:'100'},
+                     {key:'rb.t.nr.baseHeight',value:'40'},
+                     {key:'rb.t.cr.baseBgColor',value:'#DCDCDC'},
+                     {key:'rb.t.an.baseTextalign',value:'center'},
+                     {key:'rb.t.sg.textLeft',value:'Hello Hello Hello Hello'},
+                     {key:'rb.t.nr.btnFontSize',value:'14'},
+                     {key:'rb.t.cr.btnBgColor',value:'#548AC7'},
+                     {key:'rb.t.cr.btnColor',value:'white'},
+                     {key:'rb.t.ul.btnLink',value:'http://www.google.com'},
+                     {key:'rb.t.sg.btnLable',value:'Click'},
+                     {key:'rb.t.sg.textRight',value:'Hello Hello'},
+                     {key:'rb.t.ul.helpLink',value:'http://www.rulebot.com'},
+                  ],
           conditions : [
                 // event based condition
                 { 
@@ -107,16 +130,20 @@ var rbTRules = {
   {
     "use strict";
     var params = params || "";
-    try {
+    // COMMENTING FOR TIME BEING TILL WE HAVE RULES API UP
+    /*try {
           rbTServerChannel.makeGetRequest( rbTServerChannel.url.getRules,
                                            params,
                                            { success: rbTServerResponse.setRulesTable,
                                              error  : rbTServerResponse.defaultError
-                                           });
-        } catch(e) {
-          // FIXME what to do?
-          rbTAPP.reportError({"exception" : e.message, "message":"rule initialization failed"});
-        }
+                                           },
+                                           "noasync"
+                                         );
+    } catch(e) {
+      // FIXME what to do?
+      rbTAPP.reportError({"exception" : e.message, "message":"rule initialization failed"});
+    }*/
+    rbTRules.setRulesTable("");
   },
   
 
@@ -280,7 +307,7 @@ var rbTRules = {
     // Based on that we need to process further.
 
     var p = ruleProperty.slice(1,ruleProperty.length);
-    var value = eval("RBT."+p);
+    var value = eval("TEST_RBT_RULE_JSON."+p);
     if (!type)
         return value;
     if (type === "String")
@@ -302,6 +329,7 @@ var rbTRules = {
     try {
       // Hand over action to templating engine for processing event action.
       //rbTTemplates.invoke(this.ruleTable[event].action, this.ruleTable[event].action_param);
+      rbT.invokeActionScript(this.ruleTable[event].action, this.ruleTable[event].action_param);
     } catch(e) {
       rbTAPP.reportError({"exception" : e.message,
                           "message": "action could not be invoked" , 

@@ -40,9 +40,9 @@ var rbTAPP = {
       rbTSystemVar.init();
 
       // 5). FIXME : Check status of last event, if pending, execute it.
-      rbTRules.executeLastPendingEvent();
+      //rbTRules.executeLastPendingEvent();
 
-      RBT();
+      window.rb = new RBT();
     },
 
     /**
@@ -72,7 +72,7 @@ var rbTAPP = {
     */
     wake_RBT_APP : function()
     {
-      this.configs.status = true;
+      rbTAPP.configs.status = true;
       rbTDebug.log("Initializing RBT APP");
       rbTAPP.initialize();
     },
@@ -233,14 +233,25 @@ var rbTAPP = {
     reportError : function(params)
     {
       try {
-          if (params.log) {
-            debug.error(params);
-          } else {
+          if (params.log) 
+            rbTDebug.error(params);
+          if (params.server) 
             rbTServerChannel.reportError(params);
-          }
       } catch(e) {
         // FIXME what to do?
       }
+    },
+
+    /** 
+    *  Preprocess params with datatype.
+    *  @param {object} params Error log message. 
+    *  @return {object} params with added data types.
+    */
+    preprocessParams : function(params)
+    {
+      
+
+      
     }
 };
 
@@ -266,44 +277,125 @@ window.rbTDebug=(function(){var i=this,b=Array.prototype.slice,d=i.console,h={},
 /****************************[[rbTRules.js]]*************************************/ 
 
 
+var TEST_RBT_RULE_JSON = {"customer":{
+                        "email":"gmail.com",
+                        "val1":123,
+                        "val2":321,
+                        "swh":"actwitty",
+                        "ewh":"actwitty",
+                        "cns":"actwitty",
+                        "drg":"3/3/2011"
+                      }
+          };
+
 var rbTRules = {
 
+  ruleTable : {},
 
-  ruleTable : {}, 
+  operations : { 
+                  'gtn': 'greater than',
+                  'ltn': 'lesser than',
+                  'eql': 'equal to',
+                  'swh': 'starts with',
+                  'ewh': 'ends with',
+                  'cns': 'contains',
+                  'btn': 'between',
+                  'rgx': 'regex',
+                  'dag': 'days ago',
+                  'drg': 'date range',
+                  'set': 'set'
+  },
+  "permissions" : {
+          'String': [ 'eql', 'swh','ewh','cns','rgx','set' ],
+          'Date': [ 'gtn','ltn','eql','dag','drg','set' ],  
+          'Number': [ 'gtn','ltn','eql','btn','set'] 
+  },
 
   sample_json : [
         {
+          id: '1010101010',
           name  : "sample_name", 
           event : "sample_event",
-          action: {
-                  handler : {
-                      "id"    : "action id",
-                      "name"  : "name of action",
-                      "params": {}
-                  },
-          },
-          rules : [
+          action: "topbar.generic.normal",
+          action_param :
+                  [
+                     {key:'rb.t.cr.textColor ',value:'#333'},
+                     {key:'rb.t.nr.textFontsize',value:'15'},
+                     {key:'rb.t.ft.textFontfamily',value:'Arial'},
+                     {key:'rb.f.nr.baseZindex',value:'100'},
+                     {key:'rb.t.nr.baseWidth',value:'100'},
+                     {key:'rb.t.nr.baseHeight',value:'40'},
+                     {key:'rb.t.cr.baseBgColor',value:'#DCDCDC'},
+                     {key:'rb.t.an.baseTextalign',value:'center'},
+                     {key:'rb.t.sg.textLeft',value:'Hello Hello Hello Hello'},
+                     {key:'rb.t.nr.btnFontSize',value:'14'},
+                     {key:'rb.t.cr.btnBgColor',value:'#548AC7'},
+                     {key:'rb.t.cr.btnColor',value:'white'},
+                     {key:'rb.t.ul.btnLink',value:'http://www.google.com'},
+                     {key:'rb.t.sg.btnLable',value:'Click'},
+                     {key:'rb.t.sg.textRight',value:'Hello Hello'},
+                     {key:'rb.t.ul.helpLink',value:'http://www.rulebot.com'},
+                  ],
+          conditions : [
                 // event based condition
                 { 
-                  property : "",
-                  operator : "contains",
-                  value    : "83.samarth@gmail.com",
-                  connect  : "end" 
+                  property: "#customer.email",
+                  type : "String",
+                  negation: 'false',
+                  operation: 'eql',
+                  value1: 'gmail.com',
+                  connect: 'and' 
                 },
                 // actor_property based condition
                 {
-                  property : "$83.samarth@gmail.com",
-                  operator : "contains",
-                  value    : "83.samarth@gmail.com",
-                  connect  : "end" 
+                  property: "$customer.val1",
+                  type : "Number",
+                  negation: 'false',
+                  operation: 'gtn',
+                  value1: 2,
+                  connect: 'and' 
                 },
                 // system_property based condition
                 {
-                  property : "#83.samarth@gmail.com",
-                  operator : "contains",
-                  value    : "83.samarth@gmail.com",
-                  connect  : "end" 
-                }
+                  property: "#customer.val2",
+                  type : "Number",
+                  negation: 'false',
+                  operation: 'ltn',
+                  value1: 3000,
+                  connect: 'and' 
+                },
+                {
+                  property: "#customer.swh",
+                  type : "String",
+                  negation: 'false',
+                  operation: 'swh',
+                  value1: 'act',
+                  connect: 'and' 
+                },
+                {
+                  property: "#customer.ewh",
+                  type : "String",
+                  negation: 'false',
+                  operation: 'ewh',
+                  value1: 'tty',
+                  connect: 'and' 
+                },
+                {
+                  property: "#customer.cns",
+                  type : "String",
+                  negation: 'false',
+                  operation: 'cns',
+                  value1: 'wit',
+                  connect: 'and' 
+                },
+                {
+                  property: "#customer.drg",
+                  type : "Date",
+                  negation: 'false',
+                  operation: 'drg',
+                  value1: "2/2/2011",
+                  value2: "4/4/2011"
+                },
               ]
         }
   ],
@@ -317,16 +409,20 @@ var rbTRules = {
   {
     "use strict";
     var params = params || "";
-    try {
+    // COMMENTING FOR TIME BEING TILL WE HAVE RULES API UP
+    /*try {
           rbTServerChannel.makeGetRequest( rbTServerChannel.url.getRules,
                                            params,
                                            { success: rbTServerResponse.setRulesTable,
                                              error  : rbTServerResponse.defaultError
-                                           });
-        } catch(e) {
-          // FIXME what to do?
-          rbTAPP.reportError({"exception" : e.message, "message":"rule initialization failed"});
-        }
+                                           },
+                                           "noasync"
+                                         );
+    } catch(e) {
+      // FIXME what to do?
+      rbTAPP.reportError({"exception" : e.message, "message":"rule initialization failed"});
+    }*/
+    rbTRules.setRulesTable("");
   },
   
 
@@ -347,19 +443,19 @@ var rbTRules = {
         if (rule.connect === "and")
           return "&& ";
         else if (rule.connect === "or")
-          return "|| ";
+          return " || ";
         else 
           return " ";
       } else 
         return " ";
     }
-
+    // FIXME :: ADD NEGATION PARAMS HERE
     function ruleParams(rule)
     {
       if (rule.value2)
-        var params = "('"+rule.property+"','"+rule.value+"','"+ rule.value2+"')";
+        var params = "('"+rule.type+"','"+rule.negation+"','"+rule.property+"','"+rule.value1+"','"+ rule.value2+"')";
       else
-        var params = "('"+rule.property+"','"+rule.value+"')";  
+        var params = "('"+rule.type+"','"+rule.negation+"' ,'"+rule.property+"','"+rule.value1+"')";  
 
       return params;
     }
@@ -367,15 +463,16 @@ var rbTRules = {
     try {
         jQuery.each(rules, function(index, ruleList) {
           ruleString = " ";
-          for (rule in ruleList.rules) {
-            ruleString = ruleString + "rbTRules.rule." + ruleList.rules[rule].operator + 
-                    ruleParams(ruleList.rules[rule]) + ruleConnect(ruleList.rules[rule]);
+          for (var rule in ruleList.conditions) {
+            ruleString = ruleString + "rbTRules.rule." + ruleList.conditions[rule].operation + 
+                    ruleParams(ruleList.conditions[rule]) + ruleConnect(ruleList.conditions[rule]);
           }
 
-          this.ruleTable[ruleList.event] = { "name"       : ruleList.name,
-                                             "ruleString" : ruleString,
-                                             "action"     : ruleList.action.handler
-                                           };
+          rbTRules.ruleTable[ruleList.event] = { "name"         : ruleList.name,
+                                                 "ruleString"   : ruleString,
+                                                 "action"       : ruleList.action,
+                                                 "action_param" : ruleList.action_param
+                                               };
         });
     } catch (e) {
       rbTAPP.reportError({"exception" : e.message,
@@ -397,6 +494,7 @@ var rbTRules = {
 
     function prepareFunctionCode(ruleString) 
     {
+      $("#rulestring").text(ruleString);
       return 'if (' + ruleString + ') { return true; } else { return false;}';
     }
 
@@ -404,8 +502,11 @@ var rbTRules = {
           var functionCode = prepareFunctionCode(this.ruleTable[event].ruleString);
           var isRuleValid = new Function(functionCode)();
           if (isRuleValid) {
+            $("#result").text("RULES PASSED");
             this.invokeAction(event);
-          } 
+          } else {
+            $("#result").text("RULES FAILED");
+          }
     } catch (e) {
       rbTAPP.reportError({"exception"  : e.message,
                           "message"    : "rule execution on event failed" , 
@@ -415,6 +516,7 @@ var rbTRules = {
     } 
   },
   
+
   /**
   *   Execute rules table for particular events
   *   @param {string} property The property for which we need to operate upon
@@ -424,13 +526,14 @@ var rbTRules = {
   valueDataType : function(property, value)
   {
     "use strict";
-    // We are expecting only 2 types i.e string or number
+    // We are expecting only 3 types i.e string or number or date
+    var dt = this.getDataType(property);
     try {
-        if (typeof property === "string") {
+        if (dt === "String") {
           return value.toString();
-        } else if(typeof property === "number") {
+        } else if(dt === "Number") {
           return parseFloat(value);
-        } else if(Object.prototype.toString.call(date) === '[object Date]') {
+        } else if(dt === "Date") {
           return new Date(value);
         }
     } catch (e) {
@@ -467,9 +570,9 @@ var rbTRules = {
   /**
   * FIXME : enable this
   * Evaluate property value to a suitable sys or user property
-  * 
+  * @param {string} rule property For which we need to evaluate data type
   */
-  evalProperty : function(ruleProperty)
+  evalProperty : function(ruleProperty, type)
   {
     if (!ruleProperty)
       return "";
@@ -478,9 +581,20 @@ var rbTRules = {
 
     var propType = (startCh == "$") ? "actor"  : (
                    (startCh == "#") ? "system" : "open");
+
     // FIXME : Currently we do not know the structure of response we will get.
     // Based on that we need to process further.
 
+    var p = ruleProperty.slice(1,ruleProperty.length);
+    var value = eval("TEST_RBT_RULE_JSON."+p);
+    if (!type)
+        return value;
+    if (type === "String")
+        return value.toString(); 
+    else if (type === "Date")
+        return new Date(value);
+    else if (type === "Number")
+        return parseFloat(value);
   },
 
 
@@ -493,7 +607,8 @@ var rbTRules = {
   {
     try {
       // Hand over action to templating engine for processing event action.
-      rbTTemplates.invoke(this.ruleTable[event].action);
+      //rbTTemplates.invoke(this.ruleTable[event].action, this.ruleTable[event].action_param);
+      rbT.invokeActionScript(this.ruleTable[event].action, this.ruleTable[event].action_param);
     } catch(e) {
       rbTAPP.reportError({"exception" : e.message,
                           "message": "action could not be invoked" , 
@@ -502,9 +617,70 @@ var rbTRules = {
     }
   },
 
+  /**
+  * Check the data type of object
+  * @param {string} negation status
+  * @return boolean !negate status
+  */  
+  getDataType : function(a)
+  {
+    return Object.prototype.toString.call(a).split("]")[0].split(" ")[1];
+  },
 
-  
+  /**
+  * Check the negate status
+  * @param {string} negation status
+  * @return boolean !negate status
+  */
+  isNegate :  function(x)
+  {
+    return (x === "true") ? false : true; 
+  },
 
+  /**
+  * Check the validity of the rule based on permitted operations on data type
+  * @param {string} t Type of rule applying.
+  * @param {string} a Rule property
+  * @param {string} b Rule value 1
+  * @param {string} [c] Rule value 2
+  * @return boolean validity
+  */
+  isValidRule : function(dt,t,a,b,c)
+  {
+    if (!a || !b)
+      return false;
+    var propDT = this.getDataType(this.evalProperty(a,dt));
+
+    if (dt === "Date")
+      propDT = dt;
+    else if (propDT !== dt)
+      return false;
+
+    var v1DT = this.getDataType(b);
+    if (c)
+      var v2DT = this.getDataType(c);
+
+    var v2DT = v2DT || v1DT;
+
+    if (!this.permissions[propDT] || this.permissions[propDT].indexOf(t) < 0)
+      return false;
+    
+    if (propDT === "String" && (v1DT!=propDT || v2DT!=propDT)) {
+      return false;
+    } else if (propDT === "Number" && (parseFloat(b) === "NaN" || (c && parseFloat(c) === "NaN"))) {
+      return false;
+    } else if (propDT === "Date") {
+      var v1Date = new Date(b);
+      if (c)
+        var v2Date = new Date(c);
+      v2Date = v2Date || v1Date;
+      if (v1Date.toString() === "Invalid Date" || v2Date.toString() === "Invalid Date")
+        return false;
+    }
+    
+    return true; 
+  },
+ 
   /* 
      RULE FUNCTIONS 
      We should be having try-catch in all rule functions.
@@ -518,12 +694,15 @@ var rbTRules = {
     * 
     * @return {boolean} Validity based on rule
     */ 
-    lt : function(a, b)
+    ltn : function(t,x,a,b)
     {
       "use strict";
       try {
-        var prop = this.evalProperty(a);
-        return prop < this.valueDataType(prop, b);
+        $("#applyingrules").append("<h3>less than</h3>");
+        if (!rbTRules.isValidRule(t,"ltn",a,b))
+          return false;
+        var prop = rbTRules.evalProperty(a);
+        return ((prop < rbTRules.valueDataType(prop, b)) && rbTRules.isNegate(x) );
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on lt failed" , 
@@ -540,12 +719,15 @@ var rbTRules = {
     * 
     * @return {boolean} Validity based on rule
     */ 
-    gt : function(a, b)
+    gtn : function(t,x,a,b)
     {
       "use strict";
       try {
-        var prop = this.evalProperty(a);
-        return prop > this.valueDataType(prop, b);
+        $("#applyingrules").append("<h3>greater than</h3>");
+        if (!rbTRules.isValidRule(t,"gtn",a,b))
+          return false;
+        var prop = rbTRules.evalProperty(a);
+        return ((prop > rbTRules.valueDataType(prop, b)) && rbTRules.isNegate(x) );
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on gt failed" , 
@@ -556,44 +738,22 @@ var rbTRules = {
     },
 
     /**
-    * Rule to check for not equal to condition
-    * @param {string} a Rule property
-    * @param {string} b Rule value
-    * 
-    * @return {boolean} Validity based on rule
-    */ 
-    not_equal_to : function(a, b)
-    {
-      "use strict";
-      try {
-        var prop = this.evalProperty(a);
-        if (prop !== this.valueDataType(prop, b) )
-          return true;
-        else
-          return false;
-      } catch(e) {
-        rbTAPP.reportError({"exception" : e.message,
-                            "message":"rule evaluation on not_equal_to failed" , 
-                            "property" : a,
-                            "value"    : b
-                           });
-            
-      }
-    },
-
-    /**
     * Rule to check for equal to
+    * @param {string} x negation status
     * @param {string} a Rule property
     * @param {string} b Rule value
     * 
     * @return {boolean} Validity based on rule
     */ 
-    equal_to : function(a, b)
+    eql : function(t,x,a,b)
     {
       "use strict";
       try {
-        var prop = this.evalProperty(a);
-        return (prop === this.valueDataType(prop, b));
+        $("#applyingrules").append("<h3>equal to</h3>");
+        if (!rbTRules.isValidRule(t,"eql",a,b))
+          return false;
+        var prop = rbTRules.evalProperty(a);
+        return ((prop === rbTRules.valueDataType(prop, b)) && rbTRules.isNegate(x) );
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on equal_to failed" , 
@@ -605,20 +765,24 @@ var rbTRules = {
 
     /**
     * Rule to check for contains
+    * @param {string} x negation status
     * @param {string} a Rule property
     * @param {string} b Rule value
     * 
     * @return {boolean} Validity based on rule
     */ 
-    contains : function(a, b)
+    cns : function(t,x,a,b)
     {
       "use strict";
       try {
-        var prop = this.evalProperty(a);
-        if (prop.indexOf(this.valueDataType(prop, b)) >= 0 )
-          return true;
-        else
+        $("#applyingrules").append("<h3>contains</h3>");
+        if (!rbTRules.isValidRule(t,"cns",a,b))
           return false;
+        var prop = rbTRules.evalProperty(a);
+        if (prop.indexOf(rbTRules.valueDataType(prop, b)) >= 0 )
+          return (true && rbTRules.isNegate(x) );
+        else
+          return (false && rbTRules.isNegate(x) );
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on contains failed" , 
@@ -630,46 +794,53 @@ var rbTRules = {
 
     /**
     * Rule to check for starts with condition
+    * @param {string} x negation status
     * @param {string} a Rule property
     * @param {string} b Rule value
     * 
     * @return {boolean} Validity based on rule
     */ 
-    starts_with : function(a, b)
+    swh : function(t,x,a,b)
     {
       "use strict";
       try {
-        var prop = this.evalProperty(a);
-        if (prop.match("^"+this.valueDataType(prop, b)))
-          return true;
-        else
+        $("#applyingrules").append("<h3>starts with</h3>");
+        if (!rbTRules.isValidRule(t,"swh",a,b))
           return false;
+        var prop = rbTRules.evalProperty(a);
+        if (prop.match("^"+rbTRules.valueDataType(prop, b)))
+          return (true && rbTRules.isNegate(x) );
+        else
+          return (false && rbTRules.isNegate(x) );
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on starts_with failed" , 
                             "property" : a,
                             "value"    : b
                            });
-        
       }
     },
 
     /**
     * Rule to check for ends with condition
+    * @param {string} x negation status
     * @param {string} a Rule property
     * @param {string} b Rule value
     * 
     * @return {boolean} Validity based on rule
     */ 
-    ends_with : function(a, b)
+    ewh : function(t,x,a,b)
     {
       "use strict";
       try {
-        var prop = this.evalProperty(a);
-        if (prop.match(this.valueDataType(prop, b)+"$"))
-          return true;
-        else
+        $("#applyingrules").append("<h3>ends with</h3>");
+        if (!rbTRules.isValidRule(t,"ewh",a,b))
           return false;
+        var prop = rbTRules.evalProperty(a);
+        if (prop.match(rbTRules.valueDataType(prop, b)+"$"))
+          return (true && rbTRules.isNegate(x) );
+        else
+          return (false && rbTRules.isNegate(x) );
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on ends_with failed" , 
@@ -681,17 +852,21 @@ var rbTRules = {
 
     /**
     * Rule to check for in between range
+    * @param {string} x negation status
     * @param {string} a Rule property
     * @param {string} b Rule value
     * @param {string} c Rule value2
     * @return {boolean} Validity based on rule
     */ 
-    between: function(a, b, c)
+    btn: function(t,x,a,b,c)
     {
       "use strict";
       try {
-        var prop = this.evalProperty(a);
-        return prop >= this.valueDataType(prop, b) && a <= this.valueDataType(prop, c);
+        $("#applyingrules").append("<h3>between</h3>");
+        if (!rbTRules.isValidRule(t,"btn",a,b,c))
+          return false;
+        var prop = rbTRules.evalProperty(a);
+        return prop >= rbTRules.valueDataType(prop, b) && a <= rbTRules.valueDataType(prop, c)  && rbTRules.isNegate(x) ;
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on between failed" , 
@@ -704,18 +879,21 @@ var rbTRules = {
 
     /**
     * Rule to check for regex condition
+    * @param {string} x negation status
     * @param {string} a Rule property
     * @param {string} b Rule value
-    * @param {string} c Rule value2
     * @return {boolean} Validity based on rule
     */ 
-    regex :  function(a, b)
+    rgx :  function(t,x,a,b)
     {
       "use strict";
       try {
-        var prop = this.evalProperty(a);
+        $("#applyingrules").append("<h3>regex</h3>");
+        if (!rbTRules.isValidRule(t,"rgx",a,b))
+          return false;
+        var prop = rbTRules.evalProperty(a);
         regexp = new RegExp(b, 'gi');
-        return regexp.test(prop);
+        return ( regexp.test(prop) && rbTRules.isNegate(x) ) ;
       } catch (e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on regex failed" , 
@@ -723,12 +901,83 @@ var rbTRules = {
                             "value"     : b
                            });
       }
+    },
+
+    /**
+    * Rule to check for days ago condition
+    * @param {string} x negation status
+    * @param {string} a Rule property
+    * @param {string} b Rule value
+    * @return {boolean} Validity based on rule
+    */
+    dag : function(t,x,a,b)
+    {
+      "use strict";
+      try {
+        $("#applyingrules").append("<h3>days ago</h3>");
+        if (!rbTRules.isValidRule(t,"dag",a,b))
+          return false;
+        var prop = rbTRules.evalProperty(a);
+        regexp = new RegExp(b, 'gi');
+        return ( regexp.test(prop) && rbTRules.isNegate(x) ) ;
+      } catch (e) {
+        rbTAPP.reportError({"exception" : e.message,
+                            "message"   :"rule evaluation on regex failed" , 
+                            "property"  : a,
+                            "value"     : b
+                           });
+      }
+    },
+
+    /**
+    * Rule to check for date range condition
+    * @param {string} x negation status
+    * @param {string} a Rule property
+    * @param {string} b Rule value Date range1
+    * @param {string} c Rule value Date range2
+    * @return {boolean} Validity based on rule
+    */
+    drg: function(t,x,a,b,c)
+    {
+      "use strict";
+      try {
+        $("#applyingrules").append("<h3>days between</h3>");
+        if (!rbTRules.isValidRule(t,"drg",a,b,c))
+          return false;
+        var prop = rbTRules.evalProperty(a,t);
+        return prop >= rbTRules.valueDataType(prop, b) && prop <= rbTRules.valueDataType(prop, c)  && rbTRules.isNegate(x) ;
+      } catch (e) {
+        rbTAPP.reportError({"exception" : e.message,
+                            "message"   :"rule evaluation on regex failed" , 
+                            "property"  : a,
+                            "value"     : b
+                           });
+      }
+    },
+
+    /**
+    * Rule to check for set to condition
+    * @param {string} x negation status
+    * @param {string} a Rule property
+    * @return {boolean} Validity based on rule
+    */
+    set : function(t,x,a)
+    {
+      "use strict";
+      try {
+        $("#applyingrules").append("<h3>set prop</h3>");
+        var prop = rbTRules.evalProperty(a);
+        return (prop ? true:false);
+      } catch (e) {
+        rbTAPP.reportError({"exception" : e.message,
+                            "message"   :"rule evaluation on is set" , 
+                            "property"  : a,
+                           });
+      }
     }
   }
 
 };
-
-
 
 
 /****************************[[rbTServerResponse.js]]*************************************/ 
@@ -838,7 +1087,6 @@ var rbTServerResponse = {
   handleEvent : function(respData)
   {
     "use strict";
-    "use strict";
     try {
       if(respData && respData.actor) {
         rbTCookie.setCookie(rbTCookie.defaultCookies.actor, respData.actor);
@@ -919,7 +1167,7 @@ var rbTServerChannel = {
     if (event)
       requestData["event"] = event;
     if (reqData)
-      requestData["properties"] = reqData;
+      requestData["properties"] = rbJSON.typify(reqData);
     return requestData;
   },
 
@@ -941,7 +1189,6 @@ var rbTServerChannel = {
             url: url,
             type: 'GET',
             dataType: 'json',
-            contentType: 'application/json',
             data: reqServerData,
             beforeSend: function() {
                 // FIXME : add status to cookie
@@ -949,6 +1196,9 @@ var rbTServerChannel = {
             },
             success: function ( respData ) {
                 rbTCookie.deleteCookie("lastevent");
+                // FIXME :: ADDED ONLY TO TEST CLIENT SIDE
+                rbTRules.executeRulesOnEvent(event);
+
                 // FIXME : Currently we do not know the format of response we will get from server.
                 if (respData && respData.actor) { 
                   rbTServerResponse.setActor(respData.actor);
@@ -956,7 +1206,11 @@ var rbTServerChannel = {
                 }
             },
             error:function(XMLHttpRequest,textStatus, errorThrown){ 
+                // FIXME :: ADDED ONLY TO TEST CLIENT SIDE
+                rbTRules.executeRulesOnEvent(event);
+
                 callback.error(); 
+                
             }
       });
     } catch(e) {
@@ -976,30 +1230,20 @@ var rbTServerChannel = {
   *   
   *  @return void
   */  
-  makeGetRequest : function(url, params, callback)
+  makeGetRequest : function(url, params, callback, async)
   {
-<<<<<<< HEAD
-    reqServerData = {"app_id" : rbTAPP.configs.appID, "account_id" : rbTAPP.configs.accountID};
-    jQuery.ajax({
-          url: rbTServerChannel.url.createSession,
-          type: 'GET',
-          dataType: 'json',
-          contentType: 'application/json',
-          data: reqServerData,
-          success: function ( respData ) {
-              callback.success(respData);
-          },error:function(XMLHttpRequest,textStatus, errorThrown){ 
-              // todo : what to do??            
-              callback.error(); 
-          }
-    });
-=======
     "use strict";
     try {
       var reqServerData = this.makeRequestData(undefined, params);
       callback = this.extendCallbacks(callback);
+      if (async && async === "noasync")
+        var asyncSt = false;
+      else 
+        var asyncSt = true;
+
       jQuery.ajax({
             url: url,
+            async: asyncSt,
             type: 'GET',
             dataType: 'json',
             contentType: 'application/json',
@@ -1015,10 +1259,10 @@ var rbTServerChannel = {
       rbTAPP.reportError({"exception" : e.message,
                           "message"   :"server request failed" , 
                           "url"       : url,
-                          "log"       : "error" 
+                          "log"       : true,
+                          "server"    : true
                          });
     }
->>>>>>> 2537852c42ccb4889bd7dcf15d9a65ef617dc76a
   },
    
    /** 
@@ -1034,31 +1278,10 @@ var rbTServerChannel = {
   }, 
 
   /** 
-  *  Request server for ROI
-  *  @param {object} params Parameters to pass as payload for ROI.
-  *  @param {object} callback Defined callback for roi. 
+  *  Send ROI to server
+  *  @param {object} params 
   *  @return void
-  */  
-<<<<<<< HEAD
-  makeGetRequest : function(url, callback)
-  {
-    reqServerData = {"app_id" : rbTAPP.configs.appID, "account_id" : rbTAPP.configs.accountID};
-    jQuery.ajax({
-          url: url,
-          type: 'GET',
-          dataType: 'json',
-          contentType: 'application/json',
-          data: reqServerData,
-          success: function ( respData ) {
-              callback.success(respData);
-          },error:function(XMLHttpRequest,textStatus, errorThrown){ 
-              // todo : what to do??            
-              callback.error(); 
-          }
-    });
-  },
-   
-=======
+  */      
   roi : function(params, callback)
   {
     "use strict";
@@ -1066,7 +1289,6 @@ var rbTServerChannel = {
     this.makeGetRequest(this.url.roi, params, callback);
   }, 
 
->>>>>>> 2537852c42ccb4889bd7dcf15d9a65ef617dc76a
   /** 
   *  Send error report to server
   *  @param {object} params Error log message 
@@ -1074,26 +1296,11 @@ var rbTServerChannel = {
   */ 
   reportError : function(params)
   {
-<<<<<<< HEAD
-    jQuery.ajax({
-          url: rbTServerChannel.url.reportError,
-          type: 'GET',
-          dataType: 'json',
-          contentType: 'application/json',
-          data: params,
-          success: function ( respData ) {
-              callback.success(respData);
-          },error:function(XMLHttpRequest,textStatus, errorThrown){ 
-              // todo : what to do??            
-              callback.error(); 
-          }
-    });
-=======
+
     "use strict";
     var callback = this.extendCallbacks(callback);
     this.makeGetRequest(this.url.reportError, params, callback);
     callback = this.extendCallbacks(callback);
->>>>>>> 2537852c42ccb4889bd7dcf15d9a65ef617dc76a
   },
 
   /** 
@@ -1103,14 +1310,9 @@ var rbTServerChannel = {
   */  
   extendCallbacks : function(callback)
   {
-<<<<<<< HEAD
-    callback.success = callback.success || rbTServerChannel.defaultOptions.success_callback;
-    callback.error   = callback.error || rbTServerChannel.defaultOptions.error_callback;
-=======
     "use strict";
     callback.success = callback.success || this.defaultOptions.success_callback;
     callback.error   = callback.error || this.defaultOptions.error_callback;
->>>>>>> 2537852c42ccb4889bd7dcf15d9a65ef617dc76a
     return callback;
   }
 
@@ -1735,8 +1937,8 @@ var rbTUtils = {
   {
     function includeJQ()
     { 
-      rbTUtils.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
-      rbTUtils.waitForjQueryAlive();
+      this.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",rbTAPP.wake_RBT_APP);
+      //this.waitForjQueryAlive();
     }
 
     if (typeof jQuery != 'undefined') {
@@ -1783,7 +1985,7 @@ var rbTUtils = {
 	*/
   embedScript: function(url, callback, params)
   {
-      if (!url || typeof(url) == "string" || url == "")
+      if (!url || typeof(url) != "string" || url == "")
         return;
       
       var scriptElement  = document.createElement("script");
@@ -1796,8 +1998,9 @@ var rbTUtils = {
             this.readyState == "complete") {
             rbTDebug.log("Script "+ url +"loaded successfully");
             if (callback) {
-              var arg = params || "";
-              callback(arg);
+              if (params)
+                callback(params);
+              else callback();
             }
         }
       }
@@ -2050,12 +2253,11 @@ var rbTCookie = {
 
 
 /* MAIN BUSINESS SPECIFIC CALLS */
-function RBT()
-{
+var RBT = function() {
 	this._appID = rbTAPP.getAppID();
-	this._accountID = rbTAPP.getAccocuntID();
+	this._accountID = rbTAPP.getAccountID();
 	this._status = rbTAPP.isrbTAlive();
-}
+};
 
 
 /** 
@@ -2140,6 +2342,125 @@ RBT.prototype.alias = function(params)
 
 
 
+/****************************[[rbJSON.js]]*************************************/ 
+
+
+var rbJSON = {
+
+  "rb" : {},
+  "header" : "rbJSON.rb",
+  "state" : [],
+
+  /**
+  * Get Type of the object
+  * @params {object} a Object.
+  * @return {string} data type of the object.
+  */
+  getType : function (a)
+  {
+    return Object.prototype.toString.call(a).split("]")[0].split(" ")[1]
+  },
+
+
+  /**
+  * Get the current path of the json typify parse.
+  *
+  * @return {string} Path of object keys.
+  */
+  currentPath : function()
+  {
+    var rState = rbJSON.state;
+    var st = rbJSON.header;
+    for (var i=0 ; i < rState.length ; ++i) {
+      if (rState[i].type === "Array") {
+        st = st + "." + rState[i].key;
+      } else if (rState[i].type === "Object") {
+        if (rState[i-1] && rState[i-1].type === "Array")
+          st = st + "[" + rState[i].key + "]";
+        else
+          st = st + "." + rState[i].key;
+      }
+    }
+    return st;
+  },
+
+
+  /**
+  * Create new JSON typify object
+  * @param {string} type Type of an object to be created.
+  */
+  createNewObj : function(type)
+  {
+    var st = rbJSON.currentPath();
+    if (!eval(st)) {
+      if (type === "Array")
+          eval(st+"=[];");
+      else 
+          eval(st+"={};");
+    }
+  },
+
+  /**
+  * Add typified key,value pair to an object.
+  * @param {string} key Object key.
+  * @param {object} value Object value.
+  * @param {string} type Object type.
+  */
+  addValueToObj : function(key, value, type)
+  {
+    if (type === "Array" || type === "Object")
+      var extKey = rbJSON.currentPath() + ((type === "Array") ? "["+key+"]" : "." + key);
+    else
+      var extKey = rbJSON.currentPath() + "." + key;
+
+    var type = typeof(value);
+    var str = extKey+'={type:"'+type+'",value:"'+value+'"};';
+    eval(str);
+  },
+
+  /**
+  * Extend JSON object to get it typified with {type:"data-type",value:"data-value"}
+  * @param {object} obj Object to be typified.
+  *
+  */
+  extend : function(obj)
+  { 
+    for (var key in obj)
+    {
+      if (obj.hasOwnProperty(key)) {
+          var type = rbJSON.getType(obj[key]); 
+          if (type === "Object" || type === "Array" ) {
+            rbJSON.state.push({"type":type,"key":key});
+            rbJSON.createNewObj(type);
+            rbJSON.extend(obj[key]);
+          } else {
+            var pType = (rbJSON.state.length) ? rbJSON.state[rbJSON.state.length-1].type : "";
+            rbJSON.addValueToObj(key,obj[key], pType);
+          }
+      }
+    }
+    rbJSON.state.pop();
+    return;
+  },
+
+
+  /**
+  * Main function to start typifying object. 
+  * @param {object} obj  Object to be typified.
+  * 
+  * @return {object} Typified Object.
+  */
+  typify : function(obj)
+  {
+    rbJSON.rb = {};
+    rbJSON.state = [];
+    rbJSON.extend(obj);
+    return rbJSON.rb;
+  }
+
+};
+
+
 /****************************[[rbTInitApp.js]]*************************************/ 
 
 
@@ -2167,3 +2488,25 @@ RBT.prototype.alias = function(params)
                        });
   }
 })(_rbTK[0][1], _rbTK[1][1]);
+
+
+
+function testGanga()
+{
+  rb.sendEvent("sample_event",{"a":101});
+}
+
+function waitForRBT()
+{
+  if(!rbTAPP.isrbTAlive())
+  {
+    window.setTimeout(waitForRBT, 500);
+  }
+  else
+  {
+    testGanga();
+  }
+}
+
+waitForRBT();
+

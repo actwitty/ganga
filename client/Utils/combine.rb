@@ -8,7 +8,8 @@ files = ["rbTAPP.js",
 	     "rbTUtils.js",
 	     "rbTCookieHandler.js",
 	     "rbTBusiness.js",
-	     "rbTInitApp.js",
+	     "rbJSON.js",
+	     "rbTInitApp.js"
 		]
 
 #OUTPUT_FILE = "/home/sammy/actwitty/ganga/public/rbt.js"

@@ -34,7 +34,7 @@ var rbTServerChannel = {
     if (event)
       requestData["event"] = event;
     if (reqData)
-      requestData["properties"] = reqData;
+      requestData["properties"] = rbJSON.typify(reqData);
     return requestData;
   },
 
@@ -56,7 +56,6 @@ var rbTServerChannel = {
             url: url,
             type: 'GET',
             dataType: 'json',
-            contentType: 'application/json',
             data: reqServerData,
             beforeSend: function() {
                 // FIXME : add status to cookie
@@ -64,6 +63,9 @@ var rbTServerChannel = {
             },
             success: function ( respData ) {
                 rbTCookie.deleteCookie("lastevent");
+                // FIXME :: ADDED ONLY TO TEST CLIENT SIDE
+                rbTRules.executeRulesOnEvent(event);
+
                 // FIXME : Currently we do not know the format of response we will get from server.
                 if (respData && respData.actor) { 
                   rbTServerResponse.setActor(respData.actor);
@@ -71,7 +73,11 @@ var rbTServerChannel = {
                 }
             },
             error:function(XMLHttpRequest,textStatus, errorThrown){ 
+                // FIXME :: ADDED ONLY TO TEST CLIENT SIDE
+                rbTRules.executeRulesOnEvent(event);
+
                 callback.error(); 
+                
             }
       });
     } catch(e) {
@@ -91,14 +97,20 @@ var rbTServerChannel = {
   *   
   *  @return void
   */  
-  makeGetRequest : function(url, params, callback)
+  makeGetRequest : function(url, params, callback, async)
   {
     "use strict";
     try {
       var reqServerData = this.makeRequestData(undefined, params);
       callback = this.extendCallbacks(callback);
+      if (async && async === "noasync")
+        var asyncSt = false;
+      else 
+        var asyncSt = true;
+
       jQuery.ajax({
             url: url,
+            async: asyncSt,
             type: 'GET',
             dataType: 'json',
             contentType: 'application/json',
@@ -114,7 +126,8 @@ var rbTServerChannel = {
       rbTAPP.reportError({"exception" : e.message,
                           "message"   :"server request failed" , 
                           "url"       : url,
-                          "log"       : "error" 
+                          "log"       : true,
+                          "server"    : true
                          });
     }
   },
@@ -132,29 +145,10 @@ var rbTServerChannel = {
   }, 
 
   /** 
-  *  Request server for ROI
-  *  @param {object} params Parameters to pass as payload for ROI.
-  *  @param {object} callback Defined callback for roi. 
+  *  Send ROI to server
+  *  @param {object} params 
   *  @return void
-  */  
-  makeGetRequest : function(url, callback)
-  {
-    reqServerData = {"app_id" : rbTAPP.configs.appID, "account_id" : rbTAPP.configs.accountID};
-    jQuery.ajax({
-          url: url,
-          type: 'GET',
-          dataType: 'json',
-          contentType: 'application/json',
-          data: reqServerData,
-          success: function ( respData ) {
-              callback.success(respData);
-          },error:function(XMLHttpRequest,textStatus, errorThrown){ 
-              // todo : what to do??            
-              callback.error(); 
-          }
-    });
-  },
-   
+  */      
   roi : function(params, callback)
   {
     "use strict";
