@@ -278,6 +278,7 @@ window.rbTDebug=(function(){var i=this,b=Array.prototype.slice,d=i.console,h={},
 
 
 var TEST_RBT_RULE_JSON = {"customer":{
+                        "name" :"samarth",
                         "email":"gmail.com",
                         "val1":123,
                         "val2":321,
@@ -344,6 +345,15 @@ var rbTRules = {
                   negation: 'false',
                   operation: 'eql',
                   value1: 'gmail.com',
+                  connect: 'and' 
+                },
+                // negate condition
+                { 
+                  property: "#customer.name",
+                  type : "String",
+                  negation: 'true',
+                  operation: 'swh',
+                  value1: 'a',
                   connect: 'and' 
                 },
                 // actor_property based condition
@@ -449,7 +459,6 @@ var rbTRules = {
       } else 
         return " ";
     }
-    // FIXME :: ADD NEGATION PARAMS HERE
     function ruleParams(rule)
     {
       if (rule.value2)
@@ -634,7 +643,7 @@ var rbTRules = {
   */
   isNegate :  function(x)
   {
-    return (x === "true") ? false : true; 
+    return (x === "true") ? true : false; 
   },
 
   /**
@@ -701,8 +710,10 @@ var rbTRules = {
         $("#applyingrules").append("<h3>less than</h3>");
         if (!rbTRules.isValidRule(t,"ltn",a,b))
           return false;
+        var res = false;
         var prop = rbTRules.evalProperty(a);
-        return ((prop < rbTRules.valueDataType(prop, b)) && rbTRules.isNegate(x) );
+        res = ((prop < rbTRules.valueDataType(prop, b)) || rbTRules.isNegate(x) );
+        return (x === "true") ? !res : res;
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on lt failed" , 
@@ -726,8 +737,10 @@ var rbTRules = {
         $("#applyingrules").append("<h3>greater than</h3>");
         if (!rbTRules.isValidRule(t,"gtn",a,b))
           return false;
+        var res = false;
         var prop = rbTRules.evalProperty(a);
-        return ((prop > rbTRules.valueDataType(prop, b)) && rbTRules.isNegate(x) );
+        res = ((prop > rbTRules.valueDataType(prop, b)) || rbTRules.isNegate(x) );
+        return (x === "true") ? !res : res;
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on gt failed" , 
@@ -752,8 +765,10 @@ var rbTRules = {
         $("#applyingrules").append("<h3>equal to</h3>");
         if (!rbTRules.isValidRule(t,"eql",a,b))
           return false;
+        var res = false;
         var prop = rbTRules.evalProperty(a);
-        return ((prop === rbTRules.valueDataType(prop, b)) && rbTRules.isNegate(x) );
+        res =  ((prop === rbTRules.valueDataType(prop, b)) || rbTRules.isNegate(x) );
+        return (x === "true") ? !res : res; 
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on equal_to failed" , 
@@ -779,10 +794,12 @@ var rbTRules = {
         if (!rbTRules.isValidRule(t,"cns",a,b))
           return false;
         var prop = rbTRules.evalProperty(a);
+        var res;
         if (prop.indexOf(rbTRules.valueDataType(prop, b)) >= 0 )
-          return (true && rbTRules.isNegate(x) );
+          res = true;
         else
-          return (false && rbTRules.isNegate(x) );
+          res = false;
+        return (x === "true") ? !res : res; 
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on contains failed" , 
@@ -807,11 +824,13 @@ var rbTRules = {
         $("#applyingrules").append("<h3>starts with</h3>");
         if (!rbTRules.isValidRule(t,"swh",a,b))
           return false;
+        var res = false;
         var prop = rbTRules.evalProperty(a);
         if (prop.match("^"+rbTRules.valueDataType(prop, b)))
-          return (true && rbTRules.isNegate(x) );
+          res = true;
         else
-          return (false && rbTRules.isNegate(x) );
+          res = false;
+        return (x === "true") ? !res : res;
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on starts_with failed" , 
@@ -837,10 +856,12 @@ var rbTRules = {
         if (!rbTRules.isValidRule(t,"ewh",a,b))
           return false;
         var prop = rbTRules.evalProperty(a);
+        var res;
         if (prop.match(rbTRules.valueDataType(prop, b)+"$"))
-          return (true && rbTRules.isNegate(x) );
+          res = true;
         else
-          return (false && rbTRules.isNegate(x) );
+          res = false;
+        return (x === "true") ? !res : res;
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on ends_with failed" , 
@@ -866,7 +887,9 @@ var rbTRules = {
         if (!rbTRules.isValidRule(t,"btn",a,b,c))
           return false;
         var prop = rbTRules.evalProperty(a);
-        return prop >= rbTRules.valueDataType(prop, b) && a <= rbTRules.valueDataType(prop, c)  && rbTRules.isNegate(x) ;
+        var res;
+        res = (prop >= rbTRules.valueDataType(prop, b) && a <= rbTRules.valueDataType(prop, c)) ;
+        return (x === "true") ? !res : res;
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on between failed" , 
@@ -892,8 +915,10 @@ var rbTRules = {
         if (!rbTRules.isValidRule(t,"rgx",a,b))
           return false;
         var prop = rbTRules.evalProperty(a);
+        var res;
         regexp = new RegExp(b, 'gi');
-        return ( regexp.test(prop) && rbTRules.isNegate(x) ) ;
+        res = regexp.test(prop);
+        return (x === "true") ? !res : res;
       } catch (e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on regex failed" , 
@@ -918,8 +943,10 @@ var rbTRules = {
         if (!rbTRules.isValidRule(t,"dag",a,b))
           return false;
         var prop = rbTRules.evalProperty(a);
+        var res;
         regexp = new RegExp(b, 'gi');
-        return ( regexp.test(prop) && rbTRules.isNegate(x) ) ;
+        res = regexp.test(prop) ;
+        return (x === "true") ? !res : res;
       } catch (e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on regex failed" , 
@@ -945,7 +972,9 @@ var rbTRules = {
         if (!rbTRules.isValidRule(t,"drg",a,b,c))
           return false;
         var prop = rbTRules.evalProperty(a,t);
-        return prop >= rbTRules.valueDataType(prop, b) && prop <= rbTRules.valueDataType(prop, c)  && rbTRules.isNegate(x) ;
+        var res;
+        res = (prop >= rbTRules.valueDataType(prop, b) && prop <= rbTRules.valueDataType(prop, c));
+        return (x === "true") ? !res : res;
       } catch (e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on regex failed" , 
@@ -967,7 +996,8 @@ var rbTRules = {
       try {
         $("#applyingrules").append("<h3>set prop</h3>");
         var prop = rbTRules.evalProperty(a);
-        return (prop ? true:false);
+        var res = (prop ? true:false);
+        return (x === "true") ? !res : res;
       } catch (e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on is set" , 
@@ -1145,11 +1175,58 @@ var rbTServerChannel = {
     "roi"               : ""
   },
 
+  // Server request queue
+  queue : [],
+
   /* Default options for server request */
   defaultOptions : {
     "success_callback" : rbTServerResponse.defaultSuccessCallback,
     "error_callback"   : rbTServerResponse.defaultErrorCallback
   },
+
+  
+  /**
+  * Queue server requests.
+  * @param {object} obj Object to be queued.
+  * @return void
+  */
+  queueReq : function(obj)
+  {
+    this.queue.push(obj);
+  },
+
+  /**
+  * Flush request queue by initiating server requests for queued requests.
+  *
+  * @return void
+  */
+  flushReqQueue : function()
+  {
+    for (var req in this.queue) {
+      if (this.queue[req].event) {
+        this.makeEventRequest(this.queue[req].event, this.queue[req].params, this.queue[req].callback);
+      } else {
+        this.makeGetRequest(this.queue[req].url, this.queue[req].params, this.queue[req].callback, this.queue[req].async);
+      }
+    }
+  },
+
+
+  /**
+  * Check for App status, if alive , flush all req queue and clear interval.
+  *
+  */
+  reqFlushIntervalId : function()
+  {
+      var interval = setInterval(function() {
+        if (rbTAPP.isrbTAlive()) {
+          clearInterval(interval);
+          rbTServerChannel.flushReqQueue();
+        }
+      }, 2000);
+  },
+
+
 
   /** 
   *  Set Request data for all server interactions
@@ -1174,19 +1251,18 @@ var rbTServerChannel = {
   /** 
   *  Make a request to server.
   *  @param {string} event
-  *  @param {rbTServerChannel.url} url
-  *  @param {object} reqData
+  *  @param {object} params
   *  @param {object} callback
   *  @return {object}
   */
-  makeEventRequest :  function(event, url, reqData, callback)
+  makeEventRequest :  function(event, params, callback)
   {
     "use strict";
     try {
-      var reqServerData = this.makeRequestData(event, reqData);
+      var reqServerData = this.makeRequestData(event, params);
       callback = this.extendCallbacks(callback);
       jQuery.ajax({
-            url: url,
+            url: rbTServerChannel.url.fireEvent,
             type: 'GET',
             dataType: 'json',
             data: reqServerData,
@@ -1234,7 +1310,7 @@ var rbTServerChannel = {
   {
     "use strict";
     try {
-      var reqServerData = this.makeRequestData(undefined, params);
+       var reqServerData = this.makeRequestData(undefined, params);
       callback = this.extendCallbacks(callback);
       if (async && async === "noasync")
         var asyncSt = false;
@@ -1263,6 +1339,41 @@ var rbTServerChannel = {
                           "server"    : true
                          });
     }
+  },
+
+  /**
+  *
+  *
+  */  
+  makeRequest : function(obj)
+  {
+    if (!obj)
+      return;
+    if (!rbTAPP.isrbTAlive()) {
+      if (obj.url) {
+        obj.async = obj.async || "async";
+        this.queueReq({url:obj.url, params:obj.params, callback:obj.cb, async:obj.async});
+      }
+      else
+        this.queueReq({event:obj.event, params:obj.params, callback:obj.cb});
+      return;
+    } else {
+      this.flushReqQueue();
+    }
+    try {
+      if (obj.event) {
+        rbTServerChannel.makeEventRequest(obj.event, obj.params, obj.cb);
+      } else if (obj.url) {
+        rbTServerChannel.makeGetRequest(obj.url, obj.params, obj.cb);
+      } else throw new Error("Wrong server req data");
+    } catch (e) {
+      rbTAPP.reportError({"exception" : e.message,
+                          "message"   :"server request params are not valid" , 
+                          "log"       : true,
+                          "server"    : true
+                         });
+    }
+
   },
    
    /** 
@@ -1938,7 +2049,6 @@ var rbTUtils = {
     function includeJQ()
     { 
       this.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",rbTAPP.wake_RBT_APP);
-      //this.waitForjQueryAlive();
     }
 
     if (typeof jQuery != 'undefined') {
@@ -2005,25 +2115,7 @@ var rbTUtils = {
         }
       }
   },
-
-  /**
-  * Wait till jquery is alive.
-  */
-  waitForjQueryAlive : function() 
-  {
-      "use strict";
-      function checkJquery()
-      {
-        if (!window.jQuery) {
-            window.setTimeout(checkJquery, 500);
-        } else {
-          // make RBT APP alive.
-          rbTAPP.wake_RBT_APP();
-        }
-      }
-      checkJquery();
-  },
-    
+  
   // JSON
   JSON : {
       parse: (window.JSON && window.JSON.parse) || function(data)
@@ -2285,12 +2377,12 @@ RBT.prototype.sendEvent = function(event, params)
   if (!event || typeof(event) != "string" || event == "" ) {
     return;
   }
-  rbTServerChannel.makeEventRequest(event, 
-                                    rbTServerChannel.url.fireEvent,
-                                    params,
-                                    { success: rbTServerResponse.handleEvent,
-                                      error  : rbTServerResponse.defaultError
-                                    });
+  rbTServerChannel.makeRequest({"event" : event, 
+                                "params": params,
+                                "cb"    : { success: rbTServerResponse.handleEvent,
+                                            error  : rbTServerResponse.defaultError
+                                          }
+                              });
 };
 
 /** 
@@ -2302,12 +2394,12 @@ RBT.prototype.sendEvent = function(event, params)
 RBT.prototype.identify = function(params)
 {
   "use strict";
-  rbTServerChannel.makeGetRequest(rbTServerChannel.url.identify,
-                                params,
-                                { success: rbTServerResponse.setActor,
-                                  error  : rbTServerResponse.defaultError
-                                }
-                               );
+  rbTServerChannel.makeRequest({"url"    : rbTServerChannel.url.identify, 
+                                "params" : params,
+                                "cb"     : { success: rbTServerResponse.setActor,
+                                             error  : rbTServerResponse.defaultError
+                                           }
+                              });
 };
 
 
@@ -2321,11 +2413,12 @@ RBT.prototype.identify = function(params)
 RBT.prototype.setUserProperty = function(params)
 {
   "use strict";
-  rbTServerChannel.makeGetRequest( rbTServerChannel.url.setUserProperty,
-                                   params,
-                                   { success: rbTServerResponse.setUserProperty,
-                                     error  : rbTServerResponse.defaultError
-                                  });
+  rbTServerChannel.makeRequest({"url"   : rbTServerChannel.url.setUserProperty, 
+                                "params": params,
+                                "cb"    : { success: rbTServerResponse.setUserProperty,
+                                            error  : rbTServerResponse.defaultError
+                                          }
+                              });
 };
 
 
@@ -2351,26 +2444,16 @@ var rbJSON = {
   "header" : "rbJSON.rb",
   "state" : [],
 
-  /**
-  * Get Type of the object
-  * @params {object} a Object.
-  * @return {string} data type of the object.
-  */
   getType : function (a)
   {
     return Object.prototype.toString.call(a).split("]")[0].split(" ")[1]
   },
 
 
-  /**
-  * Get the current path of the json typify parse.
-  *
-  * @return {string} Path of object keys.
-  */
   currentPath : function()
   {
-    var rState = rbJSON.state;
-    var st = rbJSON.header;
+    var rState = this.state;
+    var st = this.header;
     for (var i=0 ; i < rState.length ; ++i) {
       if (rState[i].type === "Array") {
         st = st + "." + rState[i].key;
@@ -2384,78 +2467,56 @@ var rbJSON = {
     return st;
   },
 
-
-  /**
-  * Create new JSON typify object
-  * @param {string} type Type of an object to be created.
-  */
   createNewObj : function(type)
   {
-    var st = rbJSON.currentPath();
+    var st = this.currentPath();
     if (!eval(st)) {
       if (type === "Array")
           eval(st+"=[];");
       else 
           eval(st+"={};");
     }
+
   },
 
-  /**
-  * Add typified key,value pair to an object.
-  * @param {string} key Object key.
-  * @param {object} value Object value.
-  * @param {string} type Object type.
-  */
   addValueToObj : function(key, value, type)
   {
     if (type === "Array" || type === "Object")
-      var extKey = rbJSON.currentPath() + ((type === "Array") ? "["+key+"]" : "." + key);
+      var extKey = this.currentPath() + ((type === "Array") ? "["+key+"]" : "." + key);
     else
-      var extKey = rbJSON.currentPath() + "." + key;
+      var extKey = this.currentPath() + "." + key;
 
-    var type = typeof(value);
+    var type = this.getType(value);
     var str = extKey+'={type:"'+type+'",value:"'+value+'"};';
     eval(str);
   },
 
-  /**
-  * Extend JSON object to get it typified with {type:"data-type",value:"data-value"}
-  * @param {object} obj Object to be typified.
-  *
-  */
   extend : function(obj)
   { 
     for (var key in obj)
     {
       if (obj.hasOwnProperty(key)) {
-          var type = rbJSON.getType(obj[key]); 
+          var type = this.getType(obj[key]); 
           if (type === "Object" || type === "Array" ) {
-            rbJSON.state.push({"type":type,"key":key});
-            rbJSON.createNewObj(type);
-            rbJSON.extend(obj[key]);
+            this.state.push({"type":type,"key":key});
+            this.createNewObj(type);
+            this.extend(obj[key]);
           } else {
-            var pType = (rbJSON.state.length) ? rbJSON.state[rbJSON.state.length-1].type : "";
-            rbJSON.addValueToObj(key,obj[key], pType);
+            var pType = (this.state.length) ? this.state[this.state.length-1].type : "";
+            this.addValueToObj(key,obj[key], pType);
           }
       }
     }
-    rbJSON.state.pop();
+    this.state.pop();
     return;
   },
 
-
-  /**
-  * Main function to start typifying object. 
-  * @param {object} obj  Object to be typified.
-  * 
-  * @return {object} Typified Object.
-  */
   typify : function(obj)
   {
-    rbJSON.rb = {};
-    rbJSON.state = [];
-    rbJSON.extend(obj);
-    return rbJSON.rb;
+    this.rb = {};
+    this.state = [];
+    this.extend(obj);
+    return this.rb;
   }
 
 };
