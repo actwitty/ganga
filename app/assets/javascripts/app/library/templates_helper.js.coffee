@@ -8,8 +8,10 @@ App.templatesLibraryVars =
               'url' : 'ul'
 
 App.templatesConstants = 
-                          'type' : 5
-                          'label' : 6
+                          'show'  : 1
+                          'type'  : 2
+                          'label' : 3
+                          
 App.templatesFixedData = {
                           'font'  : [
                                       'Arial, Helvetica, sans-serif',

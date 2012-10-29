@@ -33,8 +33,12 @@ App.ConditionsView = Ember.View.extend
     content.pushObject(condition)  
     event.preventDefault()
 
-
-
+  selectTemplate: (event) ->
+    rule = event.context
+    target = $(event.target)    
+    val = target.find('option:selected').val()
+    rule.set 'action_param', rbT.templateArgs[val]
+    event.preventDefault()
 
   showTemplatePreview: (event) ->   
     event.preventDefault()

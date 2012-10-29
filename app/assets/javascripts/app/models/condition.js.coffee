@@ -28,6 +28,8 @@ App.Condition = Ember.Object.extend
     @set 'opList', App.operationsList[type]
     @set 'opShow', App.operationsList[type][0]
 
+  
+
    
     
 

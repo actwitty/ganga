@@ -3,61 +3,21 @@ App.sampleRule = [
                     id: 1000001
                     name: 'A fancy rule'
                     event: 'sign_up'
-                    action: 'topbar.generic.normal'
+                    action: 'bottombar.generic.fblike':'rbTemplBottombarGenericFblikeHTML'
                     action_param: [
-                                    {
-                                      key:'rb.bottombar.generic.fblike.text.cr.color'
-                                      value:'#333'
-                                    },
-                                    { 
-                                      key:'rb.bottombar.generic.fblike.text.nr.fontsize'
-                                      value:'12'
-                                    },
-                                    { 
-                                      key:'rb.bottombar.generic.fblike.text.nr.textshadow'
-                                      value: '12'
-                                    },
-                                    { 
-                                      key:'rb.bottombar.generic.fblike.text.ft.fontfamily'
-                                      value:'"Lucida Sans Unicode", "Lucida Grande", sans-serif'
-                                    }
-                                    { 
-                                      key:'rb.bottombar.generic.fblike.base.nr.zIndex'
-                                      value:'11'
-                                    },
-                                    { 
-                                      key:'rb.bottombar.generic.fblike.base.nr.width'
-                                      value: '30'
-                                    },
-                                    { 
-                                      key:'rb.bottombar.generic.fblike.base.nr.height'
-                                      value: '10'
-                                    },
-                                    { 
-                                      key:'rb.bottombar.generic.fblike.base.cr.bgColor'
-                                      value: '#777'
-                                    },
-                                    { 
-                                      key:'rb.bottombar.generic.fblike.base.an.textalign'
-                                      value: 'center'
-                                    },                                      
-                                    { 
-                                      key:'rb.bottombar.generic.fblike.left.sg.text'
-                                      value: 'hello'
-                                    },
-                                    { 
-                                      key:'rb.topbar.generic.fblike.button.ul.ahref'
-                                      value: 'http://www.google.com'
-                                    },
-                                    { 
-                                      key:'rb.bottombar.generic.fblike.right.sg.text'
-                                      value: 'world' 
-                                    },
-                                    { 
-                                      key:'rb.action.bottombar.generic.fblike.ul.ahref'
-                                      value: 'http://www.reddit.com'
-                                    }
-                                ]
+                                    {key:'rb.t.cr.textColor ',value:'#F2F0F0'},
+                                    {key:'rb.t.nr.textFontsize',value:'15'},
+                                    {key:'rb.t.ft.textFontfamily',value:'Arial'},
+                                    {key:'rb.f.nr.baseZindex',value:'1000'},
+                                    {key:'rb.t.nr.baseWidth',value:'100'},
+                                    {key:'rb.t.nr.baseHeight',value:'40'},
+                                    {key:'rb.t.cr.baseBgColor',value:'#3C5891'},
+                                    {key:'rb.t.an.baseTextalign',value:'center'},
+                                    {key:'rb.t.sg.textLeft',value:'Hello Hello'},
+                                    {key:'rb.t.ul.facebookPage',value:'http://www.google.com'},
+                                    {key:'rb.t.sg.textRight',value:'Hello Hello'},
+                                    {key:'rb.t.ul.helpLink',value:'http://www.rulebot.com'}
+                                  ]
                     conditions: [
                                   {
                                     property: 'customer[email]'
@@ -97,58 +57,22 @@ App.sampleRule = [
                     event: 'sign_in'
                     action: 'topbar.generic.normal'
                     action_param: [
-                                    {
-                                      key:'rb.bottombar.generic.fblike.text.cr.color'
-                                      value:'#333'
-                                    },
-                                    { 
-                                      key:'rb.bottombar.generic.fblike.text.nr.fontsize'
-                                      value:'12'
-                                    },
-                                    { 
-                                      key:'rb.bottombar.generic.fblike.text.nr.textshadow'
-                                      value: '12'
-                                    },
-                                    { 
-                                      key:'rb.bottombar.generic.fblike.text.ft.fontfamily'
-                                      value:'"Lucida Sans Unicode", "Lucida Grande", sans-serif'
-                                    }
-                                    { 
-                                      key:'rb.bottombar.generic.fblike.base.nr.zIndex'
-                                      value:'11'
-                                    },
-                                    { 
-                                      key:'rb.bottombar.generic.fblike.base.nr.width'
-                                      value: '30'
-                                    },
-                                    { 
-                                      key:'rb.bottombar.generic.fblike.base.nr.height'
-                                      value: '10'
-                                    },
-                                    { 
-                                      key:'rb.bottombar.generic.fblike.base.cr.bgColor'
-                                      value: '#777'
-                                    },
-                                    { 
-                                      key:'rb.bottombar.generic.fblike.base.an.textalign'
-                                      value: 'center'
-                                    },                                      
-                                    { 
-                                      key:'rb.bottombar.generic.fblike.left.sg.text'
-                                      value: 'hello'
-                                    },
-                                    { 
-                                      key:'rb.topbar.generic.fblike.button.ul.ahref'
-                                      value: 'http://www.google.com'
-                                    },
-                                    { 
-                                      key:'rb.bottombar.generic.fblike.right.sg.text'
-                                      value: 'world' 
-                                    },
-                                    { 
-                                      key:'rb.action.bottombar.generic.fblike.ul.ahref'
-                                      value: 'http://www.reddit.com'
-                                    }
+                                    {key:'rb.t.cr.textColor ',value:'#333'},
+                                    {key:'rb.t.nr.textFontsize',value:'15'},
+                                    {key:'rb.t.ft.textFontfamily',value:'Arial'},
+                                    {key:'rb.f.nr.baseZindex',value:'100'},
+                                    {key:'rb.t.nr.baseWidth',value:'100'},
+                                    {key:'rb.t.nr.baseHeight',value:'40'},
+                                    {key:'rb.t.cr.baseBgColor',value:'#DCDCDC'},
+                                    {key:'rb.t.an.baseTextalign',value:'center'},
+                                    {key:'rb.t.sg.textLeft',value:'Hello Hello Hello Hello'},
+                                    {key:'rb.t.nr.btnFontSize',value:'14'},
+                                    {key:'rb.t.cr.btnBgColor',value:'#548AC7'},
+                                    {key:'rb.t.cr.btnColor',value:'white'},
+                                    {key:'rb.t.ul.btnLink',value:'http://www.google.com'},
+                                    {key:'rb.t.sg.btnLable',value:'Click'},
+                                    {key:'rb.t.sg.textRight',value:'Hello Hello'},
+                                    {key:'rb.t.ul.helpLink',value:'http://www.rulebot.com'}
                                 ]
                     conditions:[
                                   {
