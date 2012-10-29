@@ -6,6 +6,10 @@
 
 var rbT = { inited: false};
 
+
+/****************************[[templates.js]]*************************************/ 
+
+
 rbT.templateLib = {
 	 	  'bottombar.generic.fblike':'rbTemplBottombarGenericFblikeHTML',
 	 	  'topbar.generic.normal':'rbTemplTopbarGenericNormalHTML',
@@ -20,7 +24,9 @@ rbT.templateLib = {
  
  	 	 	 }; 
 
-rbT.templateArgs = {
+
+
+ rbT.templateArgs = {
 	 	  'bottombar.generic.fblike':[
 	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'#F2F0F0'},
 	 	 	 	 	 	 {key:'rb.t.nr.textFontsize',value:'15'},
@@ -54,6 +60,7 @@ rbT.templateArgs = {
 	 	 	 	 	 	 {key:'rb.t.ul.helpLink',value:'http://www.rulebot.com'},
 	 	 	 	 	 ],
 	 	  'chat.generic.normal':[
+	 	 	 	 	 	 {key:'rb.t.sg.olarkIdentity',value:'\'6679-845-10-6199\''},
 	 	 	 	 	 	 {key:'rb.t.sg.olarkIdentity',value:'\'6679-845-10-6199\''},
 	 	 	 	 	 ],
 	 	  'topbar.generic.twitterfollow':[
@@ -169,8 +176,8 @@ rbT.templateArgs = {
 	 	 	 	 	 	 {key:'rb.t.sg.rightText',value:'Hello Hello'},
 	 	 	 	 	 	 {key:'rb.t.ul.helpLink',value:''},
 	 	 	 	 	 ]
- 	 	 	 	 };  	 	 	 
-
+ 	 	 	 	 }; 
+ 
 
 
 
@@ -233,7 +240,7 @@ rbT.rbTemplTopbarGenericTwittershareHTML='<style>.rbTextValue  {     color:{{rb.
 /****************************[[rbTemplChatGenericNormal.js]]*************************************/ 
 
 
-rbT.rbTemplChatGenericNormalHTML='<script data-cfasync="false" type=\'text/javascript\'>window.olark||(function(c){var f=window,d=document,l=f.location.protocol=="https:"?"https:":"http:",z=c.name,r="load";var nt=function(){f[z]=function(){(a.s=a.s||[]).push(arguments)};var a=f[z]._={},q=c.methods.length;while(q--){(function(n){f[z][n]=function(){f[z]("call",n,arguments)}})(c.methods[q])}a.l=c.loader;a.i=nt;a.p={0:+new Date};a.P=function(u){a.p[u]=new Date-a.p[0]};function s(){a.P(r);f[z](r)}f.addEventListener?f.addEventListener(r,s,false):f.attachEvent("on"+r,s);var ld=function(){function p(hd){hd="head";return["<",hd,"></",hd,"><",i,\' onl\' + \'oad="var d=\',g,";d.getElementsByTagName(\'head\')[0].",j,"(d.",h,"(\'script\')).",k,"=\'",l,"//",a.l,"\'",\'"\',"></",i,">"].join("")}var i="body",m=d[i];if(!m){return setTimeout(ld,100)}a.P(1);var j="appendChild",h="createElement",k="src",n=d[h]("div"),v=n[j](d[h](z)),b=d[h]("iframe"),g="document",e="domain",o;n.style.display="none";m.insertBefore(n,m.firstChild).id=z;b.frameBorder="0";b.id=z+"-loader";if(/MSIE[ ]+6/.test(navigator.userAgent)){b.src="javascript:false"}b.allowTransparency="true";v[j](b);try{b.contentWindow[g].open()}catch(w){c[e]=d[e];o="javascript:var d="+g+".open();d.domain=\'"+d.domain+"\';";b[k]=o+"void(0);"}try{var t=b.contentWindow[g];t.write(p());t.close()}catch(x){b[k]=o+\'d.write("\'+p().replace(/"/g,String.fromCharCode(92)+\'"\')+\'");d.close();\'}a.P(2)};ld()};nt()})({loader: "static.olark.com/jsclient/loader0.js",name:"olark",methods:["configure","extend","declare","identify"]});olark.identify({{rb.t.sg.olarkIdentity}});</script><noscript><a href="https://www.olark.com/site/6679-845-10-6199/contact" title="Contact us" target="_blank">Questions? Feedback?</a> powered by <a href="http://www.olark.com?welcome" title="Olark live chat software">Olark live chat software</a></noscript>'
+rbT.rbTemplChatGenericNormalHTML='<script data-cfasync="false" type=\'text/javascript\'>window.olark||(function(c){var f=window,d=document,l=f.location.protocol=="https:"?"https:":"http:",z=c.name,r="load";var nt=function(){f[z]=function(){(a.s=a.s||[]).push(arguments)};var a=f[z]._={},q=c.methods.length;while(q--){(function(n){f[z][n]=function(){f[z]("call",n,arguments)}})(c.methods[q])}a.l=c.loader;a.i=nt;a.p={0:+new Date};a.P=function(u){a.p[u]=new Date-a.p[0]};function s(){a.P(r);f[z](r)}f.addEventListener?f.addEventListener(r,s,false):f.attachEvent("on"+r,s);var ld=function(){function p(hd){hd="head";return["<",hd,"></",hd,"><",i,\' onl\' + \'oad="var d=\',g,";d.getElementsByTagName(\'head\')[0].",j,"(d.",h,"(\'script\')).",k,"=\'",l,"//",a.l,"\'",\'"\',"></",i,">"].join("")}var i="body",m=d[i];if(!m){return setTimeout(ld,100)}a.P(1);var j="appendChild",h="createElement",k="src",n=d[h]("div"),v=n[j](d[h](z)),b=d[h]("iframe"),g="document",e="domain",o;n.style.display="none";m.insertBefore(n,m.firstChild).id=z;b.frameBorder="0";b.id=z+"-loader";if(/MSIE[ ]+6/.test(navigator.userAgent)){b.src="javascript:false"}b.allowTransparency="true";v[j](b);try{b.contentWindow[g].open()}catch(w){c[e]=d[e];o="javascript:var d="+g+".open();d.domain=\'"+d.domain+"\';";b[k]=o+"void(0);"}try{var t=b.contentWindow[g];t.write(p());t.close()}catch(x){b[k]=o+\'d.write("\'+p().replace(/"/g,String.fromCharCode(92)+\'"\')+\'");d.close();\'}a.P(2)};ld()};nt()})({loader: "static.olark.com/jsclient/loader0.js",name:"olark",methods:["configure","extend","declare","identify"]});olark.identify({{rb.t.sg.olarkIdentity}});</script><noscript><a href="https://www.olark.com/site/{{rb.t.sg.olarkIdentity}}/contact" title="Contact us" target="_blank">Questions? Feedback?</a> powered by <a href="http://www.olark.com?welcome" title="Olark live chat software">Olark live chat software</a></noscript>'
 
 
 
@@ -630,6 +637,7 @@ rbT.eventHandler = {
 "use strict";
 
 
+
 //************************************************************************************
 
 rbT.init = function(){
@@ -725,9 +733,11 @@ rbT.invokeActionScriptInternal=function(action,actionParams){
 
       //TODO get the OS version here based on that action display
 
+      rbT.init();
+      
       var templateName = action;
        
-      var pos= extractDisplayPositionFromTemplName(templateName);
+      var pos= rbT.extractDisplayPositionFromTemplName(templateName);
 
       var isPosOccupied = rbT.isTemplPosOccupied(pos);
 
@@ -744,7 +754,7 @@ rbT.invokeActionScriptInternal=function(action,actionParams){
           if(pos =='modal')
           {
                for (var key in actionParams) {
-			    var value = vars[key]; 
+			    var value = actionParams[key]; 
 			    if( 'rb.f.nr.transBlockZindex' == value.key)
 			    {
 				  value.value =  rbT.findZIndex();
@@ -759,7 +769,7 @@ rbT.invokeActionScriptInternal=function(action,actionParams){
           else{
                 
             for (var key in actionParams) {
-			   var value = vars[key]; 
+			   var value = actionParams[key]; 
 			   if( 'rb.f.nr.baseZindex' == value.key)
 			  {
 				value.value =  rbT.findZIndex()+5;
