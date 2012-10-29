@@ -20,9 +20,9 @@ rbT.eventHandler = {
 	clickListner : function(evt){
         
 
-		var id = event.target.id;
+		var id = evt.target.id;
 
-		console.log(evt);
+		console.log(id);
 
 		var ele = document.getElementById(id);
 
@@ -39,7 +39,7 @@ rbT.eventHandler = {
   
     else if ( idMatch[3] == 'Roi' )
     {
-         rbT.eventHandler.roiFromTemplClick(idMatch);
+         rbT.eventHandler.roiFromTemplClick(idMatch,evt);
 
     }
 
@@ -146,7 +146,10 @@ rbT.eventHandler = {
 
 //******************************************************************************************************
   
-  roiFromTemplClick:function(idMatch){
+  roiFromTemplClick:function(idMatch,evt){
+
+    var link = evt.target.href;
+    window.open(link);
 
     //TODO
 
