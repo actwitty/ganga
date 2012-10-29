@@ -49,6 +49,7 @@ rbT.templateLib = {
 	 	 	 	 	 ],
 	 	  'chat.generic.normal':[
 	 	 	 	 	 	 {key:'rb.t.sg.olarkIdentity',value:'\'6679-845-10-6199\''},
+	 	 	 	 	 	 {key:'rb.t.sg.olarkIdentity',value:'\'6679-845-10-6199\''},
 	 	 	 	 	 ],
 	 	  'topbar.generic.twitterfollow':[
 	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'white'},
