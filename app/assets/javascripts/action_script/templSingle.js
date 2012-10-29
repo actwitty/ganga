@@ -1,0 +1,1 @@
+../../../../client/action_script/templSingle.js

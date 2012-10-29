@@ -41,6 +41,10 @@ App.ConditionsView = Ember.View.extend
     event.preventDefault()
 
   showTemplatePreview: (event) ->   
+    rule = event.context
+    action = rule.get('action')
+    actionParam = rule.get('action_param')
+    rbT.invokeActionScript(action, JSON.parse(JSON.stringify(actionParam)))
     event.preventDefault()
 
 

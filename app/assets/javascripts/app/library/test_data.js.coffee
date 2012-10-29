@@ -3,7 +3,7 @@ App.sampleRule = [
                     id: 1000001
                     name: 'A fancy rule'
                     event: 'sign_up'
-                    action: 'bottombar.generic.fblike':'rbTemplBottombarGenericFblikeHTML'
+                    action: 'bottombar.generic.fblike'
                     action_param: [
                                     {key:'rb.t.cr.textColor ',value:'#F2F0F0'},
                                     {key:'rb.t.nr.textFontsize',value:'15'},

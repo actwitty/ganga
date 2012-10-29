@@ -28,9 +28,9 @@ rbT.templateLib = {
 
  rbT.templateArgs = {
 	 	  'bottombar.generic.fblike':[
-	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'#F2F0F0'},
+	 	 	 	 	 	 {key:'rb.t.cr.textColor',value:'#F2F0F0'},
 	 	 	 	 	 	 {key:'rb.t.nr.textFontsize',value:'15'},
-	 	 	 	 	 	 {key:'rb.t.ft.textFontfamily',value:'Arial'},
+	 	 	 	 	 	 {key:'rb.t.ft.textFontfamily',value:'Arial, Helvetica, sans-serif'},
 	 	 	 	 	 	 {key:'rb.f.nr.baseZindex',value:'1000'},
 	 	 	 	 	 	 {key:'rb.t.nr.baseWidth',value:'100'},
 	 	 	 	 	 	 {key:'rb.t.nr.baseHeight',value:'40'},
@@ -42,9 +42,9 @@ rbT.templateLib = {
 	 	 	 	 	 	 {key:'rb.t.ul.helpLink',value:'http://www.rulebot.com'},
 	 	 	 	 	 ],
 	 	  'topbar.generic.normal':[
-	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'#333'},
+	 	 	 	 	 	 {key:'rb.t.cr.textColor',value:'#333'},
 	 	 	 	 	 	 {key:'rb.t.nr.textFontsize',value:'15'},
-	 	 	 	 	 	 {key:'rb.t.ft.textFontfamily',value:'Arial'},
+	 	 	 	 	 	 {key:'rb.t.ft.textFontfamily',value:'Arial, Helvetica, sans-serif'},
 	 	 	 	 	 	 {key:'rb.f.nr.baseZindex',value:'100'},
 	 	 	 	 	 	 {key:'rb.t.nr.baseWidth',value:'100'},
 	 	 	 	 	 	 {key:'rb.t.nr.baseHeight',value:'40'},
@@ -64,10 +64,10 @@ rbT.templateLib = {
 	 	 	 	 	 	 {key:'rb.t.sg.olarkIdentity',value:'\'6679-845-10-6199\''},
 	 	 	 	 	 ],
 	 	  'topbar.generic.twitterfollow':[
-	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'white'},
+	 	 	 	 	 	 {key:'rb.t.cr.textColor',value:'white'},
 	 	 	 	 	 	 {key:'rb.t.nr.textFontsize',value:'17'},
 	 	 	 	 	 	 {key:'rb.t.cr.textShadow',value:'black'},
-	 	 	 	 	 	 {key:'rb.t.ft.textFontfamily',value:'Arial'},
+	 	 	 	 	 	 {key:'rb.t.ft.textFontfamily',value:'Arial, Helvetica, sans-serif'},
 	 	 	 	 	 	 {key:'rb.f.nr.baseZindex',value:'1000'},
 	 	 	 	 	 	 {key:'rb.t.nr.baeWidth',value:'100'},
 	 	 	 	 	 	 {key:'rb.t.nr.baseHeight',value:'50'},
@@ -80,10 +80,10 @@ rbT.templateLib = {
 	 	 	 	 	 	 {key:'rb.t.ul.helpLink',value:'http://www.rulebot.com'},
 	 	 	 	 	 ],
 	 	  'bottombar.generic.twitterfollow':[
-	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'white'},
+	 	 	 	 	 	 {key:'rb.t.cr.textColor',value:'white'},
 	 	 	 	 	 	 {key:'rb.t.nr.textFontsize',value:'17'},
 	 	 	 	 	 	 {key:'rb.t.cr.textShadow',value:'black'},
-	 	 	 	 	 	 {key:'rb.t.ft.textFontfamily',value:'Arial'},
+	 	 	 	 	 	 {key:'rb.t.ft.textFontfamily',value:'Arial, Helvetica, sans-serif'},
 	 	 	 	 	 	 {key:'rb.f.nr.baseZindex',value:'1000'},
 	 	 	 	 	 	 {key:'rb.t.nr.baeWidth',value:'100'},
 	 	 	 	 	 	 {key:'rb.t.nr.baseHeight',value:'50'},
@@ -98,7 +98,7 @@ rbT.templateLib = {
 	 	  'topbar.generic.fblike':[
 	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'#F2F0F0'},
 	 	 	 	 	 	 {key:'rb.t.nr.textFontsize',value:'16'},
-	 	 	 	 	 	 {key:'rb.t.ft.textFontfamily',value:'Arial'},
+	 	 	 	 	 	 {key:'rb.t.ft.textFontfamily',value:'Arial, Helvetica, sans-serif'},
 	 	 	 	 	 	 {key:'rb.f.nr.baseZindex',value:'1000'},
 	 	 	 	 	 	 {key:'rb.t.nr.baseWidth',value:'100'},
 	 	 	 	 	 	 {key:'rb.t.nr.baseHeight',value:'40'},
@@ -113,7 +113,7 @@ rbT.templateLib = {
 	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'white'},
 	 	 	 	 	 	 {key:'rb.t.nr.textFontsize',value:'17'},
 	 	 	 	 	 	 {key:'rb.t.cr.textShadow',value:'black'},
-	 	 	 	 	 	 {key:'rb.t.ft.textFontfamily',value:'Arial'},
+	 	 	 	 	 	 {key:'rb.t.ft.textFontfamily',value:'Arial, Helvetica, sans-serif'},
 	 	 	 	 	 	 {key:'rb.f.nr.baseZindex',value:'1000'},
 	 	 	 	 	 	 {key:'rb.t.nr.baeWidth',value:'100'},
 	 	 	 	 	 	 {key:'rb.t.nr.baseHeight',value:'50'},
@@ -131,12 +131,12 @@ rbT.templateLib = {
 	 	 	 	 	 	 {key:'rb.t.cr.headingBgColor',value:'#e7e7e7'},
 	 	 	 	 	 	 {key:'rb.t.cr.modalHeadingColor',value:'#525252'},
 	 	 	 	 	 	 {key:'rb.t.nr.modalHeadingFontsize',value:'20'},
-	 	 	 	 	 	 {key:'rb.t.ft.headingFontfamily',value:'Arial'},
+	 	 	 	 	 	 {key:'rb.t.ft.headingFontfamily',value:'Arial, Helvetica, sans-serif'},
 	 	 	 	 	 	 {key:'rb.t.cr.modalHeadingTextShadow#6e6e6e',value:''},
 	 	 	 	 	 	 {key:'rb.t.sg.modalHeadingText',value:'This is the Heading '},
 	 	 	 	 	 	 {key:'rb.t.cr.modalTextColor',value:'#525252'},
 	 	 	 	 	 	 {key:'rb.t.nr.modalTextFontsize',value:'12'},
-	 	 	 	 	 	 {key:'rb.t.ft.textFontfamily',value:'Arial'},
+	 	 	 	 	 	 {key:'rb.t.ft.textFontfamily',value:'Arial, Helvetica, sans-serif'},
 	 	 	 	 	 	 {key:'rb.t.sg.modalText',value:'Hello Hello Hello Hello Hello hello heello bjashsdgfsdhvfhsdvcfhsdvhcsd hvhvchjsdvchjsdvchjvsdchvsdhvcjhsdvjvh '},
 	 	 	 	 	 	 {key:'rb.t.sg.modalImgPath',value:'../../../images/rails.png'},
 	 	 	 	 	 	 {key:'rb.t.cr.buttonBgColor',value:'#3B5998'},
@@ -146,7 +146,7 @@ rbT.templateLib = {
 	 	  'bottombar.generic.normal':[
 	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'#333'},
 	 	 	 	 	 	 {key:'rb.t.nr.textFontsize',value:'15'},
-	 	 	 	 	 	 {key:'rb.t.ft.textFontfamily',value:'Arial'},
+	 	 	 	 	 	 {key:'rb.t.ft.textFontfamily',value:'Arial, Helvetica, sans-serif'},
 	 	 	 	 	 	 {key:'rb.f.nr.baseZindex',value:'100'},
 	 	 	 	 	 	 {key:'rb.t.nr.baseWidth',value:'100'},
 	 	 	 	 	 	 {key:'rb.t.nr.baseHeight',value:'40'},
@@ -165,7 +165,7 @@ rbT.templateLib = {
 	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'white'},
 	 	 	 	 	 	 {key:'rb.t.nr.textFontsize',value:'17'},
 	 	 	 	 	 	 {key:'rb.t.cr.textShadow',value:'black'},
-	 	 	 	 	 	 {key:'rb.t.ft.textFontfamily',value:'Arial'},
+	 	 	 	 	 	 {key:'rb.t.ft.textFontfamily',value:'Arial, Helvetica, sans-serif'},
 	 	 	 	 	 	 {key:'rb.f.nr.baseZindex',value:'1000'},
 	 	 	 	 	 	 {key:'rb.t.nr.baeWidth',value:'100'},
 	 	 	 	 	 	 {key:'rb.t.nr.baseHeight',value:'50'},
@@ -184,7 +184,7 @@ rbT.templateLib = {
 /****************************[[rbTemplBottombarGenericFblike.js]]*************************************/ 
 
 
-rbT.rbTemplBottombarGenericFblikeHTML='<style>.rbTextValue   {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     font-family: {{rb.t.ft.textFontfamily}};     text-shadow : #1C2C4C 0px -1px 0px;     font-style: normal;     font-weight: bold;   }</style> <div id="fb-root"></div><script>(function(d, s, id) {  var js, fjs = d.getElementsByTagName(s)[0];  var k = \'hello\';  if (d.getElementById(id)) return;  js = d.createElement(s); js.id = id;  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";  fjs.parentNode.insertBefore(js, fjs);}(document, "script", "facebook-jssdk"));</script><div id="rbBottombarGenericFblikeBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baseWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baseBgColor}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 2px -2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">      <div id="rbBottombarGenericFblikeLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.textLeft}}     </div>    <div id="rbBottombarGenericFblikeRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:10px;width:100px;left:42%;margin-right:20px;height:25px;background-color:#FFFFFF;border-radius:5px;">                      <div class="fb-like" data-href="{{rb.t.ul.facebookPage}}" data-send="false" data-layout="button_count" data-width="47px" data-show-faces="false" data-font="arial"></div>          </div>      <div id="rbBottombarGenericFblikeRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">                  {{rb.t.sg.textRight}}     </div>     <div  style="display:inline; position:absolute;bottom:5px;right:30px;margin-left:20px;color:#FFFFFF;font-weight:bold;">                    <a id="rbBottombarGenericFblikeRoiHelp" class="rbClickable" style= "text-decoration:none;color:#FFFFFF;" href="{{rb.t.ul.helpLink}}" >            ?            </a>       </div>    <div id="rbBottombarGenericFblikeCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; bottom:5px;right:10px;font-weight:bold;" >     X    </div> </div>'
+rbT.rbTemplBottombarGenericFblikeHTML='<style>.rbTextValue   {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     font-family: {{rb.t.ft.textFontfamily}};     text-shadow : #1C2C4C 0px -1px 0px;     font-style: normal;     font-weight: bold;   }</style> <div id="fb-root"></div><script>(function(d, s, id) {  var js, fjs = d.getElementsByTagName(s)[0];  var k = \'hello\';  if (d.getElementById(id)) return;  js = d.createElement(s); js.id = id;  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";  fjs.parentNode.insertBefore(js, fjs);}(document, "script", "facebook-jssdk"));</script><div id="rbBottombarGenericFblikeBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baseWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baseBgColor}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 2px -2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">      <div id="rbBottombarGenericFblikeLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.textLeft}}     </div>    <div id="rbBottombarGenericFblikeRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:10px;width:100px;left:42%;margin-right:20px;height:25px;background-color:#FFFFFF;border-radius:5px;">                      <div class="fb-like" data-href="{{rb.t.ul.facebookPage}}" data-send="false" data-layout="button_count" data-width="47px" data-show-faces="false" data-font="Arial, Helvetica, sans-serif"></div>          </div>      <div id="rbBottombarGenericFblikeRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">                  {{rb.t.sg.textRight}}     </div>     <div  style="display:inline; position:absolute;bottom:5px;right:30px;margin-left:20px;color:#FFFFFF;font-weight:bold;">                    <a id="rbBottombarGenericFblikeRoiHelp" class="rbClickable" style= "text-decoration:none;color:#FFFFFF;" href="{{rb.t.ul.helpLink}}" >            ?            </a>       </div>    <div id="rbBottombarGenericFblikeCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; bottom:5px;right:10px;font-weight:bold;" >     X    </div> </div>'
 
 
 
@@ -212,7 +212,7 @@ rbT.rbTemplBottombarGenericTwittershareHTML='<style>.rbTextValue  {     color:{{
 /****************************[[rbTemplTopbarGenericFblike.js]]*************************************/ 
 
 
-rbT.rbTemplTopbarGenericFblikeHTML='<style>.rbTextValue   {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     font-family: {{rb.t.ft.textFontfamily}};     text-shadow : #1C2C4C 0px -1px 0px;     font-style: normal;     font-weight: bold;   }</style> <div id="fb-root"></div><script>(function(d, s, id) {  var js, fjs = d.getElementsByTagName(s)[0];  if (d.getElementById(id)) return;  js = d.createElement(s); js.id = id;  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";  fjs.parentNode.insertBefore(js, fjs);}(document, "script", "facebook-jssdk"));</script><div id="rbTopbarGenericFblikeBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baseWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baseBgColor}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 2px 2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">    <div id="rbTopbarGenericFblikeLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.textLeft}}     </div>             <div id="rbTopbarGenericFblikeRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:10px;width:80px;left:42%;margin-right:20px;height:25px;background-color:#FFFFFF;border-radius:5px;">                      <div class="fb-like" data-href="{{rb.t.ul.facebookPage=%%http://www.google.com}}" data-send="false" data-layout="button_count" data-width="250px" data-show-faces="false" data-font="arial"></div>          </div>         <div id="rbBottombarGenericFblikeRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">                  {{rb.t.sg.textRight}}     </div>   <div  style="display:inline; position:absolute;top:5px;right:30px;margin-left:20px;color:#FFFFFF;font-weight:bold;">                    <a id="rbTopbarGenericFblikeRoiHelp" class="rbClickable" style= "text-decoration:none;color:#FFFFFF;" href="{{rb.t.ul.helpLink}}" >            ?            </a>       </div>   <div id="rbTopbarGenericFblikeCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; top:5px;right:10px;font-weight:bold;" >     X   </div>     </div>'
+rbT.rbTemplTopbarGenericFblikeHTML='<style>.rbTextValue   {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     font-family: {{rb.t.ft.textFontfamily}};     text-shadow : #1C2C4C 0px -1px 0px;     font-style: normal;     font-weight: bold;   }</style> <div id="fb-root"></div><script>(function(d, s, id) {  var js, fjs = d.getElementsByTagName(s)[0];  if (d.getElementById(id)) return;  js = d.createElement(s); js.id = id;  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";  fjs.parentNode.insertBefore(js, fjs);}(document, "script", "facebook-jssdk"));</script><div id="rbTopbarGenericFblikeBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baseWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baseBgColor}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 2px 2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">    <div id="rbTopbarGenericFblikeLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.textLeft}}     </div>             <div id="rbTopbarGenericFblikeRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:10px;width:80px;left:42%;margin-right:20px;height:25px;background-color:#FFFFFF;border-radius:5px;">                      <div class="fb-like" data-href="{{rb.t.ul.facebookPage=%%http://www.google.com}}" data-send="false" data-layout="button_count" data-width="250px" data-show-faces="false" data-font="Arial, Helvetica, sans-serif"></div>          </div>         <div id="rbBottombarGenericFblikeRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">                  {{rb.t.sg.textRight}}     </div>   <div  style="display:inline; position:absolute;top:5px;right:30px;margin-left:20px;color:#FFFFFF;font-weight:bold;">                    <a id="rbTopbarGenericFblikeRoiHelp" class="rbClickable" style= "text-decoration:none;color:#FFFFFF;" href="{{rb.t.ul.helpLink}}" >            ?            </a>       </div>   <div id="rbTopbarGenericFblikeCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; top:5px;right:10px;font-weight:bold;" >     X   </div>     </div>'
 
 
 
@@ -874,11 +874,11 @@ rbT.enableTimeOutHadnling =function(templateName,timerValue){
 	rbT.enableTimeOutHadnlingInternal(templateName,timerValue);
 }
 
-//---------------------------------------------------------------
-
+//--------------------------------------------------------------- 
 rbT.invokeActionScript = function(action,actionParams)
 {
-
+	console.log(action);
+	console.log(actionParams);
 	if ( typeof actionParams === 'undefined' ){
 		rbT.sendErrorToRBServer("Invalid params in rule Json");
 		return "";
@@ -890,4 +890,7 @@ rbT.invokeActionScript = function(action,actionParams)
 
 	
 }
+
+
+
 
