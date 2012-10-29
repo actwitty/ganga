@@ -1,5 +1,5 @@
 # Operations Library
-App.operationsLibrary = 
+App.opLookup = 
                         'gtn': 'greater than'
                         'ltn': 'lesser than'
                         'eql': 'equal to'
@@ -11,6 +11,19 @@ App.operationsLibrary =
                         'dag': 'days ago'                                               
                         'drg': 'date range'
                         'set': 'set'
+App.opRevLookup = 
+                        'greater than' : 'gtn'
+                        'lesser than'  : 'ltn'
+                        'equal to' : 'eql'
+                        'starts with' : 'swh'
+                        'ends with'  :  'ewh'
+                        'contains'  : 'cns'
+                        'between'  : 'btn'
+                        'regex'  :  'rgx'
+                        'days ago'  :  'dag'                                         
+                        'date range'  :  'drg'
+                        'set'  :  'set'
+                        
 #Operation UI effect
 App.operationsValuesCount = 
                             'gtn': 1
@@ -37,10 +50,35 @@ App.operationsValuesType =
                             'drg': 'type'
                             'set': 'na'                        
 # Operations Permissions                   
-App.operationsPermission = 
-                        'String': [ 'eql', 'swh','ewh','cns','rgx','set' ]
-                        'Date': [ 'gtn','ltn','eql','dag','drg','set' ]  
-                        'Fixnum': [ 'gtn','ltn','eql','btn','rgx','set']
+App.operationsList = {
+                      'String' :  [
+                                      'equal to',
+                                      'starts with',
+                                      'ends with',
+                                      'contains',
+                                      'matches regex',
+                                      'set'
+
+                                  ],
+                      'Fixnum' :  [
+                                      'greater than',
+                                      'lesser than',
+                                      'equals to',
+                                      'between',
+                                      'set'
+
+                                  ],
+                      'Date' :    [
+                                      'greater than',
+                                      'lesser than',
+                                      'equal to',
+                                      'days ago',
+                                      'date range',
+                                      'set'
+
+                                  ]
+                  }
+
 # Operation negations
 App.negationValues = [ 
                         { key: 'false', value:'Is'},

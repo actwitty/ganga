@@ -1,19 +1,33 @@
 #TODO: I don't have a clear idea on how to use this in a non DS/REST Manager setup, parked this definition
-App.Condition = Ember.Object.extend(  
+App.Condition = Ember.Object.extend
   property: null
-  type: null
+  type: 'String'
   negation: 'false'
-  operation: []
+  operation: null
   value1: null
   value2: null
   connect: 'and'
+  
 
-  # operations choice is a dependent prooperty
-  operation_choices: (->        
-    type = @get 'type'    
-    App.operationsPermission[type]    
-  ).property('type')
+  opShow: null
+  opList: null
 
+  init: ->
+    @_super()
+ 
+    op = @get 'operation'     
+    type = @get 'type'
+    @set 'opList', App.operationsList[type]
+    if op is null        
+      @set 'opShow', App.operationsList[type][0]
+    else
+      @set 'opShow', App.opLookup[op]
 
+  changeOperationOnType: ->
+    type = @get 'type'
+    @set 'opList', App.operationsList[type]
+    @set 'opShow', App.operationsList[type][0]
 
-)
+   
+    
+
