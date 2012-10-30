@@ -169,6 +169,8 @@ rbT.sendEventToRBServer = function(){
 
 rbT.sendErrorToRBServer = function(string){
 
+  
+
   //TODO: Implement post to server
   console.log(string);
 };

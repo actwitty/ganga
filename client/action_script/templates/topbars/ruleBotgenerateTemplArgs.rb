@@ -1,8 +1,13 @@
 #!/usr/bin/ruby
 
 templLibStr = "rbT.templateLib = {\n"
+
+templNameStr = "rbT.templateName = {\n"
+
 tempArgsStr = "rbT.templateArgs = {\n"
+
 templFinalStr = ""
+
 templPropName = ""
 
 
@@ -12,7 +17,8 @@ Dir.glob('*.html').each  do|fileName|
 	origin= File.basename(fileName,File.extname(fileName))
 
 	destFileName = origin + ".js"
-
+  
+  defaultTemplName = ""
 
   tempStrLibClientJs = "rbT.".concat(origin).concat("HTML").concat("='")
 
@@ -24,13 +30,15 @@ Dir.glob('*.html').each  do|fileName|
 	end
 
 
-  strfinalforJs = str.delete("\n")
+  strfinalforJsWoNewLine = str.delete("\n")
 
   regTest = /\=\%\%[\w.\:\/\s\#\@\-\']*\%\%/ 
 
+
   regForSingleQuote = /'/
 
-  strfinalforJs= strfinalforJs.gsub(regTest, "") 
+
+  strfinalforJs= strfinalforJsWoNewLine.gsub(regTest, "") 
 
   strfinalforJs = strfinalforJs.gsub(regForSingleQuote, "\\\\\'") 
 
@@ -46,7 +54,23 @@ Dir.glob('*.html').each  do|fileName|
 
    reg = /\{\{[\w.\=\%\:\/\s\#\@\-\']*\}\}/
    
-   m = str.scan(reg)
+   regforTemplTitle = /\{\{\#\#[\w.\=\%\:\/\s\@\-\']*\#\#\}\}/
+
+   templNameMatch = strfinalforJsWoNewLine.scan(regforTemplTitle)
+
+   strfinalforJsWoNewLine= strfinalforJsWoNewLine.gsub(regforTemplTitle, "") 
+
+
+  if templNameMatch[0] 
+      
+      defaultTemplName = templNameMatch[0].delete("{{")
+      defaultTemplName =  defaultTemplName.delete("}}")
+      defaultTemplName =  defaultTemplName.delete("##")
+      defaultTemplName =  defaultTemplName.delete("##")
+
+  end
+
+   m = strfinalforJsWoNewLine.scan(reg)
   
    reg2 = /[A-Z][a-z]*/
 
@@ -83,6 +107,9 @@ Dir.glob('*.html').each  do|fileName|
     
     regVar = /[a-z A-Z]*/
     
+
+    templNameDefault =  
+
     defaults = ""
     
     rtest = m[index].scan(regTest)
@@ -108,7 +135,7 @@ Dir.glob('*.html').each  do|fileName|
        m[index] = "\t \t \t \t \t \t " +  '{'+'key:' +"'" + m[index] + "'" + ','+ 'value:'+"'#{defaults}'}"+","+"\n" 
     
     elsif  index == (m.length-1)
-      m[index] = "\t \t \t \t \t \t " + '{' + 'key:'+ "'" + m[index] + "'" + ','+ 'value:'+"'#{defaults}'}"+ ","+"\n" 
+      m[index] = "\t \t \t \t \t \t " + '{' + 'key:'+ "'" + m[index] + "'" + ','+ 'value:'+"'#{defaults}'}"+"\n" 
 
     end  
 
@@ -119,18 +146,28 @@ Dir.glob('*.html').each  do|fileName|
     
     m = "\t \t  "+ templPropName + ":" + m
 
+   
+    
+
+    templNameStr = templNameStr+ "\t \t\t\t" + templPropName + ":" + "'#{defaultTemplName}'" + ",\n"
+
+
     tempArgsStr = tempArgsStr + m
 
     templLibStr = templLibStr+ "\t \t  "+ templPropName + ":" + "'#{origin}HTML'" + ",\n"
 
 end	
 
+
+
 templLibStr = templLibStr.chop.chop  + "\n \n \t \t \t }; \n\n\n\n "
 
 tempArgsStr = tempArgsStr.chop.chop + "\n \t\ \t \t \t }; \n "
 
+templNameStr = templNameStr.chop.chop + "\n \t\ \t \t \t }; \n\n\n\n "
 
-templFinalStr = templLibStr + tempArgsStr
+
+templFinalStr = templLibStr + templNameStr + tempArgsStr
 
 File.open('../../templates.js' , "w") do|f|
     
