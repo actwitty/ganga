@@ -16,14 +16,14 @@ rbT.templateLib = {
 
  rbT.templateName = {
 	 			'bottombar.generic.fblike':'Facebook Like Bottombar',
-	 			'topbar.generic.normal':' Normal Topbar',
+	 			'topbar.generic.normal':'Normal Topbar',
 	 			'chat.generic.normal':'Chat Window',
 	 			'topbar.generic.twitterfollow':'Twitter Follow Topbar',
 	 			'bottombar.generic.twitterfollow':'Twitter Follow Bottombar',
 	 			'topbar.generic.fblike':'Facebook Like Topbar',
 	 			'bottombar.generic.twittershare':'Twitter Share Bottombar',
 	 			'modal.generic.normal':'Modal Window',
-	 			'bottombar.generic.normal':' Normal Bottombar',
+	 			'bottombar.generic.normal':'Normal Bottombar',
 	 			'topbar.generic.twittershare':'Twitter Share Topbar'
  	 	 	 	 }; 
 
@@ -41,7 +41,8 @@ rbT.templateLib = {
 	 	 	 	 	 	 {key:'rb.t.an.baseTextalign',value:'center'},
 	 	 	 	 	 	 {key:'rb.t.sg.textLeft',value:'Hello Hello'},
 	 	 	 	 	 	 {key:'rb.t.ul.facebookPage',value:'http://www.google.com'},
-	 	 	 	 	 	 {key:'rb.t.sg.textRight',value:'Hello Hello'}
+	 	 	 	 	 	 {key:'rb.t.sg.textRight',value:'Hello Hello'},
+	 	 	 	 	 	 {key:'rb.t.nr.durationOfDisplay',value:'100'}
 	 	 	 	 	 ],
 	 	  'topbar.generic.normal':[
 	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'#333'},
@@ -58,10 +59,12 @@ rbT.templateLib = {
 	 	 	 	 	 	 {key:'rb.t.cr.btnColor',value:'white'},
 	 	 	 	 	 	 {key:'rb.t.ul.btnLink',value:'http://www.google.com'},
 	 	 	 	 	 	 {key:'rb.t.sg.btnLable',value:'Click'},
-	 	 	 	 	 	 {key:'rb.t.sg.textRight',value:'Hello Hello'}
+	 	 	 	 	 	 {key:'rb.t.sg.textRight',value:'Hello Hello'},
+	 	 	 	 	 	 {key:'rb.t.nr.durationOfDisplay',value:'100'}
 	 	 	 	 	 ],
 	 	  'chat.generic.normal':[
-	 	 	 	 	 	 {key:'rb.t.sg.olarkIdentity',value:'\'6679-845-10-6199\''}
+	 	 	 	 	 	 {key:'rb.t.sg.olarkIdentity',value:'\'6679-845-10-6199\''},
+	 	 	 	 	 	 {key:'rb.t.nr.durationOfDisplay',value:'100'}
 	 	 	 	 	 ],
 	 	  'topbar.generic.twitterfollow':[
 	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'white'},
@@ -76,7 +79,8 @@ rbT.templateLib = {
 	 	 	 	 	 	 {key:'rb.t.sg.textLeft',value:'Hello Hello'},
 	 	 	 	 	 	 {key:'rb.t.sg.twitterAccount',value:'@actwitty'},
 	 	 	 	 	 	 {key:'rb.t.sg.twitterAccount',value:'@actwitty'},
-	 	 	 	 	 	 {key:'rb.t.sg.textRight',value:'Hello Hello'}
+	 	 	 	 	 	 {key:'rb.t.sg.textRight',value:'Hello Hello'},
+	 	 	 	 	 	 {key:'rb.t.nr.durationOfDisplay',value:'100'}
 	 	 	 	 	 ],
 	 	  'bottombar.generic.twitterfollow':[
 	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'white'},
@@ -91,7 +95,8 @@ rbT.templateLib = {
 	 	 	 	 	 	 {key:'rb.t.sg.textLeft',value:'Hello Hello'},
 	 	 	 	 	 	 {key:'rb.t.sg.twitterAccount',value:'@actwitty'},
 	 	 	 	 	 	 {key:'rb.t.sg.twitterAccount',value:'@actwitty'},
-	 	 	 	 	 	 {key:'rb.t.sg.textRight',value:'Hello Hello'}
+	 	 	 	 	 	 {key:'rb.t.sg.textRight',value:'Hello Hello'},
+	 	 	 	 	 	 {key:'rb.t.nr.durationOfDisplay',value:'100'}
 	 	 	 	 	 ],
 	 	  'topbar.generic.fblike':[
 	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'#F2F0F0'},
@@ -104,7 +109,8 @@ rbT.templateLib = {
 	 	 	 	 	 	 {key:'rb.t.an.baseTextalign',value:'center'},
 	 	 	 	 	 	 {key:'rb.t.sg.textLeft',value:'Hello Hello'},
 	 	 	 	 	 	 {key:'rb.t.ul.facebookPage=%%http://www.google.com',value:''},
-	 	 	 	 	 	 {key:'rb.t.sg.textRight',value:'Hello Hello'}
+	 	 	 	 	 	 {key:'rb.t.sg.textRight',value:'Hello Hello'},
+	 	 	 	 	 	 {key:'rb.t.nr.durationOfDisplay',value:'100'}
 	 	 	 	 	 ],
 	 	  'bottombar.generic.twittershare':[
 	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'white'},
@@ -118,7 +124,8 @@ rbT.templateLib = {
 	 	 	 	 	 	 {key:'rb.t.an.baseTextalign',value:'center'},
 	 	 	 	 	 	 {key:'rb.t.sg.leftText',value:'Hello Hello'},
 	 	 	 	 	 	 {key:'rb.t.sg.twitterSharetext',value:'Twteet please'},
-	 	 	 	 	 	 {key:'rb.t.sg.rightText',value:'Hello Hello'}
+	 	 	 	 	 	 {key:'rb.t.sg.rightText',value:'Hello Hello'},
+	 	 	 	 	 	 {key:'rb.t.nr.durationOfDisplay',value:'10'}
 	 	 	 	 	 ],
 	 	  'modal.generic.normal':[
 	 	 	 	 	 	 {key:'rb.f.nr.transBlockZindex',value:'1000'},
@@ -137,7 +144,8 @@ rbT.templateLib = {
 	 	 	 	 	 	 {key:'rb.t.sg.modalImgPath',value:'../../../images/rails.png'},
 	 	 	 	 	 	 {key:'rb.t.cr.buttonBgColor',value:'#3B5998'},
 	 	 	 	 	 	 {key:'rb.t.ul.modalBtnLink',value:'http://www.google.com'},
-	 	 	 	 	 	 {key:'rb.t.sg.modalBtnLable',value:'Click'}
+	 	 	 	 	 	 {key:'rb.t.sg.modalBtnLable',value:'Click'},
+	 	 	 	 	 	 {key:'rb.t.nr.durationOfDisplay',value:'100'}
 	 	 	 	 	 ],
 	 	  'bottombar.generic.normal':[
 	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'#333'},
@@ -154,7 +162,8 @@ rbT.templateLib = {
 	 	 	 	 	 	 {key:'rb.t.cr.btnColor',value:'white'},
 	 	 	 	 	 	 {key:'rb.t.ul.btnLink',value:'http://www.google.com'},
 	 	 	 	 	 	 {key:'rb.t.sg.btnLable',value:'Click'},
-	 	 	 	 	 	 {key:'rb.t.sg.textRight',value:'Hello Hello'}
+	 	 	 	 	 	 {key:'rb.t.sg.textRight',value:'Hello Hello'},
+	 	 	 	 	 	 {key:'rb.t.nr.durationOfDisplay',value:'100'}
 	 	 	 	 	 ],
 	 	  'topbar.generic.twittershare':[
 	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'white'},
@@ -168,7 +177,8 @@ rbT.templateLib = {
 	 	 	 	 	 	 {key:'rb.t.an.baseTextalign',value:'center'},
 	 	 	 	 	 	 {key:'rb.t.sg.leftText',value:'Hello Hello'},
 	 	 	 	 	 	 {key:'rb.t.sg.twitterSharetext',value:'Tweet Please'},
-	 	 	 	 	 	 {key:'rb.t.sg.rightText',value:'Hello Hello'}
+	 	 	 	 	 	 {key:'rb.t.sg.rightText',value:'Hello Hello'},
+	 	 	 	 	 	 {key:'rb.t.nr.durationOfDisplay',value:'100'}
 	 	 	 	 	 ]
  	 	 	 	 }; 
  

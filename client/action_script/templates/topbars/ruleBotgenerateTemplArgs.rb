@@ -19,6 +19,7 @@ Dir.glob('*.html').each  do|fileName|
 	destFileName = origin + ".js"
   
   defaultTemplName = ""
+  defaultTemplTimer = ""
 
   tempStrLibClientJs = "rbT.".concat(origin).concat("HTML").concat("='")
 
@@ -58,17 +59,61 @@ Dir.glob('*.html').each  do|fileName|
 
    templNameMatch = strfinalforJsWoNewLine.scan(regforTemplTitle)
 
-   strfinalforJsWoNewLine= strfinalforJsWoNewLine.gsub(regforTemplTitle, "") 
 
+   
+   if templNameMatch
 
-  if templNameMatch[0] 
+      templNameMatch.length.times  do|index|  
       
-      defaultTemplName = templNameMatch[0].delete("{{")
-      defaultTemplName =  defaultTemplName.delete("}}")
-      defaultTemplName =  defaultTemplName.delete("##")
-      defaultTemplName =  defaultTemplName.delete("##")
+         tempTitleMatch =""
+         tempTimerMatch = ""
+         tempTitleReg = /\#\#Title/
+         tempTimerReg = /\#\#Timer/
 
-  end
+
+         tempTitleMatch = templNameMatch[index].scan(tempTitleReg)
+
+         tempTimerMatch = templNameMatch[index].scan(tempTimerReg)
+
+
+         if tempTitleMatch[0]
+            
+            templTitleValue=templNameMatch[index].scan(regTest)
+
+
+            if defaultTemplName and templTitleValue[0] 
+
+               defaultTemplName = templTitleValue[0].delete("%")
+            end
+
+            if defaultTemplName  
+              defaultTemplName = defaultTemplName.delete("=")
+            end 
+
+
+         elsif tempTimerMatch[0] 
+
+             
+             templTimerValue=templNameMatch[index].scan(regTest)
+
+          if defaultTemplTimer and templTimerValue[0]   
+
+            defaultTemplTimer = templTimerValue[0].delete("%")
+          
+          end  
+
+          if defaultTemplName
+
+            defaultTemplTimer= defaultTemplTimer.delete("=")
+          end
+          
+         end 
+
+     end
+   end
+
+ strfinalforJsWoNewLine= strfinalforJsWoNewLine.gsub(regforTemplTitle, "") 
+
 
    m = strfinalforJsWoNewLine.scan(reg)
   
@@ -135,7 +180,9 @@ Dir.glob('*.html').each  do|fileName|
        m[index] = "\t \t \t \t \t \t " +  '{'+'key:' +"'" + m[index] + "'" + ','+ 'value:'+"'#{defaults}'}"+","+"\n" 
     
     elsif  index == (m.length-1)
-      m[index] = "\t \t \t \t \t \t " + '{' + 'key:'+ "'" + m[index] + "'" + ','+ 'value:'+"'#{defaults}'}"+"\n" 
+      m[index] = "\t \t \t \t \t \t " + '{' + 'key:'+ "'" + m[index] + "'" + ','+ 'value:'+"'#{defaults}'}"+",\n" 
+      m[index+1] = "\t \t \t \t \t \t " + '{' + 'key:'+ "'" + "rb.t.nr.durationOfDisplay" + "'" + ','+ 'value:'+"'#{defaultTemplTimer}'}"+"\n" 
+
 
     end  
 
@@ -162,9 +209,10 @@ end
 
 templLibStr = templLibStr.chop.chop  + "\n \n \t \t \t }; \n\n\n\n "
 
+templNameStr = templNameStr.chop.chop + "\n \t\ \t \t \t }; \n\n\n\n "
+
 tempArgsStr = tempArgsStr.chop.chop + "\n \t\ \t \t \t }; \n "
 
-templNameStr = templNameStr.chop.chop + "\n \t\ \t \t \t }; \n\n\n\n "
 
 
 templFinalStr = templLibStr + templNameStr + tempArgsStr

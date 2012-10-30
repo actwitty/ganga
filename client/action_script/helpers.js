@@ -4,6 +4,7 @@
 
 rbT.templTimers= {
  'rbT.templ.displaytimer':'false',
+ 'rbT.templ.templduration':'100'
 
 };
 
