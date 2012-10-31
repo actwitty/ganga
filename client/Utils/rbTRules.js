@@ -1,14 +1,15 @@
-var TEST_RBT_RULE_JSON = {"customer":{
-                        "name" :"samarth",
-                        "email":"gmail.com",
-                        "val1":123,
-                        "val2":321,
-                        "swh":"actwitty",
-                        "ewh":"actwitty",
-                        "cns":"actwitty",
-                        "drg":"3/3/2011"
-                      }
-          };
+var TEST_RBT_RULE_JSON = {
+                            "customer":{
+                                        "name" :"samarth",
+                                        "email":"gmail.com",
+                                        "val1":123,
+                                        "val2":321,
+                                        "swh":"actwitty",
+                                        "ewh":"actwitty",
+                                        "cns":"actwitty",
+                                        "drg":"3/3/2011"
+                                       }
+                         };
 
 var rbTRules = {
 
