@@ -62,7 +62,7 @@ class AccountsController < ApplicationController
   def read
     Rails.logger.info("Enter Account read")
 
-    params[:account_id] = current_account._id if Rails.env != "test" or params[:account_id].blank?
+    params[:account_id] = current_account._id if Rails.env != "test"
     ret = Account.read(params)
 
     raise ret[:error] if !ret[:error].blank?
@@ -85,7 +85,7 @@ class AccountsController < ApplicationController
   # OUTPUT =>{ 
   ##            events: [
   ##                      {
-  ##                        app: {id: "343433433", description: {"name": "my app", "domain": "http://myapp.com"}, }
+  ##                        apps: {app_id: "343433433", account_id: "324324", description: {"name": "my app", "domain": "http://myapp.com"}, }
   ##                      },
   ##                      {..}
   ##                    ]
@@ -95,7 +95,7 @@ class AccountsController < ApplicationController
 
     hash = { apps: []}
 
-    params[:account_id] = current_account._id if Rails.env != "test"
+    params[:account_id] = current_account._id if Rails.env != "test" 
 
     array = hash[:apps]
 

@@ -148,6 +148,16 @@ class AppsController < ApplicationController
   ##            app: {
   ##                   id: "4545554654645", 
   ##                   description: {"name": "my app", "domain": "http://myapp.com"}, 
+  ##                   rules: [
+  ##                             {
+  ##                               "name"=>"A fancy rule", "event"=>"singup", "owner"=>"client", "action"=>"topbar",
+  ##                               "action_param"=>{"text"=>"A quickbrown fox jumps over a lazy dog", "href"=>"http://www.google.com", "color"=>"#333333", "width"=>"50"}, 
+  ##                               "conditions"=>[{"property"=>"person[email]", "negation"=>"true", "operation"=>"ew", "value1"=>"@gmail.com", "connect"=>"and"}], 
+  ##                               "updated_at"=>2012-10-24 07:43:38 UTC, 
+  ##                               "created_at"=>2012-10-24 07:43:38 UTC, "id"=>"50879c2a63fe855d14000005"
+  ##                             },
+  ##                             {..}
+  ##                           ],
   ##                   schema: {
   ##                             properties: {
   ##                                           'customer[email]' => { 

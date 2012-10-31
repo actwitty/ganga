@@ -50,7 +50,7 @@ class Event
 
   # OUTPUT => {:return => true, :error => nil}
   def self.add!(params)
-    Rails.logger.info("Enter Event Create")
+    Rails.logger.info("Enter Event Add")
     
     if params[:account_id].blank? or params[:app_id].blank? or params[:name].blank? or params[:properties].blank?
       raise et("event.invalid_argument_in_event") 

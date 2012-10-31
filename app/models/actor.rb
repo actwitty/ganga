@@ -42,7 +42,7 @@ class Actor
   ## {
   ##   account_id:  '1222343'       [MANDATORY]
   ##   app_id:  "1234444',          [MANDATORY]
-  ##   actor_id:  "23232323",       [OPTIONAL] ## if not give anonymous actor is created and
+  ##   actor_id:  "23232323",       [OPTIONAL]  ## if not give anonymous actor is created and
   ##                                            ## if uid is not already existing in app_id then
   ##                                            ## the uid is assigned to anonymous actor otherwise  
   ##                                            ## actor_id of assigned actor is return

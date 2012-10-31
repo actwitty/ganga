@@ -1,9 +1,9 @@
 require 'utility'
 class ActorsController < ApplicationController
-  before_filter :authenticate_account!
-  before_filter :authenticate_app!
   protect_from_forgery
 
+  before_filter :authenticate_account!
+  #before_filter :authenticate_app!
 
   # NOTE
   ## Creates an actor.. 
@@ -66,12 +66,12 @@ class ActorsController < ApplicationController
   # INPUT => 
   ## {
   ##   app_id:    "1234444',          [MANDATORY]
-  ##   actor_id:  "23232323",       [OPTIONAL]  ## if not give anonymous actor is created and
+  ##   actor_id:  "23232323",         [OPTIONAL]  ## if not give anonymous actor is created and
   ##                                            ## if uid is not already existing in app_id then
   ##                                            ## the uid is assigned to anonymous actor otherwise  
   ##                                            ## actor_id of assigned actor is return
-  ##   uid:  "john.doe@example.com" [MANDATORY]
-  ##   type:  "mobile"              [OPTIONAL]
+  ##   uid:  "john.doe@example.com"   [MANDATORY]
+  ##   type:  "mobile"                [OPTIONAL]
   ## }
 
 

@@ -1,0 +1,6 @@
+en:
+  rule:
+    invalid_argument_in_create: "Invalid arguments given in create rule"
+    invalid_argument_in_update: "Invalid arguments given in update rule"
+    invalid_rule_id: "Invalid rule id given"
+    invalid_app_id: "App not found.. Invalid app id %{id}" 
