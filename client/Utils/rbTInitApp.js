@@ -22,3 +22,25 @@
                        });
   }
 })(_rbTK[0][1], _rbTK[1][1]);
+
+
+
+function testGanga()
+{
+  rb.sendEvent("sample_event",{"a":101});
+}
+
+function waitForRBT()
+{
+  if(!rbTAPP.isrbTAlive())
+  {
+    window.setTimeout(waitForRBT, 500);
+  }
+  else
+  {
+    testGanga();
+  }
+}
+
+waitForRBT();
+

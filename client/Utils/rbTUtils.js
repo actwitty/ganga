@@ -7,8 +7,7 @@ var rbTUtils = {
   {
     function includeJQ()
     { 
-      this.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js");
-      this.waitForjQueryAlive();
+      this.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",rbTAPP.wake_RBT_APP);
     }
 
     if (typeof jQuery != 'undefined') {
@@ -68,31 +67,14 @@ var rbTUtils = {
             this.readyState == "complete") {
             rbTDebug.log("Script "+ url +"loaded successfully");
             if (callback) {
-              var arg = params || "";
-              callback(arg);
+              if (params)
+                callback(params);
+              else callback();
             }
         }
       }
   },
-
-  /**
-  * Wait till jquery is alive.
-  */
-  waitForjQueryAlive : function() 
-  {
-      "use strict";
-      function checkJquery()
-      {
-        if (!window.jQuery) {
-            window.setTimeout(checkJquery, 500);
-        } else {
-          // make RBT APP alive.
-          rbTAPP.wake_RBT_APP();
-        }
-      }
-      checkJquery();
-  },
-    
+  
   // JSON
   JSON : {
       parse: (window.JSON && window.JSON.parse) || function(data)

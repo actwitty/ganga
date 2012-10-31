@@ -102,7 +102,6 @@ var rbTServerResponse = {
   handleEvent : function(respData)
   {
     "use strict";
-    "use strict";
     try {
       if(respData && respData.actor) {
         rbTCookie.setCookie(rbTCookie.defaultCookies.actor, respData.actor);
@@ -138,7 +137,16 @@ var rbTServerResponse = {
                           "data"      : respData
                         });
     }
-  }
+  },
 
+
+  /**
+  * Set App Specific configs
+  * @param {object} respData Data in response to server.
+  */
+  setAppDetail : function(respData)
+  {
+    
+  }
 
 };

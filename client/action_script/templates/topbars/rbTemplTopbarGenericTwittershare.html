@@ -1,38 +1,52 @@
+<!-- {{##Title=%%Twitter Share Topbar%%##}}-->
+<!-- {{##Timer=%%100%%##}}-->
+
+
 <style>
+
 .rbTextValue
-   {
-     color:{{rb.topbar.generic.twshare.text.style.color}};
-     font-size: {{rb.topbar.generic.twshare.text.style.fontsize}};
-     text-shadow: {{rb.topbar.generic.twshare.text.style.textshadow}};
-     font-family: {{rb.topbar.generic.twshare.text.style.fontfamily}};
+  {
+     color:{{rb.t.cr.textColor =%%white%%}};
+     font-size: {{rb.t.nr.textFontsize=%%17%%}}px;
+     text-shadow: 1px 1px {{rb.t.cr.textShadow=%%black%%}};
+     font-family: {{rb.t.ft.textFontfamily=%%Arial%%}};
+     text-shadow: 0 -1px 0 #007AA6;
+     font-weight: bold;
+
+
    }
+
 
 </style> 
 
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
 
+</script>
 
-<div id="rb.topbar.generic.twshare.base" style="zIndex:{{rb.topbar.generic.twshare.base.style.zIndex}};width:{{rb.topbar.generic.twshare.base.style.width}};height:{{rb.topbar.generic.twshare.base.style.height}};display:block; background-color:{{rb.topbar.generic.twshare.base.style.bgColor}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 5px 5px 3px #888888;text-align:{{rb.topbar.generic.twshare.base.style.textalign}};">
+<div id="rbTopbarGenericTwshareBaseContainer" style="zIndex:{{rb.f.nr.baseZindex=%%1000%%}};width:{{rb.t.nr.baeWidth=%%100%%}}%;height:{{rb.t.nr.baseHeight=%%50%%}}px;display:block; background-color:{{rb.t.cr.baeBgColor=%%#0B8AB8%%}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 2px 2px 2px #888888;text-align:{{rb.t.an.baseTextalign=%%center%%}};">
    
-   <p id="rbActionTopbarGenericTwshareLeftClick" class="rbTextValue"  style="display:inline;  position:relative; margin-left:20px; top:10px; margin-right:20px;">
-         {{rb.topbar.generic.twshare.left.value.text}}  
-   </p> 
+     <div id="rbTopbarGenericTwshareLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">
+         {{rb.t.sg.leftText=%%Hello Hello%%}}  
+</div> 
 
-   <div id="rbActionTopbarGenericTwshareButtonClick" class ="rbClickable" style="display:inline;position:relative;top:10px;">
+ 
+ <div id="rbTopbarGenericTwshareRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;left:42%;margin-right:20px;border-radius:5px;cursor:pointer;">
      
     
-             <a href="https://twitter.com/share?text={{rb.bottombar.generic.twshare.button.text.defaults}} " class="twitter-share-button" data-count="none" data-lang="en">Tweet</a>
+             <a href="https://twitter.com/share?text={{rb.t.sg.twitterSharetext=%%Tweet Please%%}}" class="twitter-share-button" data-count="none" data-lang="en" data-size="large">Tweet</a>
    
     </div>
-   
-   <p id="rbActionTopbarGenericTwshareRightClick" class="rbTextValue" style="display:inline;  position:relative; margin-right:20px; top:10px; margin-left:20px;">
-         
-         {{rb.topbar.generic.twshare.right.value.text}}  
-   </p> 
 
-    <div id="rbActionTopbarGenericTwshareHelpClick" class="rbClickable" style="display:inline; position:absolute;top:5px;right:30px;margin-left:20px;color:#FFFFFF;font-weight:bold;"> 
+   
+  
+<div id="rbBottombarGenericTwshareRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:47%; width:40%;overflow:hidden;">
+         
+         {{rb.t.sg.rightText=%%Hello Hello%%}}  
+</div> 
+
+      <div  style="display:inline; position:absolute;top:5px;right:30px;margin-left:20px;font-weight:bold;"> 
        
-            <a target="_blank" style= "text-decoration:none ; " href="{{rb.action.topbar.generic.twshare.help.ahref}}" >
+            <a id="rbTopbarGenericTwshareRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none ;color:#FFFFFF; " href="http://www.rulebot.com"  >
             ?
             </a>   
 
@@ -40,7 +54,7 @@
 
 
 
-    <div id="rbActionTopbarGenericTwshareCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; top:5px;right:10px;font-weight:bold;" >
+    <div id="rbTopbarGenericTwshareCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; top:5px;right:10px;font-weight:bold;cursor:pointer;cursor:pointer;" >
      X
      </div> 
 

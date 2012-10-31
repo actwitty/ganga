@@ -4,8 +4,7 @@ Handlebars.registerHelper "ifequal", (val1, val2, options) ->
   val1 = Ember.Handlebars.getPath(context, val1, options)
   val2 = Ember.Handlebars.getPath(context, val2, options)
   if val1 is val2
-    return options.fn(this)
-    val1
+    options.fn(this)
   else
     options.inverse this
 

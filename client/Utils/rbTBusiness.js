@@ -31,12 +31,12 @@ RBT.prototype.sendEvent = function(event, params)
   if (!event || typeof(event) != "string" || event == "" ) {
     return;
   }
-  rbTServerChannel.makeEventRequest(event, 
-                                    rbTServerChannel.url.fireEvent,
-                                    params,
-                                    { success: rbTServerResponse.handleEvent,
-                                      error  : rbTServerResponse.defaultError
-                                    });
+  rbTServerChannel.makeRequest({"event" : event, 
+                                "params": params,
+                                "cb"    : { success: rbTServerResponse.handleEvent,
+                                            error  : rbTServerResponse.defaultError
+                                          }
+                              });
 };
 
 /** 
@@ -48,12 +48,12 @@ RBT.prototype.sendEvent = function(event, params)
 RBT.prototype.identify = function(params)
 {
   "use strict";
-  rbTServerChannel.makeGetRequest(rbTServerChannel.url.identify,
-                                params,
-                                { success: rbTServerResponse.setActor,
-                                  error  : rbTServerResponse.defaultError
-                                }
-                               );
+  rbTServerChannel.makeRequest({"url"    : rbTServerChannel.url.identify, 
+                                "params" : params,
+                                "cb"     : { success: rbTServerResponse.setActor,
+                                             error  : rbTServerResponse.defaultError
+                                           }
+                              });
 };
 
 
@@ -67,11 +67,12 @@ RBT.prototype.identify = function(params)
 RBT.prototype.setUserProperty = function(params)
 {
   "use strict";
-  rbTServerChannel.makeGetRequest( rbTServerChannel.url.setUserProperty,
-                                   params,
-                                   { success: rbTServerResponse.setUserProperty,
-                                     error  : rbTServerResponse.defaultError
-                                  });
+  rbTServerChannel.makeRequest({"url"   : rbTServerChannel.url.setUserProperty, 
+                                "params": params,
+                                "cb"    : { success: rbTServerResponse.setUserProperty,
+                                            error  : rbTServerResponse.defaultError
+                                          }
+                              });
 };
 
 

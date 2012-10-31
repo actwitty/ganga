@@ -11,7 +11,7 @@ var rbTAPP = {
     *  Do following tasks on initialization of the app
     *  1). include jQuery if need be
     *  2). create session.
-    *  3). fetch rules.
+    *  3). fetch configs.
     *  4). check status of last event, if pending, execute it.
     *  5). fetch system properties if cache miss
     *  6). Allow Business to make calls
@@ -34,9 +34,9 @@ var rbTAPP = {
       rbTSystemVar.init();
 
       // 5). FIXME : Check status of last event, if pending, execute it.
-      rbTRules.executeLastPendingEvent();
+      //rbTRules.executeLastPendingEvent();
 
-      rb = new RBT();
+      window.rb = new RBT();
     },
 
     /**
@@ -46,19 +46,9 @@ var rbTAPP = {
     * @param {object} args Arguments with which callback will be called.
     * @return void   
     */
-    isrbTAlive :  function(callback, args)
+    isrbTAlive :  function()
     {
        return this.configs.status;
-       /*
-       if (this.configs.status) {
-          if (callback)
-             callback(args);
-          return true;
-       }
-       else
-           return false;
-      */
-
     },  
 
     /**
@@ -66,7 +56,7 @@ var rbTAPP = {
     */
     wake_RBT_APP : function()
     {
-      this.configs.status = true;
+      rbTAPP.configs.status = true;
       rbTDebug.log("Initializing RBT APP");
       rbTAPP.initialize();
     },
@@ -182,7 +172,20 @@ var rbTAPP = {
       rbTServerChannel.createSession({success:this.setSessionID});
     },
 
-
+    /** 
+    *  Get Application based configs
+    *  FIXME : THIS NEEDS TO BE DISCUSSED AS WE ARE PLANNING TO HAVE A PROXY IN BETWEEN
+    *  @return {string} TBD 
+    */
+    getAppData : function()
+    {
+      rbTServerChannel.makeRequest({ "url"   : rbTServerChannel.url.appDetails,
+                                     "params": {"appid":this.configs.appID},
+                                     "cb"    : { success: rbTServerResponse.setAppDetail,
+                                                 error  : rbTServerResponse.defaultError
+                                               }
+                                   });
+    },  
 
     /** 
     * Set System properties
@@ -227,13 +230,23 @@ var rbTAPP = {
     reportError : function(params)
     {
       try {
-          if (params.log) {
-            debug.error(params);
-          } else {
+          if (params.log) 
+            rbTDebug.error(params);
+          if (params.server) 
             rbTServerChannel.reportError(params);
-          }
       } catch(e) {
         // FIXME what to do?
       }
+    },
+
+    /** 
+    *  Preprocess params with datatype.
+    *  @param {object} params Error log message. 
+    *  @return {object} params with added data types.
+    */
+    preprocessParams : function(params)
+    {
+      
+     
     }
 };

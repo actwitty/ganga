@@ -4,6 +4,7 @@
 
 rbT.templTimers= {
  'rbT.templ.displaytimer':'false',
+ 'rbT.templ.templduration':'100'
 
 };
 
@@ -57,9 +58,18 @@ rbT.setTemplatesDisplayLockFlags=function(pos,value)
 //************************************************
 //function returns the string making capital letter the first letter
 
-rbT.capitaliseFirstLetter=function(string)
+rbT.makeFirstLetterCapital=function(string)
 {
     return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
+
+////************************************************
+//function returns the string making capital letter the first letter
+
+rbT.makeFirstLetterSmall=function(string)
+{
+    return string.charAt(0).toLowerCase() + string.slice(1);
 };
 
 
@@ -160,13 +170,10 @@ rbT.sendEventToRBServer = function(){
 
 rbT.sendErrorToRBServer = function(string){
 
+  
+
   //TODO: Implement post to server
   console.log(string);
 };
 
 
-rbT.foo = function (val)
-{
-   rbT.foo.staticProperty = "flag";
-
-}
