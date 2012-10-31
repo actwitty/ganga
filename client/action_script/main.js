@@ -37,10 +37,15 @@ rbT.getTemplateApplyVarsInternal = function(html,vars){
 	//TODO: check instanceOf
 	if(html.length){
 		for (var i =0; i<vars.length; i++) {
+			
 			var value = vars[i]; 
-			var tempVarToBeReplaced = value.key
-            var replaceKey = rbT.keyPrefix + tempVarToBeReplaced + rbT.keySuffix;
-			html = html.replace(replaceKey, value.value);
+			
+			if( value.key != 'rb.t.nr.templDuration')
+            {
+			  var tempVarToBeReplaced = value.key
+              var replaceKey = rbT.keyPrefix + tempVarToBeReplaced + rbT.keySuffix;
+			  html = html.replace(replaceKey, value.value);
+			} 
 		}
 		return html;	
 	}else{
@@ -120,15 +125,21 @@ rbT.invokeActionScriptInternal=function(action,actionParams){
           if(pos =='modal')
           {
                for (var i =0;i<actionParams.length;i++) {
-			    var value = actionParams[i]; 
-			    if( 'rb.f.nr.transBlockZindex' == value.key)
-			    {
-				  value.value =  rbT.findZIndex();
-			    }
-			    else if( 'rb.f.nr.baseZindex' == value.key)
-			    {
-				  value.value =  rbT.findZIndex()+5;
-			    }
+			      var value = actionParams[i]; 
+			       if( 'rb.f.nr.transBlockZindex' == value.key)
+			       {
+				      value.value =  rbT.findZIndex();
+			       }
+
+			       else if( 'rb.f.nr.baseZindex' == value.key)
+			       {
+				      value.value =  rbT.findZIndex()+5;
+			       }
+
+			       else if( 'rb.t.nr.durationOfDisplay'== value.key)
+			       {
+                      rbT.templTimers['rbT.templ.templduration']= value.value;
+			       }
              
 		       }
          }
@@ -136,9 +147,13 @@ rbT.invokeActionScriptInternal=function(action,actionParams){
                 
            for (var j =0;j<actionParams.length;j++) {
 			    var value = actionParams[j]; 
-			   if( 'rb.f.nr.baseZindex' == value.key)
+			  if( 'rb.f.nr.baseZindex' == value.key)
 			  {
 				value.value =  rbT.findZIndex()+5;
+			  }
+			  else if( 'rb.t.nr.durationOfDisplay'== value.key)
+			  {
+                   rbT.templTimers['rbT.templ.templduration']= value.value;
 			  }
              
 		    } 
@@ -151,7 +166,7 @@ rbT.invokeActionScriptInternal=function(action,actionParams){
          if (rbT.isTemplateGoodToApply(html)){
            rbT.applyHtmltoPage(html);
            rbT.enableClickHandling();
-           //rbT.enableTimeOutHadnling('topbar.generic.normal',10000);
+           //rbT.enableTimeOutHadnling(templateName,rbT.templTimers['rbT.templ.templduration']);
 		   rbT.setTemplatesDisplayLockFlags(pos,true);
 
 
