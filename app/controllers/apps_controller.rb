@@ -1,8 +1,10 @@
 require 'utility'
 
 class AppsController < ApplicationController
-	before_filter :authenticate_account!
-	protect_from_forgery
+	
+  protect_from_forgery
+  before_filter :authenticate_account!
+
 
   # NOTE
   ## Create App

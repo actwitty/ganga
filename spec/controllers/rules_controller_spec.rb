@@ -8,7 +8,7 @@ describe RulesController do
     @app = FactoryGirl.create(:app, account_id: @account._id)
     @actor = FactoryGirl.create(:actor, account_id: @account._id, app_id: @app._id)
     @rule = {
-      name: 'A fancy rule', event: 'singup',  owner: 'client',
+      name: 'A fancy rule', event: 'sign_up',  owner: 'client',
       action: 'topbar',
       action_param: {
         text: "A quickbrown fox jumps over a lazy dog",
@@ -68,12 +68,43 @@ describe RulesController do
   end
 
   describe "Update Rule" do
-    it "should update rule" do
+    before(:each) do
       @app.rules << Rule.new(@rule)
       @app.save!
 
       @rule[:event] = "new_one"
       @rule[:conditions] = []
+    end
+    it "should not update rule for invalid arguments" do
+      get 'update', {
+        account_id: @account._id,
+        rule_id:  @app.rules[0].id.to_s,
+        rule: @rule
+      }
+      response.status.should eq(422)
+    end
+
+    it "should not update rule for invalid value of arguments" do
+      get 'update', {
+        account_id: @account._id,
+        app_id: "1312312312",
+        rule_id:  @app.rules[0].id.to_s,
+        rule: @rule
+      }
+      response.status.should eq(422)
+    end
+
+    it "should not update rule for invalid rule id" do
+      get 'update', {
+        account_id: @account._id,
+        app_id: @app._id,
+        rule_id:  3433434,
+        rule: @rule
+      }
+      response.status.should eq(422)
+    end
+
+    it "should update rule" do
       get 'update', {
         account_id: @account._id,
         app_id: @app._id,
@@ -90,6 +121,175 @@ describe RulesController do
       puts rule.inspect
 
       rule.conditions.should be_blank
+    end
+  end
+
+  describe "Read Rule" do
+    before(:each) do
+      @app.rules << Rule.new(@rule)
+
+      @rule[:event] = "sign_in"
+      @rule[:conditions] = ["sadasdasdasd", "dsdasdasd"]
+      @app.rules << Rule.new(@rule)
+
+      @rule[:event] = "sign_up"
+      @rule[:conditions] = []
+      @app.rules << Rule.new(@rule)
+
+      @app.save!
+    end
+
+    it "should not read rule for invalid arguments" do
+      get 'read', {
+        account_id: @account._id,
+        rule_id:  @app.rules[0].id.to_s,
+      }
+      response.status.should eq(422)
+    end
+
+    it "should not read rule for invalid value of arguments" do
+      get 'read', {
+        account_id: @account._id,
+        app_id: "1312312312",
+        rule_id:  @app.rules[0].id.to_s,
+      }
+      response.status.should eq(422)
+    end
+
+    it "should not read rule for invalid rule id" do
+      get 'read', {
+        account_id: @account._id,
+        app_id: @app._id,
+        rule_id:  3433434,
+      }
+      response.status.should eq(422)
+    end
+    it "should not read rule for invalid event name" do
+      get 'read', {
+        account_id: @account._id,
+        app_id: @app._id,
+        event:  "invalid_event",
+      }
+      
+      puts JSON.parse(response.body).inspect
+
+      resp = JSON.parse(response.body)
+      resp["rules"].should be_blank
+      
+      response.status.should eq(200)
+    end
+    it "should read rule with valid id" do
+      get 'read', {
+        account_id: @account._id,
+        app_id: @app._id,
+        rule_id:  @app.rules[0].id.to_s,
+      }
+      puts JSON.parse(response.body).inspect
+      response.status.should eq(200)
+    end
+    it "should read all rules with valid event name" do
+      get 'read', {
+        account_id: @account._id,
+        app_id: @app._id,
+        event: "sign_up",
+      }
+      puts JSON.parse(response.body).inspect
+      response.status.should eq(200)
+    end
+
+    it "should read all rules of an app" do
+      get 'read', {
+        account_id: @account._id,
+        app_id: @app._id,
+        
+      }
+      puts JSON.parse(response.body).inspect
+      response.status.should eq(200)
+    end
+  end
+
+  describe "Delete Rule" do
+    before(:each) do
+      @app.rules << Rule.new(@rule)
+
+      @rule[:event] = "sign_in"
+      @rule[:conditions] = ["sadasdasdasd", "dsdasdasd"]
+      @app.rules << Rule.new(@rule)
+
+      @rule[:event] = "sign_up"
+      @rule[:conditions] = []
+      @app.rules << Rule.new(@rule)
+
+      @app.save!
+    end
+
+    it "should not delete rule for invalid arguments" do
+      get 'delete', {
+        account_id: @account._id,
+        rule_id:  @app.rules[0].id.to_s,
+      }
+      response.status.should eq(422)
+    end
+
+    it "should not delete rule for invalid value of arguments" do
+      get 'delete', {
+        account_id: @account._id,
+        app_id: "1312312312",
+        rule_id:  @app.rules[0].id.to_s,
+      }
+      response.status.should eq(422)
+    end
+
+    it "should not delete rule for invalid rule id" do
+      get 'delete', {
+        account_id: @account._id,
+        app_id: @app._id,
+        rule_id:  3433434,
+      }
+      @app.reload
+      @app.rules.count.should eq(3)
+      response.status.should eq(200)
+    end
+    it "should not delete rule for invalid event name" do
+      get 'delete', {
+        account_id: @account._id,
+        app_id: @app._id,
+        event:  "invalid_event",
+      }
+      @app.reload
+      @app.rules.count.should eq(3)
+      
+      response.status.should eq(200)
+    end
+    it "should delete rule with valid id" do
+      get 'delete', {
+        account_id: @account._id,
+        app_id: @app._id,
+        rule_id:  @app.rules[0].id.to_s,
+      }
+      @app.reload
+      @app.rules.count.should eq(2)
+      response.status.should eq(200)
+    end
+    it "should read all rules with valid event name" do
+      get 'delete', {
+        account_id: @account._id,
+        app_id: @app._id,
+        event: "sign_up",
+      }
+      @app.reload
+      @app.rules.count.should eq(1)
+      response.status.should eq(200)
+    end
+
+    it "should read all rules of an app" do
+      get 'delete', {
+        account_id: @account._id,
+        app_id: @app._id,
+      }
+      @app.reload
+      @app.rules.count.should eq(0)
+      response.status.should eq(200)
     end
   end
 end

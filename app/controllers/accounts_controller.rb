@@ -1,8 +1,8 @@
 class AccountsController < ApplicationController
 
-
-  before_filter :authenticate_account!, :except => [:credentials]
   protect_from_forgery
+  before_filter :authenticate_account!, :except => [:credentials]
+
   
   # API to send the credentials to check if the user is logged in
   def credentials

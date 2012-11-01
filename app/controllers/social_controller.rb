@@ -1,6 +1,5 @@
 class SocialController < ApplicationController
 	
-
     protect_from_forgery
     def index
     end

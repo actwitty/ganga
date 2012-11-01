@@ -19,7 +19,7 @@ class Event
 
   field :meta,        type: Boolean,     default: false
   index({app_id: -1, meta: -1})
-  index({actor_id: -1, meta: -1})
+  index({actor_id: -1, app_id: -1, meta: -1})
   index({account_id: -1, meta: -1})
 
   field :properties,  type: Array,      default: []
@@ -57,8 +57,8 @@ class Event
     end
 
     #get app object
-    app = App.find(params[:app_id])
-    raise et("event.invalid_app_id") if app.account_id.to_s != params[:account_id]
+    app = App.where(account_id: params[:account_id], _id: params[:app_id] ).first
+    raise et("event.invalid_app_id") if app.blank?
 
     # create anonymous actor if actor is blank
     if params[:actor_id].blank?
@@ -66,7 +66,7 @@ class Event
       params[:actor_id] = actor._id 
       Rails.logger.info("creating anonymous actor")
     else
-      actor = Actor.where(_id: params[:actor_id], app_id: params[:app_id]).first
+      actor = Actor.where(app_id: params[:app_id], _id: params[:actor_id]).first
       raise et("event.invalid_actor_id") if actor.blank?
     end    
 

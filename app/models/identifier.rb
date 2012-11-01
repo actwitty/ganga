@@ -16,7 +16,7 @@ class Identifier
   index({app_id: 1, uid: 1}, {unique: true})
   index({uid: 1, actor_id: 1}, {unique: true})
   
-  index(actor_id: 1)
+  index({actor_id: 1, app_id: 1})
 
   field :type ,     type: String,    default: ""
   index(type: 1)

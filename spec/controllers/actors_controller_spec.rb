@@ -11,8 +11,10 @@ describe ActorsController do
 
   describe "create actor" do
     it "should create actor properly" do
-      post 'create', { app_id: @app._id,
-                       properties: { profile: 
+      get 'create', { 
+                      account_id: @account._id,
+                      app_id: @app._id,
+                      properties: { profile: 
                           {:email => "john.doe@example.com",
                           :customer => {:address => {:city => {:geo =>{:lat => 23, :long => 34}, :name => "bangalore"}, :place => ["hello"]}}
                           }, 
@@ -27,47 +29,99 @@ describe ActorsController do
 
   describe "Identify" do
 
+    it "should not identify actor with wrong arguments" do
+      get  'identify', { app_id: @app._id, actor_id: @actor._id, uid: 'alok@gmail.com', type: "email"}
+      response.status.should eq(422)
+    end
+
+    it "should not identify actor with invalid app_id" do
+      get  'identify', {account_id: @account._id, app_id: 121212, actor_id: @actor._id, uid: 'alok@gmail.com', type: "email"}
+      response.status.should eq(422)
+    end
+
+    it "should not identify actor with invalid actor_id" do
+      a_pp = FactoryGirl.create(:app, account_id: @account._id)
+      actor = FactoryGirl.create(:actor, app: a_pp._id)
+      get  'identify', {account_id: @account._id, app_id: @app._id, actor_id: actor._id, uid: 'alok@gmail.com', type: "email"}
+      response.status.should eq(422)
+    end
+
     it "should identify actor" do
       expect{
-        post  'identify', {app_id: @app._id, actor_id: @actor._id, uid: 'alok@gmail.com', type: "email"}
+        get  'identify', {account_id: @account._id, app_id: @app._id, actor_id: @actor._id, uid: 'alok@gmail.com', type: "email"}
       }.to change(Identifier, :count).by(1)
       response.status.should eq(200)
     end
 
     it "should create new actor when no actor is given" do
       expect{
-        post  'identify', {app_id: @app._id, uid: 'alok@gmail.com'}
+        get  'identify', {account_id: @account._id, app_id: @app._id, uid: 'alok@gmail.com'}
       }.to change(Actor, :count).by(1)
       response.status.should eq(200)
     end
 
     it "should create two identities if identify called 2 times" do
       expect{
-        post  'identify', {app_id: @app._id, actor_id: @actor._id, uid: 'balu@gmail.com', type: "email"}
+        get  'identify', {account_id: @account._id, app_id: @app._id, actor_id: @actor._id, uid: 'balu@gmail.com', type: "email"}
       }.to change(Actor, :count).by(0)
 
       expect{
-        post  'identify', {app_id: @app._id, uid: 'alok@gmail.com'}
+        get  'identify', {account_id: @account._id, app_id: @app._id, uid: 'alok@gmail.com'}
       }.to change(Actor, :count).by(1)
 
       response.status.should eq(200)
     end
 
-    it "should not re-assign identify" do
+
+    it "should not re-map identity to malicious actor" do
       expect{
-        post  'identify', {app_id: @app._id, actor_id: @actor._id, uid: 'balu@gmail.com'}
+        get  'identify', {account_id: @account._id, app_id: @app._id, actor_id: @actor._id, uid: 'balu@gmail.com'}
       }.to change(Identifier, :count).by(1)
 
       actor = FactoryGirl.create(:actor)
 
       expect{
-        post  'identify', {app_id: @app._id, actor_id: actor._id,uid: 'balu@gmail.com'}
-      }.to change(Actor, :count).by(-1)
+        get  'identify', {account_id: @account._id, app_id: @app._id, actor_id: actor._id, uid: 'balu@gmail.com'}
+      }.to change(Actor, :count).by(0)
 
-      response.status.should eq(200)
+      response.status.should eq(422)
     end
 
-    it "should re-map actor if " do
+    it "should not re-map identity to actor of same account but diferent app" do
+      expect{
+        get  'identify', {account_id: @account._id, app_id: @app._id, actor_id: @actor._id, uid: 'balu@gmail.com'}
+      }.to change(Identifier, :count).by(1)
+
+      a_pp = FactoryGirl.create(:app, account_id: @account._id)
+      actor = FactoryGirl.create(:actor, app: a_pp._id)
+
+      expect{
+        get  'identify', {account_id: @account._id, app_id: @app._id, actor_id: actor._id, uid: 'balu@gmail.com'}
+      }.to change(Actor, :count).by(0)
+
+      response.status.should eq(422)
+    end
+
+
+    it "should not re-map identity if already identified" do
+      expect{
+        get  'identify', {account_id: @account._id, app_id: @app._id, actor_id: @actor._id, uid: 'balu@gmail.com'}
+      }.to change(Identifier, :count).by(1)
+
+      actor = FactoryGirl.create(:actor, app_id: @app._id)
+
+      expect{
+        get  'identify', {account_id: @account._id, app_id: @app._id, actor_id: actor._id, uid: 'balu@gmail.com'}
+      }.to change(Identifier, :count).by(0)
+
+      expect{
+        get  'identify', {account_id: @account._id, app_id: @app._id, actor_id: actor._id,uid: 'balu@gmail.com'}
+      }.to change(Actor, :count).by(0)
+
+      response.status.should eq(422)
+    end    
+
+    it "should re-map actor if same uid and differect actor id" do
       h = { :email => "john.doe@example.com", :name => "hee",
         :customer => {:address => {:city => "Bangalore", :place => "bilekahalli"}
         }
@@ -78,7 +132,7 @@ describe ActorsController do
       Event.add!(account_id: @app.account_id, app_id: @app._id, actor_id: actor._id, name: "sign_up", properties: h)
 
       expect{
-        post  'identify', {app_id: @app._id, actor_id: actor._id, uid: 'balu@gmail.com'}
+        get  'identify', {account_id: @account._id, app_id: @app._id, actor_id: actor._id, uid: 'balu@gmail.com'}
       }.to change(Identifier, :count).by(0)
 
       #old actor should be deleted by now
@@ -86,18 +140,61 @@ describe ActorsController do
       actor.should be_blank
 
       #check if events is assigned to newly mapped actor
+      puts Event.count
       p = Event.where(actor_id: @actor._id).first
       p.should_not be_blank
+
+      response.status.should eq(200)
+    end
+
+    it "should return mapped identity if called without actor" do
+      expect{
+        get  'identify', {account_id: @account._id, app_id: @app._id, actor_id: @actor._id, uid: 'balu@gmail.com'}
+      }.to change(Identifier, :count).by(1)
+
+      expect{
+        get  'identify', {account_id: @account._id, app_id: @app._id, uid: 'balu@gmail.com'}
+      }.to change(Actor, :count).by(0)
 
       response.status.should eq(200)
     end
   end
 
   describe "Set Properties" do
+    before(:each) do
+      @h ={ 
+            account_id: @account._id,app_id: @app._id, actor_id: @actor._id,
+            properties: { profile: 
+              {
+                :email => "john.doe@example.com", :name => "hee",
+                :customer => {:address => {:city => "Bangalore", :place => "bilekahalli"}}, 
+              }, 
+              system: {browser: "chrome", os: "linux"}
+            }
+          }
+    end
+    it "should not set actor with wrong arguments" do
+      @h.delete(:account_id)
+      get  'set', @h
+      response.status.should eq(422)
+    end
 
+    it "should not set actor with invalid app_id" do
+      @h[:app_id] = 42342342
+      get  'set', @h
+      response.status.should eq(422)
+    end
+
+    it "should not set actor with invalid actor_id" do
+      a_pp = FactoryGirl.create(:app, account_id: @account._id)
+      actor = FactoryGirl.create(:actor, app: a_pp._id)
+      @h[:actor_id] = actor._id
+      get  'set', @h
+      response.status.should eq(422)
+    end
     it "should set schema of actor" do
 
-      post 'set', { app_id: @app._id, actor_id: @actor._id,
+      get 'set', { account_id: @account._id,app_id: @app._id, actor_id: @actor._id,
         properties: { profile: 
           {
             :email => "john.doe@example.com", :name => "hee",
@@ -110,7 +207,7 @@ describe ActorsController do
       app.schema["properties"].should_not be_blank
       puts app.schema.inspect
 
-      post 'set', { app_id: @app._id, actor_id: @actor._id,
+      get 'set', { account_id: @account._id, app_id: @app._id, actor_id: @actor._id,
         properties: { profile: 
           {:email => "john.doe@example.com",
           :customer => {:address => {:city => {:geo =>{:lat => 23, :long => 34}, :name => "bangalore"}, :place => ["hello"]}}
@@ -128,7 +225,7 @@ describe ActorsController do
 
     it "should populate event table " do
 
-      post 'set', { app_id: @app._id, actor_id: @actor._id,
+      get 'set', { account_id: @account._id, app_id: @app._id, actor_id: @actor._id,
                     properties: { profile: { 
                                     :email => "john.doe@example.com",
                                     :customer => {:address => {:city => "Bangalore"}}
@@ -136,7 +233,7 @@ describe ActorsController do
                                   system: {browser: "chrome", os: "linux"}
                     }
       }
-      post 'set', { app_id: @app._id, actor_id: @actor._id,
+      get 'set', { account_id: @account._id, app_id: @app._id, actor_id: @actor._id,
                     properties: { profile: { 
                                     :email => "mon.doe@example.com",
                                     :customer => {:address => {:city => "Pune"}}
@@ -145,7 +242,7 @@ describe ActorsController do
                     }
       }
 
-      post 'set', { app_id: @app._id, actor_id: @actor._id,
+      get 'set', { account_id: @account._id, app_id: @app._id, actor_id: @actor._id,
                     properties: { profile: { 
                                     :email => "tom.doe@example.com",
                                     :customer => {:address => {:city => "Bangalore"}}
@@ -169,7 +266,7 @@ describe ActorsController do
   describe "Alias Actor" do
 
     before(:each) do
-      post 'create', { app_id: @app._id,
+      get 'create', { account_id: @account._id, app_id: @app._id,
                        properties: { profile: { 
                                                   :email => "john.doe@example.com",
                                                   :customer => {:address => {:city => "Bangalore"}}
@@ -182,36 +279,41 @@ describe ActorsController do
 
       @actor_id = JSON.parse(response.body)["id"]
 
-      post 'identify', { app_id: @app._id, actor_id: @actor_id, uid: "alok@actwitty.com" }
+      get 'identify', { account_id: @account._id, app_id: @app._id, actor_id: @actor_id, uid: "alok@actwitty.com" }
 
       response.status.should eq(200)
-      post 'identify', { app_id: @app._id, actor_id: @actor._id, uid: "balu@actwitty.com" }
+      get 'identify', { account_id: @account._id, app_id: @app._id, actor_id: @actor._id, uid: "balu@actwitty.com" }
     end
     
     it "should check the fail cases of aliasing properly" do
       # Invalid arguments
-      post 'alias', { app_id: @app._id,  new_uid: "+1-9911231234"  }
+      get 'alias', {account_id: @account._id,  app_id: @app._id,  new_uid: "+1-9911231234"  }
       response.status.should eq(422)
 
       # uid does not exist
-      post 'alias', { app_id: @app._id, uid: "notexist@actwitty.com", new_uid: "+1-9911231234"  }
+      get 'alias', { account_id: @account._id, app_id: @app._id, uid: "notexist@actwitty.com", new_uid: "+1-9911231234"  }
       response.status.should eq(422)
 
+      # invalid app id
+      get 'alias', { account_id: @account._id, app_id: 1232332, uid: "notexist@actwitty.com", new_uid: "+1-9911231234"  }
+      response.status.should eq(422)
+
+
       # identifier already assigned
-      post 'alias', { app_id: @app._id, uid: "alok@actwitty.com", new_uid: "balu@actwitty.com"  }
+      get 'alias', { account_id: @account._id, app_id: @app._id, uid: "alok@actwitty.com", new_uid: "balu@actwitty.com"  }
       puts JSON.parse(response.body).inspect
       response.status.should eq(422)
 
       # should return same actor as of alok@actwitty.com
-      post 'alias', { app_id: @app._id, uid: "alok@actwitty.com", new_uid: "+1-9911231234"  }
+      get 'alias', { account_id: @account._id, app_id: @app._id, uid: "alok@actwitty.com", new_uid: "+1-9911231234"  }
       response.status.should eq(200)
     end
 
     it "should create alias" do
-      post 'alias', { app_id: @app._id, uid: "alok@actwitty.com", new_uid: "+1-9911231234"  }
+      get 'alias', { account_id: @account._id, app_id: @app._id, uid: "alok@actwitty.com", new_uid: "+1-9911231234"  }
       response.status.should eq(200)
 
-      post 'alias', { app_id: @app._id, uid: "alok@actwitty.com", new_uid: "ghgrthrgth"  }
+      get 'alias', { account_id: @account._id, app_id: @app._id, uid: "alok@actwitty.com", new_uid: "ghgrthrgth"  }
       response.status.should eq(200)
 
       ids = Identifier.where(actor_id: @actor_id).all
@@ -221,8 +323,7 @@ describe ActorsController do
   end
 
   describe "Read Actor" do
-    
-    it "should read actor's data" do
+    before(:each) do
       Event.add!( account_id: @app.account_id, app_id: @app._id, actor_id: @actor._id, name: "sign_in",
               properties: { :email => "john.doe@example.com", :customer => {:address => {:city => "Bangalore"}}})
 
@@ -235,15 +336,38 @@ describe ActorsController do
       Actor.count.should eq(1)
       Event.count.should eq(3)
 
-      get 'read', {app_id: @app._id, actor_id: @actor._id, events: true }
+      Identifier.create!(account_id: @actor.account_id, app_id: @actor.app_id, actor_id: @actor._id, uid: 'balu@gmail.com', type: "fb_uid")
+      Identifier.create!(account_id: @actor.account_id, app_id: @actor.app_id, actor_id: @actor._id, uid: 'alok@gmail.com', type: "email")
+
+   
+      @h ={account_id: @account._id, app_id: @app._id, uid: "balu@gmail.com", events: true, identifiers: true }
+    end
+    it "should not set actor with wrong arguments" do
+      @h.delete(:account_id)
+      get  'read', @h
+      response.status.should eq(422)
+    end
+
+    it "should not set actor with invalid app_id" do
+      @h[:app_id] = 42342342
+      get  'read', @h
+      response.status.should eq(422)
+    end
+
+    it "should not set actor with invalid actor_id" do
+      a_pp = FactoryGirl.create(:app, account_id: @account._id)
+      actor = FactoryGirl.create(:actor, app: a_pp._id)
+      @h[:actor_id] = actor._id
+      get  'read', @h
+      response.status.should eq(422)
+    end
+    it "should read actor's data" do
+      get 'read', {account_id: @account._id, app_id: @app._id, actor_id: @actor._id, events: true }
 
       puts JSON.parse(response.body).inspect
       response.status.should eq(200)
 
-      Identifier.create!(account_id: @actor.account_id, app_id: @actor.app_id, actor_id: @actor._id, uid: 'balu@gmail.com', type: "fb_uid")
-      Identifier.create!(account_id: @actor.account_id, app_id: @actor.app_id, actor_id: @actor._id, uid: 'alok@gmail.com', type: "email")
-
-      get 'read', {app_id: @app._id, uid: "balu@gmail.com", events: true, identifiers: true }
+      get 'read', {account_id: @account._id, app_id: @app._id, uid: "balu@gmail.com", events: true, identifiers: true }
 
       puts JSON.parse(response.body).inspect
       response.status.should eq(200)

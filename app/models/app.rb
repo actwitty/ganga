@@ -43,6 +43,7 @@ class App
   validates_presence_of :description
 
   index({account_id: 1, _id: 1})
+  index({"rules.event" => 1})
   # Function
   
   # NOTE
