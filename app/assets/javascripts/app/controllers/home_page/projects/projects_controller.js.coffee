@@ -3,7 +3,14 @@ App.ProjectsController = Em.ArrayController.extend(
   selected: null    
   url: "/account/list_apps"
   
-  
+  #########################################################
+  serializeProj: ->
+    project = @get 'selected'
+    if project isnt null
+      project.serialize
+    else
+      null
+
   #########################################################
   loadAll: (data)->
     content = @get 'content'    

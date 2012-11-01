@@ -29,7 +29,6 @@
 //= require ember_app
 
 
-
 App = Ember.Application.create( {
 								 rootElement: '#rulebotEmberBase'
 							   });

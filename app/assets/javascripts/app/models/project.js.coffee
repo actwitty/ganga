@@ -17,6 +17,17 @@ App.Project = Ember.Object.extend(
         hasManyRules.pushObject(App.Rule.create(rule)) 
     @set 'hasManyRules', hasManyRules
     
+
+  serialize: ->
+    rules = []
+    for rule in hasManyRules
+      rules.push rule.serialize 
+    {
+      app_id: @get 'app_id'
+      account_id: @get 'account_id'
+      schema: @get 'schema'
+      rules: rules      
+    }
    
   created_time: (->
     time = @get('created_at')    

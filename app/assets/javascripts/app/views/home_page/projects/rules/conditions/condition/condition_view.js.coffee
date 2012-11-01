@@ -1,38 +1,60 @@
 # A child view definition
 App.ConditionView = Ember.View.extend
   rulesBinding: 'App.router.rulesController'
-  templateName: 'home_page/projects/rules/conditions/condition/single_condition'
+  templateName: 'home_page/projects/rules/conditions/condition/condition'
 
-  deleteCondition: (event) ->
-    condition = event.context
-    content = App.get('router.conditionsController').get('content')
-    content.removeObject(condition)
-    if content.length is 0
-      condition = App.Condition.create()
-      content = App.get('router.conditionsController').get('content')        
-      content.pushObject(condition)  
-    event.preventDefault()
+  showHideInputOne: 'hide'
+  showHideInputTwo: 'hide'
+  inputBoxType: 'input_box Fixnum'
+      
+  # ------------------------------------------
+  init: ->
+    @_super()    
+    @observeChangeInOperation()
+    @observeChangeInType()
+  
+  # ------------------------------------------
+  observeChangeInOperation: (->
+    operation = @get('condition').get('operation')
+    
+    if App.operationsValuesCount[operation] >= 1
+      @set 'showHideInputOne', 'rule_val show'
+      if App.operationsValuesCount[operation] >= 2
+        @set 'showHideInputTwo', 'rule_val show'
+      else
+        @set 'showHideInputTwo', 'rule_val hide'
+    else
+      @set 'showHideInputOne', 'rule_val hide'
+      @set 'showHideInputTwo', 'rule_val hide'
+  ).observes('condition.operation')
+  
+  # ------------------------------------------
+  observeChangeInType: (->    
+    type = @get('condition').get('type')
+    @set 'inputBoxType', 'input_box ' + type   
+  ).observes('condition.type')
 
-  changedProperty: (event) ->
-    condition = event.context
-    event.preventDefault()    
+  # ------------------------------------------
+  getNewDataType: (event) ->
+    target = $(event.target)
+    val = target.select2("val")
 
-  changedNegation: (event) ->
-    condition = event.context
-    event.preventDefault()
+  # -------------------------------------------
+  getNewNegation: (event) ->
+    target = $(event.target)  
+    val = target.select2('val')
 
-  changeOperation: (event) ->
-    condition = event.context
-    event.preventDefault()
+  # ------------------------------------------
+  getNewProperty: (event) ->
+    target = $(event.target)
+    val = target.select2("val")
 
-  changeDataType: (event) ->
-    condition = event.context
-    target = $(event.target)    
-    val = target.find('option:selected').val()
-    condition.set 'type', val
-    condition.changeOperationOnType()
-    # This is a hack to make the Select2 control work under ember
-    label = $(target).closest('.entry').find(".operation_sel a.select2-choice span")
-    label.html(condition.get 'opShow')
-    # this is a hack
-    event.preventDefault()
+
+  
+    
+    
+    
+    
+    
+    
+    

@@ -178,6 +178,14 @@ App.Router = Ember.Router.extend
             router.transitionTo('editRuleConditionsState')
             event.preventDefault()
 
+          # event -------------------------------------------
+          createARule: (router, event) ->
+            event.preventDefault()
+
+          # event -------------------------------------------
+          deleteRule: (router, event) ->
+            event.preventDefault()
+
           #STATES
 
           editRuleConditionsState: Ember.Route.extend
@@ -188,8 +196,45 @@ App.Router = Ember.Router.extend
               homeController.connectOutlet( {name: 'conditions', outletName: 'homeContentOutlet'} )
 
             #EVENTS
+            deleteCondition: (router, event) ->
+              condition = event.context              
+              content = App.get('router.conditionsController').get('content')
+              content.removeObject(condition)
+              if content.length is 0         
+                content.pushObject App.Condition.create()                       
+              event.preventDefault()
 
-              #STATES
+            changeDataType: (router, event) ->
+              condition = event.context                            
+              condition.set 'type', event.view.getNewDataType(event)
+              event.preventDefault()
+
+            changedNegation: (router, event) ->              
+              condition = event.context              
+              condition.set 'negation', event.view.getNewNegation(event)
+              event.preventDefault()
+
+            changedProperty: (router, event) ->
+              condition = event.context              
+              prop = event.view.getNewProperty()
+              event.preventDefault()    
+
+            changedOperation: (router, event) ->
+              condition = event.context              
+              condition.set 'operation', event.view.getNewOperation(event)
+              # not need to do any thing there is an observer
+              event.preventDefault()
+
+            saveRuleEdit: (router, event) ->
+              
+              event.preventDefault()
+
+            cancelRuleEdit: (router, event) ->
+              
+              event.preventDefault()
+
+
+            #STATES
               
 
           

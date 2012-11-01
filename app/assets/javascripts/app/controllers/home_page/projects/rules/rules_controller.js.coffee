@@ -7,7 +7,8 @@ App.RulesController = Em.ArrayController.extend(
   actorSchema: null
   eventSchema: null
   templateLib: []
-  
+
+  #########################################################  
   init: ->
     @_super()
 
@@ -31,41 +32,55 @@ App.RulesController = Em.ArrayController.extend(
     
     @set 'templateLib', templateLib
 
+  #########################################################
+  serializeRule: ->
+    rule = @get 'selected'
+    if rule isnt null
+      rule.serialize
+    else
+      null
+  #########################################################
 
+  changeEventOnRule: (eventname) ->
+    selected = @get 'selected'
+    selected.set 'event', eventname
+    hasManyConditions = [App.Condition.create()]
+    selected.set 'hasManyConditions', hasManyConditions
   #########################################################
   translatePropertyName: (property) ->
-    property.replace('][',".").replace("[","").replace("]","")
+    console.log property
+    property.replace('][',".").replace("[",".").replace("]","")
 
   #########################################################
   loadSystemSchema: ->
     project = App.get('router.projectsController').get('selected')
     schema = project.get('schema')
-    props = []
+    props = {}
     if "system" of project.schema
       system_p = project.schema.system
       for k,v of system_p      
         prop = 
-               'key': @translatePropertyName(k).capitalize()              
-               'actual': '$' + k
+               'show': k
+               'actual': k
                'type': v
-               'scope': 'actor'
-        props.push(prop)    
+               'scope': 's'
+        props[k] = prop
       @set 'systemSchema', props
 
   #########################################################
   loadActorSchema: ->
     project = App.get('router.projectsController').get('selected')
     schema = project.get('schema')     
-    props = []
+    props = {}
     if "actor" of project.schema
       actor_p = project.schema.actor
       for k,v of actor_p      
         prop = 
-               'key': @translatePropertyName(k).capitalize()              
-               'actual': '#' + k
+               'show': k       
+               'actual': k
                'type': v
-               'scope': 'actor'
-        props.push(prop)    
+               'scope': 'a'
+        props[k] = prop
       @set 'actorSchema', props
 
   #########################################################
@@ -77,7 +92,7 @@ App.RulesController = Em.ArrayController.extend(
 
       event = rule.get 'event'
       event_p = undefined
-      props = []
+      props = {}
 
       if "schema" of project
         if "events" of project.schema
@@ -85,13 +100,11 @@ App.RulesController = Em.ArrayController.extend(
 
       for k,v of event_p      
         prop = 
-               'key': @translatePropertyName(k)
-               'label': @translatePropertyName(k)
+               'show': @translatePropertyName(k)               
                'actual': k
                'type': v
-               'scope': 'event'
-        props.push(prop)       
-
+               'scope': 'e'
+        props[k] = prop
 
       @set 'eventSchema', props
 
@@ -137,6 +150,7 @@ App.RulesController = Em.ArrayController.extend(
     @loadEvents()
     @loadRules()
   ).observes('App.router.projectsController.selected')
+
 
 
 )

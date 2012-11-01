@@ -36,8 +36,8 @@ rbT.getTemplateHTMLByNameInternal = function(name){
 rbT.getTemplateApplyVarsInternal = function(html,vars){
 	//TODO: check instanceOf
 	if(html.length){
-		for (var key in vars) {
-			var value = vars[key]; 
+		for (var i =0; i<vars.length; i++) {
+			var value = vars[i]; 
 			var tempVarToBeReplaced = value.key
             var replaceKey = rbT.keyPrefix + tempVarToBeReplaced + rbT.keySuffix;
 			html = html.replace(replaceKey, value.value);
@@ -119,8 +119,8 @@ rbT.invokeActionScriptInternal=function(action,actionParams){
           
           if(pos =='modal')
           {
-               for (var key in actionParams) {
-			    var value = actionParams[key]; 
+               for (var i =0;i<actionParams.length;i++) {
+			    var value = actionParams[i]; 
 			    if( 'rb.f.nr.transBlockZindex' == value.key)
 			    {
 				  value.value =  rbT.findZIndex();
@@ -134,8 +134,8 @@ rbT.invokeActionScriptInternal=function(action,actionParams){
          }
           else{
                 
-            for (var key in actionParams) {
-			   var value = actionParams[key]; 
+           for (var j =0;j<actionParams.length;j++) {
+			    var value = actionParams[j]; 
 			   if( 'rb.f.nr.baseZindex' == value.key)
 			  {
 				value.value =  rbT.findZIndex()+5;

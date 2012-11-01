@@ -1,21 +1,16 @@
 App.ActionParamsView = Ember.View.extend
   templateName: 'home_page/projects/rules/actions/actions_params'  
-
-  init: ->
-    @_super()       
-
-  didInsertElement: ->
-    @_super()
-
+  
   didContentChange: (->        
-    Ember.run.schedule('render', this, 'applyJqueryConstructs')
+    #Put to execute in next runloop
+    Ember.run.next( this, 'applyJqueryConstructs')
   ).observes('actionParams')
   
 
-  applyJqueryConstructs: ->
-     
+  applyJqueryConstructs: ->  
+    $(".colorpickerProps").colorpicker()    
     $(".select2Props").not(".select2-container").select2(
                                 minimumInputLength: 0                                      
                                 closeOnSelect: true
-                                openOnEnter: true
-                              )
+                                openOnEnter: true)
+   

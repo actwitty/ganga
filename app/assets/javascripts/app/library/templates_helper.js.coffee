@@ -14,6 +14,7 @@ App.templatesConstants =
 
 App.templatesFixedData = {
                           'font'  : [
+                                      "Arial",
                                       "Arial, Helvetica, sans-serif",
                                       "\'Arial Black\', Gadget, sans-serif",
                                       "\'Comic Sans MS\', cursive, sans-serif",
