@@ -177,11 +177,11 @@ Dir.glob('*.html').each  do|fileName|
 
 
    if index!= (m.length-1)
-       m[index] = "\t \t \t \t \t \t " +  '{'+'key:' +"'" + m[index] + "'" + ','+ 'value:'+"'#{defaults}'}"+","+"\n" 
+       m[index] = "\t \t \t \t \t \t " +"'" + m[index] + "'" + ":"+ "'#{defaults}'"+","+"\n" 
     
     elsif  index == (m.length-1)
-      m[index] = "\t \t \t \t \t \t " + '{' + 'key:'+ "'" + m[index] + "'" + ','+ 'value:'+"'#{defaults}'}"+",\n" 
-      m[index+1] = "\t \t \t \t \t \t " + '{' + 'key:'+ "'" + "rb.t.nr.durationOfDisplay" + "'" + ','+ 'value:'+"'#{defaultTemplTimer}'}"+"\n" 
+      m[index] = "\t \t \t \t \t \t "+ "'" + m[index] + "'" + ":"+"'#{defaults}'"+",\n" 
+      m[index+1] = "\t \t \t \t \t \t " + "'" + "rb.t.nr.durationOfDisplay" + "'" + ":"+"'#{defaultTemplTimer}'"+"\n" 
 
 
     end  
@@ -189,7 +189,7 @@ Dir.glob('*.html').each  do|fileName|
     end 
     m= m.to_s
 
-    m = "[\n" + m + "\t \t \t \t \t ],\n"
+    m = "{\n" + m + "\t \t \t \t \t },\n"
     
     m = "\t \t  "+ templPropName + ":" + m
 

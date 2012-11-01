@@ -22,7 +22,6 @@ rbT.getTemplateHTMLByNameInternal = function(name){
   
 			var html = rbT[rbT.templateLib[name]];
 
-			console.log(html);
 
             return html;
 		}else{
@@ -36,17 +35,20 @@ rbT.getTemplateHTMLByNameInternal = function(name){
 rbT.getTemplateApplyVarsInternal = function(html,vars){
 	//TODO: check instanceOf
 	if(html.length){
-		for (var i =0; i<vars.length; i++) {
+		for (var key in vars) {
+		
+		if(vars.hasOwnProperty(key))
+		{	
+			var value = vars[key] ; 
 			
-			var value = vars[i]; 
-			
-			if( value.key != 'rb.t.nr.templDuration')
+			if( key != 'rb.t.nr.templDuration')
             {
-			  var tempVarToBeReplaced = value.key
+			  var tempVarToBeReplaced = key;
               var replaceKey = rbT.keyPrefix + tempVarToBeReplaced + rbT.keySuffix;
-			  html = html.replace(replaceKey, value.value);
+			  html = html.replace(replaceKey, value);
 			} 
-		}
+		}	
+	  }
 		return html;	
 	}else{
 	 rbT.sendErrorToRBServer("Bad variable array error for template");
@@ -102,7 +104,10 @@ rbT.enableTimeOutHadnlingInternal= function(templateName,timerValue){
 //*************************************************************************************
 rbT.invokeActionScriptInternal=function(action,actionParams){
 
+/*
+
       //TODO get the OS version here based on that action display
+*/      
 
       rbT.init();
       
@@ -124,49 +129,54 @@ rbT.invokeActionScriptInternal=function(action,actionParams){
           
           if(pos =='modal')
           {
-               for (var i =0;i<actionParams.length;i++) {
-			      var value = actionParams[i]; 
-			       if( 'rb.f.nr.transBlockZindex' == value.key)
+               for (var key in actionParams) {
+
+               	if(actionParams.hasOwnProperty(key))
+               	{
+			         if( 'rb.f.nr.transBlockZindex' == key)
 			       {
-				      value.value =  rbT.findZIndex();
+				       actionParams[key] =  rbT.findZIndex();
 			       }
 
-			       else if( 'rb.f.nr.baseZindex' == value.key)
+			       else if( 'rb.f.nr.baseZindex' == key)
 			       {
-				      value.value =  rbT.findZIndex()+5;
+				      actionParams[key]  =  rbT.findZIndex()+5;
 			       }
 
-			       else if( 'rb.t.nr.durationOfDisplay'== value.key)
+			       else if( 'rb.t.nr.durationOfDisplay'== key)
 			       {
-                      rbT.templTimers['rbT.templ.templduration']= value.value;
+                      rbT.templTimers['templ.templduration']= actionParams[key] ;
 			       }
              
 		       }
+		     }  
          }
           else{
                 
-           for (var j =0;j<actionParams.length;j++) {
-			    var value = actionParams[j]; 
-			  if( 'rb.f.nr.baseZindex' == value.key)
+           for (var key in actionParams) {
+             if(actionParams.hasOwnProperty(key))
+			  {	
+			  if( 'rb.f.nr.baseZindex' == key)
 			  {
-				value.value =  rbT.findZIndex()+5;
+				actionParams[key] =  rbT.findZIndex()+5;
 			  }
-			  else if( 'rb.t.nr.durationOfDisplay'== value.key)
-			  {
-                   rbT.templTimers['rbT.templ.templduration']= value.value;
+			  else if( 'rb.t.nr.durationOfDisplay'== key)
+              {
+                   rbT.templTimers['templ.templduration']= actionParams[key] ;
 			  }
+
+			 } 
              
 		    } 
 		  }        
 
           html = rbT.getTemplateApplyVars(html, actionParams);
   
-         console.log(html);
 
          if (rbT.isTemplateGoodToApply(html)){
            rbT.applyHtmltoPage(html);
            rbT.enableClickHandling();
-           //rbT.enableTimeOutHadnling(templateName,rbT.templTimers['rbT.templ.templduration']);
+           rbT.enableTimeOutHadnling(templateName,rbT.templTimers['templ.templduration']*1000);
 		   rbT.setTemplatesDisplayLockFlags(pos,true);
 
 
