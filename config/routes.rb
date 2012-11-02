@@ -28,10 +28,10 @@ Ganga::Application.routes.draw do
 
 
   # App Api
-  post '/app/create',         :to => 'apps#create'
-  get  '/app/read',           :to => 'apps#read'
-  post '/app/update',         :to => 'apps#update'
-  post '/app/delete',         :to => 'apps#delete'
+  get '/app/create',         :to => 'apps#create'
+  get '/app/read',           :to => 'apps#read'
+  get '/app/update',         :to => 'apps#update'
+  get '/app/delete',         :to => 'apps#delete'
   
 
   # Event Api
