@@ -64,14 +64,15 @@ RBT.prototype.identify = function(params)
 * @param {object} params Option based on which actor property will be set
 * @return void
 */
-RBT.prototype.setUserProperty = function(params)
+RBT.prototype.setActor = function(params)
 {
   "use strict";
-  rbTServerChannel.makeRequest({"url"   : rbTServerChannel.url.setUserProperty, 
-                                "params": params,
-                                "cb"    : { success: rbTServerResponse.setUserProperty,
-                                            error  : rbTServerResponse.defaultError
-                                          }
+  rbTServerChannel.makeRequest({"url"        : rbTServerChannel.url.setActor, 
+                                "params"     : params,
+                                "set_actor"   : true,
+                                "cb"         : { success: rbTServerResponse.setUserProperty,
+                                                 error  : rbTServerResponse.defaultError
+                                               }
                               });
 };
 

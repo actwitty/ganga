@@ -5,7 +5,7 @@ var rbTSystemVar = {
   properties : {},
 
   // To get all properties
-  allProperties : "browser_info,referrer_info,device_info,screen_info,viewport_info,locale_info,plugins_info,time_info",
+  allProperties : "browser,referrer,device,screen,viewport,location,plugins,time",
 
   /** Initialize system variable script
    *  @return void
@@ -55,7 +55,7 @@ var rbTSystemVar = {
 
   /** Get system variable property
    *  Following supported
-   *  1). "browser_info"
+   *  1). "browser"
           return -> 
           {
              browser : browser_name,
@@ -64,7 +64,7 @@ var rbTSystemVar = {
 
           }
 
-      2). "referrer_info"
+      2). "referrer"
           return ->
           {
             host: "127.0.1.1"
@@ -72,32 +72,32 @@ var rbTSystemVar = {
             port: 80
             protocol: "http:"
           }
-      3). "device_info"
+      3). "device"
           return ->
           {
             is_mobile: false
             is_phone: false
             is_tablet: false
           } 
-      4). "screen_info"
+      4). "screen"
           return ->
           {
             height: 768,
             width: 1366
           }
-      5). "viewport_info"
+      5). "viewport"
           return ->
           {
             height: 768,
             width: 1366
           }
-      6). "locale_info"
+      6). "location"
           return ->
           {
             country: "us",
             lang: "en
           }
-      7). "plugins_info"
+      7). "plugins"
           return ->
           {
             flash: true
@@ -105,7 +105,7 @@ var rbTSystemVar = {
             quicktime: true
             silverlight: false
           }
-      8). "time_info"
+      8). "time"
           return ->
           {
             observes_dst: false
@@ -123,28 +123,28 @@ var rbTSystemVar = {
     var propertyCnf = {};
     for (var i = 0; i < types.length ; ++i) {
       switch(types[i]) {
-      case "browser_info":
+      case "browser":
           propertyCnf[types[i]] =  this.properties.browser; 
           break;
-      case "referrer_info":
+      case "referrer":
           propertyCnf[types[i]] =  this.properties.current_session.referrer_info; 
           break;
-      case "device_info" :
+      case "device" :
           propertyCnf[types[i]] =  this.properties.device; 
           break;
-      case "screen_info" :
+      case "screen" :
           propertyCnf[types[i]] =  this.properties.device.screen; 
           break;
-      case "viewport_info" :
+      case "viewport" :
           propertyCnf[types[i]] =  this.properties.device.viewport; 
           break;
-      case "locale_info":
+      case "location":
           propertyCnf[types[i]] =  this.properties.locale; 
           break;
-      case "plugins_info":
+      case "plugins":
           propertyCnf[types[i]] =  this.properties.plugins; 
           break;
-      case "time_info":
+      case "time":
           propertyCnf[types[i]] =  this.properties.time; 
           break;
       }

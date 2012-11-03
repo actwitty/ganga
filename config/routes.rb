@@ -27,6 +27,7 @@ Ganga::Application.routes.draw do
   get  '/actor/alias',       :to => 'actors#alias'
 
 
+
   # App Api
   get '/app/create',         :to => 'apps#create'
   get '/app/read',           :to => 'apps#read'

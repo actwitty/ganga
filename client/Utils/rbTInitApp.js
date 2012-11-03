@@ -27,7 +27,13 @@
 
 function testGanga()
 {
-  rb.sendEvent("sample_event",{"a":101});
+  //rb.sendEvent("sample_event",{"a":101});
+  //rb.identify({"uid":"83.samarth@gmail.com"});
+  window.rb = new RBT();
+
+  rb.setActor({"name":"samarth","age":"29"});
+
+  console.log("ENDING TESTING SEQUENCE");
 }
 
 function waitForRBT()

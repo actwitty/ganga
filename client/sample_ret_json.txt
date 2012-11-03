@@ -1,0 +1,13 @@
+{  "events": [],
+   "account": {"id":"5092248456b26a4e31000001"},
+   "app": {
+            "id":"5092252556b26a4e31000002",
+            "description":{
+                            "email": "samarth@actwitty.com",
+                            "address":"testing",
+                            "domain":"127.0.1.1",
+                            "name":"testing"
+                           },
+            "rules":[]
+           }
+}

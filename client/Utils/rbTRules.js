@@ -96,6 +96,7 @@ var rbTRules = {
                   value1: 3000,
                   connect: 'and' 
                 },
+                // starts with
                 {
                   property: "#customer.swh",
                   type : "String",
@@ -104,6 +105,7 @@ var rbTRules = {
                   value1: 'act',
                   connect: 'and' 
                 },
+                // ends with
                 {
                   property: "#customer.ewh",
                   type : "String",
@@ -112,6 +114,7 @@ var rbTRules = {
                   value1: 'tty',
                   connect: 'and' 
                 },
+                // contains
                 {
                   property: "#customer.cns",
                   type : "String",
@@ -120,6 +123,7 @@ var rbTRules = {
                   value1: 'wit',
                   connect: 'and' 
                 },
+                // date range
                 {
                   property: "#customer.drg",
                   type : "Date",
@@ -165,7 +169,7 @@ var rbTRules = {
   setRulesTable : function(rules)
   {
     "use strict";
-    rules = this.sample_json;
+    //rules = this.sample_json;
     var ruleString = "";
 
 
@@ -239,10 +243,14 @@ var rbTRules = {
             $("#result").text("RULES FAILED");
           }
     } catch (e) {
+      if (this.ruleTable[event])
+        var ruleStr = this.ruleTable[event].ruleString || "--";
+      else
+        var ruleStr = "Rule string cannot be formed!";  
       rbTAPP.reportError({"exception"  : e.message,
                           "message"    : "rule execution on event failed" , 
                           "event_name" : event,
-                          "rule_string": this.ruleTable[event].ruleString
+                          "rule_string": ruleStr
                          });
     } 
   },

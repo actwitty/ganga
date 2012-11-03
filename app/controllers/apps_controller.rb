@@ -1,11 +1,10 @@
 require 'utility'
 
 class AppsController < ApplicationController
-	
   protect_from_forgery
   before_filter :authenticate_account!
 
-  respond_to  :json
+  respond_to  :json,:js
   # NOTE
   ## Create App
 
@@ -152,9 +151,25 @@ class AppsController < ApplicationController
   ##                   description: {"name": "my app", "domain": "http://myapp.com"}, 
   ##                   rules: [
   ##                             {
-  ##                               "name"=>"A fancy rule", "event"=>"singup", "owner"=>"client", "action"=>"topbar",
-  ##                               "action_param"=>{"text"=>"A quickbrown fox jumps over a lazy dog", "href"=>"http://www.google.com", "color"=>"#333333", "width"=>"50"}, 
-  ##                               "conditions"=>[{"property"=>"person[email]", "negation"=>"true", "operation"=>"ew", "value1"=>"@gmail.com", "connect"=>"and"}], 
+  ##                               "name"=>"A fancy rule", 
+  ##                               "event"=>"singup", 
+  ##                               "owner"=>"client", 
+  ##                               "action"=>"topbar",
+  ##                               "action_param"=> {
+  ##                                          "text"=>"A quickbrown fox jumps over a lazy dog", 
+  ##                                          "href"=>"http://www.google.com", 
+  ##                                          "color"=>"#333333", 
+  ##                                          "width"=>"50"
+  ##                                          }, 
+  ##                               "conditions"=> [ 
+  ##                                                {
+  ##                                                  "property"=>"person[email]", 
+  ##                                                  "negation"=>"true", 
+  ##                                                  "operation"=>"ew", 
+  ##                                                  "value1"=>"@gmail.com", 
+  ##                                                  "connect"=>"and"
+  ##                                                }
+  ##                                              ], 
   ##                               "updated_at"=>2012-10-24 07:43:38 UTC, 
   ##                               "created_at"=>2012-10-24 07:43:38 UTC, "id"=>"50879c2a63fe855d14000005"
   ##                             },
@@ -165,18 +180,18 @@ class AppsController < ApplicationController
   ##                                           'customer[email]' => { 
   ##                                                                   "String" => ["set_actor", "sign_up"],
   ##                                                                   "Fixnum" => ["purchased", "sign_in"]
-  ##                                         }
-  ##                           
+  ##                                                                }
+  ##                                         },
   ##                             events: {
   ##                                           'sign_up' => {"name" => String, "address[city]" => "String"}
-  ##                                     }
+  ##                                     },
   ##                             
   ##                             profile:{
   ##                                         "gender" => String, "name" => "String"
-  ##                                     }  
+  ##                                     },  
   ##                             system: {
   ##                                         "location" => String, "page_view_time" => "String"
-  ##                                     }  
+  ##                                     },  
   ##                           } 
   ##                 }  
   ##
@@ -192,9 +207,10 @@ class AppsController < ApplicationController
   ##                    ]
   ##        }
 	def read
-		Rails.logger.info("Enter App read")
+		Rails.logger.info("Enter App read #{params.inspect}")
+    
 
-		params[:account_id] = current_account._id
+		#params[:account_id] = current_account._id
 		ret = App.read(params)
 		
 		raise ret[:error] if !ret[:error].blank?

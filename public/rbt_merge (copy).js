@@ -1,7 +1,7 @@
 
 
 
-/***********************[[2012-10-27 15:52:48 +0530]]*********************************/ 
+/***********************[[2012-10-29 20:17:19 +0530]]*********************************/ 
 
 
 
@@ -290,6 +290,7 @@ window.rbTDebug=(function(){var i=this,b=Array.prototype.slice,d=i.console,h={},
 
 
 var TEST_RBT_RULE_JSON = {"customer":{
+                        "name" :"samarth",
                         "email":"gmail.com",
                         "val1":123,
                         "val2":321,
@@ -356,6 +357,15 @@ var rbTRules = {
                   negation: 'false',
                   operation: 'eql',
                   value1: 'gmail.com',
+                  connect: 'and' 
+                },
+                // negate condition
+                { 
+                  property: "#customer.name",
+                  type : "String",
+                  negation: 'true',
+                  operation: 'swh',
+                  value1: 'a',
                   connect: 'and' 
                 },
                 // actor_property based condition
@@ -461,7 +471,6 @@ var rbTRules = {
       } else 
         return " ";
     }
-    // FIXME :: ADD NEGATION PARAMS HERE
     function ruleParams(rule)
     {
       if (rule.value2)
@@ -646,7 +655,7 @@ var rbTRules = {
   */
   isNegate :  function(x)
   {
-    return (x === "true") ? false : true; 
+    return (x === "true") ? true : false; 
   },
 
   /**
@@ -713,8 +722,10 @@ var rbTRules = {
         $("#applyingrules").append("<h3>less than</h3>");
         if (!rbTRules.isValidRule(t,"ltn",a,b))
           return false;
+        var res = false;
         var prop = rbTRules.evalProperty(a);
-        return ((prop < rbTRules.valueDataType(prop, b)) && rbTRules.isNegate(x) );
+        res = ((prop < rbTRules.valueDataType(prop, b)) || rbTRules.isNegate(x) );
+        return (x === "true") ? !res : res;
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on lt failed" , 
@@ -738,8 +749,10 @@ var rbTRules = {
         $("#applyingrules").append("<h3>greater than</h3>");
         if (!rbTRules.isValidRule(t,"gtn",a,b))
           return false;
+        var res = false;
         var prop = rbTRules.evalProperty(a);
-        return ((prop > rbTRules.valueDataType(prop, b)) && rbTRules.isNegate(x) );
+        res = ((prop > rbTRules.valueDataType(prop, b)) || rbTRules.isNegate(x) );
+        return (x === "true") ? !res : res;
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on gt failed" , 
@@ -764,8 +777,10 @@ var rbTRules = {
         $("#applyingrules").append("<h3>equal to</h3>");
         if (!rbTRules.isValidRule(t,"eql",a,b))
           return false;
+        var res = false;
         var prop = rbTRules.evalProperty(a);
-        return ((prop === rbTRules.valueDataType(prop, b)) && rbTRules.isNegate(x) );
+        res =  ((prop === rbTRules.valueDataType(prop, b)) || rbTRules.isNegate(x) );
+        return (x === "true") ? !res : res; 
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on equal_to failed" , 
@@ -791,10 +806,12 @@ var rbTRules = {
         if (!rbTRules.isValidRule(t,"cns",a,b))
           return false;
         var prop = rbTRules.evalProperty(a);
+        var res;
         if (prop.indexOf(rbTRules.valueDataType(prop, b)) >= 0 )
-          return (true && rbTRules.isNegate(x) );
+          res = true;
         else
-          return (false && rbTRules.isNegate(x) );
+          res = false;
+        return (x === "true") ? !res : res; 
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on contains failed" , 
@@ -819,11 +836,13 @@ var rbTRules = {
         $("#applyingrules").append("<h3>starts with</h3>");
         if (!rbTRules.isValidRule(t,"swh",a,b))
           return false;
+        var res = false;
         var prop = rbTRules.evalProperty(a);
         if (prop.match("^"+rbTRules.valueDataType(prop, b)))
-          return (true && rbTRules.isNegate(x) );
+          res = true;
         else
-          return (false && rbTRules.isNegate(x) );
+          res = false;
+        return (x === "true") ? !res : res;
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on starts_with failed" , 
@@ -849,10 +868,12 @@ var rbTRules = {
         if (!rbTRules.isValidRule(t,"ewh",a,b))
           return false;
         var prop = rbTRules.evalProperty(a);
+        var res;
         if (prop.match(rbTRules.valueDataType(prop, b)+"$"))
-          return (true && rbTRules.isNegate(x) );
+          res = true;
         else
-          return (false && rbTRules.isNegate(x) );
+          res = false;
+        return (x === "true") ? !res : res;
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on ends_with failed" , 
@@ -878,7 +899,9 @@ var rbTRules = {
         if (!rbTRules.isValidRule(t,"btn",a,b,c))
           return false;
         var prop = rbTRules.evalProperty(a);
-        return prop >= rbTRules.valueDataType(prop, b) && a <= rbTRules.valueDataType(prop, c)  && rbTRules.isNegate(x) ;
+        var res;
+        res = (prop >= rbTRules.valueDataType(prop, b) && a <= rbTRules.valueDataType(prop, c)) ;
+        return (x === "true") ? !res : res;
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on between failed" , 
@@ -904,8 +927,10 @@ var rbTRules = {
         if (!rbTRules.isValidRule(t,"rgx",a,b))
           return false;
         var prop = rbTRules.evalProperty(a);
+        var res;
         regexp = new RegExp(b, 'gi');
-        return ( regexp.test(prop) && rbTRules.isNegate(x) ) ;
+        res = regexp.test(prop);
+        return (x === "true") ? !res : res;
       } catch (e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on regex failed" , 
@@ -930,8 +955,10 @@ var rbTRules = {
         if (!rbTRules.isValidRule(t,"dag",a,b))
           return false;
         var prop = rbTRules.evalProperty(a);
+        var res;
         regexp = new RegExp(b, 'gi');
-        return ( regexp.test(prop) && rbTRules.isNegate(x) ) ;
+        res = regexp.test(prop) ;
+        return (x === "true") ? !res : res;
       } catch (e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on regex failed" , 
@@ -957,7 +984,9 @@ var rbTRules = {
         if (!rbTRules.isValidRule(t,"drg",a,b,c))
           return false;
         var prop = rbTRules.evalProperty(a,t);
-        return prop >= rbTRules.valueDataType(prop, b) && prop <= rbTRules.valueDataType(prop, c)  && rbTRules.isNegate(x) ;
+        var res;
+        res = (prop >= rbTRules.valueDataType(prop, b) && prop <= rbTRules.valueDataType(prop, c));
+        return (x === "true") ? !res : res;
       } catch (e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on regex failed" , 
@@ -979,7 +1008,8 @@ var rbTRules = {
       try {
         $("#applyingrules").append("<h3>set prop</h3>");
         var prop = rbTRules.evalProperty(a);
-        return (prop ? true:false);
+        var res = (prop ? true:false);
+        return (x === "true") ? !res : res;
       } catch (e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on is set" , 
@@ -1157,11 +1187,58 @@ var rbTServerChannel = {
     "roi"               : ""
   },
 
+  // Server request queue
+  queue : [],
+
   /* Default options for server request */
   defaultOptions : {
     "success_callback" : rbTServerResponse.defaultSuccessCallback,
     "error_callback"   : rbTServerResponse.defaultErrorCallback
   },
+
+  
+  /**
+  * Queue server requests.
+  * @param {object} obj Object to be queued.
+  * @return void
+  */
+  queueReq : function(obj)
+  {
+    this.queue.push(obj);
+  },
+
+  /**
+  * Flush request queue by initiating server requests for queued requests.
+  *
+  * @return void
+  */
+  flushReqQueue : function()
+  {
+    for (var req in this.queue) {
+      if (this.queue[req].event) {
+        this.makeEventRequest(this.queue[req].event, this.queue[req].params, this.queue[req].callback);
+      } else {
+        this.makeGetRequest(this.queue[req].url, this.queue[req].params, this.queue[req].callback, this.queue[req].async);
+      }
+    }
+  },
+
+
+  /**
+  * Check for App status, if alive , flush all req queue and clear interval.
+  *
+  */
+  reqFlushIntervalId : function()
+  {
+      var interval = setInterval(function() {
+        if (rbTAPP.isrbTAlive()) {
+          clearInterval(interval);
+          rbTServerChannel.flushReqQueue();
+        }
+      }, 2000);
+  },
+
+
 
   /** 
   *  Set Request data for all server interactions
@@ -1186,23 +1263,23 @@ var rbTServerChannel = {
   /** 
   *  Make a request to server.
   *  @param {string} event
-  *  @param {rbTServerChannel.url} url
-  *  @param {object} reqData
+  *  @param {object} params
   *  @param {object} callback
   *  @return {object}
   */
-  makeEventRequest :  function(event, url, reqData, callback)
+  makeEventRequest :  function(event, params, callback)
   {
     "use strict";
     try {
-      var reqServerData = this.makeRequestData(event, reqData);
+      var reqServerData = this.makeRequestData(event, params);
       callback = this.extendCallbacks(callback);
       jQuery.ajax({
-            url: url,
+            url: rbTServerChannel.url.fireEvent,
             type: 'GET',
             dataType: 'json',
             data: reqServerData,
             beforeSend: function() {
+                // FIXME : add status to cookie
                 rbTCookie.setCookie("lastevent", event);
             },
             success: function ( respData ) {
@@ -1245,7 +1322,7 @@ var rbTServerChannel = {
   {
     "use strict";
     try {
-      var reqServerData = this.makeRequestData(undefined, params);
+       var reqServerData = this.makeRequestData(undefined, params);
       callback = this.extendCallbacks(callback);
       if (async && async === "noasync")
         var asyncSt = false;
@@ -1274,6 +1351,41 @@ var rbTServerChannel = {
                           "server"    : true
                          });
     }
+  },
+
+  /**
+  *
+  *
+  */  
+  makeRequest : function(obj)
+  {
+    if (!obj)
+      return;
+    if (!rbTAPP.isrbTAlive()) {
+      if (obj.url) {
+        obj.async = obj.async || "async";
+        this.queueReq({url:obj.url, params:obj.params, callback:obj.cb, async:obj.async});
+      }
+      else
+        this.queueReq({event:obj.event, params:obj.params, callback:obj.cb});
+      return;
+    } else {
+      this.flushReqQueue();
+    }
+    try {
+      if (obj.event) {
+        rbTServerChannel.makeEventRequest(obj.event, obj.params, obj.cb);
+      } else if (obj.url) {
+        rbTServerChannel.makeGetRequest(obj.url, obj.params, obj.cb);
+      } else throw new Error("Wrong server req data");
+    } catch (e) {
+      rbTAPP.reportError({"exception" : e.message,
+                          "message"   :"server request params are not valid" , 
+                          "log"       : true,
+                          "server"    : true
+                         });
+    }
+
   },
    
    /** 
@@ -1949,7 +2061,6 @@ var rbTUtils = {
     function includeJQ()
     { 
       this.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",rbTAPP.wake_RBT_APP);
-      //this.waitForjQueryAlive();
     }
 
     if (typeof jQuery != 'undefined') {
@@ -2016,25 +2127,7 @@ var rbTUtils = {
         }
       }
   },
-
-  /**
-  * Wait till jquery is alive.
-  */
-  waitForjQueryAlive : function() 
-  {
-      "use strict";
-      function checkJquery()
-      {
-        if (!window.jQuery) {
-            window.setTimeout(checkJquery, 500);
-        } else {
-          // make RBT APP alive.
-          rbTAPP.wake_RBT_APP();
-        }
-      }
-      checkJquery();
-  },
-    
+  
   // JSON
   JSON : {
       parse: (window.JSON && window.JSON.parse) || function(data)
@@ -2296,12 +2389,12 @@ RBT.prototype.sendEvent = function(event, params)
   if (!event || typeof(event) != "string" || event == "" ) {
     return;
   }
-  rbTServerChannel.makeEventRequest(event, 
-                                    rbTServerChannel.url.fireEvent,
-                                    params,
-                                    { success: rbTServerResponse.handleEvent,
-                                      error  : rbTServerResponse.defaultError
-                                    });
+  rbTServerChannel.makeRequest({"event" : event, 
+                                "params": params,
+                                "cb"    : { success: rbTServerResponse.handleEvent,
+                                            error  : rbTServerResponse.defaultError
+                                          }
+                              });
 };
 
 /** 
@@ -2313,12 +2406,12 @@ RBT.prototype.sendEvent = function(event, params)
 RBT.prototype.identify = function(params)
 {
   "use strict";
-  rbTServerChannel.makeGetRequest(rbTServerChannel.url.identify,
-                                params,
-                                { success: rbTServerResponse.setActor,
-                                  error  : rbTServerResponse.defaultError
-                                }
-                               );
+  rbTServerChannel.makeRequest({"url"    : rbTServerChannel.url.identify, 
+                                "params" : params,
+                                "cb"     : { success: rbTServerResponse.setActor,
+                                             error  : rbTServerResponse.defaultError
+                                           }
+                              });
 };
 
 
@@ -2332,11 +2425,12 @@ RBT.prototype.identify = function(params)
 RBT.prototype.setUserProperty = function(params)
 {
   "use strict";
-  rbTServerChannel.makeGetRequest( rbTServerChannel.url.setUserProperty,
-                                   params,
-                                   { success: rbTServerResponse.setUserProperty,
-                                     error  : rbTServerResponse.defaultError
-                                  });
+  rbTServerChannel.makeRequest({"url"   : rbTServerChannel.url.setUserProperty, 
+                                "params": params,
+                                "cb"    : { success: rbTServerResponse.setUserProperty,
+                                            error  : rbTServerResponse.defaultError
+                                          }
+                              });
 };
 
 
@@ -2362,26 +2456,16 @@ var rbJSON = {
   "header" : "rbJSON.rb",
   "state" : [],
 
-  /**
-  * Get Type of the object
-  * @params {object} a Object.
-  * @return {string} data type of the object.
-  */
   getType : function (a)
   {
     return Object.prototype.toString.call(a).split("]")[0].split(" ")[1]
   },
 
 
-  /**
-  * Get the current path of the json typify parse.
-  *
-  * @return {string} Path of object keys.
-  */
   currentPath : function()
   {
-    var rState = rbJSON.state;
-    var st = rbJSON.header;
+    var rState = this.state;
+    var st = this.header;
     for (var i=0 ; i < rState.length ; ++i) {
       if (rState[i].type === "Array") {
         st = st + "." + rState[i].key;
@@ -2395,78 +2479,56 @@ var rbJSON = {
     return st;
   },
 
-
-  /**
-  * Create new JSON typify object
-  * @param {string} type Type of an object to be created.
-  */
   createNewObj : function(type)
   {
-    var st = rbJSON.currentPath();
+    var st = this.currentPath();
     if (!eval(st)) {
       if (type === "Array")
           eval(st+"=[];");
       else 
           eval(st+"={};");
     }
+
   },
 
-  /**
-  * Add typified key,value pair to an object.
-  * @param {string} key Object key.
-  * @param {object} value Object value.
-  * @param {string} type Object type.
-  */
   addValueToObj : function(key, value, type)
   {
     if (type === "Array" || type === "Object")
-      var extKey = rbJSON.currentPath() + ((type === "Array") ? "["+key+"]" : "." + key);
+      var extKey = this.currentPath() + ((type === "Array") ? "["+key+"]" : "." + key);
     else
-      var extKey = rbJSON.currentPath() + "." + key;
+      var extKey = this.currentPath() + "." + key;
 
-    var type = typeof(value);
+    var type = this.getType(value);
     var str = extKey+'={type:"'+type+'",value:"'+value+'"};';
     eval(str);
   },
 
-  /**
-  * Extend JSON object to get it typified with {type:"data-type",value:"data-value"}
-  * @param {object} obj Object to be typified.
-  *
-  */
   extend : function(obj)
   { 
     for (var key in obj)
     {
       if (obj.hasOwnProperty(key)) {
-          var type = rbJSON.getType(obj[key]); 
+          var type = this.getType(obj[key]); 
           if (type === "Object" || type === "Array" ) {
-            rbJSON.state.push({"type":type,"key":key});
-            rbJSON.createNewObj(type);
-            rbJSON.extend(obj[key]);
+            this.state.push({"type":type,"key":key});
+            this.createNewObj(type);
+            this.extend(obj[key]);
           } else {
-            var pType = (rbJSON.state.length) ? rbJSON.state[rbJSON.state.length-1].type : "";
-            rbJSON.addValueToObj(key,obj[key], pType);
+            var pType = (this.state.length) ? this.state[this.state.length-1].type : "";
+            this.addValueToObj(key,obj[key], pType);
           }
       }
     }
-    rbJSON.state.pop();
+    this.state.pop();
     return;
   },
 
-
-  /**
-  * Main function to start typifying object. 
-  * @param {object} obj  Object to be typified.
-  * 
-  * @return {object} Typified Object.
-  */
   typify : function(obj)
   {
-    rbJSON.rb = {};
-    rbJSON.state = [];
-    rbJSON.extend(obj);
-    return rbJSON.rb;
+    this.rb = {};
+    this.state = [];
+    this.extend(obj);
+    return this.rb;
   }
 
 };
@@ -2535,6 +2597,10 @@ waitForRBT();
 
 var rbT = { inited: false};
 
+
+/****************************[[templates.js]]*************************************/ 
+
+
 rbT.templateLib = {
 	 	  'bottombar.generic.fblike':'rbTemplBottombarGenericFblikeHTML',
 	 	  'topbar.generic.normal':'rbTemplTopbarGenericNormalHTML',
@@ -2549,7 +2615,9 @@ rbT.templateLib = {
  
  	 	 	 }; 
 
-rbT.templateArgs = {
+
+
+ rbT.templateArgs = {
 	 	  'bottombar.generic.fblike':[
 	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'#F2F0F0'},
 	 	 	 	 	 	 {key:'rb.t.nr.textFontsize',value:'15'},
@@ -2562,7 +2630,6 @@ rbT.templateArgs = {
 	 	 	 	 	 	 {key:'rb.t.sg.textLeft',value:'Hello Hello'},
 	 	 	 	 	 	 {key:'rb.t.ul.facebookPage',value:'http://www.google.com'},
 	 	 	 	 	 	 {key:'rb.t.sg.textRight',value:'Hello Hello'},
-	 	 	 	 	 	 {key:'rb.t.ul.helpLink',value:'http://www.rulebot.com'},
 	 	 	 	 	 ],
 	 	  'topbar.generic.normal':[
 	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'#333'},
@@ -2580,9 +2647,9 @@ rbT.templateArgs = {
 	 	 	 	 	 	 {key:'rb.t.ul.btnLink',value:'http://www.google.com'},
 	 	 	 	 	 	 {key:'rb.t.sg.btnLable',value:'Click'},
 	 	 	 	 	 	 {key:'rb.t.sg.textRight',value:'Hello Hello'},
-	 	 	 	 	 	 {key:'rb.t.ul.helpLink',value:'http://www.rulebot.com'},
 	 	 	 	 	 ],
 	 	  'chat.generic.normal':[
+	 	 	 	 	 	 {key:'rb.t.sg.olarkIdentity',value:'\'6679-845-10-6199\''},
 	 	 	 	 	 	 {key:'rb.t.sg.olarkIdentity',value:'\'6679-845-10-6199\''},
 	 	 	 	 	 ],
 	 	  'topbar.generic.twitterfollow':[
@@ -2599,7 +2666,6 @@ rbT.templateArgs = {
 	 	 	 	 	 	 {key:'rb.t.sg.twitterAccount',value:'@actwitty'},
 	 	 	 	 	 	 {key:'rb.t.sg.twitterAccount',value:'@actwitty'},
 	 	 	 	 	 	 {key:'rb.t.sg.textRight',value:'Hello Hello'},
-	 	 	 	 	 	 {key:'rb.t.ul.helpLink',value:'http://www.rulebot.com'},
 	 	 	 	 	 ],
 	 	  'bottombar.generic.twitterfollow':[
 	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'white'},
@@ -2615,7 +2681,6 @@ rbT.templateArgs = {
 	 	 	 	 	 	 {key:'rb.t.sg.twitterAccount',value:'@actwitty'},
 	 	 	 	 	 	 {key:'rb.t.sg.twitterAccount',value:'@actwitty'},
 	 	 	 	 	 	 {key:'rb.t.sg.textRight',value:'Hello Hello'},
-	 	 	 	 	 	 {key:'rb.t.ul.helpLink',value:'http://www.rulebot.com'},
 	 	 	 	 	 ],
 	 	  'topbar.generic.fblike':[
 	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'#F2F0F0'},
@@ -2629,7 +2694,6 @@ rbT.templateArgs = {
 	 	 	 	 	 	 {key:'rb.t.sg.textLeft',value:'Hello Hello'},
 	 	 	 	 	 	 {key:'rb.t.ul.facebookPage=%%http://www.google.com',value:''},
 	 	 	 	 	 	 {key:'rb.t.sg.textRight',value:'Hello Hello'},
-	 	 	 	 	 	 {key:'rb.t.ul.helpLink',value:'http://www.google.com'},
 	 	 	 	 	 ],
 	 	  'bottombar.generic.twittershare':[
 	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'white'},
@@ -2644,7 +2708,6 @@ rbT.templateArgs = {
 	 	 	 	 	 	 {key:'rb.t.sg.leftText',value:'Hello Hello'},
 	 	 	 	 	 	 {key:'rb.t.sg.twitterSharetext',value:'Twteet please'},
 	 	 	 	 	 	 {key:'rb.t.sg.rightText',value:'Hello Hello'},
-	 	 	 	 	 	 {key:'rb.t.ul.helpLink',value:''},
 	 	 	 	 	 ],
 	 	  'modal.generic.normal':[
 	 	 	 	 	 	 {key:'rb.f.nr.transBlockZindex',value:'1000'},
@@ -2681,7 +2744,6 @@ rbT.templateArgs = {
 	 	 	 	 	 	 {key:'rb.t.ul.btnLink',value:'http://www.google.com'},
 	 	 	 	 	 	 {key:'rb.t.sg.btnLable',value:'Click'},
 	 	 	 	 	 	 {key:'rb.t.sg.textRight',value:'Hello Hello'},
-	 	 	 	 	 	 {key:'rb.t.ul.helpLink',value:'http://www.rulebot.com'},
 	 	 	 	 	 ],
 	 	  'topbar.generic.twittershare':[
 	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'white'},
@@ -2696,77 +2758,76 @@ rbT.templateArgs = {
 	 	 	 	 	 	 {key:'rb.t.sg.leftText',value:'Hello Hello'},
 	 	 	 	 	 	 {key:'rb.t.sg.twitterSharetext',value:'Tweet Please'},
 	 	 	 	 	 	 {key:'rb.t.sg.rightText',value:'Hello Hello'},
-	 	 	 	 	 	 {key:'rb.t.ul.helpLink',value:''},
 	 	 	 	 	 ]
- 	 	 	 	 };  	 	 	 
+ 	 	 	 	 }; 
+ 
 
 
 
-
-/****************************[[rbTemplBottombarGenericFblike.js]]*************************************/ 
-
-
-rbT.rbTemplBottombarGenericFblikeHTML='<style>.rbTextValue   {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     font-family: {{rb.t.ft.textFontfamily}};     text-shadow : #1C2C4C 0px -1px 0px;     font-style: normal;     font-weight: bold;   }</style> <div id="fb-root"></div><script>(function(d, s, id) {  var js, fjs = d.getElementsByTagName(s)[0];  var k = \'hello\';  if (d.getElementById(id)) return;  js = d.createElement(s); js.id = id;  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";  fjs.parentNode.insertBefore(js, fjs);}(document, "script", "facebook-jssdk"));</script><div id="rbBottombarGenericFblikeBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baseWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baseBgColor}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 2px -2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">      <div id="rbBottombarGenericFblikeLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.textLeft}}     </div>    <div id="rbBottombarGenericFblikeRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:10px;width:100px;left:42%;margin-right:20px;height:25px;background-color:#FFFFFF;border-radius:5px;">                      <div class="fb-like" data-href="{{rb.t.ul.facebookPage}}" data-send="false" data-layout="button_count" data-width="47px" data-show-faces="false" data-font="arial"></div>          </div>      <div id="rbBottombarGenericFblikeRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">                  {{rb.t.sg.textRight}}     </div>     <div  style="display:inline; position:absolute;bottom:5px;right:30px;margin-left:20px;color:#FFFFFF;font-weight:bold;">                    <a id="rbBottombarGenericFblikeRoiHelp" class="rbClickable" style= "text-decoration:none;color:#FFFFFF;" href="{{rb.t.ul.helpLink}}" >            ?            </a>       </div>    <div id="rbBottombarGenericFblikeCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; bottom:5px;right:10px;font-weight:bold;" >     X    </div> </div>'
+/****************************[[./templates/topbars/rbTemplBottombarGenericFblike.js]]*************************************/ 
 
 
-
-/****************************[[rbTemplBottombarGenericTwitterfollow.js]]*************************************/ 
-
-
-rbT.rbTemplBottombarGenericTwitterfollowHTML='<style>.rbTextValue  {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     text-shadow: 1px 1px {{rb.t.cr.textShadow}};     font-family: {{rb.t.ft.textFontfamily}};     text-shadow: 0 -1px 0 #007AA6;     font-weight: bold;   }</style> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script><div id="rbBottombarGenericTwfollowBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baeWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baeBgColor}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 2px -2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">       <div id="rbBottombarGenericTwfollowLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.textLeft}}     </div>    <div id="rbBottombarGenericTwfollowRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;left:42%;margin-right:20px;">                        <a  data-show-count="false" data-button = "blue" class="twitter-follow-button" href="https://twitter.com/{{rb.t.sg.twitterAccount}}" data-size="large">Follow {{rb.t.sg.twitterAccount}} </a>       </div>       <div id="rbBottombarGenericTwfollowRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:52%; width:40%;overflow:hidden;">                  {{rb.t.sg.textRight}}     </div>     <div  style="display:inline; position:absolute;bottom:5px;right:30px;margin-left:20px;font-weight:bold;">                    <a id="rbBottombarGenericTwfollowRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none ;color:#FFFFFF " href="{{rb.t.ul.helpLink}}" >            ?            </a>       </div>    <div id="rbBottombarGenericTwfollowCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; bottom:5px;right:10px;font-weight:bold;" >     X     </div> </div>'
+rbT.rbTemplBottombarGenericFblikeHTML='<style>.rbTextValue   {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     font-family: {{rb.t.ft.textFontfamily}};     text-shadow : #1C2C4C 0px -1px 0px;     font-style: normal;     font-weight: bold;   }</style> <div id="fb-root"></div><script>(function(d, s, id) {  var js, fjs = d.getElementsByTagName(s)[0];  var k = \'hello\';  if (d.getElementById(id)) return;  js = d.createElement(s); js.id = id;  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";  fjs.parentNode.insertBefore(js, fjs);}(document, "script", "facebook-jssdk"));</script><div id="rbBottombarGenericFblikeBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baseWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baseBgColor}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 2px -2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">      <div id="rbBottombarGenericFblikeLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.textLeft}}     </div>    <div id="rbBottombarGenericFblikeRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:10px;width:100px;left:42%;margin-right:20px;height:25px;background-color:#FFFFFF;border-radius:5px;">                      <div class="fb-like" data-href="{{rb.t.ul.facebookPage}}" data-send="false" data-layout="button_count" data-width="47px" data-show-faces="false" data-font="arial"></div>          </div>      <div id="rbBottombarGenericFblikeRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">                  {{rb.t.sg.textRight}}     </div>     <div  style="display:inline; position:absolute;bottom:5px;right:30px;margin-left:20px;color:#FFFFFF;font-weight:bold;">                    <a id="rbBottombarGenericFblikeRoiHelp" class="rbClickable" style= "text-decoration:none;color:#FFFFFF;" href="http://www.rulebot.com" >            ?            </a>       </div>    <div id="rbBottombarGenericFblikeCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; bottom:5px;right:10px;font-weight:bold;" >     X    </div> </div>'
 
 
 
-/****************************[[rbTemplBottombarGenericNormal.js]]*************************************/ 
+/****************************[[./templates/topbars/rbTemplBottombarGenericTwitterfollow.js]]*************************************/ 
 
 
-rbT.rbTemplBottombarGenericNormalHTML='<style>  .rbTextValue   {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     font-family: {{rb.t.ft.textFontfamily}};     font-weight: bold;   }</style><div id="rbBottombarGenericNormalBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baseWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baseBgColor}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 2px -2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">   <div id="rbBottombarGenericNormalLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.textLeft}}     </div>   <a id="rbBottombarGenericNormalRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:10px;width:80px;left:42%;margin-right:20px;height:25px; border-radius:5px;text-decoration:none; font-size:{{rb.t.nr.btnFontSize}}px;     background-color:{{rb.t.cr.btnBgColor}};text-shadow: 0px -1px 0px #29588D;       color :{{rb.t.cr.btnColor}};text-align:center;border:1px solid #305580;padding-top:3px" href="{{rb.t.ul.btnLink}}"> {{rb.t.sg.btnLable}} </a>      <div id="rbBottombarGenericNormalRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">                  {{rb.t.sg.textRight}}     </div>    <div  style="display:inline; position:absolute;right:30px; bottom:5px;margin-left:20px;font-weight:bold;">                    <a id="rbBottombarGenericNormalRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none;color:#333" href="{{rb.t.ul.helpLink}}" >            ?            </a>     </div>    <div id="rbBottombarGenericNormalCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#333; bottom:5px;right:10px;font-weight:bold;" >     X    </div> </div>'
-
-
-
-/****************************[[rbTemplBottombarGenericTwittershare.js]]*************************************/ 
-
-
-rbT.rbTemplBottombarGenericTwittershareHTML='<style>.rbTextValue  {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     text-shadow: 1px 1px {{rb.t.cr.textShadow}};     font-family: {{rb.t.ft.textFontfamily}};     text-shadow: 0 -1px 0 #007AA6;     font-weight: bold;   }</style> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script><div id="rbBottombarGenericTwshareBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baeWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baeBgColor}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 2px -2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">      <div id="rbBottombarGenericTwshareLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.leftText}}     </div>       <div id="rbBottombarGenericTwshareRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;left:42%;margin-right:20px;border-radius:5px;">                      <a href="https://twitter.com/share?text={{rb.t.sg.twitterSharetext}}" class="twitter-share-button" data-count="none" data-lang="en" data-size="large">Tweet</a>       </div>       <div id="rbBottombarGenericTwshareRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:47%; width:40%;overflow:hidden;">                  {{rb.t.sg.rightText}}     </div>     <div  style="display:inline; position:absolute;bottom:5px;right:30px;margin-left:20px;font-weight:bold;">                    <a id="rbBottombarGenericTwshareRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none ;color:#FFFFFF; " href="{{rb.t.ul.helpLink}}" >            ?            </a>       </div>    <div id="rbBottombarGenericTwshareCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; bottom:5px;right:10px;font-weight:bold;" >     X     </div> </div>'
+rbT.rbTemplBottombarGenericTwitterfollowHTML='<style>.rbTextValue  {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     text-shadow: 1px 1px {{rb.t.cr.textShadow}};     font-family: {{rb.t.ft.textFontfamily}};     text-shadow: 0 -1px 0 #007AA6;     font-weight: bold;   }</style> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script><div id="rbBottombarGenericTwfollowBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baeWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baeBgColor}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 2px -2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">       <div id="rbBottombarGenericTwfollowLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.textLeft}}     </div>    <div id="rbBottombarGenericTwfollowRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;left:42%;margin-right:20px;">                        <a  data-show-count="false" data-button = "blue" class="twitter-follow-button" href="https://twitter.com/{{rb.t.sg.twitterAccount}}" data-size="large">Follow {{rb.t.sg.twitterAccount}} </a>       </div>       <div id="rbBottombarGenericTwfollowRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:52%; width:40%;overflow:hidden;">                  {{rb.t.sg.textRight}}     </div>     <div  style="display:inline; position:absolute;bottom:5px;right:30px;margin-left:20px;font-weight:bold;">                    <a id="rbBottombarGenericTwfollowRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none ;color:#FFFFFF " href=http://www.rulebot.com"  >            ?            </a>       </div>    <div id="rbBottombarGenericTwfollowCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; bottom:5px;right:10px;font-weight:bold;" >     X     </div> </div>'
 
 
 
-/****************************[[rbTemplTopbarGenericFblike.js]]*************************************/ 
+/****************************[[./templates/topbars/rbTemplBottombarGenericNormal.js]]*************************************/ 
 
 
-rbT.rbTemplTopbarGenericFblikeHTML='<style>.rbTextValue   {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     font-family: {{rb.t.ft.textFontfamily}};     text-shadow : #1C2C4C 0px -1px 0px;     font-style: normal;     font-weight: bold;   }</style> <div id="fb-root"></div><script>(function(d, s, id) {  var js, fjs = d.getElementsByTagName(s)[0];  if (d.getElementById(id)) return;  js = d.createElement(s); js.id = id;  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";  fjs.parentNode.insertBefore(js, fjs);}(document, "script", "facebook-jssdk"));</script><div id="rbTopbarGenericFblikeBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baseWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baseBgColor}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 2px 2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">    <div id="rbTopbarGenericFblikeLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.textLeft}}     </div>             <div id="rbTopbarGenericFblikeRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:10px;width:80px;left:42%;margin-right:20px;height:25px;background-color:#FFFFFF;border-radius:5px;">                      <div class="fb-like" data-href="{{rb.t.ul.facebookPage=%%http://www.google.com}}" data-send="false" data-layout="button_count" data-width="250px" data-show-faces="false" data-font="arial"></div>          </div>         <div id="rbBottombarGenericFblikeRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">                  {{rb.t.sg.textRight}}     </div>   <div  style="display:inline; position:absolute;top:5px;right:30px;margin-left:20px;color:#FFFFFF;font-weight:bold;">                    <a id="rbTopbarGenericFblikeRoiHelp" class="rbClickable" style= "text-decoration:none;color:#FFFFFF;" href="{{rb.t.ul.helpLink}}" >            ?            </a>       </div>   <div id="rbTopbarGenericFblikeCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; top:5px;right:10px;font-weight:bold;" >     X   </div>     </div>'
-
-
-
-/****************************[[rbTemplTopbarGenericTwitterfollow.js]]*************************************/ 
-
-
-rbT.rbTemplTopbarGenericTwitterfollowHTML='<style>.rbTextValue  {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     text-shadow: 1px 1px {{rb.t.cr.textShadow}};     font-family: {{rb.t.ft.textFontfamily}};     text-shadow: 0 -1px 0 #007AA6;     font-weight: bold;   }</style> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script><div id="rbTopbarGenericTwfollowBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baeWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baeBgColor}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 2px 2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">          <div id="rbTopbarGenericTwfollowLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.textLeft}}     </div>           <div id="rbTopbarGenericTwfollowRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;left:42%;margin-right:20px;">                        <a  data-show-count="false" data-button = "blue" class="twitter-follow-button" href="https://twitter.com/{{rb.t.sg.twitterAccount}}" data-size="large">Follow {{rb.t.sg.twitterAccount}} </a>       </div>           <div id="rbTopbarGenericTwfollowRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:52%; width:40%;overflow:hidden;">                  {{rb.t.sg.textRight}}     </div>   <div style="display:inline; position:absolute;top:5px;right:30px;margin-left:20px;font-weight:bold;">                    <a id="rbTopbarGenericTwfollowRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none ;color:#FFFFFF; " href="{{rb.t.ul.helpLink}}" >            ?            </a>       </div>  <div id="rbTopbarGenericTwfollowCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; top:5px;right:10px;font-weight:bold;" >     X  </div> </div>'
+rbT.rbTemplBottombarGenericNormalHTML='<style>  .rbTextValue   {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     font-family: {{rb.t.ft.textFontfamily}};     font-weight: bold;   }</style><div id="rbBottombarGenericNormalBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baseWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baseBgColor}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 2px -2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">   <div id="rbBottombarGenericNormalLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.textLeft}}     </div>   <a id="rbBottombarGenericNormalRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:10px;width:80px;left:42%;margin-right:20px;height:25px; border-radius:5px;text-decoration:none; font-size:{{rb.t.nr.btnFontSize}}px;     background-color:{{rb.t.cr.btnBgColor}};text-shadow: 0px -1px 0px #29588D;       color :{{rb.t.cr.btnColor}};text-align:center;border:1px solid #305580;padding-top:3px" href="{{rb.t.ul.btnLink}}"> {{rb.t.sg.btnLable}} </a>      <div id="rbBottombarGenericNormalRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">                  {{rb.t.sg.textRight}}     </div>    <div  style="display:inline; position:absolute;right:30px; bottom:5px;margin-left:20px;font-weight:bold;">                    <a id="rbBottombarGenericNormalRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none;color:#333" href="http://www.rulebot.com" >            ?            </a>     </div>    <div id="rbBottombarGenericNormalCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#333; bottom:5px;right:10px;font-weight:bold;" >     X    </div> </div>'
 
 
 
-/****************************[[rbTemplTopbarGenericNormal.js]]*************************************/ 
+/****************************[[./templates/topbars/rbTemplBottombarGenericTwittershare.js]]*************************************/ 
 
 
-rbT.rbTemplTopbarGenericNormalHTML='<style>  .rbTextValue   {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     font-family: {{rb.t.ft.textFontfamily}};     font-weight: bold;   }</style><div id="rbTopbarGenericNormalBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baseWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baseBgColor}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 2px 2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">  <div id="rbTopbarGenericNormalLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.textLeft}}  </div>    <a id="rbTopbarGenericNormalRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;width:80px;left:42%;margin-right:20px;height:25px; border-radius:5px;text-decoration:none; font-size:{{rb.t.nr.btnFontSize}}px; background-color:{{rb.t.cr.btnBgColor}};text-shadow: 0px -1px 0px #29588D;   color :{{rb.t.cr.btnColor}};text-align:center;border:1px solid #305580; padding-top:3px;" href="{{rb.t.ul.btnLink}}"> {{rb.t.sg.btnLable}} </a>    <div id="rbTopbarGenericNormalRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">                  {{rb.t.sg.textRight}}    </div>           <div  style="display:inline; position:absolute;right:30px; top:5px;margin-left:20px;font-weight:bold;">                    <a id="rbTopbarGenericNormalRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none;color:#333" href="{{rb.t.ul.helpLink}}" >            ?            </a>     </div><div id="rbTopbarGenericNormalCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#333; top:5px;right:10px;font-weight:bold;" >     X</div> </div>'
-
-
-
-/****************************[[rbTemplTopbarGenericTwittershare.js]]*************************************/ 
-
-
-rbT.rbTemplTopbarGenericTwittershareHTML='<style>.rbTextValue  {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     text-shadow: 1px 1px {{rb.t.cr.textShadow}};     font-family: {{rb.t.ft.textFontfamily}};     text-shadow: 0 -1px 0 #007AA6;     font-weight: bold;   }</style> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script><div id="rbTopbarGenericTwshareBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baeWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baeBgColor}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 2px 2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">        <div id="rbTopbarGenericTwshareLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.leftText}}  </div>   <div id="rbTopbarGenericTwshareRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;left:42%;margin-right:20px;border-radius:5px;">                      <a href="https://twitter.com/share?text={{rb.t.sg.twitterSharetext}}" class="twitter-share-button" data-count="none" data-lang="en" data-size="large">Tweet</a>       </div>     <div id="rbBottombarGenericTwshareRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:47%; width:40%;overflow:hidden;">                  {{rb.t.sg.rightText}}  </div>       <div  style="display:inline; position:absolute;top:5px;right:30px;margin-left:20px;font-weight:bold;">                    <a id="rbTopbarGenericTwshareRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none ;color:#FFFFFF; " href="{{rb.t.ul.helpLink}}" >            ?            </a>       </div>    <div id="rbTopbarGenericTwshareCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; top:5px;right:10px;font-weight:bold;" >     X     </div> </div>'
+rbT.rbTemplBottombarGenericTwittershareHTML='<style>.rbTextValue  {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     text-shadow: 1px 1px {{rb.t.cr.textShadow}};     font-family: {{rb.t.ft.textFontfamily}};     text-shadow: 0 -1px 0 #007AA6;     font-weight: bold;   }</style> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script><div id="rbBottombarGenericTwshareBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baeWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baeBgColor}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 2px -2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">      <div id="rbBottombarGenericTwshareLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.leftText}}     </div>       <div id="rbBottombarGenericTwshareRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;left:42%;margin-right:20px;border-radius:5px;">                      <a href="https://twitter.com/share?text={{rb.t.sg.twitterSharetext}}" class="twitter-share-button" data-count="none" data-lang="en" data-size="large">Tweet</a>       </div>       <div id="rbBottombarGenericTwshareRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:47%; width:40%;overflow:hidden;">                  {{rb.t.sg.rightText}}     </div>     <div  style="display:inline; position:absolute;bottom:5px;right:30px;margin-left:20px;font-weight:bold;">                    <a id="rbBottombarGenericTwshareRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none ;color:#FFFFFF; " href="http://www.rulebot.com"  >            ?            </a>       </div>    <div id="rbBottombarGenericTwshareCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; bottom:5px;right:10px;font-weight:bold;" >     X     </div> </div>'
 
 
 
-/****************************[[rbTemplChatGenericNormal.js]]*************************************/ 
+/****************************[[./templates/topbars/rbTemplTopbarGenericFblike.js]]*************************************/ 
 
 
-rbT.rbTemplChatGenericNormalHTML='<script data-cfasync="false" type=\'text/javascript\'>window.olark||(function(c){var f=window,d=document,l=f.location.protocol=="https:"?"https:":"http:",z=c.name,r="load";var nt=function(){f[z]=function(){(a.s=a.s||[]).push(arguments)};var a=f[z]._={},q=c.methods.length;while(q--){(function(n){f[z][n]=function(){f[z]("call",n,arguments)}})(c.methods[q])}a.l=c.loader;a.i=nt;a.p={0:+new Date};a.P=function(u){a.p[u]=new Date-a.p[0]};function s(){a.P(r);f[z](r)}f.addEventListener?f.addEventListener(r,s,false):f.attachEvent("on"+r,s);var ld=function(){function p(hd){hd="head";return["<",hd,"></",hd,"><",i,\' onl\' + \'oad="var d=\',g,";d.getElementsByTagName(\'head\')[0].",j,"(d.",h,"(\'script\')).",k,"=\'",l,"//",a.l,"\'",\'"\',"></",i,">"].join("")}var i="body",m=d[i];if(!m){return setTimeout(ld,100)}a.P(1);var j="appendChild",h="createElement",k="src",n=d[h]("div"),v=n[j](d[h](z)),b=d[h]("iframe"),g="document",e="domain",o;n.style.display="none";m.insertBefore(n,m.firstChild).id=z;b.frameBorder="0";b.id=z+"-loader";if(/MSIE[ ]+6/.test(navigator.userAgent)){b.src="javascript:false"}b.allowTransparency="true";v[j](b);try{b.contentWindow[g].open()}catch(w){c[e]=d[e];o="javascript:var d="+g+".open();d.domain=\'"+d.domain+"\';";b[k]=o+"void(0);"}try{var t=b.contentWindow[g];t.write(p());t.close()}catch(x){b[k]=o+\'d.write("\'+p().replace(/"/g,String.fromCharCode(92)+\'"\')+\'");d.close();\'}a.P(2)};ld()};nt()})({loader: "static.olark.com/jsclient/loader0.js",name:"olark",methods:["configure","extend","declare","identify"]});olark.identify({{rb.t.sg.olarkIdentity}});</script><noscript><a href="https://www.olark.com/site/6679-845-10-6199/contact" title="Contact us" target="_blank">Questions? Feedback?</a> powered by <a href="http://www.olark.com?welcome" title="Olark live chat software">Olark live chat software</a></noscript>'
+rbT.rbTemplTopbarGenericFblikeHTML='<style>.rbTextValue   {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     font-family: {{rb.t.ft.textFontfamily}};     text-shadow : #1C2C4C 0px -1px 0px;     font-style: normal;     font-weight: bold;   }</style> <div id="fb-root"></div><script>(function(d, s, id) {  var js, fjs = d.getElementsByTagName(s)[0];  if (d.getElementById(id)) return;  js = d.createElement(s); js.id = id;  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";  fjs.parentNode.insertBefore(js, fjs);}(document, "script", "facebook-jssdk"));</script><div id="rbTopbarGenericFblikeBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baseWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baseBgColor}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 2px 2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">    <div id="rbTopbarGenericFblikeLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.textLeft}}     </div>             <div id="rbTopbarGenericFblikeRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:10px;width:80px;left:42%;margin-right:20px;height:25px;background-color:#FFFFFF;border-radius:5px;">                      <div class="fb-like" data-href="{{rb.t.ul.facebookPage=%%http://www.google.com}}" data-send="false" data-layout="button_count" data-width="250px" data-show-faces="false" data-font="arial"></div>          </div>         <div id="rbBottombarGenericFblikeRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">                  {{rb.t.sg.textRight}}     </div>   <div  style="display:inline; position:absolute;top:5px;right:30px;margin-left:20px;color:#FFFFFF;font-weight:bold;">                    <a id="rbTopbarGenericFblikeRoiHelp" class="rbClickable" style= "text-decoration:none;color:#FFFFFF;" href="http://www.rulebot.com"  >            ?            </a>       </div>   <div id="rbTopbarGenericFblikeCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; top:5px;right:10px;font-weight:bold;" >     X   </div>     </div>'
 
 
 
-/****************************[[rbTemplModalGenericNormal.js]]*************************************/ 
+/****************************[[./templates/topbars/rbTemplTopbarGenericTwitterfollow.js]]*************************************/ 
+
+
+rbT.rbTemplTopbarGenericTwitterfollowHTML='<style>.rbTextValue  {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     text-shadow: 1px 1px {{rb.t.cr.textShadow}};     font-family: {{rb.t.ft.textFontfamily}};     text-shadow: 0 -1px 0 #007AA6;     font-weight: bold;   }</style> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script><div id="rbTopbarGenericTwfollowBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baeWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baeBgColor}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 2px 2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">          <div id="rbTopbarGenericTwfollowLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.textLeft}}     </div>           <div id="rbTopbarGenericTwfollowRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;left:42%;margin-right:20px;">                        <a  data-show-count="false" data-button = "blue" class="twitter-follow-button" href="https://twitter.com/{{rb.t.sg.twitterAccount}}" data-size="large">Follow {{rb.t.sg.twitterAccount}} </a>       </div>           <div id="rbTopbarGenericTwfollowRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:52%; width:40%;overflow:hidden;">                  {{rb.t.sg.textRight}}     </div>   <div style="display:inline; position:absolute;top:5px;right:30px;margin-left:20px;font-weight:bold;">                    <a id="rbTopbarGenericTwfollowRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none ;color:#FFFFFF; " href="http://www.rulebot.com"  >            ?            </a>       </div>  <div id="rbTopbarGenericTwfollowCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; top:5px;right:10px;font-weight:bold;" >     X  </div> </div>'
+
+
+
+/****************************[[./templates/topbars/rbTemplTopbarGenericNormal.js]]*************************************/ 
+
+
+rbT.rbTemplTopbarGenericNormalHTML='<style>  .rbTextValue   {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     font-family: {{rb.t.ft.textFontfamily}};     font-weight: bold;   }</style><div id="rbTopbarGenericNormalBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baseWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baseBgColor}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 2px 2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">  <div id="rbTopbarGenericNormalLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.textLeft}}  </div>    <a id="rbTopbarGenericNormalRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;width:80px;left:42%;margin-right:20px;height:25px; border-radius:5px;text-decoration:none; font-size:{{rb.t.nr.btnFontSize}}px; background-color:{{rb.t.cr.btnBgColor}};text-shadow: 0px -1px 0px #29588D;   color :{{rb.t.cr.btnColor}};text-align:center;border:1px solid #305580; padding-top:3px;" href="{{rb.t.ul.btnLink}}"> {{rb.t.sg.btnLable}} </a>    <div id="rbTopbarGenericNormalRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">                  {{rb.t.sg.textRight}}    </div>           <div  style="display:inline; position:absolute;right:30px; top:5px;margin-left:20px;font-weight:bold;">                    <a id="rbTopbarGenericNormalRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none;color:#333" href="http://www.rulebot.com"  >            ?            </a>     </div><div id="rbTopbarGenericNormalCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#333; top:5px;right:10px;font-weight:bold;" >     X</div> </div>'
+
+
+
+/****************************[[./templates/topbars/rbTemplTopbarGenericTwittershare.js]]*************************************/ 
+
+
+rbT.rbTemplTopbarGenericTwittershareHTML='<style>.rbTextValue  {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     text-shadow: 1px 1px {{rb.t.cr.textShadow}};     font-family: {{rb.t.ft.textFontfamily}};     text-shadow: 0 -1px 0 #007AA6;     font-weight: bold;   }</style> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script><div id="rbTopbarGenericTwshareBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baeWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baeBgColor}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 2px 2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">        <div id="rbTopbarGenericTwshareLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.leftText}}  </div>   <div id="rbTopbarGenericTwshareRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;left:42%;margin-right:20px;border-radius:5px;">                      <a href="https://twitter.com/share?text={{rb.t.sg.twitterSharetext}}" class="twitter-share-button" data-count="none" data-lang="en" data-size="large">Tweet</a>       </div>     <div id="rbBottombarGenericTwshareRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:47%; width:40%;overflow:hidden;">                  {{rb.t.sg.rightText}}  </div>       <div  style="display:inline; position:absolute;top:5px;right:30px;margin-left:20px;font-weight:bold;">                    <a id="rbTopbarGenericTwshareRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none ;color:#FFFFFF; " href="http://www.rulebot.com"  >            ?            </a>       </div>    <div id="rbTopbarGenericTwshareCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; top:5px;right:10px;font-weight:bold;" >     X     </div> </div>'
+
+
+
+/****************************[[./templates/topbars/rbTemplChatGenericNormal.js]]*************************************/ 
+
+
+rbT.rbTemplChatGenericNormalHTML='<script data-cfasync="false" type=\'text/javascript\'>window.olark||(function(c){var f=window,d=document,l=f.location.protocol=="https:"?"https:":"http:",z=c.name,r="load";var nt=function(){f[z]=function(){(a.s=a.s||[]).push(arguments)};var a=f[z]._={},q=c.methods.length;while(q--){(function(n){f[z][n]=function(){f[z]("call",n,arguments)}})(c.methods[q])}a.l=c.loader;a.i=nt;a.p={0:+new Date};a.P=function(u){a.p[u]=new Date-a.p[0]};function s(){a.P(r);f[z](r)}f.addEventListener?f.addEventListener(r,s,false):f.attachEvent("on"+r,s);var ld=function(){function p(hd){hd="head";return["<",hd,"></",hd,"><",i,\' onl\' + \'oad="var d=\',g,";d.getElementsByTagName(\'head\')[0].",j,"(d.",h,"(\'script\')).",k,"=\'",l,"//",a.l,"\'",\'"\',"></",i,">"].join("")}var i="body",m=d[i];if(!m){return setTimeout(ld,100)}a.P(1);var j="appendChild",h="createElement",k="src",n=d[h]("div"),v=n[j](d[h](z)),b=d[h]("iframe"),g="document",e="domain",o;n.style.display="none";m.insertBefore(n,m.firstChild).id=z;b.frameBorder="0";b.id=z+"-loader";if(/MSIE[ ]+6/.test(navigator.userAgent)){b.src="javascript:false"}b.allowTransparency="true";v[j](b);try{b.contentWindow[g].open()}catch(w){c[e]=d[e];o="javascript:var d="+g+".open();d.domain=\'"+d.domain+"\';";b[k]=o+"void(0);"}try{var t=b.contentWindow[g];t.write(p());t.close()}catch(x){b[k]=o+\'d.write("\'+p().replace(/"/g,String.fromCharCode(92)+\'"\')+\'");d.close();\'}a.P(2)};ld()};nt()})({loader: "static.olark.com/jsclient/loader0.js",name:"olark",methods:["configure","extend","declare","identify"]});olark.identify({{rb.t.sg.olarkIdentity}});</script><noscript><a href="https://www.olark.com/site/{{rb.t.sg.olarkIdentity}}/contact" title="Contact us" target="_blank">Questions? Feedback?</a> powered by <a href="http://www.olark.com?welcome" title="Olark live chat software">Olark live chat software</a></noscript>'
+
+
+
+/****************************[[./templates/topbars/rbTemplModalGenericNormal.js]]*************************************/ 
 
 
 rbT.rbTemplModalGenericNormalHTML='<style>#rbModalGenericNormalTranblockContainer {          visibility: visible;         position: fixed;          left: 0px;          top: 0px;           width:100%;           height:100%;       background-color:black;          z-index:{{rb.f.nr.transBlockZindex}};      opacity:0.6;      filter:alpha(opacity=60);}#rbModalGenericNormalBaseContainer{          visibility: visible;         position: fixed;          left: 0px;          top: 0px;           width:100%;           height:100%;      z-index:{{rb.f.nr.baseZindex}}; }#rbModalGenericNormalSubsubContainer        {                 width:500px; 	           height: 300px;             background-color:{{rb.t.cr.baseBgColor}};               border:4px solid #a3a3a3;                position: fixed;             border-radius:5px;             top : 30%;             left : 30%;        }  </style><div id="rbModalGenericNormalTranblockContainer"></div> <div id="rbModalGenericNormalBaseContainer">		<div id="rbModalGenericNormalSubContainer">		<div id="rbModalGenericNormalSubsubContainer"  style="postion:relative;">                                 <div style="top:0px;width:100%;height:18%;left:0px;background-color:{{rb.t.cr.headingBgColor}};">           <div style="top:0%;left:0 %;position:absolute;color:{{rb.t.cr.modalHeadingColor}};width:70%; height:14%;font-size:{{rb.t.nr.modalHeadingFontsize}}px;font-family:{{rb.t.ft.headingFontfamily}}; overflow:hidden;border-top-left-radius:5px;border-top-right-radius:5px;padding:5px;text-shadow:1px 1px {{rb.t.cr.modalHeadingTextShadow#6e6e6e}};">               {{rb.t.sg.modalHeadingText}}           </div>          <div id="rbModalGenericNormalCloseClick" class="rbClickable"  style="top:1%;right:1%;position:absolute;color:black;font-weight:bold; padding:2px;">            X          </div>            </div>           	<div style="top:22%;left:0%;position:absolute;color:{{rb.t.cr.modalTextColor}};width:70%;height:65%;overflow:hidden;font-size:{{rb.t.nr.modalTextFontsize}}px;font-family:{{rb.t.ft.textFontfamily}};text-align:left;border-bottom-left-radius:5px;border-bottom-right-radius:5px;padding:5px;">           	    {{rb.t.sg.modalText}}                         	 </div>             <div style="top:30%;right:5%;width:15%;height:20%;position:absolute;overflow:hidden">              <img src="{{rb.t.sg.modalImgPath}}" alt="image"\>             </div> 			               <button   style="bottom:2%;right:2%;position:absolute;color:white;width:75px;height:25px;text-align:center;background-color:{{rb.t.cr.buttonBgColor}};border-radius:5px;padding-top:2px;border:1px solid #305580 ;font-weight: bold;">               <a  id="rbModalGenericNormalRoiButton" class="rbClickable" style="text-decoration:none;color:white;" href= "{{rb.t.ul.modalBtnLink}}" target="_self" class="rbClickable" >                {{rb.t.sg.modalBtnLable}}               </a>             </button>	      </div>	</div></div>'
@@ -3012,9 +3073,9 @@ rbT.eventHandler = {
 	clickListner : function(evt){
         
 
-		var id = event.target.id;
+		var id = evt.target.id;
 
-		console.log(evt);
+		console.log(id);
 
 		var ele = document.getElementById(id);
 
@@ -3031,7 +3092,7 @@ rbT.eventHandler = {
   
     else if ( idMatch[3] == 'Roi' )
     {
-         rbT.eventHandler.roiFromTemplClick(idMatch);
+         rbT.eventHandler.roiFromTemplClick(idMatch,evt);
 
     }
 
@@ -3138,7 +3199,10 @@ rbT.eventHandler = {
 
 //******************************************************************************************************
   
-  roiFromTemplClick:function(idMatch){
+  roiFromTemplClick:function(idMatch,evt){
+
+    var link = evt.target.href;
+    window.open(link);
 
     //TODO
 
@@ -3157,6 +3221,7 @@ rbT.eventHandler = {
 /* Main code */
 /* The global Rulebot scope */
 "use strict";
+
 
 
 //************************************************************************************
@@ -3191,8 +3256,8 @@ rbT.getTemplateHTMLByNameInternal = function(name){
 rbT.getTemplateApplyVarsInternal = function(html,vars){
 	//TODO: check instanceOf
 	if(html.length){
-		for (var key in vars) {
-			var value = vars[key]; 
+		for (var i =0; i<vars.length; i++) {
+			var value = vars[i]; 
 			var tempVarToBeReplaced = value.key
             var replaceKey = rbT.keyPrefix + tempVarToBeReplaced + rbT.keySuffix;
 			html = html.replace(replaceKey, value.value);
@@ -3254,9 +3319,11 @@ rbT.invokeActionScriptInternal=function(action,actionParams){
 
       //TODO get the OS version here based on that action display
 
+      rbT.init();
+      
       var templateName = action;
        
-      var pos= extractDisplayPositionFromTemplName(templateName);
+      var pos= rbT.extractDisplayPositionFromTemplName(templateName);
 
       var isPosOccupied = rbT.isTemplPosOccupied(pos);
 
@@ -3272,8 +3339,8 @@ rbT.invokeActionScriptInternal=function(action,actionParams){
           
           if(pos =='modal')
           {
-               for (var key in actionParams) {
-			    var value = vars[key]; 
+               for (var i =0;i<actionParams.length;i++) {
+			    var value = actionParams[i]; 
 			    if( 'rb.f.nr.transBlockZindex' == value.key)
 			    {
 				  value.value =  rbT.findZIndex();
@@ -3287,8 +3354,8 @@ rbT.invokeActionScriptInternal=function(action,actionParams){
          }
           else{
                 
-            for (var key in actionParams) {
-			   var value = vars[key]; 
+           for (var j =0;j<actionParams.length;j++) {
+			    var value = actionParams[j]; 
 			   if( 'rb.f.nr.baseZindex' == value.key)
 			  {
 				value.value =  rbT.findZIndex()+5;

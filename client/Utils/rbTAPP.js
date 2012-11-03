@@ -27,8 +27,9 @@ var rbTAPP = {
       // 2). Create session Deferred till further discussion
       //rbTAPP.createSession();
 
-      // 3). Initialize rulebot rules
-      rbTRules.init();
+      // 3). Get rulebot app details
+      //rbTRules.init();
+      this.getAppData();
 
       // 4). Initialize system variables  
       rbTSystemVar.init();
@@ -36,7 +37,6 @@ var rbTAPP = {
       // 5). FIXME : Check status of last event, if pending, execute it.
       //rbTRules.executeLastPendingEvent();
 
-      window.rb = new RBT();
     },
 
     /**
@@ -137,7 +137,7 @@ var rbTAPP = {
     */  
     getActorID : function()
     {
-      return rbTCookie.getCookie(rbTCookie.defaultCookie.actorID); 
+      return rbTCookie.getCookie(rbTCookie.defaultCookies.actorID); 
       //return this.configs.actorID;
     },
 
@@ -180,7 +180,6 @@ var rbTAPP = {
     getAppData : function()
     {
       rbTServerChannel.makeRequest({ "url"   : rbTServerChannel.url.appDetails,
-                                     "params": {"appid":this.configs.appID},
                                      "cb"    : { success: rbTServerResponse.setAppDetail,
                                                  error  : rbTServerResponse.defaultError
                                                }
@@ -230,8 +229,7 @@ var rbTAPP = {
     reportError : function(params)
     {
       try {
-          if (params.log) 
-            rbTDebug.error(params);
+          rbTDebug.error(params);
           if (params.server) 
             rbTServerChannel.reportError(params);
       } catch(e) {
