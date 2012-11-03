@@ -20,18 +20,18 @@ Ganga::Application.routes.draw do
   get   '/category',          :to => 'rules#category'
  
   # Actor Api
-  post  '/actor/create',      :to => 'actors#create'
-  get   '/actor/read',        :to => 'actors#read'
-  post  '/actor/identify',    :to => 'actors#identify'
-  post  '/actor/set',         :to => 'actors#set'
-  post  '/actor/alias',       :to => 'actors#alias'
+  get  '/actor/create',      :to => 'actors#create'
+  get  '/actor/read',        :to => 'actors#read'
+  get  '/actor/identify',    :to => 'actors#identify'
+  get  '/actor/set',         :to => 'actors#set'
+  get  '/actor/alias',       :to => 'actors#alias'
 
 
   # App Api
-  post '/app/create',         :to => 'apps#create'
-  get  '/app/read',           :to => 'apps#read'
-  post '/app/update',         :to => 'apps#update'
-  post '/app/delete',         :to => 'apps#delete'
+  get '/app/create',         :to => 'apps#create'
+  get '/app/read',           :to => 'apps#read'
+  get '/app/update',         :to => 'apps#update'
+  get '/app/delete',         :to => 'apps#delete'
   
 
   # Event Api
@@ -44,6 +44,8 @@ Ganga::Application.routes.draw do
   # Rule Api
   get '/rule/create',         :to => "rules#create"
   get '/rule/update',         :to => "rules#update"
+  get '/rule/read',           :to => "rules#read"
+  get '/rule/delete',         :to => "rules#delete"
 
   
   match '/:locale' => 'base#index'                                    

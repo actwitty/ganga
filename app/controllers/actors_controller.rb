@@ -1,9 +1,10 @@
 require 'utility'
 class ActorsController < ApplicationController
   protect_from_forgery
-
   before_filter :authenticate_account!
   #before_filter :authenticate_app!
+
+  respond_to :json
 
   # NOTE
   ## Creates an actor.. 
@@ -34,7 +35,8 @@ class ActorsController < ApplicationController
     Rails.logger.info("Enter Create Actor")
 
     # Create Anonymous actor
-    params[:account_id] = current_account._id
+    params[:account_id] = current_account._id if Rails.env != "test"
+
     obj = Actor.create!(app_id: params[:app_id], account_id: params[:account_id])
 
     raise et("actor.create_failed") if obj.blank?
@@ -51,17 +53,19 @@ class ActorsController < ApplicationController
     hash["id"] = hash["_id"]
     hash.delete("_id")
 
-    render json: hash, status: 200 
+    respond_with(hash, status: 200)
   rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    render json: { errors: e.message} , status: 422
+    respond_with({ errors: e.message} , status: 422)
   end
+  
+
   # NOTE
   ## Uniqly identify an actor..
   ## If not set an auto unique id is assigned to actor
-  ## Also If not set, then for example a user coming from mobile and PC
+  ## Also If not set, then a user coming from mobile and PC
   ## will be identified as two different user.
-  ## Identiy Any unique id which business want - email or any other id
+  ## Identify with Any unique id which business want - email or any other id
 
   # INPUT => 
   ## {
@@ -79,15 +83,15 @@ class ActorsController < ApplicationController
   def identify
     Rails.logger.info("Enter Actor Identify")
 
-    params[:account_id] = current_account._id
+    params[:account_id] = current_account._id if Rails.env != "test"
     ret = Actor.identify(params)
 
     raise ret[:error] if !ret[:error].blank?
 
-    render json: {actor_id: ret[:return]}, status: 200 
+    respond_with({actor_id: ret[:return]}, status: 200 )
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    render json: { errors: e.message} , status: 422
+    respond_with({ errors: e.message} , status: 422)
   end
 
   # NOTE
@@ -125,7 +129,7 @@ class ActorsController < ApplicationController
   def set
     Rails.logger.info("Enter Actor Set")
 
-    params[:account_id] = current_account._id
+    params[:account_id] = current_account._id if Rails.env != "test"
 
     ret = Actor.set(params)
 
@@ -135,10 +139,10 @@ class ActorsController < ApplicationController
     hash["id"] = hash["_id"]
     hash.delete("_id")
 
-    render json: hash, status: 200
+    respond_with( hash, status: 200)
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    render json: { errors: e.message }, status: 422
+    respond_with({ errors: e.message} , status: 422)
   end
 
   # NOTE
@@ -155,16 +159,16 @@ class ActorsController < ApplicationController
   def alias
     Rails.logger.info("Enter Actor Alias")
 
-    params[:account_id] = current_account._id
+    params[:account_id] = current_account._id if Rails.env != "test"
     ret = Actor.alias(params)
 
     raise ret[:error] if !ret[:error].blank?
 
-    render json: {status: ret[:return]}, status: 200
+    respond_with({status: ret[:return]}, status: 200)
 
   rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    render json: { errors: e.message} , status: 422
+    respond_with({ errors: e.message} , status: 422)
   end
 
   # NOTE
@@ -201,15 +205,15 @@ class ActorsController < ApplicationController
   def read
     Rails.logger.info("Enter Actor Read")
 
-    params[:account_id] = current_account._id
+    params[:account_id] = current_account._id if Rails.env != "test"
     ret = Actor.read(params)
 
     raise ret[:error] if !ret[:error].blank?
 
-    render json: ret[:return], status: 200
+    respond_with(ret[:return], status: 200)
 
   rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    render json: { errors: e.message} , status: 422
+    respond_with({ errors: e.message} , status: 422)
   end
 end

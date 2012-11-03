@@ -6,6 +6,7 @@ require "action_controller/railtie"
 require "action_mailer/railtie"
 require "active_resource/railtie"
 require 'sprockets/railtie'
+require 'rack/jsonp'
 #require "rails/test_unit/railtie"  #removed as we are using rspec - alok
 
 
@@ -75,5 +76,15 @@ module Ganga
 
 
     config.ember.variant = Rails.env.to_sym
+
+    # ALOK for JSONP middleware
+    config.middleware.use Rack::JSONP do
+      allow do
+        origins 'example.org'
+        resource %r{/apps/\d+.json},
+          #:headers => ['Origin', 'Accept', 'Content-Type'],
+          :methods => [:post]
+      end
+    end
   end
 end

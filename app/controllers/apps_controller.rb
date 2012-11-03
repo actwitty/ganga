@@ -1,9 +1,11 @@
 require 'utility'
 
 class AppsController < ApplicationController
-	before_filter :authenticate_account!
-	protect_from_forgery
+	
+  protect_from_forgery
+  before_filter :authenticate_account!
 
+  respond_to  :json
   # NOTE
   ## Create App
 
@@ -48,10 +50,10 @@ class AppsController < ApplicationController
 		hash["id"] = hash["_id"]
 		hash.delete("_id")
 
-	  render json: hash, status: 200			
+	  respond_with(hash, status: 200)			
 	rescue => e
 		Rails.logger.error("**** ERROR **** #{er(e)}")
-		render json: { errors: e.message} , status: 422
+		respond_with({ errors: e.message} , status: 422)
 	end
 
 
@@ -73,10 +75,10 @@ class AppsController < ApplicationController
 
 		App.where(account_id: current_account._id , _id: params[:app_id]).destroy
 
-		render json: {status: true}, status: 200			
+		respond_with({status: true}, status: 200)			
 	rescue => e
 		Rails.logger.error("**** ERROR **** #{er(e)}")
-		render json: { errors:  e.message}, status: 422
+		respond_with({ errors:  e.message}, status: 422)
 	end
 
 
@@ -126,10 +128,10 @@ class AppsController < ApplicationController
 		hash["id"] = hash["_id"]
 		hash.delete("_id")
 
-		render json: hash, status: 200			
+		respond_with(hash, status: 200)		
 	rescue => e
 		Rails.logger.error("**** ERROR **** #{er(e)}")
-		render json: { errors: e.message}, status: 422
+		respond_with({ errors: e.message}, status: 422)
 	end	
 
 
@@ -169,7 +171,7 @@ class AppsController < ApplicationController
   ##                                           'sign_up' => {"name" => String, "address[city]" => "String"}
   ##                                     }
   ##                             
-  ##                             actor:  {
+  ##                             profile:{
   ##                                         "gender" => String, "name" => "String"
   ##                                     }  
   ##                             system: {
@@ -197,9 +199,9 @@ class AppsController < ApplicationController
 		
 		raise ret[:error] if !ret[:error].blank?
 
-		render json: ret[:return], status: 200			
+		respond_with(ret[:return], status: 200)			
 	rescue => e
 		Rails.logger.error("**** ERROR **** #{er(e)}")
-		render json: { errors: e.message}, status: 422
+		respond_with( { errors: e.message}, status: 422)
 	end
 end

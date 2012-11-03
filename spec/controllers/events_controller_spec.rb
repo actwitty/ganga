@@ -8,6 +8,7 @@ describe EventsController do
     @account = FactoryGirl.create(:account)
     @app = FactoryGirl.create(:app, account_id: @account._id)
     @actor = FactoryGirl.create(:actor, account_id: @account._id, app_id: @app._id)
+    request.env['HTTP_ACCEPT'] = "application/json"
   end
   
   describe "create event" do
