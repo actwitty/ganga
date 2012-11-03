@@ -26,7 +26,7 @@
 
   <div class="event_box">
     <h3> Trigger Event </h3>
-    <select class="select2Props evt_sel" {{action "changeRuleEvent" target="App.conditionsView"}}>
+    <select class="select2Props evt_sel" {{action "changeRuleEvent" }}>
   
       {{#each event in view.rules.events}}    
         {{#ifequal view.rules.selected.event event}}

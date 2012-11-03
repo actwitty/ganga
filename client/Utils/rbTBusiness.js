@@ -37,11 +37,6 @@ RBT.prototype.sendEvent = function(event, params)
                                             error  : rbTServerResponse.defaultError
                                           }
                               });
-  /*rbTServerChannel.makeEventRequest(event, 
-                                    params,
-                                    { success: rbTServerResponse.handleEvent,
-                                      error  : rbTServerResponse.defaultError
-                                    });*/
 };
 
 /** 
@@ -59,12 +54,6 @@ RBT.prototype.identify = function(params)
                                              error  : rbTServerResponse.defaultError
                                            }
                               });
-  /*rbTServerChannel.makeGetRequest(,
-                                params,
-                                { success: rbTServerResponse.setActor,
-                                  error  : rbTServerResponse.defaultError
-                                }
-                               );*/
 };
 
 
@@ -84,11 +73,6 @@ RBT.prototype.setUserProperty = function(params)
                                             error  : rbTServerResponse.defaultError
                                           }
                               });
-  /*rbTServerChannel.makeGetRequest( rbTServerChannel.url.setUserProperty,
-                                   params,
-                                   { success: rbTServerResponse.setUserProperty,
-                                     error  : rbTServerResponse.defaultError
-                                  });*/
 };
 
 

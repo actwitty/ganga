@@ -1,7 +1,6 @@
 <select class='select2Props operation_sel' {{action "changedOperation" condition }}>
-  <h3>{{view.operations}}</h3>
   {{#eachProperty view.operationList}}    
-    {{#ifequal iter_key view.operation}}
+    {{#ifequal iter_key view.condition.operation}}
       <option  value="{{getvalue iter_key}}" selected >{{iter_val}}</option>
     {{else}}
       <option  value="{{getvalue iter_key}}" >{{iter_val}}</option>

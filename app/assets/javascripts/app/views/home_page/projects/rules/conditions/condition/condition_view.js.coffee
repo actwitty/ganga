@@ -31,8 +31,12 @@ App.ConditionView = Ember.View.extend
   # ------------------------------------------
   observeChangeInType: (->    
     type = @get('condition').get('type')
-    @set 'inputBoxType', 'input_box ' + type   
+    @set 'inputBoxType', 'input_box ' + type
   ).observes('condition.type')
+  # ------------------------------------------
+  applyChangedType: (event, type) ->
+    target = $(event.target)
+    target.closest('.entry').find('.type_sel').select2('val', type)
 
   # ------------------------------------------
   getNewDataType: (event) ->
@@ -48,7 +52,13 @@ App.ConditionView = Ember.View.extend
   getNewProperty: (event) ->
     target = $(event.target)
     val = target.select2("val")
-
+  # ------------------------------------------
+  getNewPropertyScope: (event) ->
+    target = $(event.target)
+    val = target.select2("val")
+    option = target.find 'option[value="' + val  + '"]'
+    option.attr 'scope'
+   
 
   
     

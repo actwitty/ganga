@@ -1,13 +1,15 @@
-var TEST_RBT_RULE_JSON = {"customer":{
-                        "email":"gmail.com",
-                        "val1":123,
-                        "val2":321,
-                        "swh":"actwitty",
-                        "ewh":"actwitty",
-                        "cns":"actwitty",
-                        "drg":"3/3/2011"
-                      }
-          };
+var TEST_RBT_RULE_JSON = {
+                            "customer":{
+                                        "name" :"samarth",
+                                        "email":"gmail.com",
+                                        "val1":123,
+                                        "val2":321,
+                                        "swh":"actwitty",
+                                        "ewh":"actwitty",
+                                        "cns":"actwitty",
+                                        "drg":"3/3/2011"
+                                       }
+                         };
 
 var rbTRules = {
 
@@ -65,6 +67,15 @@ var rbTRules = {
                   negation: 'false',
                   operation: 'eql',
                   value1: 'gmail.com',
+                  connect: 'and' 
+                },
+                // negate condition
+                { 
+                  property: "#customer.name",
+                  type : "String",
+                  negation: 'true',
+                  operation: 'swh',
+                  value1: 'a',
                   connect: 'and' 
                 },
                 // actor_property based condition
@@ -170,7 +181,6 @@ var rbTRules = {
       } else 
         return " ";
     }
-    // FIXME :: ADD NEGATION PARAMS HERE
     function ruleParams(rule)
     {
       if (rule.value2)
@@ -355,7 +365,7 @@ var rbTRules = {
   */
   isNegate :  function(x)
   {
-    return (x === "true") ? false : true; 
+    return (x === "true") ? true : false; 
   },
 
   /**
@@ -405,6 +415,7 @@ var rbTRules = {
   /* 
      RULE FUNCTIONS 
      We should be having try-catch in all rule functions.
+     FIXME :: MERGE ALL IN ONE FUNCTION WITH CONDITION TO SAVE SPACE
   */
   rule : 
   {
@@ -422,8 +433,10 @@ var rbTRules = {
         $("#applyingrules").append("<h3>less than</h3>");
         if (!rbTRules.isValidRule(t,"ltn",a,b))
           return false;
+        var res = false;
         var prop = rbTRules.evalProperty(a);
-        return ((prop < rbTRules.valueDataType(prop, b)) && rbTRules.isNegate(x) );
+        res = ((prop < rbTRules.valueDataType(prop, b)) || rbTRules.isNegate(x) );
+        return (x === "true") ? !res : res;
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on lt failed" , 
@@ -447,8 +460,10 @@ var rbTRules = {
         $("#applyingrules").append("<h3>greater than</h3>");
         if (!rbTRules.isValidRule(t,"gtn",a,b))
           return false;
+        var res = false;
         var prop = rbTRules.evalProperty(a);
-        return ((prop > rbTRules.valueDataType(prop, b)) && rbTRules.isNegate(x) );
+        res = ((prop > rbTRules.valueDataType(prop, b)) || rbTRules.isNegate(x) );
+        return (x === "true") ? !res : res;
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on gt failed" , 
@@ -473,8 +488,10 @@ var rbTRules = {
         $("#applyingrules").append("<h3>equal to</h3>");
         if (!rbTRules.isValidRule(t,"eql",a,b))
           return false;
+        var res = false;
         var prop = rbTRules.evalProperty(a);
-        return ((prop === rbTRules.valueDataType(prop, b)) && rbTRules.isNegate(x) );
+        res =  ((prop === rbTRules.valueDataType(prop, b)) || rbTRules.isNegate(x) );
+        return (x === "true") ? !res : res; 
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on equal_to failed" , 
@@ -500,10 +517,12 @@ var rbTRules = {
         if (!rbTRules.isValidRule(t,"cns",a,b))
           return false;
         var prop = rbTRules.evalProperty(a);
+        var res;
         if (prop.indexOf(rbTRules.valueDataType(prop, b)) >= 0 )
-          return (true && rbTRules.isNegate(x) );
+          res = true;
         else
-          return (false && rbTRules.isNegate(x) );
+          res = false;
+        return (x === "true") ? !res : res; 
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on contains failed" , 
@@ -528,11 +547,13 @@ var rbTRules = {
         $("#applyingrules").append("<h3>starts with</h3>");
         if (!rbTRules.isValidRule(t,"swh",a,b))
           return false;
+        var res = false;
         var prop = rbTRules.evalProperty(a);
         if (prop.match("^"+rbTRules.valueDataType(prop, b)))
-          return (true && rbTRules.isNegate(x) );
+          res = true;
         else
-          return (false && rbTRules.isNegate(x) );
+          res = false;
+        return (x === "true") ? !res : res;
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on starts_with failed" , 
@@ -558,10 +579,12 @@ var rbTRules = {
         if (!rbTRules.isValidRule(t,"ewh",a,b))
           return false;
         var prop = rbTRules.evalProperty(a);
+        var res;
         if (prop.match(rbTRules.valueDataType(prop, b)+"$"))
-          return (true && rbTRules.isNegate(x) );
+          res = true;
         else
-          return (false && rbTRules.isNegate(x) );
+          res = false;
+        return (x === "true") ? !res : res;
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on ends_with failed" , 
@@ -587,7 +610,9 @@ var rbTRules = {
         if (!rbTRules.isValidRule(t,"btn",a,b,c))
           return false;
         var prop = rbTRules.evalProperty(a);
-        return prop >= rbTRules.valueDataType(prop, b) && a <= rbTRules.valueDataType(prop, c)  && rbTRules.isNegate(x) ;
+        var res;
+        res = (prop >= rbTRules.valueDataType(prop, b) && a <= rbTRules.valueDataType(prop, c)) ;
+        return (x === "true") ? !res : res;
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on between failed" , 
@@ -613,8 +638,10 @@ var rbTRules = {
         if (!rbTRules.isValidRule(t,"rgx",a,b))
           return false;
         var prop = rbTRules.evalProperty(a);
+        var res;
         regexp = new RegExp(b, 'gi');
-        return ( regexp.test(prop) && rbTRules.isNegate(x) ) ;
+        res = regexp.test(prop);
+        return (x === "true") ? !res : res;
       } catch (e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on regex failed" , 
@@ -639,8 +666,10 @@ var rbTRules = {
         if (!rbTRules.isValidRule(t,"dag",a,b))
           return false;
         var prop = rbTRules.evalProperty(a);
+        var res;
         regexp = new RegExp(b, 'gi');
-        return ( regexp.test(prop) && rbTRules.isNegate(x) ) ;
+        res = regexp.test(prop) ;
+        return (x === "true") ? !res : res;
       } catch (e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on regex failed" , 
@@ -666,7 +695,9 @@ var rbTRules = {
         if (!rbTRules.isValidRule(t,"drg",a,b,c))
           return false;
         var prop = rbTRules.evalProperty(a,t);
-        return prop >= rbTRules.valueDataType(prop, b) && prop <= rbTRules.valueDataType(prop, c)  && rbTRules.isNegate(x) ;
+        var res;
+        res = (prop >= rbTRules.valueDataType(prop, b) && prop <= rbTRules.valueDataType(prop, c));
+        return (x === "true") ? !res : res;
       } catch (e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on regex failed" , 
@@ -688,7 +719,8 @@ var rbTRules = {
       try {
         $("#applyingrules").append("<h3>set prop</h3>");
         var prop = rbTRules.evalProperty(a);
-        return (prop ? true:false);
+        var res = (prop ? true:false);
+        return (x === "true") ? !res : res;
       } catch (e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on is set" , 

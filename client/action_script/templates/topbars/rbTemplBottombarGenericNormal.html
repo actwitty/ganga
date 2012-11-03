@@ -1,3 +1,8 @@
+<!-- {{##Title=%%Normal Bottombar%%##}}-->
+<!-- {{##Timer=%%10%%##}}-->
+
+
+
 <style>
 
   .rbTextValue
@@ -5,7 +10,7 @@
      color:{{rb.t.cr.textColor =%%#333%%}};
      font-size: {{rb.t.nr.textFontsize=%%15%%}}px;
      font-family: {{rb.t.ft.textFontfamily=%%Arial%%}};
-     font-weight: bold;
+     font-weight:{{rb.t.ft.textFontWeight=%%bold%%}};
    }
 
 
@@ -21,9 +26,9 @@
 
   
 
-<a id="rbBottombarGenericNormalRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:10px;width:80px;left:42%;margin-right:20px;height:25px; border-radius:5px;text-decoration:none; font-size:{{rb.t.nr.btnFontSize=%%14%%}}px;
+<a id="rbBottombarGenericNormalRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;width:80px;left:42%;margin-right:20px;height:25px; border-radius:5px;text-decoration:none; font-size:{{rb.t.nr.btnFontSize=%%14%%}}px;
      background-color:{{rb.t.cr.btnBgColor=%%#548AC7%%}};text-shadow: 0px -1px 0px #29588D;  
-     color :{{rb.t.cr.btnColor=%%white%%}};text-align:center;border:1px solid #305580;padding-top:3px" href="{{rb.t.ul.btnLink=%%http://www.google.com%%}}"> {{rb.t.sg.btnLable=%%Click%%}} </a>
+     color :{{rb.t.cr.btnColor=%%white%%}};text-align:center;border:1px solid #305580;padding-top:3px;cursor:pointer;" href="{{rb.t.ul.btnLink=%%http://www.google.com%%}}"> {{rb.t.sg.btnLable=%%Click%%}} </a>
 
     
   <div id="rbBottombarGenericNormalRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">
@@ -33,7 +38,7 @@
    
  <div  style="display:inline; position:absolute;right:30px; bottom:5px;margin-left:20px;font-weight:bold;"> 
        
-            <a id="rbBottombarGenericNormalRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none;color:#333" href="{{rb.t.ul.helpLink=%%http://www.rulebot.com%%}}" >
+            <a id="rbBottombarGenericNormalRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none;color:#333" href="http://www.rulebot.com" >
             ?
             </a>   
 
@@ -41,7 +46,7 @@
 
 
 
-    <div id="rbBottombarGenericNormalCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#333; bottom:5px;right:10px;font-weight:bold;" >
+    <div id="rbBottombarGenericNormalCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#333; bottom:5px;right:10px;font-weight:bold;cursor:pointer;" >
      X
     </div> 
 

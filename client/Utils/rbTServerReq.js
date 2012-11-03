@@ -9,7 +9,8 @@ var rbTServerChannel = {
     "setSystemProperty" : "",
     "getRules"          : "",
     "reportError"       : "",
-    "roi"               : ""
+    "roi"               : "",
+    "appDetails"        : ""
   },
 
   // Server request queue
@@ -213,7 +214,7 @@ var rbTServerChannel = {
 
   },
    
-   /** 
+  /** 
   *  Request server to create session
   *  FIXME : NEED TO KNOW HOW SESSION WILL BE CREATED, BASED ON THAT WE WILL REMOVE MULTIPLE AJAX 
   *  @return void
@@ -224,6 +225,19 @@ var rbTServerChannel = {
     callback = this.extendCallbacks(callback);
     this.makeGetRequest(url, null, callback);
   }, 
+
+  /** 
+  *  Request server to app details
+  *  FIXME : IF THERE IS ANYTHING MISSING
+  *  @return void
+  */  
+  appDetails : function(params, callback)
+  {
+    "use strict";
+    callback = this.extendCallbacks(callback);
+    this.makeGetRequest(this.url.details, null, callback);
+  }, 
+
 
   /** 
   *  Send ROI to server
@@ -244,7 +258,6 @@ var rbTServerChannel = {
   */ 
   reportError : function(params)
   {
-
     "use strict";
     var callback = this.extendCallbacks(callback);
     this.makeGetRequest(this.url.reportError, params, callback);

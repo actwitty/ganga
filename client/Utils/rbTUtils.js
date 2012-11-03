@@ -8,7 +8,6 @@ var rbTUtils = {
     function includeJQ()
     { 
       this.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",rbTAPP.wake_RBT_APP);
-      //this.waitForjQueryAlive();
     }
 
     if (typeof jQuery != 'undefined') {
@@ -75,25 +74,7 @@ var rbTUtils = {
         }
       }
   },
-
-  /**
-  * Wait till jquery is alive.
-  */
-  waitForjQueryAlive : function() 
-  {
-      "use strict";
-      function checkJquery()
-      {
-        if (!window.jQuery) {
-            window.setTimeout(checkJquery, 500);
-        } else {
-          // make RBT APP alive.
-          rbTAPP.wake_RBT_APP();
-        }
-      }
-      checkJquery();
-  },
-    
+  
   // JSON
   JSON : {
       parse: (window.JSON && window.JSON.parse) || function(data)

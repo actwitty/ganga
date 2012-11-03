@@ -35,13 +35,60 @@ App.ConditionsView = Ember.View.extend
     event.preventDefault()
 
 
+  # -----------------------------------------------------
+  cancelRuleEditHandler: (event) ->
+    # -----------------------------------------------------
+    current_this = @
+    showAlertOnCancel = ->    
+
+      alert = 
+              activate: true
+              header: 
+                      main : "Reject all changes made "
+                      note : "You have requested RuleBot to drop the edits to this rule."
+              detail: "Clicking yes will clear all changes and you have done on this screen. Are you sure ? "
+              first_btn:
+                        class : "btn-warning"
+                        text  : "Yes"
+                        callback : (context)->
+                                  alert = context.get 'alert'
+                                  alert.activate = false
+                                  alert= null  
+                                  context.set 'alert', alert
+                                  # TODO: May be route it through the App Router
+                                  App.get('router.rulesController').cancelEditOfRule()
+                                  event.preventDefault()                              
+                        context : current_this
+              second_btn:
+                        class : "btn-inverse"
+                        text  : "No"
+                        callback : (context)->
+                                  alert = context.get 'alert'
+                                  alert.activate = false
+                                  alert= null  
+                                  context.set 'alert', alert                                    
+                                  event.preventDefault()
+                        context : current_this
+    
+      current_this.set 'alert', alert
+
+    showAlertOnCancel()
 
   # -----------------------------------------------------
-  changeRuleEvent: (event)->
+  saveRuleEditHandler: (event) ->
+    rule = @get('rules').get('selected')
+    
+    val = target.select2("val")
+    
+    current_this = @
+
+
+  # -----------------------------------------------------
+  changeRuleEventConfirmation: (event)->
 
     rule = @get('rules').get('selected')
-    target = $(event.target)    
-    oldVal = rule.get 'event'    
+    target = $(event.target)
+    oldVal = rule.get 'event'
     val = target.select2("val")
     
     current_this = @
@@ -63,7 +110,9 @@ App.ConditionsView = Ember.View.extend
                                   alert.activate = false
                                   alert= null  
                                   context.set 'alert', alert
-                                  App.get('router.rulesController').changeEventOnRule(val)                               
+                                  # TODO: May be route it through the App Router
+                                  App.get('router.rulesController').changeEventOnRule(val)
+                                  event.preventDefault()                              
                         context : current_this
               second_btn:
                         class : "btn-inverse"
@@ -73,7 +122,8 @@ App.ConditionsView = Ember.View.extend
                                   alert.activate = false
                                   alert= null  
                                   context.set 'alert', alert  
-                                  target.select2('val',oldVal)                            
+                                  target.select2('val',oldVal)
+                                  event.preventDefault()
                         context : current_this
     
       current_this.set 'alert', alert
@@ -83,7 +133,7 @@ App.ConditionsView = Ember.View.extend
     if rule.get('event') isnt val
       showAlertEventChange()
 
-    event.preventDefault()  
+    
 
 
 

@@ -137,7 +137,16 @@ var rbTServerResponse = {
                           "data"      : respData
                         });
     }
-  }
+  },
 
+
+  /**
+  * Set App Specific configs
+  * @param {object} respData Data in response to server.
+  */
+  setAppDetail : function(respData)
+  {
+    
+  }
 
 };

@@ -7,6 +7,7 @@ App.RulesController = Em.ArrayController.extend(
   actorSchema: null
   eventSchema: null
   templateLib: []
+  editState: 'new'
 
   #########################################################  
   init: ->
@@ -46,9 +47,58 @@ App.RulesController = Em.ArrayController.extend(
     selected.set 'event', eventname
     hasManyConditions = [App.Condition.create()]
     selected.set 'hasManyConditions', hasManyConditions
+  #########################################################  
+  markStateOfRuleEdit: (state)->    
+    @set 'editState', state
+      
   #########################################################
-  translatePropertyName: (property) ->
-    console.log property
+  storeSerializedBeforeEdit: (rule)->    
+    @set 'serializeSelected', rule.serialize()    
+    @set 'selected', rule
+
+
+  #########################################################
+  cancelEditOfRule: -> 
+    serialized = @get 'serializeSelected'
+    project = App.get 'router.projectsController.selected'
+    editState = @get 'editState'    
+    if editState is 'old'      
+      editRule = @get 'selected'      
+      @set 'selected', null
+      @set 'serializeSelected', null
+      ruleArr = project.get 'hasManyRules'        
+      restoreRule = App.Rule.create(serialized)
+      index = ruleArr.indexOf editRule      
+      if index >= 0        
+        ruleArr[index] = restoreRule     
+      App.get("router").send("reenterProjectRules")
+    else      
+      @set 'selected', null   
+      @set 'serializeSelected', null   
+      App.get("router").send("reenterProjectRules")
+      
+  #########################################################
+  saveEditOfRule: -> 
+    serialized = @get 'serializeSelected'
+    project = App.get 'router.projectsController.selected'
+    editState = @get 'editState'    
+    if editState is 'old'      
+      editRule = @get 'selected'      
+      @set 'selected', null
+      ruleArr = project.get 'hasManyRules'        
+      restoreRule = App.Rule.create(serialized)
+      index = ruleArr.indexOf editRule      
+      if index >= 0        
+        ruleArr[index] = restoreRule     
+      App.get("router").send("reenterProjectRules")
+    else      
+      @set 'selected', null      
+      App.get("router").send("reenterProjectRules")
+      
+
+
+  #########################################################
+  translatePropertyName: (property) ->    
     property.replace('][',".").replace("[",".").replace("]","")
 
   #########################################################
@@ -60,7 +110,7 @@ App.RulesController = Em.ArrayController.extend(
       system_p = project.schema.system
       for k,v of system_p      
         prop = 
-               'show': k
+               'show': @translatePropertyName(k)
                'actual': k
                'type': v
                'scope': 's'
@@ -84,7 +134,7 @@ App.RulesController = Em.ArrayController.extend(
       @set 'actorSchema', props
 
   #########################################################
-  loadEventSchema: ->
+  loadEventSchema: ->    
     project = App.get('router.projectsController').get('selected')
     rule = @get('selected')
     schema = project.get('schema')    
@@ -100,13 +150,13 @@ App.RulesController = Em.ArrayController.extend(
 
       for k,v of event_p      
         prop = 
-               'show': @translatePropertyName(k)               
+               'show': @translatePropertyName(k)
                'actual': k
                'type': v
                'scope': 'e'
         props[k] = prop
 
-      @set 'eventSchema', props
+      @set 'eventSchema', props    
 
   #########################################################
 
@@ -134,13 +184,14 @@ App.RulesController = Em.ArrayController.extend(
 
   #########################################################
   reloadSchema: (->    
-    @loadEventSchema()
+    ruleSelected = @get 'selected'    
+    if ruleSelected  isnt null      
+      @loadEventSchema()      
   ).observes('selected.event')
 
   #########################################################
   # Get triggered on the selection of project changes
-  projectChanged: (->
-
+  projectChanged: (->    
     @set 'content', []
     @set 'selected', null
 

@@ -23,6 +23,13 @@ App.Condition = Ember.Object.extend
           @set 'operation', op
           break
 
+
+  observeOperationChange: (->
+    @set 'value1', ''
+    @set 'value2', ''   
+  ).observes('operation')
+
+
   observesTypeChange: (->
     type = @get 'type'    
     @set 'opList', App.operationsList[type]    
@@ -30,10 +37,8 @@ App.Condition = Ember.Object.extend
       if App.operationsList[type].hasOwnProperty(op)
         @set 'operation', op
         break
-    @set 'value1', ''
-    @set 'value2', ''    
-  ).observes('type')
-  
+  ).observes('type')    
+
   
   serialize: ->
     {

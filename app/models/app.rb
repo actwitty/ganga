@@ -65,8 +65,9 @@ class App
       raise et("app.invalid_argument_in_update") 
     end
     
-    app = App.find(params[:app_id])
-    raise et("app.invalid_app_id") if app.blank?
+    app = App.where(account_id: params[:account_id], _id: params[:app_id] ).first
+
+    raise et("app.invalid_app_id", id: params[:app_id]) if app.blank?
 
     desc = Utility.serialize_to(hash: params[:description], serialize_to: "value")
     
@@ -97,6 +98,16 @@ class App
   ##            app: {
   ##                   id: "4545554654645", 
   ##                   description: {"name": "my app", "domain": "http://myapp.com"}, 
+  ##                   rules: [
+  ##                             {
+  ##                               "name"=>"A fancy rule", "event"=>"singup", "owner"=>"client", "action"=>"topbar",
+  ##                               "action_param"=>{"text"=>"A quickbrown fox jumps over a lazy dog", "href"=>"http://www.google.com", "color"=>"#333333", "width"=>"50"}, 
+  ##                               "conditions"=>[{"property"=>"person[email]", "negation"=>"true", "operation"=>"ew", "value1"=>"@gmail.com", "connect"=>"and"}], 
+  ##                               "updated_at"=>2012-10-24 07:43:38 UTC, 
+  ##                               "created_at"=>2012-10-24 07:43:38 UTC, "id"=>"50879c2a63fe855d14000005"
+  ##                             },
+  ##                             {..}
+  ##                           ],
   ##                   schema: {
   ##                             properties: {
   ##                                           'customer[email]' => { 
@@ -140,8 +151,9 @@ class App
     raise et("app.invalid_app_id", id: params[:app_id]) if app.blank?
 
     hash[:account] = {id: app.account_id}
-    hash[:app] = {id: app._id, description: app.description}
-
+    hash[:app] = {id: app._id, description: app.description, rules: app.format_rules}
+    
+    
     if params[:events] == true
       events = Event.includes(:actor).where( app_id: params[:app_id], meta: false ).limit(AppConstants.limit_events).desc(:_id)
       events.each do |attr|
@@ -199,5 +211,24 @@ class App
   rescue => e
     Rails.logger.error("**** ERROR **** #{e.message}")
     {:return => false, :error => e}
+  end
+
+  def format_rules
+    Rails.logger.info("Enter Format Rules")
+
+    array = []
+    
+    # serialize rules
+    self.rules.each do |rule|
+      rule = rule.attributes
+      rule["id"] = rule["_id"]
+      rule.delete("_id")
+      array << rule 
+    end
+
+    array
+  rescue => e
+    Rails.logger.error("**** ERROR **** #{e.message}")
+    []
   end
 end

@@ -28,7 +28,9 @@ describe EventsController do
     
     it "should not create event with invalid app" do
       # account in this test case is not mapped to app
-      get 'create', { app_id: @app._id,
+      get 'create', { 
+                      account_id: @account._id,
+                      app_id: 123232,
                       actor_id: @actor._id,
                       name: 'sign_up',
                       properties: { :email => "john.doe@example.com",

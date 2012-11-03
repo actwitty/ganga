@@ -84,10 +84,11 @@ App.Router = Ember.Router.extend
 
       # event -------------------------------------------
       showProjectRules: (router, event) ->   
-        project = event.context
+        project = event.context        
         router.get('projectsController').set('selected', project)
-        router.transitionTo('loggedInState.projectConfigState.showRulesState')
+        router.transitionTo('loggedInState.projectConfigState.showRulesState.indexState')
         event.preventDefault()
+      
 
       # event -------------------------------------------
       openReports: (router, event) ->
@@ -164,29 +165,34 @@ App.Router = Ember.Router.extend
         showRulesState: Ember.Route.extend
           #SETUP
           route: '/rules'
-          connectOutlets: (router, event) ->
-            homeController = router.get('homeController')
-            homeController.connectOutlet({name: 'rules', outletName: 'homeContentOutlet'} )        
-         
-          #EVENTS
-          # event -------------------------------------------
-          editRules: (router, event) ->
-            # Context comes as argument
-            rule = event.context        
-            rulesController = router.get('rulesController')
-            rulesController.set 'selected', rule
-            router.transitionTo('editRuleConditionsState')
-            event.preventDefault()
-
-          # event -------------------------------------------
-          createARule: (router, event) ->
-            event.preventDefault()
-
-          # event -------------------------------------------
-          deleteRule: (router, event) ->
-            event.preventDefault()
 
           #STATES
+          indexState: Ember.Route.extend
+          #SETUP
+            route: '/'
+            connectOutlets: (router, event) ->
+              homeController = router.get('homeController')
+              homeController.connectOutlet({name: 'rules', outletName: 'homeContentOutlet'} )        
+         
+            #EVENTS
+            # event -------------------------------------------
+            editRules: (router, event) ->
+              # Context comes as argument
+              rule = event.context        
+              rulesController = router.get('rulesController')           
+              rulesController.markStateOfRuleEdit('old')
+              rulesController.storeSerializedBeforeEdit(rule)
+              router.transitionTo('editRuleConditionsState')
+              event.preventDefault()
+
+            # event -------------------------------------------
+            createARule: (router, event) ->
+              event.preventDefault()
+
+            # event -------------------------------------------
+            deleteRule: (router, event) ->
+              event.preventDefault()
+          
 
           editRuleConditionsState: Ember.Route.extend
             #SETUP
@@ -196,6 +202,7 @@ App.Router = Ember.Router.extend
               homeController.connectOutlet( {name: 'conditions', outletName: 'homeContentOutlet'} )
 
             #EVENTS
+            # event ------------------------------------------------------  
             deleteCondition: (router, event) ->
               condition = event.context              
               content = App.get('router.conditionsController').get('content')
@@ -204,35 +211,65 @@ App.Router = Ember.Router.extend
                 content.pushObject App.Condition.create()                       
               event.preventDefault()
 
+            # event ------------------------------------------------------  
             changeDataType: (router, event) ->
               condition = event.context                            
               condition.set 'type', event.view.getNewDataType(event)
               event.preventDefault()
 
+            # event ------------------------------------------------------  
             changedNegation: (router, event) ->              
               condition = event.context              
               condition.set 'negation', event.view.getNewNegation(event)
               event.preventDefault()
 
+            # event ------------------------------------------------------  
             changedProperty: (router, event) ->
-              condition = event.context              
-              prop = event.view.getNewProperty()
-              event.preventDefault()    
+              condition = event.context                            
+              
+              scope = event.view.getNewPropertyScope(event)              
+              property = event.view.getNewProperty(event)
+              
+              condition.set 'scope', scope
+              condition.set 'property', property
+              rulesController = App.get('router.rulesController')
+              typeSchema = {}
 
+              if scope is 'e'
+                typeSchema = rulesController.get('eventSchema')
+              else if scope is 's'
+                typeSchema = rulesController.get('systemSchema')
+              else if scope is 'a'
+                typeSchema = rulesController.get('actorSchema')             
+              
+              condition.set( 'type', typeSchema[property].type)
+              event.view.applyChangedType(event, typeSchema[property].type)
+              event.preventDefault()
+
+            # event ------------------------------------------------------  
             changedOperation: (router, event) ->
               condition = event.context              
               condition.set 'operation', event.view.getNewOperation(event)
-              # not need to do any thing there is an observer
               event.preventDefault()
 
+            # event ------------------------------------------------------  
+            changeRuleEvent: (router, event) ->
+              event.view.changeRuleEventConfirmation(event)
+              event.preventDefault()
+
+            # event ------------------------------------------------------  
             saveRuleEdit: (router, event) ->
-              
+              event.view.saveRuleEditHandler(event)
               event.preventDefault()
 
+            # event ------------------------------------------------------  
             cancelRuleEdit: (router, event) ->
-              
+              event.view.cancelRuleEditHandler(event)
               event.preventDefault()
 
+            # event -------------------------------------------
+            reenterProjectRules: (router) ->                      
+              router.transitionTo('loggedInState.projectConfigState.showRulesState.indexState')        
 
             #STATES
               

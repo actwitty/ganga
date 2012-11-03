@@ -26,6 +26,7 @@ App.sampleRule = [
                                     operation: "ewh"
                                     value1: "@gmail.com"
                                     connect: "and"
+                                    scope: "e"
                                   },
                                   {
                                     property: "customer[counter]"                   
@@ -34,20 +35,23 @@ App.sampleRule = [
                                     operation: "gtn"
                                     value1: 5
                                     connect: "and"
+                                    scope: "e"
                                   },
                                   {
-                                    property: "$country"            
+                                    property: "country"            
                                     type: "String"                         
                                     negation: "false"
                                     operation: "cns"
                                     value1: 5
+                                    scope: "s"
                                   },
                                   {
-                                    property: "#gender"             
+                                    property: "gender"             
                                     type: "String"                        
                                     negation: "true"
                                     operation: "eql"
                                     value1: 5
+                                    scope: "a"
                                   }                                  
                                 ] 
                   }  ,
@@ -81,6 +85,7 @@ App.sampleRule = [
                                     operation: "ewh"
                                     value1: "@gmail.com"
                                     connect: "and"
+                                    scope: "e"
                                   },
                                   {
                                     property: "customer[klout]"     
@@ -89,6 +94,7 @@ App.sampleRule = [
                                     operation: "gtn"
                                     value1: 1000
                                     connect: "and"
+                                    scope: "e"
                                   },
                                   {
                                     property: "cutomer[signin_date]"                    
@@ -97,6 +103,7 @@ App.sampleRule = [
                                     operation: "dag"
                                     value1: 15
                                     value2: 30
+                                    scope: "e"
                                   }
                                 ]
                   }
@@ -162,6 +169,7 @@ App.sampleSchema =
 
                       system: 
                                 "location" : "String"
+                                "country" : "String"
                                 "source" : "String"
                                 "search_term" : "String"                                
                                 "page_view_time" : "Date"

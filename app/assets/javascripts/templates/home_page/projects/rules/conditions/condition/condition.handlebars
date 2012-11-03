@@ -3,33 +3,33 @@
   <div class="property">  <!-- Start of the main property select box -->
 
 
-    <select class='select2Props property_sel' {{action "changedProperty" condition }}>
+    <select class='select2Props property_sel' {{action "changedProperty" condition}}>
 
       <optgroup label="{{getvalue view.rules.selected.event}} Properties"> 
 
-        {{#eachProperty view.rules.eventSchema}}                               
-          {{#ifequal property.actual condition.property}}
-            <option value="{{getvalue iter_key}}" selected>{{iter_val.show}}</option>
+        {{#eachProperty view.rules.eventSchema}} 
+          {{#ifequal iter_val.actual condition.property}}
+            <option value="{{getvalue iter_key}}" scope="{{getvalue iter_val.scope}}" selected>{{iter_val.show}}</option>
           {{else}}
-            <option value="{{getvalue iter_key}}" >{{iter_val.show}}</option>
-          {{/ifequal}} -->
+            <option value="{{getvalue iter_key}}" scope="{{getvalue iter_val.scope}}" >{{iter_val.show}}</option>
+          {{/ifequal}} 
         {{/eachProperty}}
       </optgroup> 
       <optgroup label="System Properties"> 
         {{#eachProperty view.rules.systemSchema}}                 
-          {{#ifequal property.actual condition.property}}
-            <option value="{{getvalue iter_key}}" selected>{{iter_val.show}}</option>
+          {{#ifequal iter_val.actual condition.property}}
+            <option value="{{getvalue iter_key}}"  scope="{{getvalue iter_val.scope}}" selected>{{iter_val.show}}</option>
           {{else}}
-            <option value="{{getvalue iter_key}}">{{iter_val.show}}</option>
+            <option value="{{getvalue iter_key}}" scope="{{getvalue iter_val.scope}}" >{{iter_val.show}}</option>
           {{/ifequal}} -->
         {{/eachProperty}}
       </optgroup> 
       <optgroup label="User Properties"> 
         {{#eachProperty view.rules.actorSchema}}                 
-          {{#ifequal property.actual condition.property}}
-            <option value="{{getvalue iter_key}}" selected>{{iter_val.show}}</option>
+          {{#ifequal iter_val.actual condition.property}}
+            <option value="{{getvalue iter_key}}" scope="{{getvalue iter_val.scope}}" selected>{{iter_val.show}}</option>
           {{else}}
-            <option value="{{getvalue iter_key}}">{{iter_val.show}}</option>
+            <option value="{{getvalue iter_key}}" scope="{{getvalue iter_val.scope}}" >{{iter_val.show}}</option>
           {{/ifequal}} -->
         {{/eachProperty}}
       </optgroup> 
@@ -51,27 +51,33 @@
 
 
   <div class="operation">  <!-- Start of the operation select box -->
-    {{view App.OperationView conditionBinding="condition" }}    
+    {{view App.OperationView conditionBinding="condition" }}
   </div>  <!-- End of the operation select box -->
+
   
    <div {{bindAttr class="view.showHideInputOne"}} >
     {{view App.RequiredAFTextField valueBinding="condition.value1" placeholder="Value" classBinding='view.inputBoxType' }}
   </div>
+
+
 
   <div {{bindAttr class="view.showHideInputTwo"}} >
       <p> to </p>
      {{view App.RequiredAFTextField valueBinding="condition.value2" placeholder="Value" classBinding='view.inputBoxType' }}
   </div>
   
- 
+
+  
   <div class="type">  <!-- Start of the operation select box -->
-    <select class='select2Props type_sel' {{action "changeDataType" condition }}>              
-        {{#each type in App.dataTypes}}  
-          {{#ifequal type.key condition.type}}
-            <option  value="{{getvalue type.key}}" selected>{{type.value}}</option>
+    <!-- {{view App.OperationView valueBinding="condition" }} -->
+     <select class='select2Props type_sel' {{action "changeDataType" condition}}>
+
+        {{#each type in App.dataTypes}}                               
+          {{#ifequal condition.type type.key}}
+            <option value="{{getvalue type.key}}" selected>{{type.value}}</option>
           {{else}}
-           <option  value="{{getvalue type.key}}">{{type.value}}</option>
-          {{/ifequal}}
+            <option value="{{getvalue type.key}}" >{{type.value}}</option>
+          {{/ifequal}} -->
         {{/each}}
     </select>
   </div>  <!-- End of the operation select box -->

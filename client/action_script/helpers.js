@@ -3,7 +3,8 @@
 //templ related timers
 
 rbT.templTimers= {
- 'rbT.templ.displaytimer':'false',
+ 'templ.displaytimer':'false',
+ 'templ.templduration':'100'
 
 };
 
@@ -169,7 +170,15 @@ rbT.sendEventToRBServer = function(){
 
 rbT.sendErrorToRBServer = function(string){
 
-  //TODO: Implement post to server
+  
+/*
+
+ rbTAPP.reportError({"message":string,"server":true});
+
+
+*/
+
+  //TODO: Implement post to server // for console log=true
   console.log(string);
 };
 

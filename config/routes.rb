@@ -18,9 +18,7 @@ Ganga::Application.routes.draw do
   
   get   '/credentials',       :to => 'accounts#credentials'
   get   '/category',          :to => 'rules#category'
-  post  '/submitRule' ,       :to => 'rules#submitRule'
-  get   '/rules/editRule' ,   :to => 'rules#editRule'
-
+ 
   # Actor Api
   post  '/actor/create',      :to => 'actors#create'
   get   '/actor/read',        :to => 'actors#read'
@@ -42,7 +40,10 @@ Ganga::Application.routes.draw do
   # Account Api
   get  '/account/read',       :to => 'accounts#read'
   get  '/account/list_apps',  :to => 'accounts#list_apps'
-    
+
+  # Rule Api
+  get '/rule/create',         :to => "rules#create"
+  get '/rule/update',         :to => "rules#update"
 
   
   match '/:locale' => 'base#index'                                    

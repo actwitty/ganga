@@ -20,9 +20,8 @@ rbT.eventHandler = {
 	clickListner : function(evt){
         
 
-		var id = event.target.id;
+		var id = evt.target.id;
 
-		console.log(evt);
 
 		var ele = document.getElementById(id);
 
@@ -39,7 +38,7 @@ rbT.eventHandler = {
   
     else if ( idMatch[3] == 'Roi' )
     {
-         rbT.eventHandler.roiFromTemplClick(idMatch);
+         rbT.eventHandler.roiFromTemplClick(idMatch,evt);
 
     }
 
@@ -66,7 +65,8 @@ rbT.eventHandler = {
   timeOutHandler : function (tempalteName , timerValue)
 	{
 
-       rbT.templTimer['rbT.templ.displaytimer'] = setInterval(function(){rbT.eventHandler.timerDeleteTempl
+
+       rbT.templTimers['templ.displaytimer'] = setInterval(function(){rbT.eventHandler.timerDeleteTempl
        (tempalteName)},timerValue); 
        
   },
@@ -77,8 +77,25 @@ rbT.eventHandler = {
 
        var tempMatch = tempalteName.match(/[a-z]*/g);
 
-       id = "rb" + rbT.makeFirstLetterCapital(tempMatch[0])+rbT.makeFirstLetterCapital(tempMatch[2])+
-            rbT.makeFirstLetterCapital(tempMatch[4])+"BaseContainer";
+ 
+       
+      if(tempMatch[0] != 'modal' )
+       { 
+           id = "rb" + rbT.makeFirstLetterCapital(tempMatch[0])+rbT.makeFirstLetterCapital(tempMatch[2])+rbT.makeFirstLetterCapital(tempMatch[4])+"BaseContainer";
+       }     
+
+
+     else if(tempMatch[0] == 'modal')
+     {
+
+         var id = "rb" + rbT.makeFirstLetterCapital(tempMatch[0])+rbT.makeFirstLetterCapital(tempMatch[2])+rbT.makeFirstLetterCapital(tempMatch[4])+"BaseContainer";
+         var transId = "rb" + rbT.makeFirstLetterCapital(tempMatch[0])+rbT.makeFirstLetterCapital(tempMatch[2])+rbT.makeFirstLetterCapital(tempMatch[4])+"TranblockContainer";
+         var transBase = document.getElementById(transId);
+         if(transBase != 'undefined')
+         transBase.parentNode.removeChild(transBase);
+     } 
+     
+
         
         rbT.setTemplatesDisplayLockFlags(tempMatch[0],false);
         
@@ -93,7 +110,7 @@ rbT.eventHandler = {
          else
          {
             Base.parentNode.removeChild(Base);
-            clearInterval(rbT.templTimer['rbT.templ.displaytimer']);
+            clearInterval(rbT.templTimers['templ.displaytimer']);
 
          }	
 
@@ -104,10 +121,11 @@ rbT.eventHandler = {
 
    closeTempl:function(idMatch){
 
+      if(rbT.templTimers['templ.displaytimer'])
+      {
+          clearInterval(rbT.templTimers['templ.displaytimer']);
 
-      
-     console.log(idMatch);
-
+      }
       if(idMatch[0] == 'Topbar' || idMatch[0] == 'Bottombar' )
 
      {   
@@ -146,9 +164,16 @@ rbT.eventHandler = {
 
 //******************************************************************************************************
   
-  roiFromTemplClick:function(idMatch){
+  roiFromTemplClick:function(idMatch,evt){
 
-    //TODO
+    var link = evt.target.href;
+    window.open(link);
+
+/*
+         //rbTServerChannel.roi(JSON);
+        //TODO
+
+*/
 
   },  
  

@@ -18,8 +18,8 @@ App.Rule = Ember.Object.extend
 
   serialize: ->
     conditions = []
-    for condition in hasManyConditions
-      conditions.push condition.serialize 
+    for condition in @get 'hasManyConditions'
+      conditions.push condition.serialize()
     {
       id: @get 'id'
       name: @get 'name'
