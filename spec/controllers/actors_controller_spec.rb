@@ -7,12 +7,12 @@ describe ActorsController do
     @account = FactoryGirl.create(:account)
     @app = FactoryGirl.create(:app, account_id: @account._id)
     @actor = FactoryGirl.create(:actor, account_id: @account._id, app_id: @app._id)
+    request.env['HTTP_ACCEPT'] = "application/json"
   end
 
   describe "create actor" do
     it "should create actor properly" do
-      get 'create', { 
-                      account_id: @account._id,
+      get 'create', { account_id: @account._id,
                       app_id: @app._id,
                       properties: { profile: 
                           {:email => "john.doe@example.com",
@@ -21,6 +21,7 @@ describe ActorsController do
                         system: {browser: "chrome", os: "linux"}
         }
       }
+      puts request.inspect
       puts JSON.parse(response.body).inspect
       response.status.should eq(200)
       Actor.count.should eq(2)

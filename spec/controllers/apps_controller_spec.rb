@@ -7,6 +7,7 @@ describe AppsController do
   before(:each) do
     @account = FactoryGirl.create(:account)
     @wrong_app = FactoryGirl.create(:app)
+    request.env['HTTP_ACCEPT'] = "application/json"
   end  
 
   describe "create app" do

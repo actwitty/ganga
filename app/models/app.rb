@@ -120,7 +120,7 @@ class App
   ##                                           'sign_up' => {"name" => String, "address[city]" => "String"}
   ##                                     }
   ##                             
-  ##                             actor:  {
+  ##                             profile:{
   ##                                         "gender" => String, "name" => "String"
   ##                                     }  
   ##                             system: {

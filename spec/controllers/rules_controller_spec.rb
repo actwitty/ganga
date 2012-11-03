@@ -26,6 +26,8 @@ describe RulesController do
         },
       ]
     }
+
+    request.env['HTTP_ACCEPT'] = "application/json"
   end
 
   describe "create event" do

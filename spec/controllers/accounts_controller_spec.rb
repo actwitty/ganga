@@ -18,6 +18,7 @@ describe AccountsController do
                     }
                 )
     @actor.reload
+    request.env['HTTP_ACCEPT'] = "application/json"
   end
 
   describe "Account Read" do

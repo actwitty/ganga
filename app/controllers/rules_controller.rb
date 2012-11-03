@@ -2,6 +2,8 @@ class RulesController < ApplicationController
   protect_from_forgery
   before_filter :authenticate_account!
 
+  respond_to :json
+
   # NOTE
   ## create a rule
 
@@ -54,10 +56,10 @@ class RulesController < ApplicationController
 
     raise ret[:error] if !ret[:error].blank?
 
-    render json: {rule_id: ret[:return]}, status: 200
+    respond_with({rule_id: ret[:return]}, status: 200)
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    render json: {errors: e.message}, status: 422
+    respond_with({errors: e.message}, status: 422)
   end
 
 
@@ -113,10 +115,10 @@ class RulesController < ApplicationController
 
     raise ret[:error] if !ret[:error].blank?
 
-    render json: {status: ret[:return]}, status: 200
+    respond_with({status: ret[:return]}, status: 200)
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    render json: {errors: e.message}, status: 422
+    respond_with({errors: e.message}, status: 422)
   end
 
 
@@ -146,10 +148,10 @@ class RulesController < ApplicationController
 
     raise ret[:error] if !ret[:error].blank?
 
-    render json: {rules: ret[:return]}, status: 200
+    respond_with({rules: ret[:return]}, status: 200)
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    render json: {errors: e.message}, status: 422
+    respond_with({errors: e.message}, status: 422)
   end
 
   ## delete one or all rule
@@ -175,9 +177,9 @@ class RulesController < ApplicationController
 
     raise ret[:error] if !ret[:error].blank?
 
-    render json: {status: ret[:return]}, status: 200
+    respond_with({status: ret[:return]}, status: 200)
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    render json: {errors: e.message}, status: 422
+    respond_with({errors: e.message}, status: 422)
   end
 end

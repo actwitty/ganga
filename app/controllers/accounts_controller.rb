@@ -3,7 +3,7 @@ class AccountsController < ApplicationController
   protect_from_forgery
   before_filter :authenticate_account!, :except => [:credentials]
 
-  
+  respond_to  :json
   # API to send the credentials to check if the user is logged in
   def credentials
     Rails.logger.debug("Enter: params:#{params}")
@@ -23,7 +23,7 @@ class AccountsController < ApplicationController
 
       if request.xhr?
         response_json[:logged_in] = true
-        render :json => response_json, :status => 200
+        respond_with(response_json, :status => 200)
       end
 
     else
@@ -31,7 +31,7 @@ class AccountsController < ApplicationController
       Rails.logger.info("Response :#{response_json}")
       if request.xhr?
         response_json[:logged_in] = false
-        render :json => response_json, :status => 200
+        respond_with( response_json, :status => 200)
       end
     end
   end
@@ -67,10 +67,10 @@ class AccountsController < ApplicationController
 
     raise ret[:error] if !ret[:error].blank?
   
-    render json: ret[:return], status: 200      
+    respond_with(ret[:return], status: 200)     
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    render json: { errors: e.message}, status: 422
+    respond_with( { errors: e.message}, status: 422)
   end
 
 
@@ -104,10 +104,10 @@ class AccountsController < ApplicationController
     end
   
     Rails.logger.info("#{array.inspect}") 
-    render json: array, status: 200      
+    respond_with(array, status: 200)      
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    render json: { errors: e.message}, status: 422
+    respond_with( { errors: e.message}, status: 422)
   end
 
 end

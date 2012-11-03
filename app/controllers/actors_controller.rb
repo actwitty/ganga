@@ -4,6 +4,8 @@ class ActorsController < ApplicationController
   before_filter :authenticate_account!
   #before_filter :authenticate_app!
 
+  respond_to :json
+
   # NOTE
   ## Creates an actor.. 
   
@@ -51,10 +53,10 @@ class ActorsController < ApplicationController
     hash["id"] = hash["_id"]
     hash.delete("_id")
 
-    render json: hash, status: 200 
+    respond_with(hash, status: 200)
   rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    render json: { errors: e.message} , status: 422
+    respond_with({ errors: e.message} , status: 422)
   end
   
 
@@ -86,10 +88,10 @@ class ActorsController < ApplicationController
 
     raise ret[:error] if !ret[:error].blank?
 
-    render json: {actor_id: ret[:return]}, status: 200 
+    respond_with({actor_id: ret[:return]}, status: 200 )
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    render json: { errors: e.message} , status: 422
+    respond_with({ errors: e.message} , status: 422)
   end
 
   # NOTE
@@ -137,10 +139,10 @@ class ActorsController < ApplicationController
     hash["id"] = hash["_id"]
     hash.delete("_id")
 
-    render json: hash, status: 200
+    respond_with( hash, status: 200)
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    render json: { errors: e.message }, status: 422
+    respond_with({ errors: e.message} , status: 422)
   end
 
   # NOTE
@@ -162,11 +164,11 @@ class ActorsController < ApplicationController
 
     raise ret[:error] if !ret[:error].blank?
 
-    render json: {status: ret[:return]}, status: 200
+    respond_with({status: ret[:return]}, status: 200)
 
   rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    render json: { errors: e.message} , status: 422
+    respond_with({ errors: e.message} , status: 422)
   end
 
   # NOTE
@@ -208,10 +210,10 @@ class ActorsController < ApplicationController
 
     raise ret[:error] if !ret[:error].blank?
 
-    render json: ret[:return], status: 200
+    respond_with(ret[:return], status: 200)
 
   rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    render json: { errors: e.message} , status: 422
+    respond_with({ errors: e.message} , status: 422)
   end
 end

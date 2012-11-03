@@ -2,6 +2,7 @@ class EventsController < ApplicationController
 	protect_from_forgery
   before_filter :authenticate_account!
 
+  respond_to  :json
 	# NOTE
   ## create a event
 
@@ -50,10 +51,10 @@ class EventsController < ApplicationController
     hash["id"] = hash["_id"]
     hash.delete("_id")
 
-    render json: hash, status: 200
+    respond_with(hash, status: 200)
 
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    render json: {errors: e.message}, status: 422
+    respond_with({errors: e.message}, status: 422)
   end
 end
