@@ -9,10 +9,10 @@ App.RulesController = Em.ArrayController.extend
   templateLib: []
   editState: 'new'
 
-  url: 
-      create : "rules/create"
-      update : "rules/update"
-      delete : "rules/delete"
+  url:
+      create : "rule/create"
+      update : "rule/update"
+      delete : "rule/delete"
   
 
   #########################################################  
@@ -87,11 +87,12 @@ App.RulesController = Em.ArrayController.extend
   saveEditOfRule: ->    
     project = App.get 'router.projectsController.selected'
     editState = @get 'editState'    
-    rule = @get 'selected'    
+    rule = @get 'selected'
+       
     if editState is 'new'        
-      @createRule(project.get 'app_id', rule.serialize())
+      @createRule(project.get('app_id'), rule.serialize())
     else  
-      @updateRule(project.get 'app_id', rule.serialize())                    
+      @updateRule(project.get('app_id'), rule.serialize())                    
       
   #########################################################
   translatePropertyName: (property) ->    
@@ -201,25 +202,22 @@ App.RulesController = Em.ArrayController.extend
   ).observes('App.router.projectsController.selected')
   #########################################################
   # Create a Rule
-  createRule: (app_id, rule)->
-    controllerObj = this
-    controllerObj.set 'content', []
-
+  createRule: (proj_app_id, rule_data)->
+    
     success= (data) ->
       App.get("router").send("reenterProjectRules")
     error= () ->
       # TODO: Pop out error
     url = @get 'url.create'
     json = 
-           'app_id' : app_id
-           'rule' : rule
+            app_id : proj_app_id
+            rule : rule_data
+    console.log json
     App.getRequest  url, json, success, error
 
   #########################################################
   # Update a Rule  
-  updateRule: (app_id, rule)->
-    controllerObj = this
-    controllerObj.set 'content', []
+  updateRule: (proj_app_id, rule_data)->
 
     success= (data) ->
       App.get("router").send("reenterProjectRules")
@@ -227,8 +225,11 @@ App.RulesController = Em.ArrayController.extend
       # TODO: Pop out error
     url = @get 'url.update'
     json = 
-           'app_id' : app_id
-           'rule' : rule
+            app_id : proj_app_id
+            rule : rule_data
+            rule_id : rule_data.id
+    rule_data.id = null
+
     App.getRequest  url, json, success, error
   #########################################################
   # Delete a Rule

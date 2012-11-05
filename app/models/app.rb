@@ -141,7 +141,7 @@ class App
   ##                    ]
   ##        }
   def self.read(params)
-    Rails.logger.info("Enter App Read")
+    Rails.logger.info("Enter App Read #{params}")
     hash = {events: []}
 
     if params[:account_id].blank? or params[:app_id].blank?

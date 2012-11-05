@@ -10,6 +10,22 @@ App.Rule = Ember.Object.extend
   hasManyConditions: []
   actionParamArr: []
 
+  init: ->
+    @_super  
+    console.log @get 'id'
+    hasManyConditions = []
+    conditions = @get 'conditions'
+    if conditions isnt null
+      for k,condition of conditions
+        hasManyConditions.pushObject(App.Condition.create(condition))
+      @set 'hasManyConditions', hasManyConditions 
+    else
+      @set 'hasManyConditions', [App.Condition.create()]
+
+    
+    @loadParam(@get 'action_param')  
+
+
   serializeParams: ->
     params = @get 'actionParamArr'
     action_param = {}
@@ -43,15 +59,7 @@ App.Rule = Ember.Object.extend
     @set 'actionParamArr', actionParamArr
 
   
-  init: ->
-    @_super  
-    hasManyConditions = []
-    conditions = @get 'conditions'
-    if conditions isnt null
-      for condition in conditions
-        hasManyConditions.pushObject(App.Condition.create(condition)) 
-    @set 'hasManyConditions', hasManyConditions 
-    @loadParam(@get 'action_param')  
+
     
 
  

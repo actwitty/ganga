@@ -84,10 +84,13 @@ App.Router = Ember.Router.extend
 
       # event -------------------------------------------
       showProjectRules: (router, event) ->   
-        project = event.context        
-        router.get('projectsController').set('selected', project)
-        router.transitionTo('loggedInState.projectConfigState.showRulesState.indexState')
+        project = event.context      
+        router.get('projectsController').loadProjectRules(project)
         event.preventDefault()
+
+      projectRulesLoaded: (router, project) ->
+        router.get('projectsController').set('selected', project)  
+        App.get('router').transitionTo('loggedInState.projectConfigState.showRulesState.indexState')
       
 
       # event -------------------------------------------
@@ -172,7 +175,7 @@ App.Router = Ember.Router.extend
             route: '/'
             connectOutlets: (router, event) ->
               homeController = router.get('homeController')
-              homeController.connectOutlet({name: 'rules', outletName: 'homeContentOutlet'} )        
+              homeController.connectOutlet({name: 'rules', outletName: 'homeContentOutlet'})        
          
             #EVENTS
             # event -------------------------------------------

@@ -110,7 +110,7 @@ App.ConditionsView = Ember.View.extend
     
       current_this.set 'alert', alert
 
-    showAlertOnCancel()
+    showAlertOnSave()
 
 
   # -----------------------------------------------------

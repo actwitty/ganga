@@ -5,28 +5,33 @@ App.Project = Ember.Object.extend(
   schema: null
   rules: null
   description: {email: null, address: null, domain: null, name: null}   
-  hasManyRules: []
+  hasManyRules: null
 
 
   init: ->
     @_super  
-    hasManyRules = []     
-    rules = @get 'rules'       
+    
+  setRules: (rules)->
+    hasManyRules = [] 
     if rules isnt null
       for rule in rules
         hasManyRules.pushObject(App.Rule.create(rule)) 
     @set 'hasManyRules', hasManyRules
-    
 
+  checkRulesIsNull: ->
+    hasManyRules = @get 'hasManyRules'
+    if hasManyRules is null
+      true
   serialize: ->
-    rules = []
-    for rule in hasManyRules
-      rules.push rule.serialize 
+    # rules = []
+    # for rule in hasManyRules
+    #   rules.push rule.serialize 
     {
       app_id: @get 'app_id'
       account_id: @get 'account_id'
       schema: @get 'schema'
-      rules: rules      
+      description: @get 'description'
+      # rules: rules      
     }
    
   created_time: (->
