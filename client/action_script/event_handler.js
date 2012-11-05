@@ -95,7 +95,7 @@ rbT.eventHandler = {
          transBase.parentNode.removeChild(transBase);
      } 
      
-
+       
         
         rbT.setTemplatesDisplayLockFlags(tempMatch[0],false);
         
