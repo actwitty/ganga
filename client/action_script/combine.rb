@@ -12,6 +12,8 @@ files = [ "include.js",
           "./templates/topbars/rbTemplTopbarGenericTwittershare.js",
           "./templates/topbars/rbTemplChatGenericNormal.js",
           "./templates/topbars/rbTemplModalGenericNormal.js",
+          "./templates/topbars/rbTemplUservoiceGenericNormal.js",
+
           "helpers.js",
           "externals.js",
           "event_handler.js",

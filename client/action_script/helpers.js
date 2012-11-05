@@ -16,7 +16,7 @@ rbT.templatesDisplayLockFlags = {
     'rbT.bottombar.displayLock':'false',
     'rbT.modal.displayLock' :'false',
     'rbT.chat.displayLock' :'false',
-    'rbT.feedback.displayLock' :'false',
+    'rbT.uservoice.displayLock' :'false',
 
 
 };
