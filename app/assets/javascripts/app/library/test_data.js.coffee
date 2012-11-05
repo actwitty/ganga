@@ -42,7 +42,7 @@ App.sampleRule = [
                                     type: "String"                         
                                     negation: "false"
                                     operation: "cns"
-                                    value1: 5
+                                    value1: 'IN'
                                     scope: "s"
                                   },
                                   {
@@ -52,6 +52,14 @@ App.sampleRule = [
                                     operation: "eql"
                                     value1: 5
                                     scope: "a"
+                                  },
+                                  {
+                                    property: "device[name]"             
+                                    type: "String"                        
+                                    negation: "true"
+                                    operation: "eql"
+                                    value1: 'ipad'
+                                    scope: "s"
                                   }                                  
                                 ] 
                   }  ,

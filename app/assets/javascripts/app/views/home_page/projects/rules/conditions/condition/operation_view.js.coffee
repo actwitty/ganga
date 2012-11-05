@@ -24,5 +24,5 @@ App.OperationView = Ember.View.extend
   # ------------------------------------------
   getNewOperation: (event) ->
     target = $(event.target)
-    val = target.select2("val")
+    target.select2("val")
 

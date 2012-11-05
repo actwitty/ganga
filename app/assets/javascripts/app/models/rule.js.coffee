@@ -2,6 +2,7 @@ App.Rule = Ember.Object.extend
   id: null
   name: null
   event: null 
+  owner: 'client'
   action: null
   action_param: null
   conditions: null
@@ -24,6 +25,7 @@ App.Rule = Ember.Object.extend
       id: @get 'id'
       name: @get 'name'
       event: @get 'event'
+      owner: @get 'owner'
       action: @get 'action'
       action_param: @serializeParams()
       conditions: conditions      

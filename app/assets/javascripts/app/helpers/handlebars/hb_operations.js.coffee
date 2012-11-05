@@ -29,5 +29,7 @@ Handlebars.registerHelper "getOperationDescription", (op, options) ->
   op = Ember.Handlebars.getPath(context, op, options)
   App.operationsLibrary[op].capitalize()
 
+
+
   
 

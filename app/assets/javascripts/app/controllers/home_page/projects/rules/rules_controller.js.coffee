@@ -1,4 +1,4 @@
-App.RulesController = Em.ArrayController.extend(
+App.RulesController = Em.ArrayController.extend
 
   content: []
   selected: null
@@ -8,6 +8,12 @@ App.RulesController = Em.ArrayController.extend(
   eventSchema: null
   templateLib: []
   editState: 'new'
+
+  url: 
+      create : "rules/create"
+      update : "rules/update"
+      delete : "rules/delete"
+  
 
   #########################################################  
   init: ->
@@ -53,7 +59,7 @@ App.RulesController = Em.ArrayController.extend(
       
   #########################################################
   storeSerializedBeforeEdit: (rule)->    
-    @set 'serializeSelected', rule.serialize()    
+    @set 'serializeSelected', rule.serialize()
     @set 'selected', rule
 
 
@@ -78,25 +84,15 @@ App.RulesController = Em.ArrayController.extend(
       App.get("router").send("reenterProjectRules")
       
   #########################################################
-  saveEditOfRule: -> 
-    serialized = @get 'serializeSelected'
+  saveEditOfRule: ->    
     project = App.get 'router.projectsController.selected'
     editState = @get 'editState'    
-    if editState is 'old'      
-      editRule = @get 'selected'      
-      @set 'selected', null
-      ruleArr = project.get 'hasManyRules'        
-      restoreRule = App.Rule.create(serialized)
-      index = ruleArr.indexOf editRule      
-      if index >= 0        
-        ruleArr[index] = restoreRule     
-      App.get("router").send("reenterProjectRules")
-    else      
-      @set 'selected', null      
-      App.get("router").send("reenterProjectRules")
+    rule = @get 'selected'    
+    if editState is 'new'        
+      @createRule(project.get 'app_id', rule.serialize())
+    else  
+      @updateRule(project.get 'app_id', rule.serialize())                    
       
-
-
   #########################################################
   translatePropertyName: (property) ->    
     property.replace('][',".").replace("[",".").replace("]","")
@@ -104,18 +100,15 @@ App.RulesController = Em.ArrayController.extend(
   #########################################################
   loadSystemSchema: ->
     project = App.get('router.projectsController').get('selected')
-    schema = project.get('schema')
     props = {}
-    if "system" of project.schema
-      system_p = project.schema.system
-      for k,v of system_p      
-        prop = 
-               'show': @translatePropertyName(k)
-               'actual': k
-               'type': v
-               'scope': 's'
-        props[k] = prop
-      @set 'systemSchema', props
+    for k,v of App.systemSchema      
+      prop = 
+            'show': @translatePropertyName(k)
+            'actual': k
+            'type': v
+            'scope': 's'
+      props[k] = prop
+    @set 'systemSchema', props
 
   #########################################################
   loadActorSchema: ->
@@ -131,7 +124,7 @@ App.RulesController = Em.ArrayController.extend(
                'type': v
                'scope': 'a'
         props[k] = prop
-      @set 'actorSchema', props
+    @set 'actorSchema', props
 
   #########################################################
   loadEventSchema: ->    
@@ -156,7 +149,7 @@ App.RulesController = Em.ArrayController.extend(
                'scope': 'e'
         props[k] = prop
 
-      @set 'eventSchema', props    
+    @set 'eventSchema', props    
 
   #########################################################
 
@@ -201,10 +194,43 @@ App.RulesController = Em.ArrayController.extend(
     @loadEvents()
     @loadRules()
   ).observes('App.router.projectsController.selected')
+  #########################################################
+  # Create a Rule
+  createRule: (app_id, rule)->
+    controllerObj = this
+    controllerObj.set 'content', []
+
+    success= (data) ->
+      App.get("router").send("reenterProjectRules")
+    error= () ->
+      # TODO: Pop out error
+    url = @get 'url.create'
+    json = 
+           'app_id' : app_id
+           'rule' : rule
+    App.getRequest  url, json, success, error
+
+  #########################################################
+  # Update a Rule  
+  updateRule: (app_id, rule)->
+    controllerObj = this
+    controllerObj.set 'content', []
+
+    success= (data) ->
+      App.get("router").send("reenterProjectRules")
+    error= () ->
+      # TODO: Pop out error
+    url = @get 'url.update'
+    json = 
+           'app_id' : app_id
+           'rule' : rule
+    App.getRequest  url, json, success, error
+  #########################################################
+  # Delete a Rule
+  deleteRule: ->
 
 
 
-)
 
 
 

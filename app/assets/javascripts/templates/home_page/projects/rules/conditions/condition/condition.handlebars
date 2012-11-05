@@ -54,9 +54,12 @@
     {{view App.OperationView conditionBinding="condition" }}
   </div>  <!-- End of the operation select box -->
 
-  
-   <div {{bindAttr class="view.showHideInputOne"}} >
-    {{view App.RequiredAFTextField valueBinding="condition.value1" placeholder="Value" classBinding='view.inputBoxType' }}
+  <div {{bindAttr class="view.showHideInputOne"}} >
+    {{#if condition.valueOptions}}       
+      {{view App.AutocompelteValueView conditionBinding="condition" valuesBinding="condition.valueOptions" selectedValBinding="condition.value1"}}
+    {{else}}
+      {{view App.RequiredAFTextField valueBinding="condition.value1" placeholder="Value" classBinding='view.inputBoxType' }}
+    {{/if}}
   </div>
 
 

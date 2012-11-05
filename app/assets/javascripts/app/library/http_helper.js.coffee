@@ -9,7 +9,7 @@ App.getRequest = (req_url, req_data, req_success_cb, req_error_cb) ->
 
   $.ajax
     type: "get"
-    url: req_url
+    url: req_url + '.json'
     contentType: "json"
     data: req_data
 
@@ -27,8 +27,7 @@ App.postRequest = (req_url, req_data, req_success_cb, req_error_cb)->
   if typeof req_url is 'undefined'
     App.log App.ERR, "No URL requested returning "
     return
-
-  console.log App.AUTH_TOKEN
+  
   # Post needs the csrf token
   if typeof req_data is 'undefined'
     req_data = { authenticity_token : App.AUTH_TOKEN }
@@ -40,7 +39,7 @@ App.postRequest = (req_url, req_data, req_success_cb, req_error_cb)->
   $.ajax
     type: "post"
     data: req_data
-    url: req_url  
+    url: req_url  + '.json'
 
     success: (data) ->
       App.log App.DBG, "Received success with data for " + req_url

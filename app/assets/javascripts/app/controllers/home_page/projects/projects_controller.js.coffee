@@ -17,8 +17,8 @@ App.ProjectsController = Em.ArrayController.extend(
     if 'accounts' of data
       for project in data.accounts 
         #TODO: remove this
-        project.rules = App.sampleRule
-        project.schema =App.sampleSchema
+        # project.rules = App.sampleRule
+        # project.schema = App.sampleSchema
         #TODO: ends   
         content.pushObject App.Project.create(project)
 

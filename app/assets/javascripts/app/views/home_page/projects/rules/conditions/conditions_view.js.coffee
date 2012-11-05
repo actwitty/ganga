@@ -76,11 +76,41 @@ App.ConditionsView = Ember.View.extend
 
   # -----------------------------------------------------
   saveRuleEditHandler: (event) ->
-    rule = @get('rules').get('selected')
+    current_this = @    
+    # -----------------------------------------------------
+    showAlertOnSave = ->    
+      alert = 
+              activate: true
+              header: 
+                      main : "Save the edit on this rule "
+                      note : "You have requested RuleBot to save the edits on this rule."
+              detail: "Clicking yes will save the rule or you can reject the edit. Are you sure ? "
+              first_btn:
+                        class : "btn-success"
+                        text  : "Yes"
+                        callback : (context)->
+                                  alert = context.get 'alert'
+                                  alert.activate = false
+                                  alert= null  
+                                  context.set 'alert', alert
+                                  # TODO: May be route it through the App Router
+                                  App.get('router.rulesController').saveEditOfRule()
+                                  event.preventDefault()                              
+                        context : current_this
+              second_btn:
+                        class : "btn-warning"
+                        text  : "No"
+                        callback : (context)->
+                                  alert = context.get 'alert'
+                                  alert.activate = false
+                                  alert= null  
+                                  context.set 'alert', alert                                    
+                                  event.preventDefault()
+                        context : current_this
     
-    val = target.select2("val")
-    
-    current_this = @
+      current_this.set 'alert', alert
+
+    showAlertOnCancel()
 
 
   # -----------------------------------------------------

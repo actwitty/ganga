@@ -10,6 +10,6 @@ App.ConditionsController = Ember.ArrayController.extend
         @set 'content', conditions        
       else
         content = @get 'content'
-        content.pushObject App.Condition.ctreate()    
+        content.pushObject App.Condition.create()    
   ).observes("App.router.rulesController.selected.hasManyConditions")
   

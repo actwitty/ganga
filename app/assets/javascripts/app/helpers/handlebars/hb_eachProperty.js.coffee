@@ -10,3 +10,5 @@ Handlebars.registerHelper "eachProperty", (obj, options) ->
                             )
     
   ret
+
+

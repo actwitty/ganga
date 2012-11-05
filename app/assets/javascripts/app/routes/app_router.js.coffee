@@ -186,7 +186,13 @@ App.Router = Ember.Router.extend
               event.preventDefault()
 
             # event -------------------------------------------
-            createARule: (router, event) ->
+            createRule: (router, event) ->
+              # Context comes as argument
+              rule = App.Rule.create()
+              rulesController = router.get('rulesController')           
+              rulesController.markStateOfRuleEdit('new')
+              rulesController.storeSerializedBeforeEdit(rule)
+              router.transitionTo('editRuleConditionsState')
               event.preventDefault()
 
             # event -------------------------------------------
@@ -258,6 +264,12 @@ App.Router = Ember.Router.extend
               event.preventDefault()
 
             # event ------------------------------------------------------  
+            changeConditionValue: (router, event) ->
+              condition = event.context                                          
+              selectedVal = event.view.getConditionValue(event)
+              condition.set 'value1', selectedVal              
+              event.preventDefault()
+            # event ------------------------------------------------------  
             saveRuleEdit: (router, event) ->
               event.view.saveRuleEditHandler(event)
               event.preventDefault()
@@ -275,7 +287,7 @@ App.Router = Ember.Router.extend
               
 
           
-        
+          
         #STATES       
     # LOGGED IN STATE ENDS HERE
 
