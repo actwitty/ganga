@@ -159,14 +159,19 @@ App.RulesController = Em.ArrayController.extend
     project = App.get('router.projectsController').get('selected')
     event_p = {}
 
-
     if "schema" of project
       if "events" of project.schema
         event_p = project.schema.events
 
-    for k,v of event_p 
-      events.push k
-    @set 'events', events    
+        for k,v of event_p 
+          events.push k
+
+    if events.length is 0
+      events.push 'beacon'
+        
+    @set 'events', events 
+
+
         
 
   #########################################################
