@@ -1,7 +1,9 @@
-App.AccountController = Em.ObjectController.extend(
+App.AccountController = Em.ObjectController.extend
   content: null  
   url: "/credentials"   
-  load: ()->
+  logoutUrl: "/signout"
+  #------------------------------------------------------
+  load: ->
     controllerObj = this
     controllerObj.set 'content', null
     
@@ -10,16 +12,25 @@ App.AccountController = Em.ObjectController.extend(
       
       controllerObj.set 'content', account      
       
-      App.get("router").send("credentialGetDone");
-    
+      App.get("router").send("credentialGetDone")
+  
     error= () ->
-      App.get("router").send("credentialGetFailed");
+      App.get("router").send("credentialGetFailed")
     
 
     App.getRequest controllerObj.url, {}, success, error
+  #------------------------------------------------------
+  logout: ->
+    controllerObj = this
+    controllerObj.set 'content', null
+
+    success= (data) ->
+      App.get("router").send("logoutDoneEvent")    
+    error= () ->      
     
-   update: () ->
-)
+    App.getRequest controllerObj.logoutUrl, {}, success, error
+
+
   
    
    

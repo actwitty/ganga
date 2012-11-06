@@ -65,11 +65,11 @@ App.Router = Ember.Router.extend
         router.transitionTo('loggedInState.bareBoneAccountState') 
 
       # event -------------------------------------------
-      newProject: (router, event) ->
-        event.preventDefault()
+      newProject: (router, event) ->        
         editController = router.get('projectEditController')
         editController.set('content', App.Project.create())
         router.transitionTo('loggedInState.newProjectState')
+        event.preventDefault()
         
       # event -------------------------------------------
       deleteProject: (router, event) ->
@@ -96,11 +96,8 @@ App.Router = Ember.Router.extend
       # event -------------------------------------------
       openReports: (router, event) ->
 
-      # event -------------------------------------------
-      logoutEvent: (router, event) -> 
-        #TODO: Trigger logout and transition to loggedout
-        router.transitionTo('loggedOutState') 
-
+            
+      
       #STATES
       #state -------------------------------------
       index: Ember.Route.extend
@@ -294,16 +291,8 @@ App.Router = Ember.Router.extend
         #STATES       
     # LOGGED IN STATE ENDS HERE
 
-    # LOGGED OUT STATE STARTS HERE
-    loggedOutState  : Ember.Route.extend
-      #SETUP
-      route: "/thanks"
-      connectOutlets: (router, event) ->
-        applicationController = router.get('applicationController')
-        
-      #EVENTS
-      #STATES
-    # LOGGED OUT STATE ENDS HERE
+
+
 
 
 

@@ -6,12 +6,17 @@ App.ProjectsView = Ember.View.extend
   # This is called after the insert of view is complete
   didInsertElement: ->
     @_super()
-    $("#appsTable").tablesorter()
-    #   # $('#appsTable').dataTable(
-    #   #                             "sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>"
-    #   #                             "sPaginationType": "bootstrap")
+    Ember.run.next(this, 'applyJqueryConstructs')
+    
+    
 
- 
+   applyJqueryConstructs: ->
+    # $("#appsTable").tablesorter()
+    $('#appsTable').dataTable(
+                              sDom: "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>"
+                              sPaginationType : "bootstrap")
+
+
   hideInfo: (event) ->
   	@set 'showHelpInfo', false
   	event.preventDefault()
