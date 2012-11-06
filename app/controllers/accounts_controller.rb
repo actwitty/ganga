@@ -43,19 +43,24 @@ class AccountsController < ApplicationController
   # INPUT
   ## {  
   ##    :events => true or false         [OPTIONAL] # events 
+  ##    :actors => true or false         [OPTIONAL] # actors
   ## }
 
   # OUTPUT =>{ 
   ##            account: {id: "445654654645", name: "Sudhanshu & Sons Chaddhi Wale", description: {subscription: "Free", authenticate_app: false}},
   ##            events: [
   ##                      {
-  ##                        app: {id: "343433433", description: {"name": "my app", "domain": "http://myapp.com"}, }
+  ##                        app: {id: "343433433", description: {"super_app_id": "23131313", "name": "my app", "domain": "http://myapp.com"}, }
   ##                        actor: {id: "3433434", description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}} }
   ##          
   ##                        name: "sign_in", 
   ##                        properties: [{"k" => "name", "v" => "alok"}, {"k" => "address[city]", "v" => "Bangalore"}]
   ##                        time: 2009-02-19 00:00:00 UTC
   ##                      },
+  ##                      {..}
+  ##                    ],
+  ##            actors: [
+  ##                      {id: "3433434", description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}}}
   ##                      {..}
   ##                    ]
   ##        }

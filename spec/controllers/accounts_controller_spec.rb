@@ -34,7 +34,7 @@ describe AccountsController do
       Event.add!( account_id: @account._id, app_id: @app._id, actor_id: @actor._id, name: "sign_in",
       properties: { :email => "tom.doe@example.com", :customer => {:address => {:city => "Bangalore"}}})
 
-      get 'read', {account_id: @account._id, events: true}
+      get 'read', {account_id: @account._id, events: true, actors: true}
 
       h = JSON.parse(response.body)
       puts h.inspect

@@ -11,9 +11,13 @@ class Actor
   has_many     :events,   :dependent => :destroy
   has_many     :identifiers,  :dependent => :destroy
 
+  field :meta, type: Boolean,     default: false
+
   # Attributes
   validates_presence_of :account_id, :app_id
-  index({app_id: 1, _id: 1})
+
+  index({app_id: -1, _id: -1})
+  index({account_id: -1, _id: -1})
 
   # NOTE
   ## all values of description hash is array, as an actor can have many values of same property
@@ -298,11 +302,12 @@ class Actor
     hash[:actor][:description] = actor.description 
     
 
-    if params[:identifiers] == true
-      ids = Identifier.where(actor_id: actor_id, app_id: params[:app_id]).all
-      ids.each {|attr| hash[:identifiers] << {attr.uid => attr.type}}
-      Rails.logger.info("Adding Identifiers")
-    end
+    #BLOCKED FOR TIMEBEING
+    # if params[:identifiers] == true
+    #   ids = Identifier.where(actor_id: actor_id, app_id: params[:app_id]).all
+    #   ids.each {|attr| hash[:identifiers] << {attr.uid => attr.type}}
+    #   Rails.logger.info("Adding Identifiers")
+    # end
     
     if params[:events] == true
       events = Event.where(actor_id: actor_id, app_id: params[:app_id], meta: false).limit(AppConstants.limit_events).desc(:_id)

@@ -76,18 +76,23 @@ class Account
   ## {  
   ##    :account_id => "1212121212"      [MANDATORY]
   ##    :events => true or false         [OPTIONAL] # events 
+  ##    :actors => true or false         [OPTIONAL] # actors
   ## }
 
   # OUTPUT =>{ 
   ##            account: {id: "445654654645", name: "Sudhanshu & Sons Chaddhi Wale", description: {subscription: "Free", authenticate_app: false}},
   ##            events: [
   ##                      {
-  ##                        app: {id: "343433433", description: {"name": "my app", "domain": "http://myapp.com"}, }
+  ##                        app: {id: "343433433", description: {"super_app_id": "23131313", "name": "my app", "domain": "http://myapp.com"}, }
   ##                        actor: {id: "3433434", description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}} }          
   ##                        name: "sign_in", 
   ##                        properties: [{"k" => "name", "v" => "alok"}, {"k" => "address[city]", "v" => "Bangalore"}]
   ##                        time: 2009-02-19 00:00:00 UTC
   ##                      },
+  ##                      {..}
+  ##                    ],
+  ##            actors: [
+  ##                      {id: "3433434", description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}}}
   ##                      {..}
   ##                    ]
   ##        }
@@ -95,7 +100,7 @@ class Account
 
     Rails.logger.info("Enter Account Read")
 
-    hash = {events: []}
+    hash = {events: [], actors: []}
 
     if params[:account_id].blank? 
       raise et("account.invalid_argument_in_read")
@@ -115,6 +120,13 @@ class Account
                           actor: {id: attr.actor_id, description: attr.actor.description}, 
                           name: attr.name, properties: attr.properties, time: attr.created_at
                          }
+      end
+    end
+
+    if params[:actors] == true
+      actors = Actor.where(account_id: account._id).limit(AppConstants.limit_actors).desc(:_id)
+      actors.each do |attr|
+        hash[:actors] << {id: attr._id, description: attr.description}  if attr.meta == false                      
       end
     end
 

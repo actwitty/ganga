@@ -52,7 +52,8 @@ class ActorsController < ApplicationController
     hash = obj.reload.attributes
     hash["id"] = hash["_id"]
     hash.delete("_id")
-
+    
+    puts hash.inspect
     respond_with(hash, status: 200)
   rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")

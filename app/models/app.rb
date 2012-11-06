@@ -47,6 +47,43 @@ class App
   # Function
   
   # NOTE
+  ## Create App
+
+  # INPUT
+  ## {  
+  ##    :account_id => "2334534534"   [MANDATORY] 
+  ##    :description => {             [MANDATORY]
+  ##      :email => "john.doe@example.com",
+  ##        :address => {:city => "Bangalore"}}
+  ## }
+
+  # OUTPUT => {
+  ##             :return => obj, :error => nil
+  ##          }
+  def self.add!(params)
+    Rails.logger.info("Enter App Add")
+
+    if params[:account_id].blank? or params[:description].blank?
+      raise et("app.invalid_argument_in_create") 
+    end
+    
+    obj = App.new(account_id: params[:account_id], description: params[:description])
+
+    # create the super actor of app. it will be meta actor
+    actor = Actor.create!(account_id: params[:account_id], app_id: obj._id, meta: true)
+    params[:description][AppConstants.super_actor] = actor._id 
+    obj.description = params[:description]
+
+    obj.save!
+    raise et("app.create_failed") if obj.blank?
+    
+    {:return => obj, :error => nil}  
+  rescue => e
+    Rails.logger.error("**** ERROR **** #{er(e)}")
+    {:return => false, :error => e} 
+  end
+  
+  # NOTE
   ## update app description
 
   # INPUT
@@ -54,8 +91,8 @@ class App
   ##  :account_id => "23232312"[MANDATORY] 
   ##  :app_id => "1234444',    [MANDATORY]
   ##  :description => {        [MANDATORY]
-  ##      :email => "john.doe@example.com",
-  ##      :address => {:city => "Bangalore"}}
+  ##      "email" => "john.doe@example.com",
+  ##      "address" => {:city => "Bangalore"}}
   ## }
 
   # OUTPUT => {:return => object, :error => nil}
@@ -73,7 +110,7 @@ class App
     desc = Utility.serialize_to(hash: params[:description], serialize_to: "value")
     
     desc.each do |k,v|
-      app.description[k] = v
+      app.description[k.to_sym] = v if k != "super_actor_id"
     end
 
     app.save!
@@ -91,6 +128,7 @@ class App
   ##    :account_id => "1212121212"      [MANDATORY]
   ##    :app_id => 123                   [MANDATORY]
   ##    :events => true or false         [OPTIONAL] # events 
+  ##    :actors => true or false         [OPTIONAL] # actors
   ## }
 
   # OUTPUT =>{ 
@@ -98,7 +136,7 @@ class App
   ##
   ##            app: {
   ##                   id: "4545554654645", 
-  ##                   description: {"name": "my app", "domain": "http://myapp.com"}, 
+  ##                   description: {"super_app_id": "23131313", "name": "my app", "domain": "http://myapp.com"}, 
   ##                   rules: [
   ##                             {
   ##                               "name"=>"A fancy rule", "event"=>"singup", "owner"=>"client", "action"=>"topbar",
@@ -138,11 +176,15 @@ class App
   ##                        time: 2009-02-19 00:00:00 UTC
   ##                      },
   ##                      {..}
+  ##                    ],
+  ##            actors: [
+  ##                      {id: "3433434", description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}}}
+  ##                      {..}
   ##                    ]
   ##        }
   def self.read(params)
     Rails.logger.info("Enter App Read")
-    hash = {events: []}
+    hash = {events: [], actors: []}
 
     if params[:account_id].blank? or params[:app_id].blank?
       raise et("app.invalid_argument_in_read")
@@ -162,6 +204,13 @@ class App
                             actor: {id: attr.actor_id, description: attr.actor.description}, 
                             name: attr.name, properties: attr.properties, time: attr.created_at
                          }
+      end
+    end
+
+    if params[:actors] == true
+      actors = Actor.where(app_id: app._id).limit(AppConstants.limit_actors).desc(:_id)
+      actors.each do |attr|
+        hash[:actors] << {id: attr._id, description: attr.description}  if attr.meta == false                      
       end
     end
   
@@ -214,6 +263,7 @@ class App
     {:return => false, :error => e}
   end
 
+  
   def format_rules
     Rails.logger.info("Enter Format Rules")
 
