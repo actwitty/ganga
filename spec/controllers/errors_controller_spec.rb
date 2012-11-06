@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ErrsController do
+describe ErrorsController do
   login_account
 
   before(:each) do
@@ -9,3 +9,4 @@ describe ErrsController do
     request.env['HTTP_ACCEPT'] = "application/json"
   end  
 end
+

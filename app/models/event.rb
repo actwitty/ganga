@@ -33,7 +33,7 @@ class Event
   # Functions
 
   # NOTE
-  ## set the property of actor explicitly
+  ## create an event
 
   # INPUT
   ## {

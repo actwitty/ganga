@@ -144,9 +144,11 @@ class AppsController < ApplicationController
 
   # INPUT
   ## {  
-  ##  	:app_id => 123                   [MANDATORY]
-  ##    :events => true or false         [OPTIONAL] # events 
-  ##    :actors => true or false         [OPTIONAL] # actors
+  ##  	app_id: 123                   [MANDATORY]
+  ##    events: true or false         [OPTIONAL] # events 
+  ##    conversions: true or false    [OPTIONAL] # conversion
+  ##    errors: true or false         [OPTIONAL] # errors
+  ##    actors: true or false         [OPTIONAL] # actors
   ## }
 
   # OUTPUT =>{ 
@@ -185,20 +187,41 @@ class AppsController < ApplicationController
   ##                           } 
   ##                 }  
   ##
-  ##            events: [
+  ##           events: [
   ##                      {
-  ##                        actor: {id: "3433434", description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}} }
-  ##          
-  ##                        name: "sign_in", 
+  ##                        id: "3232342434", name: "sign_in", 
   ##                        properties: [{"k" => "name", "v" => "alok"}, {"k" => "address[city]", "v" => "Bangalore"}]
+  ##                        actor_id: "3433434",
   ##                        time: 2009-02-19 00:00:00 UTC
   ##                      },
   ##                      {..}
-  ##                    ] ,
-  ##           actors: [
-  ##                      {id: "3433434", description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}}}
+  ##                    ],
+  ##            conversions: [
+  ##                            {
+  ##                              id: "32323424355",
+  ##                              properties: [{"k" => "button", "v" => "clicked"}, {"k" => "times", "v" => "40"}]
+  ##                              actor_id: "3433434",
+  ##                              time: 2009-02-19 23:00:00 UTC
+  ##                            },
+  ##                            {...}
+  ##                         ],
+  ##            errors: [
+  ##                       {
+  ##                          id: "3232342434",
+  ##                          properties: [{"k" => "name", "v" => "Javascript Error"}, {"k" => "reason", "v" => "dont know"}]
+  ##                          actor_id: "3433434",
+  ##                          time: 2009-02-19 21:00:00 UTC
+  ##                       },
+  ##                       {...}
+  ##                    ],
+  ##            actors: [
+  ##                      {
+  ##                        id: "3433434", 
+  ##                        description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}},
+  ##                        time: 2009-02-19 21:00:00 UTC
+  ##                      }
   ##                      {..}
-  ##                   ]
+  ##                    ]
   ##        }
 	def read
 		Rails.logger.info("Enter App read")

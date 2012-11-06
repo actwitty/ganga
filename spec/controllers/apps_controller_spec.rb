@@ -76,7 +76,7 @@ describe AppsController do
     end
 
     it "should update app" do
-      post 'update', {account_id: @account._id, :app_id => @app["id"],:description => {email: "bon.doe@example.com",address: {city: "Bangalore"} }}
+      post 'update', {account_id: @account._id, :app_id => @app["id"],:description => {email: "bon.doe@example.com",address: {city: "Bangalore"}, super_actor_id: 2323232 }}
 
       response.status.should eq(200)
 

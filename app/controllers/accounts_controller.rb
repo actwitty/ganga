@@ -37,30 +37,52 @@ class AccountsController < ApplicationController
   end
 
 
-  #NOTE
-  ## Gives account information. Also will fetch events (latest 100) if event: true
-
   # INPUT
   ## {  
-  ##    :events => true or false         [OPTIONAL] # events 
-  ##    :actors => true or false         [OPTIONAL] # actors
+  ##    events: true or false         [OPTIONAL] # events 
+  ##    conversions: true or false    [OPTIONAL] # conversion
+  ##    errors: true or false         [OPTIONAL] # errors
+  ##    actors: true or false         [OPTIONAL] # actors
   ## }
 
   # OUTPUT =>{ 
   ##            account: {id: "445654654645", name: "Sudhanshu & Sons Chaddhi Wale", description: {subscription: "Free", authenticate_app: false}},
   ##            events: [
   ##                      {
-  ##                        app: {id: "343433433", description: {"super_app_id": "23131313", "name": "my app", "domain": "http://myapp.com"}, }
-  ##                        actor: {id: "3433434", description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}} }
-  ##          
   ##                        name: "sign_in", 
   ##                        properties: [{"k" => "name", "v" => "alok"}, {"k" => "address[city]", "v" => "Bangalore"}]
+  ##                        app_id: "343433433",
+  ##                        actor_id: "3434334"
   ##                        time: 2009-02-19 00:00:00 UTC
   ##                      },
   ##                      {..}
   ##                    ],
+  ##            conversions: [
+  ##                            {
+  ##                              id: "32323424355",
+  ##                              properties: [{"k" => "button", "v" => "clicked"}, {"k" => "times", "v" => "40"}],
+  ##                              app_id: "343433433",
+  ##                              actor_id: "3433434",
+  ##                              time: 2009-02-19 23:00:00 UTC
+  ##                            },
+  ##                            {...}
+  ##                         ],
+  ##            errors: [
+  ##                       {
+  ##                          id: "3232342434",
+  ##                          properties: [{"k" => "name", "v" => "Javascript Error"}, {"k" => "reason", "v" => "dont know"}]
+  ##                          app_id: "343433433",
+  ##                          actor_id: "3433434",
+  ##                          time: 2009-02-19 21:00:00 UTC
+  ##                       },
+  ##                       {...}
+  ##                    ],
   ##            actors: [
-  ##                      {id: "3433434", description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}}}
+  ##                      {
+  ##                        id: "3433434", 
+  ##                        description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}},
+  ##                        time: 2009-02-19 21:00:00 UTC
+  ##                      }
   ##                      {..}
   ##                    ]
   ##        }

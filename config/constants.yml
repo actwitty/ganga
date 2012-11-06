@@ -32,6 +32,8 @@ development: &default
   # Limits
   limit_events:           100
   limit_actors:           100
+  limit_errors:           100
+  limit_conversions:      100
 
   # Service Keys
   facebook_app_id:      '244515575666539'
