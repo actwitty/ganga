@@ -4,5 +4,5 @@ Handlebars.registerHelper 'getvalue', (param, options) ->
   context = (options.contexts and options.contexts[0]) or this  
   value = Ember.Handlebars.getPath(context, param, options)  
   
-  return value.capitalize()
+  return value
   

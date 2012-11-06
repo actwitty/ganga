@@ -24,7 +24,12 @@ Handlebars.registerHelper "getType", (condition, options) ->
   else
   	App.operationsValuesType[condition.op]
 
-Handlebars.registerHelper "getOperaitonDescription", (op, options) ->
+Handlebars.registerHelper "getOperationDescription", (op, options) ->
   context = (options.contexts and options.contexts[0]) or this
   op = Ember.Handlebars.getPath(context, op, options)
   App.operationsLibrary[op].capitalize()
+
+
+
+  
+

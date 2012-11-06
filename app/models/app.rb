@@ -136,7 +136,7 @@ class App
   ##
   ##            app: {
   ##                   id: "4545554654645", 
-  ##                   description: {"super_app_id": "23131313", "name": "my app", "domain": "http://myapp.com"}, 
+  ##                   description: {"name": "my app", "domain": "http://myapp.com"}, 
   ##                   rules: [
   ##                             {
   ##                               "name"=>"A fancy rule", "event"=>"singup", "owner"=>"client", "action"=>"topbar",

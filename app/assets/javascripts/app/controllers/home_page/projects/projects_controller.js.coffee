@@ -1,18 +1,21 @@
-App.ProjectsController = Em.ArrayController.extend(
+App.ProjectsController = Em.ArrayController.extend
   content: []
   selected: null    
   url: "/account/list_apps"
-  
-  
+  rules_load: "/app/read"
+  #########################################################
+  serializeProj: ->
+    project = @get 'selected'
+    if project isnt null
+      project.serialize
+    else
+      null
+
   #########################################################
   loadAll: (data)->
     content = @get 'content'    
     if 'accounts' of data
       for project in data.accounts 
-        #TODO: remove this
-        project.rules = App.sampleRule
-        project.schema =App.sampleSchema
-        #TODO: ends   
         content.pushObject App.Project.create(project)
 
       if content.length > 0
@@ -36,6 +39,24 @@ App.ProjectsController = Em.ArrayController.extend(
     error= () ->
 
     App.getRequest controllerObj.url, {events : false}, success, error
+
+  #########################################################
+  loadProjectRules: (project)->
+    if project.checkRulesIsNull() is true
+      success= (data) -> 
+        project.setRules(data.app.rules)      
+        App.get("router").send("projectRulesLoaded", project)
+
+      error= () ->
+        #Todo error handling
+      json = 
+            app_id : project.get 'app_id'
+            events : false
+      App.getRequest @get('rules_load'), json, success, error
+    else
+      App.get("router").send("projectRulesLoaded", project)
+
+
 
   #########################################################   
 
@@ -63,4 +84,3 @@ App.ProjectsController = Em.ArrayController.extend(
 
 
 
-)

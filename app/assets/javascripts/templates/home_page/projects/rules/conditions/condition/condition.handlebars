@@ -1,0 +1,88 @@
+<div class="entry">
+  <div class="delete" {{action "deleteCondition" condition }}> </div>
+  <div class="property">  <!-- Start of the main property select box -->
+
+
+    <select class='select2Props property_sel' {{action "changedProperty" condition}}>
+
+      <optgroup label="{{getvalue view.rules.selected.event}} Properties"> 
+
+        {{#eachProperty view.rules.eventSchema}} 
+          {{#ifequal iter_val.actual condition.property}}
+            <option value="{{getvalue iter_key}}" scope="{{getvalue iter_val.scope}}" selected>{{iter_val.show}}</option>
+          {{else}}
+            <option value="{{getvalue iter_key}}" scope="{{getvalue iter_val.scope}}" >{{iter_val.show}}</option>
+          {{/ifequal}} 
+        {{/eachProperty}}
+      </optgroup> 
+      <optgroup label="System Properties"> 
+        {{#eachProperty view.rules.systemSchema}}                 
+          {{#ifequal iter_val.actual condition.property}}
+            <option value="{{getvalue iter_key}}"  scope="{{getvalue iter_val.scope}}" selected>{{iter_val.show}}</option>
+          {{else}}
+            <option value="{{getvalue iter_key}}" scope="{{getvalue iter_val.scope}}" >{{iter_val.show}}</option>
+          {{/ifequal}} -->
+        {{/eachProperty}}
+      </optgroup> 
+      <optgroup label="User Properties"> 
+        {{#eachProperty view.rules.actorSchema}}                 
+          {{#ifequal iter_val.actual condition.property}}
+            <option value="{{getvalue iter_key}}" scope="{{getvalue iter_val.scope}}" selected>{{iter_val.show}}</option>
+          {{else}}
+            <option value="{{getvalue iter_key}}" scope="{{getvalue iter_val.scope}}" >{{iter_val.show}}</option>
+          {{/ifequal}} -->
+        {{/eachProperty}}
+      </optgroup> 
+
+    </select>
+  </div>   <!-- End of the main property select box -->
+
+  <div class="negation">  <!-- Start of the negation select box -->
+    <select class='select2Props negation_sel' {{action "changedNegation" condition }}>
+        {{#each negation in App.negationValues}}                   
+          {{#ifequal negation.key condition.negation}}
+            <option  value="{{getvalue negation.key}}" selected >{{negation.value}}</option>
+          {{else}}
+           <option  value="{{getvalue negation.key}}" >{{negation.value}}</option>
+          {{/ifequal}}
+        {{/each}}
+    </select>
+  </div>  <!-- End of the negation select box -->
+
+
+  <div class="operation">  <!-- Start of the operation select box -->
+    {{view App.OperationView conditionBinding="condition" }}
+  </div>  <!-- End of the operation select box -->
+
+  <div {{bindAttr class="view.showHideInputOne"}} >
+    {{#if condition.valueOptions}}       
+      {{view App.AutocompelteValueView conditionBinding="condition" valuesBinding="condition.valueOptions" selectedValBinding="condition.value1"}}
+    {{else}}
+      {{view App.RequiredAFTextField valueBinding="condition.value1" placeholder="Value" classBinding='view.inputBoxType' }}
+    {{/if}}
+  </div>
+
+
+
+  <div {{bindAttr class="view.showHideInputTwo"}} >
+      <p> to </p>
+     {{view App.RequiredAFTextField valueBinding="condition.value2" placeholder="Value" classBinding='view.inputBoxType' }}
+  </div>
+  
+
+  
+  <div class="type">  <!-- Start of the operation select box -->
+    <!-- {{view App.OperationView valueBinding="condition" }} -->
+     <select class='select2Props type_sel' {{action "changeDataType" condition}}>
+
+        {{#each type in App.dataTypes}}                               
+          {{#ifequal condition.type type.key}}
+            <option value="{{getvalue type.key}}" selected>{{type.value}}</option>
+          {{else}}
+            <option value="{{getvalue type.key}}" >{{type.value}}</option>
+          {{/ifequal}} -->
+        {{/each}}
+    </select>
+  </div>  <!-- End of the operation select box -->
+
+</div> <!-- End of Condition Entry Box -->
