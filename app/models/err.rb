@@ -1,4 +1,4 @@
-class Error
+class Err
   include Mongoid::Document
   include Mongoid::Timestamps
 
@@ -82,4 +82,3 @@ class Error
     {:return => nil, :error => e}
   end
 end
-

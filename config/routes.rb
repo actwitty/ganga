@@ -47,7 +47,13 @@ Ganga::Application.routes.draw do
   get '/rule/read',           :to => "rules#read"
   get '/rule/delete',         :to => "rules#delete"
 
-  
+  # Conversion Api
+  get '/conversion/create',   :to => "conversions#create"
+
+  # Error Api
+  get '/err/create',          :to => "errs#create"
+
+
   match '/:locale' => 'base#index'                                    
   root :to => "base#index"
   

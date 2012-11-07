@@ -207,7 +207,7 @@ class App
   ##        }
   def self.read(params)
     Rails.logger.info("Enter App Read")
-    hash = {events: [], actors: []}
+    hash = {events: [], actors: [], conversions: [], errors: []}
 
     if params[:account_id].blank? or params[:app_id].blank?
       raise et("app.invalid_argument_in_read")
@@ -232,13 +232,13 @@ class App
 
     if params[:conversions] == true
       conversions = Conversion.where(app_id: app._id).limit(AppConstants.limit_conversions).desc(:_id)
-      conversions.each {|attr| hash[:conversions] << { properties: attr.properties, actor_id: attr.actor_id, time: attr.created_at}}
+      conversions.each {|attr| hash[:conversions] << {id: attr._id, properties: attr.properties, actor_id: attr.actor_id, time: attr.created_at}}
       Rails.logger.info("Adding Conversions")
     end
 
     if params[:errors] == true
-      errors = Error.where(app_id: app._id).limit(AppConstants.limit_errors).desc(:_id)
-      errors.each {|attr| hash[:errors] << { properties: attr.properties, actor_id: attr.actor_id, time: attr.created_at}}
+      errors = Err.where(app_id: app._id).limit(AppConstants.limit_errors).desc(:_id)
+      errors.each {|attr| hash[:errors] << {id: attr._id, properties: attr.properties, actor_id: attr.actor_id, time: attr.created_at}}
       Rails.logger.info("Adding Errors")
     end
 

@@ -1,5 +1,5 @@
-class ErrorsController < ApplicationController
-  protect_from_forgery
+class ErrsController < ApplicationController
+	protect_from_forgery
   before_filter :authenticate_account!
   #before_filter :authenticate_app!
 
@@ -37,7 +37,7 @@ class ErrorsController < ApplicationController
     Rails.logger.info("Enter Error Create")
     
     params[:account_id] = current_account._id if Rails.env != "test"
-    ret = Error.add!(params)
+    ret = Err.add!(params)
 
     raise ret[:error] if !ret[:error].blank?
 

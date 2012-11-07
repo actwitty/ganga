@@ -341,7 +341,7 @@ class Actor
     end
 
     if params[:errors] == true
-      errors = Error.where(actor_id: actor_id, app_id: params[:app_id]).limit(AppConstants.limit_errors).desc(:_id)
+      errors = Err.where(actor_id: actor_id, app_id: params[:app_id]).limit(AppConstants.limit_errors).desc(:_id)
       errors.each {|attr| hash[:errors] << { id: attr._id, properties: attr.properties, time: attr.created_at}}
       Rails.logger.info("Adding Errors")
     end

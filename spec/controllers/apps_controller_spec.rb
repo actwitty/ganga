@@ -131,7 +131,20 @@ describe AppsController do
       Event.add!( account_id: @app["account_id"], app_id: @app["id"], actor_id: @actor._id, name: "sign_in",
         properties: { :email => "tom.doe@example.com", :customer => {:address => {:city => "Bangalore"}}})
 
-      get 'read', {account_id: @account._id, app_id: @app["id"],events: true, actors: true}
+      Err.add!( account_id: @app["account_id"], app_id: @app["id"], actor_id: @actor._id, 
+      properties: { :name => "Something failed",:reason => { err: "I know", code: 402}})
+
+      Err.add!( account_id: @app["account_id"], app_id: @app["id"], actor_id: @actor._id,
+      properties: { :name => "Javascript failed",:reason => { err: "dont know", code: 402}})
+
+      Conversion.add!( account_id: @app["account_id"], app_id: @app["id"], actor_id: @actor._id,
+      properties: { :button => "clicked",:times => {:time => ["20/12/2011", "19/11/2012"], :count => 30}})
+
+      Conversion.add!( account_id: @app["account_id"], app_id: @app["id"], actor_id: @actor._id,
+      properties: { :button => "hovered",:times => {:time => ["20/12/2011", "19/11/2012"], :count => 30}})
+
+
+      get 'read', {account_id: @account._id, app_id: @app["id"],events: true, actors: true, conversions: true, errors: true}
 
       puts JSON.parse(response.body).inspect
       response.status.should eq(200)
