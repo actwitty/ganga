@@ -7,7 +7,9 @@ var TEST_RBT_RULE_JSON = {
                                         "swh":"actwitty",
                                         "ewh":"actwitty",
                                         "cns":"actwitty",
-                                        "drg":"3/3/2011"
+                                        "drg":"3/3/2011",
+                                        "rgx":"deosamarth",
+                                        "set":"abc",
                                        }
                          };
 
@@ -34,107 +36,7 @@ var rbTRules = {
           'Number': [ 'gtn','ltn','eql','btn','set'] 
   },
 
-  sample_json : [
-        {
-          id: '1010101010',
-          name  : "sample_name", 
-          event : "sample_event",
-          action: "topbar.generic.normal",
-          action_param :
-                  [
-                     {key:'rb.t.cr.textColor ',value:'#333'},
-                     {key:'rb.t.nr.textFontsize',value:'15'},
-                     {key:'rb.t.ft.textFontfamily',value:'Arial'},
-                     {key:'rb.f.nr.baseZindex',value:'100'},
-                     {key:'rb.t.nr.baseWidth',value:'100'},
-                     {key:'rb.t.nr.baseHeight',value:'40'},
-                     {key:'rb.t.cr.baseBgColor',value:'#DCDCDC'},
-                     {key:'rb.t.an.baseTextalign',value:'center'},
-                     {key:'rb.t.sg.textLeft',value:'Hello Hello Hello Hello'},
-                     {key:'rb.t.nr.btnFontSize',value:'14'},
-                     {key:'rb.t.cr.btnBgColor',value:'#548AC7'},
-                     {key:'rb.t.cr.btnColor',value:'white'},
-                     {key:'rb.t.ul.btnLink',value:'http://www.google.com'},
-                     {key:'rb.t.sg.btnLable',value:'Click'},
-                     {key:'rb.t.sg.textRight',value:'Hello Hello'},
-                     {key:'rb.t.ul.helpLink',value:'http://www.rulebot.com'},
-                  ],
-          conditions : [
-                // event based condition
-                { 
-                  property: "#customer.email",
-                  type : "String",
-                  negation: 'false',
-                  operation: 'eql',
-                  value1: 'gmail.com',
-                  connect: 'and' 
-                },
-                // negate condition
-                { 
-                  property: "#customer.name",
-                  type : "String",
-                  negation: 'true',
-                  operation: 'swh',
-                  value1: 'a',
-                  connect: 'and' 
-                },
-                // actor_property based condition
-                {
-                  property: "$customer.val1",
-                  type : "Number",
-                  negation: 'false',
-                  operation: 'gtn',
-                  value1: 2,
-                  connect: 'and' 
-                },
-                // system_property based condition
-                {
-                  property: "#customer.val2",
-                  type : "Number",
-                  negation: 'false',
-                  operation: 'ltn',
-                  value1: 3000,
-                  connect: 'and' 
-                },
-                // starts with
-                {
-                  property: "#customer.swh",
-                  type : "String",
-                  negation: 'false',
-                  operation: 'swh',
-                  value1: 'act',
-                  connect: 'and' 
-                },
-                // ends with
-                {
-                  property: "#customer.ewh",
-                  type : "String",
-                  negation: 'false',
-                  operation: 'ewh',
-                  value1: 'tty',
-                  connect: 'and' 
-                },
-                // contains
-                {
-                  property: "#customer.cns",
-                  type : "String",
-                  negation: 'false',
-                  operation: 'cns',
-                  value1: 'wit',
-                  connect: 'and' 
-                },
-                // date range
-                {
-                  property: "#customer.drg",
-                  type : "Date",
-                  negation: 'false',
-                  operation: 'drg',
-                  value1: "2/2/2011",
-                  value2: "4/4/2011"
-                },
-              ]
-        }
-  ],
+  
   
   /**
   * Initialize Rules for business
@@ -646,9 +548,8 @@ var rbTRules = {
         if (!rbTRules.isValidRule(t,"rgx",a,b))
           return false;
         var prop = rbTRules.evalProperty(a);
-        var res;
-        regexp = new RegExp(b, 'gi');
-        res = regexp.test(prop);
+        var regexp = new RegExp(b, 'gi');
+        var res = regexp.test(prop);
         return (x === "true") ? !res : res;
       } catch (e) {
         rbTAPP.reportError({"exception" : e.message,
@@ -674,9 +575,8 @@ var rbTRules = {
         if (!rbTRules.isValidRule(t,"dag",a,b))
           return false;
         var prop = rbTRules.evalProperty(a);
-        var res;
-        regexp = new RegExp(b, 'gi');
-        res = regexp.test(prop) ;
+        var regexp = new RegExp(b, 'gi');
+        var res = regexp.test(prop) ;
         return (x === "true") ? !res : res;
       } catch (e) {
         rbTAPP.reportError({"exception" : e.message,
@@ -703,8 +603,7 @@ var rbTRules = {
         if (!rbTRules.isValidRule(t,"drg",a,b,c))
           return false;
         var prop = rbTRules.evalProperty(a,t);
-        var res;
-        res = (prop >= rbTRules.valueDataType(prop, b) && prop <= rbTRules.valueDataType(prop, c));
+        var res = (prop >= rbTRules.valueDataType(prop, b) && prop <= rbTRules.valueDataType(prop, c));
         return (x === "true") ? !res : res;
       } catch (e) {
         rbTAPP.reportError({"exception" : e.message,

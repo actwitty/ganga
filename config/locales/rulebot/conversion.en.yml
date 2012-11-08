@@ -1,0 +1,7 @@
+en:
+  conversion:
+    invalid_argument_in_conversion: "invalid arguemnt in conversion Add"
+    create_failed: "Conversion creation failed"
+    invalid_app_id: "invalid App ID"
+    invalid_actor_id: "invalid Actor ID"
+    property_not_serialized: "Conversion is not serialized"

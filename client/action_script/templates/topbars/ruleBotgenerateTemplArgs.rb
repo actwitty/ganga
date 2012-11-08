@@ -116,13 +116,16 @@ Dir.glob('*.html').each  do|fileName|
 
 
    m = strfinalforJsWoNewLine.scan(reg)
+
   
    reg2 = /[A-Z][a-z]*/
 
    tempStr = ""
 
+
    tempMatch = origin.scan(reg2)
-   
+
+
    length = tempMatch.length
 
    templength = length-1
@@ -145,6 +148,8 @@ Dir.glob('*.html').each  do|fileName|
   end  
 
   templPropName = tempStr.downcase 
+
+
 
     m.length.times do |index|  
     m[index] = m[index].delete("{{")
@@ -187,6 +192,13 @@ Dir.glob('*.html').each  do|fileName|
     end  
 
     end 
+
+   if !m[0]  and tempMatch[0]
+
+    m[0] ="\t \t \t \t \t \t " + "'" + "rb.t.nr.durationOfDisplay" + "'" + ":"+"'#{defaultTemplTimer}'"+"\n"
+
+  end 
+   
     m= m.to_s
 
     m = "{\n" + m + "\t \t \t \t \t },\n"

@@ -14,6 +14,8 @@
   </div>
 {{/if}}
 
+{{view App.AlertView alertParamsBinding="view.alert"}}
+
 <div class="rule_edit">
 
   <div class="name_box">
@@ -24,11 +26,11 @@
 
   <div class="event_box">
     <h3> Trigger Event </h3>
-    <select class="select2Props evt_sel" >
+    <select class="select2Props evt_sel" {{action "changeRuleEvent" }}>
   
       {{#each event in view.rules.events}}    
         {{#ifequal view.rules.selected.event event}}
-          <option  selected>{{event}}</option>
+          <option value={{getvalue event}} selected>{{event}}</option>
         {{else}}
           <option >{{event}}</option>
         {{/ifequal}}
@@ -36,11 +38,9 @@
 
     </select>
   </div>
-
   
-  {{template "home_page/projects/rules/conditions/condition_lister"}}
-
-  {{template "home_page/projects/rules/conditions/actions"}}
+  {{view App.ConditionListerView conditionsBinding="controller.content"}}
+  {{template "home_page/projects/rules/actions/action"}}
   
   <div class="commands_box" >
     <div class="commands">

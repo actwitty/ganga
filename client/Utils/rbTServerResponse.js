@@ -5,20 +5,20 @@ var rbTServerResponse = {
   *   
   *  @return void
   */ 
-  defaultSuccessCallback : function()
+  defaultSuccessCallback : function(respData)
   {
     // FIXME : what to do?
-    rbTDebug.log("Success callback : default server response");
+    rbTAPP.log({"message": "Success callback : default server response","data":respData});
   },
   /** 
   *  Handle default error callback if not mentioned explicitly
   *   
   *  @return void
   */ 
-  defaultErrorCallback : function()
+  defaultErrorCallback : function(respData)
   {
     // FIXME : what to do?
-    rbTDebug.warn("Error callback : default server response");
+    rbTAPP.log({"message": "Error callback : default server response","data":respData});
   },
 
 
@@ -27,14 +27,25 @@ var rbTServerResponse = {
   * @param {object} respData Actor identification details
   * @return void
   */
-  setActor : function(respData)
+  setActorID : function(respData)
   { 
     "use strict";
+    rbTAPP.log({"message": "Setting actor details with server resp","data":respData});
     try {
-      if (respData && respData.actor_id) {
+      if (respData && respData.id) {
         // FIXME :: Flush and reset all cookies if there is a change in actor.
         // WAITING AS THERE ARE SOME CHANGES IN BACKEND.
-        rbTCookie.setCookie(rbTCookie.defaultCookies.actorID, JSON.stringify(respData.actor_id));
+        var oldActorId = rbTCookie.getCookie(rbTCookie.defaultCookies.actorID);
+        if (!oldActorId || oldActorId !== respData.id) {
+          rbTCookie.setCookie(rbTCookie.defaultCookies.actorID, JSON.stringify(respData.actor_id));
+          rbTServerChannel.makeRequest({"url"       : rbTServerChannel.url.readActor, 
+                                        "set_actor_prop" : true,
+                                        "cb"        : { success: rbTServerResponse.setActorProperty,
+                                                        error  : rbTServerResponse.defaultError
+                                                      }
+                                       });
+        }
+        rbTAPP.setActorID(respData.actor_id);
       } else {
         throw new Error("there is no server resp data");
       }
@@ -52,15 +63,17 @@ var rbTServerResponse = {
   * @param {object} respData Actor identification details
   * @return void
   */
-  setUserProperty : function(respData)
+  setActorProperty : function(respData)
   {
-     "use strict";
+    "use strict";
+    rbTAPP.log({"message": "Setting actor details with server resp","data":respData});
+
     // FIXME : check for which property to set
     try {
       if (respData) {
         rbTCookie.setCookie(rbTCookie.defaultCookies.actorprop, JSON.stringify(respData));
       } else {
-        throw "there is no data";
+        throw "there is no data for setting actor property";
       }
     } catch(e) {
       rbTAPP.reportError({"exception" : e.message,
@@ -78,6 +91,8 @@ var rbTServerResponse = {
   setSystemProperty : function(respData)
   {
     "use strict";
+    rbTAPP.log({"message": "Setting system property with server resp","data":respData});
+
     // FIXME : check for which property to set
     try {
       if (respData) {
@@ -101,6 +116,7 @@ var rbTServerResponse = {
   handleEvent : function(respData)
   {
     "use strict";
+    rbTAPP.log({"message": "Handling event with server resp","data":respData});
     try {
       if(respData && respData.actor) {
         rbTCookie.setCookie(rbTCookie.defaultCookies.actor, respData.actor);
@@ -115,6 +131,16 @@ var rbTServerResponse = {
     }
   },
 
+  /**
+  * Handle event response from server
+  * @param {object} respData conversion response details
+  * @return void
+  */
+  handleConversion : function(respData)
+  {
+    rbTAPP.log({"message" : "conversion api response from server","data":respData});
+    return;
+  },
   
   /**
   * Set Rules response from server
@@ -124,6 +150,8 @@ var rbTServerResponse = {
   setRules : function(respData)
   {
     "use strict";
+    rbTAPP.log({"message": "Setting rules with server resp","data":respData});
+
     try {
       if(respData) {
         rbTRules.setRulesTable(respData);
@@ -145,6 +173,7 @@ var rbTServerResponse = {
   */
   setAppDetail : function(respData)
   {
+    rbTAPP.log({"message": "Setting app details with server resp","data":respData});
     var sample_rule_json = [
         {
           id: '1010101010',
@@ -237,13 +266,32 @@ var rbTServerResponse = {
                   negation: 'false',
                   operation: 'drg',
                   value1: "2/2/2011",
-                  value2: "4/4/2011"
+                  value2: "4/4/2011",
+                  connect: 'and'
                 },
+                // regex
+                {
+                  property: "#customer.rgx",
+                  type : "String",
+                  negation: 'false',
+                  operation: 'rgx',
+                  value1: 'sam',
+                  connect: 'and' 
+                },
+                // set
+                {
+                  property: "#customer.set",
+                  type : "String",
+                  negation: 'false',
+                  operation: 'set',
+                }
               ]
         },
     ];
     
     rbTRules.setRulesTable(sample_rule_json);
+
+    rbTAPP.configs.status = true;
   }
 
 };

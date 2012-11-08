@@ -12,16 +12,18 @@ describe AppsController do
 
   describe "create app" do
     it "should check attributes before creating app" do
-      get 'create', { description: { }}
+      post 'create', { account_id: @account._id, description: { }}
 
       puts JSON.parse(response.body).inspect
       response.status.should eq(422)
     end
 
     it "should create app" do
-      get 'create', {description: { :email => "john.doe@example.com", 
+      post 'create', {account_id: @account._id, description: { :email => "john.doe@example.com", 
                                       :customer => {:address => {:city => "Bangalore"}},
                                       :domain => "http://example.com"
+                       
+
                                     }
                     }
       puts JSON.parse(response.body).inspect
@@ -31,7 +33,7 @@ describe AppsController do
 
   describe "Delete App" do
     before(:each) do
-      get 'create', {  description: { :email => "john.doe@example.com", 
+      post 'create', {  account_id: @account._id, description: { :email => "john.doe@example.com", 
                                       :customer => {:address => {:city => "Bangalore"}},
                                       :domain => "http://example.com"
                                     }
@@ -43,19 +45,19 @@ describe AppsController do
   
 
     it "should delete app" do
-      get 'delete', {app_id: @app["id"]}
+      post 'delete', {account_id: @account._id, app_id: @app["id"]}
       App.count.should eq(1)
     end
 
     it "should not delete wrong app" do
-      get 'delete', {app_id: @wrong_app._id}
+      post 'delete', {account_id: @account._id, app_id: @wrong_app._id}
       App.count.should eq(2)
     end
   end  
 
   describe "Update App" do
     before(:each) do
-      get 'create', {  description: { :email => "john.doe@example.com", 
+      post 'create', { account_id: @account._id, description: { :email => "john.doe@example.com", 
                                       :customer => {:address => {:city => "Bangalore"}},
                                       :domain => "http://example.com"
                                     }
@@ -64,17 +66,17 @@ describe AppsController do
       response.status.should eq(200)
     end
     it "should check arguments while app update" do
-      get 'update', {:app_id => @app["id"],:description => { }}
+      post 'update', {account_id: @account._id, :app_id => @app["id"],:description => { }}
       response.status.should eq(422)
     end
 
     it "should check for valid app in update" do
-      get 'update', {:app_id => "232323234234",:description => {email: "bon.doe@example.com",address: {city: "Bangalore"} }}
+      post 'update', {account_id: @account._id, :app_id => "232323234234",:description => {email: "bon.doe@example.com",address: {city: "Bangalore"} }}
       response.status.should eq(422)
     end
 
     it "should update app" do
-      get 'update', {:app_id => @app["id"],:description => {email: "bon.doe@example.com",address: {city: "Bangalore"} }}
+      post 'update', {account_id: @account._id, :app_id => @app["id"],:description => {email: "bon.doe@example.com",address: {city: "Bangalore"}, super_actor_id: 2323232 }}
 
       response.status.should eq(200)
 
@@ -88,7 +90,7 @@ describe AppsController do
 
   describe "App Read" do
     before(:each) do
-      get 'create', {  description: { :email => "john.doe@example.com", 
+      post 'create', { account_id: @account._id, description: { :email => "john.doe@example.com", 
                                       :customer => {:address => {:city => "Bangalore"}},
                                       :domain => "http://example.com"
                                     }
@@ -109,12 +111,12 @@ describe AppsController do
     end
     
     it "should check arguments while app read" do
-      get 'read', { events: false } 
+      get 'read', { account_id: @account._id, events: false } 
       response.status.should eq(422)
     end
 
     it "should check for valid app in update" do
-      get 'read', {app_id: "232323234234",events: false}
+      get 'read', {account_id: @account._id, app_id: "232323234234",events: false}
       response.status.should eq(422)
     end
 
@@ -129,7 +131,20 @@ describe AppsController do
       Event.add!( account_id: @app["account_id"], app_id: @app["id"], actor_id: @actor._id, name: "sign_in",
         properties: { :email => "tom.doe@example.com", :customer => {:address => {:city => "Bangalore"}}})
 
-      get 'read', {app_id: @app["id"],events: true}
+      Err.add!( account_id: @app["account_id"], app_id: @app["id"], actor_id: @actor._id, 
+      properties: { :name => "Something failed",:reason => { err: "I know", code: 402}})
+
+      Err.add!( account_id: @app["account_id"], app_id: @app["id"], actor_id: @actor._id,
+      properties: { :name => "Javascript failed",:reason => { err: "dont know", code: 402}})
+
+      Conversion.add!( account_id: @app["account_id"], app_id: @app["id"], actor_id: @actor._id,
+      properties: { :button => "clicked",:times => {:time => ["20/12/2011", "19/11/2012"], :count => 30}})
+
+      Conversion.add!( account_id: @app["account_id"], app_id: @app["id"], actor_id: @actor._id,
+      properties: { :button => "hovered",:times => {:time => ["20/12/2011", "19/11/2012"], :count => 30}})
+
+
+      get 'read', {account_id: @account._id, app_id: @app["id"],events: true, actors: true, conversions: true, errors: true}
 
       puts JSON.parse(response.body).inspect
       response.status.should eq(200)

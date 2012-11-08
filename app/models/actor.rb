@@ -11,9 +11,13 @@ class Actor
   has_many     :events,   :dependent => :destroy
   has_many     :identifiers,  :dependent => :destroy
 
+  field :meta, type: Boolean,     default: false
+
   # Attributes
   validates_presence_of :account_id, :app_id
-  index({app_id: 1, _id: 1})
+
+  index({app_id: -1, _id: -1})
+  index({account_id: -1, _id: -1})
 
   # NOTE
   ## all values of description hash is array, as an actor can have many values of same property
@@ -233,7 +237,7 @@ class Actor
   end
 
   # NOTE
-  ## set a new identifier(alias) of actor
+  ## Read Actor Data
 
   # INPUT
   ## {
@@ -245,6 +249,8 @@ class Actor
   ##   uid: "john.doe@example.com",  [OPTIONAL] 
   ##   identifiers: true or false    [OPTIONAL] # associated identifiers 
   ##   events: true or false         [OPTIONAL] # events 
+  ##   conversions: true or false    [OPTIONAL] # conversion
+  ##   errors: true or false         [OPTIONAL] # errors
   ## }
 
   # OUTPUT => {
@@ -256,17 +262,34 @@ class Actor
   ##
   ##            events: [
   ##                      {
-  ##                         name: "sign_in", 
+  ##                         id: "3232342434", name: "sign_in", 
   ##                         properties: [{"k" => "name", "v" => "alok"}, {"k" => "address[city]", "v" => "Bangalore"}]
   ##                         time: 2009-02-19 00:00:00 UTC
   ##                      },
   ##                      {...}
-  ##                    ]
+  ##                    ],
+  ##            conversions: [
+  ##                            {
+  ##                              id: "32323424355",
+  ##                              properties: [{"k" => "button", "v" => "clicked"}, {"k" => "times", "v" => "40"}]
+  ##                              time: 2009-02-19 23:00:00 UTC
+  ##                            },
+  ##                            {...}
+  ##                         ],
+  ##            errors: [
+  ##                       {
+  ##                          id: "3232342434",
+  ##                          properties: [{"k" => "name", "v" => "Javascript Error"}, {"k" => "reason", "v" => "dont know"}]
+  ##                          time: 2009-02-19 21:00:00 UTC
+  ##                       },
+  ##                       {...}
+  ##                    ],
+  ##
   ##          }
   def self.read(params)
     Rails.logger.info("Enter Actor Read")
 
-    hash = {identifiers: [], events: [] }
+    hash = {identifiers: [], events: [], conversions: [], errors: [] }
     actor_id = nil
     actor = nil
 
@@ -298,16 +321,29 @@ class Actor
     hash[:actor][:description] = actor.description 
     
 
-    if params[:identifiers] == true
-      ids = Identifier.where(actor_id: actor_id, app_id: params[:app_id]).all
-      ids.each {|attr| hash[:identifiers] << {attr.uid => attr.type}}
-      Rails.logger.info("Adding Identifiers")
-    end
+    #BLOCKED FOR TIMEBEING
+    # if params[:identifiers] == true
+    #   ids = Identifier.where(actor_id: actor_id, app_id: params[:app_id]).all
+    #   ids.each {|attr| hash[:identifiers] << {attr.uid => attr.type}}
+    #   Rails.logger.info("Adding Identifiers")
+    # end
     
     if params[:events] == true
       events = Event.where(actor_id: actor_id, app_id: params[:app_id], meta: false).limit(AppConstants.limit_events).desc(:_id)
-      events.each {|attr| hash[:events] << {name: attr.name, properties: attr.properties, time: attr.created_at}}
+      events.each {|attr| hash[:events] << {id: attr._id, name: attr.name, properties: attr.properties, time: attr.created_at}}
       Rails.logger.info("Adding Events")
+    end
+
+    if params[:conversions] == true
+      conversions = Conversion.where(actor_id: actor_id, app_id: params[:app_id]).limit(AppConstants.limit_conversions).desc(:_id)
+      conversions.each {|attr| hash[:conversions] << { id: attr._id, properties: attr.properties, time: attr.created_at}}
+      Rails.logger.info("Adding Conversions")
+    end
+
+    if params[:errors] == true
+      errors = Err.where(actor_id: actor_id, app_id: params[:app_id]).limit(AppConstants.limit_errors).desc(:_id)
+      errors.each {|attr| hash[:errors] << { id: attr._id, properties: attr.properties, time: attr.created_at}}
+      Rails.logger.info("Adding Errors")
     end
 
     {:return => hash, :error => nil}    

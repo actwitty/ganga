@@ -15,6 +15,7 @@
       rbTAPP.setAppID(appid);
       rbTAPP.setAccountID(accid);
       rbTUtils.includeJQIfNeeded();
+      window.rb = new RBT();
     }
   } catch (e) {
     rbTAPP.reportError({"exception" : e.message, 
@@ -29,24 +30,10 @@ function testGanga()
 {
   //rb.sendEvent("sample_event",{"a":101});
   //rb.identify({"uid":"83.samarth@gmail.com"});
-  window.rb = new RBT();
-
   rb.setActor({"name":"samarth","age":"29"});
 
   console.log("ENDING TESTING SEQUENCE");
 }
 
-function waitForRBT()
-{
-  if(!rbTAPP.isrbTAlive())
-  {
-    window.setTimeout(waitForRBT, 500);
-  }
-  else
-  {
-    testGanga();
-  }
-}
-
-waitForRBT();
+testGanga();
 

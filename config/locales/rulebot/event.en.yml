@@ -4,4 +4,4 @@ en:
     create_failed: "Event creation failed"
     property_not_serialized: "Event's property is not serialized"
     invalid_actor_id: "Invalid Actor!!"
-    invalid_app_id: "Invalid App!!"
+    invalid_app_id: "Invalid App ID"

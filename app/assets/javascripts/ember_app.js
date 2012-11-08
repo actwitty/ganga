@@ -6,6 +6,7 @@
 //= require_tree ./app/library
 //= require_tree ./templates
 //= require_tree ./app/routes
+//= require_tree ./action_script
 //= require_self
 /*************************** REST Init ***************************/
 jQuery.ajaxSetup({ 

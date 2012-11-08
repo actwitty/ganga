@@ -1,7 +1,11 @@
+require 'pp'
 class ApplicationController < ActionController::Base
-  protect_from_forgery
+  #protect_from_forgery
 
-  before_filter :set_locale
+  respond_to :json
+
+  #before_filter :set_locale
+  #before_filter :set_access_control_headers
 
   def set_locale
   	I18n.locale = params[:locale] || I18n.default_locale
@@ -29,4 +33,16 @@ class ApplicationController < ActionController::Base
  # 	root_path
  #end
   
+   
+  def  set_access_control_headers
+    list = {"https://twitter.com" => true, "http://stackoverflow.com" => true, "http://api.jquery.com" => true, "http://keen.io" => true}
+        
+    if !list[request.env['HTTP_ORIGIN']].blank?
+      headers['Access-Control-Allow-Origin'] = request.env['HTTP_ORIGIN']
+      headers['Access-Control-Request-Method'] = "*"
+      headers['Access-Control-Allow-Headers'] = "*"
+      headers['Access-Control-Allow-Credentials'] = "true"
+    end   
+    # respond_with({ errors: "Un-Authorised"} , status: 200)
+  end
 end

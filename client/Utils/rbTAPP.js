@@ -1,11 +1,8 @@
 var rbTAPP = {
-    
-
     /* Main configs will be holded here */
     configs : {
       "status" : false
     },
-
     
     /** 
     *  Do following tasks on initialization of the app
@@ -31,11 +28,15 @@ var rbTAPP = {
       //rbTRules.init();
       this.getAppData();
 
+      rbTActor.retFromCookie();
+
       // 4). Initialize system variables  
       rbTSystemVar.init();
 
       // 5). FIXME : Check status of last event, if pending, execute it.
       //rbTRules.executeLastPendingEvent();
+
+      //rbTServerChannel.flushReqQueue();
 
     },
 
@@ -56,7 +57,6 @@ var rbTAPP = {
     */
     wake_RBT_APP : function()
     {
-      rbTAPP.configs.status = true;
       rbTDebug.log("Initializing RBT APP");
       rbTAPP.initialize();
     },
@@ -91,17 +91,14 @@ var rbTAPP = {
       this.configs.sessionID = id;
     },
 
-    /** 
-    *  Set Actor ID
-    *  @param {string} id 
-    *  @return void
-    */
-    setActorID : function(id)
+    /**
+    *
+    *
+    */   
+    setTransientVar : function(data)
     {
-      //this.configs.ActorID = id;
-      rbTCookie.setCookie("actor_id", respData);
-    },   
-
+      this.configs.transVar = data;
+    },
 
 
     /** 
@@ -131,14 +128,12 @@ var rbTAPP = {
       return this.configs.sessionID;
     },
 
-    /** 
-    *  Get Actor ID
-    *  @return {string} id 
-    */  
-    getActorID : function()
+    /**
+    *
+    */
+    getTransientVar : function()
     {
-      return rbTCookie.getCookie(rbTCookie.defaultCookies.actorID); 
-      //return this.configs.actorID;
+      return this.configs.transVar;
     },
 
 
@@ -179,11 +174,11 @@ var rbTAPP = {
     */
     getAppData : function()
     {
-      rbTServerChannel.makeRequest({ "url"   : rbTServerChannel.url.appDetails,
-                                     "cb"    : { success: rbTServerResponse.setAppDetail,
-                                                 error  : rbTServerResponse.defaultError
-                                               }
-                                   });
+      rbTServerChannel.makeGetRequest({ "url"   : rbTServerChannel.url.appDetails,
+                                        "cb"    : { success: rbTServerResponse.setAppDetail,
+                                                    error  : rbTServerResponse.defaultError
+                                                  }
+                                      });
     },  
 
     /** 
@@ -235,6 +230,18 @@ var rbTAPP = {
       } catch(e) {
         // FIXME what to do?
       }
+    },
+    
+    /** 
+    *  log
+    *  @param {object} params Error log message 
+    *  @return void
+    */
+    log : function(params)
+    {
+      if(params && params.message)
+        rbTDebug.log(params.message);
+      rbTDebug.log(params)
     },
 
     /** 

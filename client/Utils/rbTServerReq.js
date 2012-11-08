@@ -4,7 +4,7 @@ var rbTServerChannel = {
 
   serverUrl : function(url)
   {
-    return this.rbt_url + url;
+    return this.rbt_url + url + ".jsonp";
   }, 
 
   /* All server url routes to be mapped here */
@@ -13,10 +13,11 @@ var rbTServerChannel = {
     "appDetails"        : "app/read",
     "fireEvent"         : "event/create",
     "identify"          : "actor/identify",
+    "readActor"         : "actor/read",
     "createActor"       : "actor/create",
     "setActor"          : "actor/set",
-    "roi"               : "",
-    "reportError"       : "",
+    "conversion"        : "conversion/create",
+    "reportError"       : "err/create",
   },
 
   // Server request queue
@@ -48,9 +49,11 @@ var rbTServerChannel = {
   {
     for (var req in this.queue) {
       if (this.queue[req].event) {
-        this.makeEventRequest(this.queue[req].event, this.queue[req].params, this.queue[req].callback);
+        //this.makeEventRequest(this.queue[req].event, this.queue[req].params, this.queue[req].callback);
+        this.makeEventRequest(this.queue[req]);
       } else {
-        this.makeGetRequest(this.queue[req].url, this.queue[req].params, this.queue[req].callback, this.queue[req].async);
+        //this.makeGetRequest(this.queue[req].url, this.queue[req].params, this.queue[req].callback, this.queue[req].async);
+        this.makeGetRequest(this.queue[req]);
       }
     }
   },
@@ -60,7 +63,7 @@ var rbTServerChannel = {
   * Check for App status, if alive , flush all req queue and clear interval.
   *
   */
-  reqFlushIntervalId : function()
+  reqQFlushInterval : function()
   {
       var interval = setInterval(function() {
         if (rbTAPP.isrbTAlive()) {
@@ -103,11 +106,15 @@ var rbTServerChannel = {
       return {};
     var requestData = reqData;
 
-    if (obj.set_actor) {
+    if (obj.set_actor || obj.conversion) {
       obj.params = obj.params || {};
-      requestData["properties"] = reqData ? rbJSON.typify(obj.params) : {};
+      requestData["properties"] = {"profile":reqData ? rbJSON.typify(obj.params) : {}};
+      requestData["actor_id"] = rbTAPP.getActorID() || "";
+    } else if(obj.set_actor_prop) {
       requestData["actor_id"] = rbTAPP.getActorID() || "";
     }
+
+
     return requestData;
   },
 
@@ -122,22 +129,26 @@ var rbTServerChannel = {
   makeEventRequest :  function(obj)
   {
     "use strict";
+    var that = obj;
     try {
       var reqServerData = this.makeRequestData(obj.event, obj.params );
-      callback = this.extendCallbacks(obj.callback);
+      var callback = this.extendCallbacks(obj.callback);
+      var that = obj;
       jQuery.ajax({
             url: this.serverUrl(rbTServerChannel.url.fireEvent),
             type: 'GET',
-            dataType: 'json',
+            dataType: 'jsonp',
+            contentType : 'application/javascript',
             data: reqServerData,
             crossDomain:true,
+            timeout : 10000,
             beforeSend: function() {
-                rbTCookie.setCookie("lastevent", event);
+                rbTCookie.setCookie("lastevent", that.event);
             },
             success: function ( respData ) {
                 rbTCookie.deleteCookie("lastevent");
                 // FIXME :: ADDED ONLY TO TEST CLIENT SIDE
-                rbTRules.executeRulesOnEvent(event);
+                rbTRules.executeRulesOnEvent(that.event);
 
                 // FIXME : Currently we do not know the format of response we will get from server.
                 if (respData && respData.actor) { 
@@ -147,7 +158,7 @@ var rbTServerChannel = {
             },
             error:function(XMLHttpRequest,textStatus, errorThrown){ 
                 // FIXME :: ADDED ONLY TO TEST CLIENT SIDE
-                rbTRules.executeRulesOnEvent(event);
+                rbTRules.executeRulesOnEvent(that.event);
 
                 callback.error(); 
                 
@@ -156,8 +167,8 @@ var rbTServerChannel = {
     } catch(e) {
       rbTAPP.reportError({"exception" : e.message,
                           "message"   :"server event request failed" , 
-                          //"event"     : event,
-                          //"reqData"   : JSON.stringify(reqData),
+                          "event"     : that.event,
+                          "obj"       : JSON.stringify(that),
                           "log"       : "error" 
                          }); 
     }
@@ -174,6 +185,7 @@ var rbTServerChannel = {
   makeGetRequest : function(obj)
   {
     "use strict";
+    var that = obj;
     try {
       var reqServerData = this.extendReqData(obj,this.makeRequestData(undefined, obj.params));
       var callback = this.extendCallbacks(obj.cb);
@@ -181,15 +193,18 @@ var rbTServerChannel = {
         var asyncSt = false;
       else 
         var asyncSt = true;
-
+      //reqServerData["format"]="javascript";
       jQuery.ajax({
             url: this.serverUrl(obj.url),
             async: asyncSt,
             type: 'GET',
             dataType: 'jsonp',
+            contentType : 'application/javascript',
             data: reqServerData,
             crossDomain:true,
+            timeout : 10000,
             success: function ( respData ) {
+                respData.url = that.url;
                 callback.success(respData);
             },error:function(XMLHttpRequest,textStatus, errorThrown){ 
                 // todo : what to do??            
@@ -198,7 +213,8 @@ var rbTServerChannel = {
       });
     } catch(e) {
       rbTAPP.reportError({"exception" : e.message,
-                          "message"   :"server request failed" , 
+                          "message"   : "server request failed" , 
+                          "object"    : obj,
                           "log"       : true,
                           "server"    : true
                          });
@@ -211,6 +227,7 @@ var rbTServerChannel = {
   */  
   makeRequest : function(obj)
   {
+    var that = obj;
     if (!obj)
       return;
     if (!rbTAPP.isrbTAlive()) {
@@ -218,8 +235,10 @@ var rbTServerChannel = {
         obj.async = obj.async || "async";
         this.queueReq({url:obj.url, params:obj.params, callback:obj.cb, async:obj.async});
       }
-      else
+      else {
         this.queueReq({event:obj.event, params:obj.params, callback:obj.cb});
+      }
+      this.reqQFlushInterval();
       return;
     } else {
       this.flushReqQueue();
@@ -233,7 +252,7 @@ var rbTServerChannel = {
     } catch (e) {
       rbTAPP.reportError({"exception" : e.message,
                           "message"   : "server request params are not valid" , 
-                          //"url"       : obj.url,
+                          "url"       : that.url,
                           "log"       : true,
                           "server"    : true
                          });
@@ -271,11 +290,15 @@ var rbTServerChannel = {
   *  @param {object} params 
   *  @return void
   */      
-  roi : function(params, callback)
+  conversion : function(params, callback)
   {
     "use strict";
     var cb = this.extendCallbacks(callback);
-    this.makeGetRequest(this.url.roi, params, callback);
+    this.makeGetRequest({"url"        : rbTServerChannel.url.conversion, 
+                         "params"     : params,
+                         "conversion" : true,
+                         "cb"         : cb
+                       });
   }, 
 
   /** 
@@ -288,7 +311,6 @@ var rbTServerChannel = {
     "use strict";
     var callback = this.extendCallbacks(callback);
     this.makeGetRequest(this.url.reportError, params, callback);
-    callback = this.extendCallbacks(callback);
   },
 
   /** 

@@ -1,0 +1,77 @@
+{{#each template_config in view.actionParams}}
+  
+  {{#shouldShow template_config.key}}
+    <!--TODO: This is inefficient to not have if else but its ok, will fix later -->
+    {{#isNumeric template_config.key}}
+      <div class="entry">
+        <div class="key">
+          {{getTemplatePlaceHolder template_config.key}}
+        </div>
+        <div class="value">
+          {{view App.RequiredAFTextField valueBinding="template_config.value" class="in" }}
+        </div>
+      </div>
+    {{/isNumeric}}
+
+    {{#isFont template_config.key}}
+      <div class="entry">
+        <div class="key">
+          {{getTemplatePlaceHolder template_config.key}}
+        </div>
+        <div class="value">          
+          {{view Ember.Select
+            contentBinding="App.templatesFixedData.font"
+            selectionBinding="template_config.value"
+            class='select2Props in'}}
+        </div>
+      </div>
+    {{/isFont}}
+
+    {{#isColor template_config.key}}
+      <div class="entry">
+        <div class="key">
+          {{getTemplatePlaceHolder template_config.key}}
+        </div>
+        <div class="value">
+          {{view App.RequiredAFTextField valueBinding="template_config.value" class="colorpickerProps in"}}          
+        </div>
+      </div>
+    {{/isColor}}
+    
+    {{#isAlign template_config.key}}
+      <div class="entry">
+        <div class="key">
+          {{getTemplatePlaceHolder template_config.key}}
+        </div>
+        <div class="value">              
+          {{view Ember.Select
+                contentBinding="App.templatesFixedData.align"
+                selectionBinding="template_config.value"
+                class='select2Props in'}}
+        </div>
+      </div>        
+    {{/isAlign}}
+
+    {{#isString  template_config.key}}
+      <div class="entry">
+        <div class="key">
+          {{getTemplatePlaceHolder template_config.key}}
+        </div>
+        <div class="value">
+          {{view App.RequiredAFTextField valueBinding="template_config.value" class="in"}}
+        </div>
+      </div>        
+    {{/isString}}    
+
+    {{#isUrl template_config.key}}
+      <div class="entry">
+        <div class="key">
+          {{getTemplatePlaceHolder template_config.key}}
+        </div>
+        <div class="value">
+          {{view App.RequiredAFTextField valueBinding="template_config.value" class="in"}}
+        </div>
+      </div>        
+    {{/isUrl}}
+  {{/shouldShow}}
+{{/each}}

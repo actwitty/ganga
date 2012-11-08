@@ -170,8 +170,15 @@ rbT.invokeActionScriptInternal=function(action,actionParams){
 		    } 
 		  }        
 
+		  console.log(html);
+
+		   console.log("\n\n\n\n\n");
+
+
+
           html = rbT.getTemplateApplyVars(html, actionParams);
-  
+          
+          console.log(html);
 
          if (rbT.isTemplateGoodToApply(html)){
            rbT.applyHtmltoPage(html);

@@ -1,7 +1,8 @@
 App.HomeView = Ember.View.extend
   templateName: 'home_page/home'
   accountBinding: 'App.router.accountController.content'
-  projectsBinding: 'App.router.projectsController.selected'
+  projectBinding: 'App.router.projectsController.selected'
+  projectsListBinding: 'App.router.projectsController.content'
    
     
   # # Reference callbacks

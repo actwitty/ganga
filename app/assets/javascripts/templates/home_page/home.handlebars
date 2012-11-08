@@ -5,19 +5,23 @@
 
 
       <!-- Header Bar Project Menu -->
-      <div class="proj_menu">
-          <div class="selected">              
-            {{view.projects.description.name}}              
+      <div class="proj_menu">   
+        {{#if view.project}}      
+          <div class="btn-group" style='width: 140px'>
+            <button style='width: 120px'  class="btn">{{view.project.description.name}}</button>
+            <button class="btn dropdown-toggle" data-toggle="dropdown"> 
+              <span class="caret"></span></button>
+              <ul class="dropdown-menu">
+                {{#each project in view.projectsList}}
+                  <li><a {{action "showProjectRules" project}}>{{project.description.name}}</a></li>
+                {{/each}}                
+                <li class="divider"></li>
+                <li><a {{action "newProject"}}>Create New Application</a></li>
+              </ul>
           </div>
-          <div class="more">          
-          </div>
-          <div class="inner_box">
-            <a></a>
-            <a href="" class="selected">
-              <span class="project_name">RuleBot</span>
-            </a>                        
-            <a class="create_new"> New App </a>
-          </div>
+        {{else}}
+          <div class="btn" style='width: 140px' {{action "newProject"}}>Create New Application</div>
+        {{/if}}
       </div>
 
       
@@ -28,23 +32,15 @@
 
       <!-- Right side menu -->
       <div class="user">
-        <div class="label">
-          <div class="label_wrapper">
-            <div class="name">
-              {{ view.account.name }}
-            </div>
-            <div id="arrow">
-            </div>
-          </div>
-        </div>
-        <div class="body resize" style="width: 152px; display: none; ">
-          <div id="body_wrapper">
-            <div id="logout_button">              
-            </div>
-            <a id="logout" href="/logout/">
-              Sign out
-            </a>
-          </div>
+        <div class="btn-group">
+          <button class="btn dropdown-toggle" data-toggle="dropdown">
+            {{ view.account.name }} 
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li><a {{action "showSettings"}}>Settings</a></li>
+            <li><a href="/accounts/sign_out">Sign-out</a></li>                  
+          </ul>
         </div>
       </div>
       <!-- Other Menus -->

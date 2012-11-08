@@ -12,7 +12,9 @@ describe ActorsController do
 
   describe "create actor" do
     it "should create actor properly" do
-      get 'create', { account_id: @account._id,
+      get 'create', { 
+                      callback: 'parseUser',
+                      account_id: @account._id,
                       app_id: @app._id,
                       properties: { profile: 
                           {:email => "john.doe@example.com",
@@ -21,7 +23,7 @@ describe ActorsController do
                         system: {browser: "chrome", os: "linux"}
         }
       }
-      puts request.inspect
+
       puts JSON.parse(response.body).inspect
       response.status.should eq(200)
       Actor.count.should eq(2)
@@ -334,6 +336,19 @@ describe ActorsController do
       Event.add!( account_id: @app.account_id, app_id: @app._id, actor_id: @actor._id, name: "sign_in",
         properties: { :email => "tom.doe@example.com", :customer => {:address => {:city => "Delkhi"}}})
 
+      Err.add!( account_id: @app["account_id"], app_id: @app._id, actor_id: @actor._id, 
+      properties: { :name => "Something failed",:reason => { err: "I know", code: 402}})
+
+      Err.add!( account_id: @app["account_id"], app_id: @app._id, actor_id: @actor._id,
+      properties: { :name => "Javascript failed",:reason => { err: "dont know", code: 402}})
+
+      Conversion.add!( account_id: @app["account_id"], app_id: @app._id, actor_id: @actor._id,
+      properties: { :button => "clicked",:times => {:time => ["20/12/2011", "19/11/2012"], :count => 30}})
+
+      Conversion.add!( account_id: @app["account_id"], app_id: @app._id, actor_id: @actor._id,
+      properties: { :button => "hovered",:times => {:time => ["20/12/2011", "19/11/2012"], :count => 30}})
+
+
       Actor.count.should eq(1)
       Event.count.should eq(3)
 
@@ -341,7 +356,7 @@ describe ActorsController do
       Identifier.create!(account_id: @actor.account_id, app_id: @actor.app_id, actor_id: @actor._id, uid: 'alok@gmail.com', type: "email")
 
    
-      @h ={account_id: @account._id, app_id: @app._id, uid: "balu@gmail.com", events: true, identifiers: true }
+      @h ={account_id: @account._id, app_id: @app._id, uid: "balu@gmail.com", events: true, identifiers: true, conversions: true, errors: true }
     end
     it "should not set actor with wrong arguments" do
       @h.delete(:account_id)
@@ -368,7 +383,7 @@ describe ActorsController do
       puts JSON.parse(response.body).inspect
       response.status.should eq(200)
 
-      get 'read', {account_id: @account._id, app_id: @app._id, uid: "balu@gmail.com", events: true, identifiers: true }
+      get 'read', {account_id: @account._id, app_id: @app._id, uid: "balu@gmail.com", events: true, identifiers: true, conversions: true, errors: true }
 
       puts JSON.parse(response.body).inspect
       response.status.should eq(200)
