@@ -132,17 +132,6 @@ var rbTServerResponse = {
   },
 
   /**
-  * Handle event response from server
-  * @param {object} respData conversion response details
-  * @return void
-  */
-  handleConversion : function(respData)
-  {
-    rbTAPP.log({"message" : "conversion api response from server","data":respData});
-    return;
-  },
-  
-  /**
   * Set Rules response from server
   * @param {object} respData in the form of rules
   * @return void

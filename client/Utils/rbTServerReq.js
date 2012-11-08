@@ -286,7 +286,7 @@ var rbTServerChannel = {
 
 
   /** 
-  *  Send ROI to server
+  *  Send conversion to server
   *  @param {object} params 
   *  @return void
   */      
