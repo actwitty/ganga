@@ -28,7 +28,7 @@ RBT.prototype.isAlive = function()
 RBT.prototype.sendEvent = function(event, params)
 {
   "use strict";
-  if (!event || typeof(event) != "string" || event == "" ) {
+  if (!event || typeof(event) != "string" || event === "" ) {
     return;
   }
   rbTServerChannel.makeRequest({"event" : event, 
@@ -50,7 +50,7 @@ RBT.prototype.identify = function(params)
   "use strict";
   rbTServerChannel.makeRequest({"url"    : rbTServerChannel.url.identify, 
                                 "params" : params,
-                                "cb"     : { success: rbTServerResponse.setActor,
+                                "cb"     : { success: rbTServerResponse.setActorID,
                                              error  : rbTServerResponse.defaultError
                                            }
                               });
@@ -64,14 +64,17 @@ RBT.prototype.identify = function(params)
 * @param {object} params Option based on which actor property will be set
 * @return void
 */
-RBT.prototype.setUserProperty = function(params)
+RBT.prototype.setActor = function(params)
 {
   "use strict";
-  rbTServerChannel.makeRequest({"url"   : rbTServerChannel.url.setUserProperty, 
-                                "params": params,
-                                "cb"    : { success: rbTServerResponse.setUserProperty,
-                                            error  : rbTServerResponse.defaultError
-                                          }
+  if (rbTActor.propExist(params))
+    return;
+  rbTServerChannel.makeRequest({"url"        : rbTServerChannel.url.setActor, 
+                                "params"     : params,
+                                "set_actor"  : true,
+                                "cb"         : { success: rbTServerResponse.setActorProperty,
+                                                 error  : rbTServerResponse.defaultError
+                                               }
                               });
 };
 

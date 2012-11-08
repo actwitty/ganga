@@ -27,11 +27,12 @@ Ganga::Application.routes.draw do
   get  '/actor/alias',       :to => 'actors#alias'
 
 
+
   # App Api
-  get '/app/create',         :to => 'apps#create'
+  post '/app/create',        :to => 'apps#create'
   get '/app/read',           :to => 'apps#read'
-  get '/app/update',         :to => 'apps#update'
-  get '/app/delete',         :to => 'apps#delete'
+  post '/app/update',        :to => 'apps#update'
+  post '/app/delete',        :to => 'apps#delete'
   
 
   # Event Api
@@ -47,7 +48,13 @@ Ganga::Application.routes.draw do
   get '/rule/read',           :to => "rules#read"
   get '/rule/delete',         :to => "rules#delete"
 
-  
+  # Conversion Api
+  get '/conversion/create',   :to => "conversions#create"
+
+  # Error Api
+  get '/err/create',          :to => "errs#create"
+
+
   match '/:locale' => 'base#index'                                    
   root :to => "base#index"
   

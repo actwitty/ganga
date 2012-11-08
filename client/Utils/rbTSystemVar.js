@@ -4,9 +4,6 @@ var rbTSystemVar = {
   // All properties will be set here
   properties : {},
 
-  // To get all properties
-  allProperties : "browser_info,referrer_info,device_info,screen_info,viewport_info,locale_info,plugins_info,time_info",
-
   /** Initialize system variable script
    *  @return void
    */
@@ -20,7 +17,7 @@ var rbTSystemVar = {
       if (!sysVarInCookie) {
         return true; 
       } else {
-        var currentSysVar = this.getAllProperty();
+        var currentSysVar = this.getProperty();
         return (sysVarInCookie === currentSysVar) ? false : true;
       }
     }
@@ -35,9 +32,9 @@ var rbTSystemVar = {
     if (isSystemVarDirty.call(this)) {
       // Put current sys var in cookie and send it to server 
       // for update only if we have cookie miss 
-      var systemVars = this.getAllProperty();
+      var systemVars = this.getProperty();
       this.setPropertyInCookie(systemVars);
-      rbTAPP.setSystemProperty(systemVars);
+      //rbTAPP.setSystemProperty(systemVars);
     }
   },
 
@@ -54,107 +51,28 @@ var rbTSystemVar = {
 
 
   /** Get system variable property
-   *  Following supported
-   *  1). "browser_info"
-          return -> 
-          {
-             browser : browser_name,
-             os      : os_name,
-             version : version_number
-
-          }
-
-      2). "referrer_info"
-          return ->
-          {
-            host: "127.0.1.1"
-            path: "/~sammy/"
-            port: 80
-            protocol: "http:"
-          }
-      3). "device_info"
-          return ->
-          {
-            is_mobile: false
-            is_phone: false
-            is_tablet: false
-          } 
-      4). "screen_info"
-          return ->
-          {
-            height: 768,
-            width: 1366
-          }
-      5). "viewport_info"
-          return ->
-          {
-            height: 768,
-            width: 1366
-          }
-      6). "locale_info"
-          return ->
-          {
-            country: "us",
-            lang: "en
-          }
-      7). "plugins_info"
-          return ->
-          {
-            flash: true
-            java: false
-            quicktime: true
-            silverlight: false
-          }
-      8). "time_info"
-          return ->
-          {
-            observes_dst: false
-            tz_offset: 5.5
-          }
-   *
-   *   @param {string} type
-   *   @return {object} value
-   */
-
+    'browser' : 'String'
+    'browser_version' : 'String'
+    'operatingsystem' : 'String'
+    'referrer[host]' : 'String'
+    'referrer[path]' : 'String'
+    'referrer[name]' : 'String'
+    'device[type]' : 'String'
+    'device[name]' : 'String'
+    'screen[height]' : 'Number'
+    'screen[width]' :  'Number'
+    'viewport[height]' : 'Number'
+    'viewport[width]' : 'Number'
+    'country' : 'String'
+    'language' : 'String'
+    'plugins' : 'Array'
+    'timezone' : 'String'
+    'day_light_saving' : 'Boolean'
+  */
   getProperty : function(propertyTypes)
   {
     "use strict";
-    var types = propertyTypes.split(",");
-    var propertyCnf = {};
-    for (var i = 0; i < types.length ; ++i) {
-      switch(types[i]) {
-      case "browser_info":
-          propertyCnf[types[i]] =  this.properties.browser; 
-          break;
-      case "referrer_info":
-          propertyCnf[types[i]] =  this.properties.current_session.referrer_info; 
-          break;
-      case "device_info" :
-          propertyCnf[types[i]] =  this.properties.device; 
-          break;
-      case "screen_info" :
-          propertyCnf[types[i]] =  this.properties.device.screen; 
-          break;
-      case "viewport_info" :
-          propertyCnf[types[i]] =  this.properties.device.viewport; 
-          break;
-      case "locale_info":
-          propertyCnf[types[i]] =  this.properties.locale; 
-          break;
-      case "plugins_info":
-          propertyCnf[types[i]] =  this.properties.plugins; 
-          break;
-      case "time_info":
-          propertyCnf[types[i]] =  this.properties.time; 
-          break;
-      }
-    }
-    return propertyCnf;
-  },
-
-  getAllProperty : function()
-  {
-    return this.getProperty(this.allProperties);
+    return this.properties;
   },
 
   setPropertyInCookie : function(property)
@@ -162,10 +80,39 @@ var rbTSystemVar = {
     rbTCookie.setCookie(rbTCookie.defaultCookies.systemProp, JSON.stringify(property));
   },
 
+  setEJProp : function(json)
+  {
+     rbTSystemVar.setProperty("country",json.CountryName); 
+     rbTSystemVar.setProperty("timezone",json.LocalTimeZone); 
+  },
+
+  setSessionJSProp : function(json)
+  {
+    rbTAPP.log({"message":"System Properties got through Session JS","data":json});
+    this.setProperty("browser",json.browser.browser);
+    this.setProperty("browser_version",json.browser.version);
+    this.setProperty("operatingsystem",json.browser.os);
+    this.setProperty("referrer",json.current_session.referrer_info);
+    this.setProperty("device",json.device.type);
+    this.setProperty("screen",json.device.screen);
+    this.setProperty("viewport",json.device.viewport);
+    this.setProperty("plugins",json.plugins);
+    this.setProperty("language",json.locale.lang);
+    this.setProperty("day_light_saving",json.time.observes_dst);
+  },
 
 };
 
-
+var backcode="1102012";
+function EasyjQuery_Cache_IP(fname,json) {
+  rbTAPP.log({"message":"easy jquery response","data":json});
+  eval(fname + "(json);");
+}
+function EasyjQuery_Get_IP(fname,is_full) {
+  var full_version = "";
+  jQuery.getScript("http://api.easyjquery.com/ips/?callback=" + fname + full_version);
+}
+  
 
 
 /**
@@ -176,6 +123,8 @@ var rbTSystemVar = {
  * This version uses google's jsapi library for location services.
  * For details, see: https://github.com/codejoust/session.js
  */
+
+// FIXME : NOT ALL PROPERTIES FROM SESSION.JS IS NEEDED NOW..GETTING SOMETHINGS FROM EASYJQUERY
 
 var session_fetch = (function(win, doc, nav)
 {
@@ -224,7 +173,6 @@ var session_fetch = (function(win, doc, nav)
     // If the module has arguments,
     //   it _needs_ to return a callback function.
     var unloaded_modules = {
-      api_version: API_VERSION,
       locale: modules.locale(),
       current_session: modules.session(),
       original_session: modules.session(
@@ -233,9 +181,11 @@ var session_fetch = (function(win, doc, nav)
       browser: modules.browser(),
       plugins: modules.plugins(),
       time: modules.time(),
-      device: modules.device()
+      device: modules.device(),
     };
     // Location switch
+    // FIXME :: NOW NOT GETTING LOCATION INFO FROM SESSION JS, INSTEAD GETTING FROM EASYJQUERY
+    /*
     if (options.use_html5_location){
       unloaded_modules.location = modules.html5_location();
     } else if (options.ipinfodb_key){
@@ -243,6 +193,7 @@ var session_fetch = (function(win, doc, nav)
     } else if (options.gapi_location){
       unloaded_modules.location = modules.gapi_location();
     }
+    */
     // Cache win.session.start
     if (win.session && win.session.start){
       var start = win.session.start;
@@ -279,12 +230,19 @@ var session_fetch = (function(win, doc, nav)
 
     /* set the properties in our rbT hash */
     (function setrbTProperties() {
+      var sessionJSProp = {};
       for (property in unloaded_modules) {
-        rbTSystemVar.setProperty(property, unloaded_modules[property] );
+        //rbTSystemVar.setProperty(property, unloaded_modules[property] );
+        sessionJSProp[property] = unloaded_modules[property];
       }
+      rbTSystemVar.setSessionJSProp(sessionJSProp);
     })();
-    //setrbTProperties();
+    EasyjQuery_Get_IP("rbTSystemVar.setEJProp");
   };
+
+
+
+
 
 
   // Browser (and OS) detection
@@ -382,6 +340,12 @@ var session_fetch = (function(win, doc, nav)
       device.is_tablet = !!nav.userAgent.match(/(iPad|SCH-I800|xoom|kindle)/i);
       device.is_phone = !device.is_tablet && !!nav.userAgent.match(/(iPhone|iPod|blackberry|android 0.5|htc|lg|midp|mmp|mobile|nokia|opera mini|palm|pocket|psp|sgh|smartphone|symbian|treo mini|Playstation Portable|SonyEricsson|Samsung|MobileExplorer|PalmSource|Benq|Windows Phone|Windows Mobile|IEMobile|Windows CE|Nintendo Wii)/i);
       device.is_mobile = device.is_tablet || device.is_phone;
+      if (device.is_mobile) {
+        var name = nav.userAgent.match(/(iPhone|iPod|blackberry|android 0.5|htc|lg|midp|mmp|mobile|nokia|opera mini|palm|pocket|psp|sgh|smartphone|symbian|treo mini|Playstation Portable|SonyEricsson|Samsung|MobileExplorer|PalmSource|Benq|Windows Phone|Windows Mobile|IEMobile|Windows CE|Nintendo Wii|SCH-I800|xoom|kindle)/ig);
+        if (name)
+          name = name[0];
+      }
+      device.type = { type: device.is_mobile ? "mobile" : "pc", name: name || browser.detect().browser};
       return device;
     },
     plugins: function(){

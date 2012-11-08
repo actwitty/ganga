@@ -1,7 +1,7 @@
 
 
 
-/***********************[[2012-10-29 20:17:19 +0530]]*********************************/ 
+/***********************[[2012-11-08 12:19:32 +0530]]*********************************/ 
 
 
 
@@ -17,19 +17,16 @@
 
 
 var rbTAPP = {
-    
-
     /* Main configs will be holded here */
     configs : {
       "status" : false
     },
-
     
     /** 
     *  Do following tasks on initialization of the app
     *  1). include jQuery if need be
     *  2). create session.
-    *  3). fetch rules.
+    *  3). fetch configs.
     *  4). check status of last event, if pending, execute it.
     *  5). fetch system properties if cache miss
     *  6). Allow Business to make calls
@@ -45,8 +42,11 @@ var rbTAPP = {
       // 2). Create session Deferred till further discussion
       //rbTAPP.createSession();
 
-      // 3). Initialize rulebot rules
-      rbTRules.init();
+      // 3). Get rulebot app details
+      //rbTRules.init();
+      this.getAppData();
+
+      rbTActor.retFromCookie();
 
       // 4). Initialize system variables  
       rbTSystemVar.init();
@@ -54,7 +54,8 @@ var rbTAPP = {
       // 5). FIXME : Check status of last event, if pending, execute it.
       //rbTRules.executeLastPendingEvent();
 
-      window.rb = new RBT();
+      //rbTServerChannel.flushReqQueue();
+
     },
 
     /**
@@ -64,19 +65,9 @@ var rbTAPP = {
     * @param {object} args Arguments with which callback will be called.
     * @return void   
     */
-    isrbTAlive :  function(callback, args)
+    isrbTAlive :  function()
     {
        return this.configs.status;
-       /*
-       if (this.configs.status) {
-          if (callback)
-             callback(args);
-          return true;
-       }
-       else
-           return false;
-      */
-
     },  
 
     /**
@@ -84,7 +75,6 @@ var rbTAPP = {
     */
     wake_RBT_APP : function()
     {
-      rbTAPP.configs.status = true;
       rbTDebug.log("Initializing RBT APP");
       rbTAPP.initialize();
     },
@@ -119,17 +109,14 @@ var rbTAPP = {
       this.configs.sessionID = id;
     },
 
-    /** 
-    *  Set Actor ID
-    *  @param {string} id 
-    *  @return void
-    */
-    setActorID : function(id)
+    /**
+    *
+    *
+    */   
+    setTransientVar : function(data)
     {
-      //this.configs.ActorID = id;
-      rbTCookie.setCookie("actor_id", respData);
-    },   
-
+      this.configs.transVar = data;
+    },
 
 
     /** 
@@ -159,14 +146,12 @@ var rbTAPP = {
       return this.configs.sessionID;
     },
 
-    /** 
-    *  Get Actor ID
-    *  @return {string} id 
-    */  
-    getActorID : function()
+    /**
+    *
+    */
+    getTransientVar : function()
     {
-      return rbTCookie.getCookie(rbTCookie.defaultCookie.actorID); 
-      //return this.configs.actorID;
+      return this.configs.transVar;
     },
 
 
@@ -200,7 +185,19 @@ var rbTAPP = {
       rbTServerChannel.createSession({success:this.setSessionID});
     },
 
-
+    /** 
+    *  Get Application based configs
+    *  FIXME : THIS NEEDS TO BE DISCUSSED AS WE ARE PLANNING TO HAVE A PROXY IN BETWEEN
+    *  @return {string} TBD 
+    */
+    getAppData : function()
+    {
+      rbTServerChannel.makeGetRequest({ "url"   : rbTServerChannel.url.appDetails,
+                                        "cb"    : { success: rbTServerResponse.setAppDetail,
+                                                    error  : rbTServerResponse.defaultError
+                                                  }
+                                      });
+    },  
 
     /** 
     * Set System properties
@@ -245,13 +242,24 @@ var rbTAPP = {
     reportError : function(params)
     {
       try {
-          if (params.log) 
-            rbTDebug.error(params);
+          rbTDebug.error(params);
           if (params.server) 
             rbTServerChannel.reportError(params);
       } catch(e) {
         // FIXME what to do?
       }
+    },
+    
+    /** 
+    *  log
+    *  @param {object} params Error log message 
+    *  @return void
+    */
+    log : function(params)
+    {
+      if(params && params.message)
+        rbTDebug.log(params.message);
+      rbTDebug.log(params)
     },
 
     /** 
@@ -262,10 +270,90 @@ var rbTAPP = {
     preprocessParams : function(params)
     {
       
-
-      
+     
     }
 };
+
+
+
+/****************************[[rbTActor.js]]*************************************/ 
+
+
+var rbTActor = function() {
+
+  var __id = "";
+  var __prop = {};
+
+  return {
+
+      /**
+      *
+      *
+      */
+      retFromCookie : function()
+      {
+      	rbTDebug.log("retrieveing data for actor from cookie");
+        if (rbTCookie.getCookie(rbTCookie.defaultCookies.actorProp))
+          this.setProperties(rbTCookie.getCookie(rbTCookie.defaultCookies.actorProp)); 
+        if (rbTCookie.getCookie(rbTCookie.defaultCookies.actorID))
+          this.setID(rbTCookie.getCookie(rbTCookie.defaultCookies.actorID));
+      },
+
+      /** 
+      *  Get Actor ID
+      *  @return {string} id 
+      */  
+      getID : function()
+      {
+        return __id;
+        //return rbTCookie.getCookie(rbTCookie.defaultCookies.actorID); 
+      },
+      
+      /**
+      *
+      *
+      */
+      getProperties : function()
+      {
+        return __prop;
+      },
+
+      /** 
+      *  Set Actor ID
+      *  @param {string} id 
+      *  @return void
+      */
+      setID : function(id)
+      {
+        rbTCookie.setCookie(rbTCookie.defaultCookies.actorID, id);
+        __id = id;
+      },
+
+      /**
+      *
+      *
+      */
+      setProperties : function(prop)
+      {
+        __prop = prop;
+        rbTCookie.setCookie(rbTCookie.defaultCookies.actorProp, JSON.stringify(prop));
+      },
+
+      /**
+      *
+      *
+      */
+      propExist : function(prop)
+      {
+        var a = JSON.stringify(__prop).replace(/(^{)|(}$)/g, "");
+        var b = JSON.stringify(prop).replace(/(^{)|(}$)/g, "");
+        rbTDebug.log({"stored" : a , "passed" : b, "message":"actor prop existence"});
+        return (a.indexOf(b) >= 0) ? true : false;
+      }
+
+  };
+
+}();
 
 
 
@@ -289,17 +377,20 @@ window.rbTDebug=(function(){var i=this,b=Array.prototype.slice,d=i.console,h={},
 /****************************[[rbTRules.js]]*************************************/ 
 
 
-var TEST_RBT_RULE_JSON = {"customer":{
-                        "name" :"samarth",
-                        "email":"gmail.com",
-                        "val1":123,
-                        "val2":321,
-                        "swh":"actwitty",
-                        "ewh":"actwitty",
-                        "cns":"actwitty",
-                        "drg":"3/3/2011"
-                      }
-          };
+var TEST_RBT_RULE_JSON = {
+                            "customer":{
+                                        "name" :"samarth",
+                                        "email":"gmail.com",
+                                        "val1":123,
+                                        "val2":321,
+                                        "swh":"actwitty",
+                                        "ewh":"actwitty",
+                                        "cns":"actwitty",
+                                        "drg":"3/3/2011",
+                                        "rgx":"deosamarth",
+                                        "set":"abc",
+                                       }
+                         };
 
 var rbTRules = {
 
@@ -324,103 +415,7 @@ var rbTRules = {
           'Number': [ 'gtn','ltn','eql','btn','set'] 
   },
 
-  sample_json : [
-        {
-          id: '1010101010',
-          name  : "sample_name", 
-          event : "sample_event",
-          action: "topbar.generic.normal",
-          action_param :
-                  [
-                     {key:'rb.t.cr.textColor ',value:'#333'},
-                     {key:'rb.t.nr.textFontsize',value:'15'},
-                     {key:'rb.t.ft.textFontfamily',value:'Arial'},
-                     {key:'rb.f.nr.baseZindex',value:'100'},
-                     {key:'rb.t.nr.baseWidth',value:'100'},
-                     {key:'rb.t.nr.baseHeight',value:'40'},
-                     {key:'rb.t.cr.baseBgColor',value:'#DCDCDC'},
-                     {key:'rb.t.an.baseTextalign',value:'center'},
-                     {key:'rb.t.sg.textLeft',value:'Hello Hello Hello Hello'},
-                     {key:'rb.t.nr.btnFontSize',value:'14'},
-                     {key:'rb.t.cr.btnBgColor',value:'#548AC7'},
-                     {key:'rb.t.cr.btnColor',value:'white'},
-                     {key:'rb.t.ul.btnLink',value:'http://www.google.com'},
-                     {key:'rb.t.sg.btnLable',value:'Click'},
-                     {key:'rb.t.sg.textRight',value:'Hello Hello'},
-                     {key:'rb.t.ul.helpLink',value:'http://www.rulebot.com'},
-                  ],
-          conditions : [
-                // event based condition
-                { 
-                  property: "#customer.email",
-                  type : "String",
-                  negation: 'false',
-                  operation: 'eql',
-                  value1: 'gmail.com',
-                  connect: 'and' 
-                },
-                // negate condition
-                { 
-                  property: "#customer.name",
-                  type : "String",
-                  negation: 'true',
-                  operation: 'swh',
-                  value1: 'a',
-                  connect: 'and' 
-                },
-                // actor_property based condition
-                {
-                  property: "$customer.val1",
-                  type : "Number",
-                  negation: 'false',
-                  operation: 'gtn',
-                  value1: 2,
-                  connect: 'and' 
-                },
-                // system_property based condition
-                {
-                  property: "#customer.val2",
-                  type : "Number",
-                  negation: 'false',
-                  operation: 'ltn',
-                  value1: 3000,
-                  connect: 'and' 
-                },
-                {
-                  property: "#customer.swh",
-                  type : "String",
-                  negation: 'false',
-                  operation: 'swh',
-                  value1: 'act',
-                  connect: 'and' 
-                },
-                {
-                  property: "#customer.ewh",
-                  type : "String",
-                  negation: 'false',
-                  operation: 'ewh',
-                  value1: 'tty',
-                  connect: 'and' 
-                },
-                {
-                  property: "#customer.cns",
-                  type : "String",
-                  negation: 'false',
-                  operation: 'cns',
-                  value1: 'wit',
-                  connect: 'and' 
-                },
-                {
-                  property: "#customer.drg",
-                  type : "Date",
-                  negation: 'false',
-                  operation: 'drg',
-                  value1: "2/2/2011",
-                  value2: "4/4/2011"
-                },
-              ]
-        }
-  ],
+  
   
   /**
   * Initialize Rules for business
@@ -455,7 +450,7 @@ var rbTRules = {
   setRulesTable : function(rules)
   {
     "use strict";
-    rules = this.sample_json;
+    //rules = this.sample_json;
     var ruleString = "";
 
 
@@ -529,10 +524,14 @@ var rbTRules = {
             $("#result").text("RULES FAILED");
           }
     } catch (e) {
+      if (this.ruleTable[event])
+        var ruleStr = this.ruleTable[event].ruleString || "--";
+      else
+        var ruleStr = "Rule string cannot be formed!";  
       rbTAPP.reportError({"exception"  : e.message,
                           "message"    : "rule execution on event failed" , 
                           "event_name" : event,
-                          "rule_string": this.ruleTable[event].ruleString
+                          "rule_string": ruleStr
                          });
     } 
   },
@@ -705,6 +704,7 @@ var rbTRules = {
   /* 
      RULE FUNCTIONS 
      We should be having try-catch in all rule functions.
+     FIXME :: MERGE ALL IN ONE FUNCTION WITH CONDITION TO SAVE SPACE
   */
   rule : 
   {
@@ -927,9 +927,8 @@ var rbTRules = {
         if (!rbTRules.isValidRule(t,"rgx",a,b))
           return false;
         var prop = rbTRules.evalProperty(a);
-        var res;
-        regexp = new RegExp(b, 'gi');
-        res = regexp.test(prop);
+        var regexp = new RegExp(b, 'gi');
+        var res = regexp.test(prop);
         return (x === "true") ? !res : res;
       } catch (e) {
         rbTAPP.reportError({"exception" : e.message,
@@ -955,9 +954,8 @@ var rbTRules = {
         if (!rbTRules.isValidRule(t,"dag",a,b))
           return false;
         var prop = rbTRules.evalProperty(a);
-        var res;
-        regexp = new RegExp(b, 'gi');
-        res = regexp.test(prop) ;
+        var regexp = new RegExp(b, 'gi');
+        var res = regexp.test(prop) ;
         return (x === "true") ? !res : res;
       } catch (e) {
         rbTAPP.reportError({"exception" : e.message,
@@ -984,8 +982,7 @@ var rbTRules = {
         if (!rbTRules.isValidRule(t,"drg",a,b,c))
           return false;
         var prop = rbTRules.evalProperty(a,t);
-        var res;
-        res = (prop >= rbTRules.valueDataType(prop, b) && prop <= rbTRules.valueDataType(prop, c));
+        var res = (prop >= rbTRules.valueDataType(prop, b) && prop <= rbTRules.valueDataType(prop, c));
         return (x === "true") ? !res : res;
       } catch (e) {
         rbTAPP.reportError({"exception" : e.message,
@@ -1032,20 +1029,20 @@ var rbTServerResponse = {
   *   
   *  @return void
   */ 
-  defaultSuccessCallback : function()
+  defaultSuccessCallback : function(respData)
   {
     // FIXME : what to do?
-    rbTDebug.log("Success callback : default server response");
+    rbTAPP.log({"message": "Success callback : default server response","data":respData});
   },
   /** 
   *  Handle default error callback if not mentioned explicitly
   *   
   *  @return void
   */ 
-  defaultErrorCallback : function()
+  defaultErrorCallback : function(respData)
   {
     // FIXME : what to do?
-    rbTDebug.warn("Success callback : default server response");
+    rbTAPP.log({"message": "Error callback : default server response","data":respData});
   },
 
 
@@ -1054,17 +1051,27 @@ var rbTServerResponse = {
   * @param {object} respData Actor identification details
   * @return void
   */
-  setActor : function(respData)
+  setActorID : function(respData)
   { 
     "use strict";
+    rbTAPP.log({"message": "Setting actor details with server resp","data":respData});
     try {
-      if (respData) {
+      if (respData && respData.id) {
         // FIXME :: Flush and reset all cookies if there is a change in actor.
         // WAITING AS THERE ARE SOME CHANGES IN BACKEND.
-        rbTCookie.setCookie(rbTCookie.defaultCookies.actor, JSON.stringify(respData));
-
+        var oldActorId = rbTCookie.getCookie(rbTCookie.defaultCookies.actorID);
+        if (!oldActorId || oldActorId !== respData.id) {
+          rbTCookie.setCookie(rbTCookie.defaultCookies.actorID, JSON.stringify(respData.actor_id));
+          rbTServerChannel.makeRequest({"url"       : rbTServerChannel.url.readActor, 
+                                        "set_actor_prop" : true,
+                                        "cb"        : { success: rbTServerResponse.setActorProperty,
+                                                        error  : rbTServerResponse.defaultError
+                                                      }
+                                       });
+        }
+        rbTAPP.setActorID(respData.actor_id);
       } else {
-        throw "there is no data";
+        throw new Error("there is no server resp data");
       }
     } catch(e) {
       rbTAPP.reportError({"exception" : e.message,
@@ -1080,15 +1087,17 @@ var rbTServerResponse = {
   * @param {object} respData Actor identification details
   * @return void
   */
-  setUserProperty : function(respData)
+  setActorProperty : function(respData)
   {
-     "use strict";
+    "use strict";
+    rbTAPP.log({"message": "Setting actor details with server resp","data":respData});
+
     // FIXME : check for which property to set
     try {
       if (respData) {
         rbTCookie.setCookie(rbTCookie.defaultCookies.actorprop, JSON.stringify(respData));
       } else {
-        throw "there is no data";
+        throw "there is no data for setting actor property";
       }
     } catch(e) {
       rbTAPP.reportError({"exception" : e.message,
@@ -1106,6 +1115,8 @@ var rbTServerResponse = {
   setSystemProperty : function(respData)
   {
     "use strict";
+    rbTAPP.log({"message": "Setting system property with server resp","data":respData});
+
     // FIXME : check for which property to set
     try {
       if (respData) {
@@ -1129,6 +1140,7 @@ var rbTServerResponse = {
   handleEvent : function(respData)
   {
     "use strict";
+    rbTAPP.log({"message": "Handling event with server resp","data":respData});
     try {
       if(respData && respData.actor) {
         rbTCookie.setCookie(rbTCookie.defaultCookies.actor, respData.actor);
@@ -1152,6 +1164,8 @@ var rbTServerResponse = {
   setRules : function(respData)
   {
     "use strict";
+    rbTAPP.log({"message": "Setting rules with server resp","data":respData});
+
     try {
       if(respData) {
         rbTRules.setRulesTable(respData);
@@ -1164,8 +1178,135 @@ var rbTServerResponse = {
                           "data"      : respData
                         });
     }
-  }
+  },
 
+
+  /**
+  * Set App Specific configs
+  * @param {object} respData Data in response to server.
+  */
+  setAppDetail : function(respData)
+  {
+    rbTAPP.log({"message": "Setting app details with server resp","data":respData});
+    var sample_rule_json = [
+        {
+          id: '1010101010',
+          name  : "sample_name", 
+          event : "sample_event",
+          action: "topbar.generic.normal",
+          action_param :
+                  [
+                     {key:'rb.t.cr.textColor ',value:'#333'},
+                     {key:'rb.t.nr.textFontsize',value:'15'},
+                     {key:'rb.t.ft.textFontfamily',value:'Arial'},
+                     {key:'rb.f.nr.baseZindex',value:'100'},
+                     {key:'rb.t.nr.baseWidth',value:'100'},
+                     {key:'rb.t.nr.baseHeight',value:'40'},
+                     {key:'rb.t.cr.baseBgColor',value:'#DCDCDC'},
+                     {key:'rb.t.an.baseTextalign',value:'center'},
+                     {key:'rb.t.sg.textLeft',value:'Hello Hello Hello Hello'},
+                     {key:'rb.t.nr.btnFontSize',value:'14'},
+                     {key:'rb.t.cr.btnBgColor',value:'#548AC7'},
+                     {key:'rb.t.cr.btnColor',value:'white'},
+                     {key:'rb.t.ul.btnLink',value:'http://www.google.com'},
+                     {key:'rb.t.sg.btnLable',value:'Click'},
+                     {key:'rb.t.sg.textRight',value:'Hello Hello'},
+                     {key:'rb.t.ul.helpLink',value:'http://www.rulebot.com'},
+                  ],
+          conditions : [
+                // event based condition
+                { 
+                  property: "#customer.email",
+                  type : "String",
+                  negation: 'false',
+                  operation: 'eql',
+                  value1: 'gmail.com',
+                  connect: 'and' 
+                },
+                // negate condition
+                { 
+                  property: "#customer.name",
+                  type : "String",
+                  negation: 'true',
+                  operation: 'swh',
+                  value1: 'a',
+                  connect: 'and' 
+                },
+                // actor_property based condition
+                {
+                  property: "$customer.val1",
+                  type : "Number",
+                  negation: 'false',
+                  operation: 'gtn',
+                  value1: 2,
+                  connect: 'and' 
+                },
+                // system_property based condition
+                {
+                  property: "#customer.val2",
+                  type : "Number",
+                  negation: 'false',
+                  operation: 'ltn',
+                  value1: 3000,
+                  connect: 'and' 
+                },
+                {
+                  property: "#customer.swh",
+                  type : "String",
+                  negation: 'false',
+                  operation: 'swh',
+                  value1: 'act',
+                  connect: 'and' 
+                },
+                {
+                  property: "#customer.ewh",
+                  type : "String",
+                  negation: 'false',
+                  operation: 'ewh',
+                  value1: 'tty',
+                  connect: 'and' 
+                },
+                {
+                  property: "#customer.cns",
+                  type : "String",
+                  negation: 'false',
+                  operation: 'cns',
+                  value1: 'wit',
+                  connect: 'and' 
+                },
+                {
+                  property: "#customer.drg",
+                  type : "Date",
+                  negation: 'false',
+                  operation: 'drg',
+                  value1: "2/2/2011",
+                  value2: "4/4/2011",
+                  connect: 'and'
+                },
+                // regex
+                {
+                  property: "#customer.rgx",
+                  type : "String",
+                  negation: 'false',
+                  operation: 'rgx',
+                  value1: 'sam',
+                  connect: 'and' 
+                },
+                // set
+                {
+                  property: "#customer.set",
+                  type : "String",
+                  negation: 'false',
+                  operation: 'set',
+                }
+              ]
+        },
+    ];
+    
+    rbTRules.setRulesTable(sample_rule_json);
+
+    rbTAPP.configs.status = true;
+  }
 
 };
 
@@ -1175,16 +1316,24 @@ var rbTServerResponse = {
 
 var rbTServerChannel = {
   
+  rbt_url : "http://localhost:3000/",
+
+  serverUrl : function(url)
+  {
+    return this.rbt_url + url + ".jsonp";
+  }, 
+
   /* All server url routes to be mapped here */
   url : {
     "createSession"     : "",
-    "fireEvent"         : "http://localhost:3000/event/create",
-    "identify"          : "",
-    "setUserProperty"   : "",
-    "setSystemProperty" : "",
-    "getRules"          : "",
+    "appDetails"        : "app/read",
+    "fireEvent"         : "event/create",
+    "identify"          : "actor/identify",
+    "readActor"         : "actor/read",
+    "createActor"       : "actor/create",
+    "setActor"          : "actor/set",
+    "roi"               : "",
     "reportError"       : "",
-    "roi"               : ""
   },
 
   // Server request queue
@@ -1216,9 +1365,11 @@ var rbTServerChannel = {
   {
     for (var req in this.queue) {
       if (this.queue[req].event) {
-        this.makeEventRequest(this.queue[req].event, this.queue[req].params, this.queue[req].callback);
+        //this.makeEventRequest(this.queue[req].event, this.queue[req].params, this.queue[req].callback);
+        this.makeEventRequest(this.queue[req]);
       } else {
-        this.makeGetRequest(this.queue[req].url, this.queue[req].params, this.queue[req].callback, this.queue[req].async);
+        //this.makeGetRequest(this.queue[req].url, this.queue[req].params, this.queue[req].callback, this.queue[req].async);
+        this.makeGetRequest(this.queue[req]);
       }
     }
   },
@@ -1228,7 +1379,7 @@ var rbTServerChannel = {
   * Check for App status, if alive , flush all req queue and clear interval.
   *
   */
-  reqFlushIntervalId : function()
+  reqQFlushInterval : function()
   {
       var interval = setInterval(function() {
         if (rbTAPP.isrbTAlive()) {
@@ -1249,14 +1400,37 @@ var rbTServerChannel = {
   makeRequestData : function(event, reqData)
   {
     var requestData = {};
-
+    if (event) {
+      requestData = {};
+      requestData["properties"] = reqData ? rbJSON.typify(reqData) : {};
+      requestData["event"] = event;  
+    }
     requestData["app_id"] = rbTAPP.getAppID(); // mandatory
-    requestData["account_id"] = rbTAPP.getAccountID(); // mandatory
-   
-    if (event)
-      requestData["event"] = event;
-    if (reqData)
-      requestData["properties"] = rbJSON.typify(reqData);
+    requestData["account_id"] = rbTAPP.getAccountID(); // mandatory  
+
+    return requestData;
+  },
+
+  /**
+  *
+  *
+  *
+  */
+  extendReqData : function(obj, reqData)
+  {
+    if (!obj || !reqData)
+      return {};
+    var requestData = reqData;
+
+    if (obj.set_actor) {
+      obj.params = obj.params || {};
+      requestData["properties"] = {"profile":reqData ? rbJSON.typify(obj.params) : {}};
+      requestData["actor_id"] = rbTAPP.getActorID() || "";
+    } else if(obj.set_actor_prop) {
+      requestData["actor_id"] = rbTAPP.getActorID() || "";
+    }
+
+
     return requestData;
   },
 
@@ -1267,25 +1441,30 @@ var rbTServerChannel = {
   *  @param {object} callback
   *  @return {object}
   */
-  makeEventRequest :  function(event, params, callback)
+  //makeEventRequest :  function(event, params, callback)
+  makeEventRequest :  function(obj)
   {
     "use strict";
+    var that = obj;
     try {
-      var reqServerData = this.makeRequestData(event, params);
-      callback = this.extendCallbacks(callback);
+      var reqServerData = this.makeRequestData(obj.event, obj.params );
+      var callback = this.extendCallbacks(obj.callback);
+      var that = obj;
       jQuery.ajax({
-            url: rbTServerChannel.url.fireEvent,
+            url: this.serverUrl(rbTServerChannel.url.fireEvent),
             type: 'GET',
-            dataType: 'json',
+            dataType: 'jsonp',
+            contentType : 'application/javascript',
             data: reqServerData,
+            crossDomain:true,
+            timeout : 10000,
             beforeSend: function() {
-                // FIXME : add status to cookie
-                rbTCookie.setCookie("lastevent", event);
+                rbTCookie.setCookie("lastevent", that.event);
             },
             success: function ( respData ) {
                 rbTCookie.deleteCookie("lastevent");
                 // FIXME :: ADDED ONLY TO TEST CLIENT SIDE
-                rbTRules.executeRulesOnEvent(event);
+                rbTRules.executeRulesOnEvent(that.event);
 
                 // FIXME : Currently we do not know the format of response we will get from server.
                 if (respData && respData.actor) { 
@@ -1295,7 +1474,7 @@ var rbTServerChannel = {
             },
             error:function(XMLHttpRequest,textStatus, errorThrown){ 
                 // FIXME :: ADDED ONLY TO TEST CLIENT SIDE
-                rbTRules.executeRulesOnEvent(event);
+                rbTRules.executeRulesOnEvent(that.event);
 
                 callback.error(); 
                 
@@ -1304,8 +1483,8 @@ var rbTServerChannel = {
     } catch(e) {
       rbTAPP.reportError({"exception" : e.message,
                           "message"   :"server event request failed" , 
-                          "event"     : event,
-                          "reqData"   : JSON.stringify(reqData),
+                          "event"     : that.event,
+                          "obj"       : JSON.stringify(that),
                           "log"       : "error" 
                          }); 
     }
@@ -1318,25 +1497,30 @@ var rbTServerChannel = {
   *   
   *  @return void
   */  
-  makeGetRequest : function(url, params, callback, async)
+  //makeGetRequest : function(url, params, callback, async)
+  makeGetRequest : function(obj)
   {
     "use strict";
+    var that = obj;
     try {
-       var reqServerData = this.makeRequestData(undefined, params);
-      callback = this.extendCallbacks(callback);
-      if (async && async === "noasync")
+      var reqServerData = this.extendReqData(obj,this.makeRequestData(undefined, obj.params));
+      var callback = this.extendCallbacks(obj.cb);
+      if (obj.async && obj.async === "noasync")
         var asyncSt = false;
       else 
         var asyncSt = true;
-
+      //reqServerData["format"]="javascript";
       jQuery.ajax({
-            url: url,
+            url: this.serverUrl(obj.url),
             async: asyncSt,
             type: 'GET',
-            dataType: 'json',
-            contentType: 'application/json',
+            dataType: 'jsonp',
+            contentType : 'application/javascript',
             data: reqServerData,
+            crossDomain:true,
+            timeout : 10000,
             success: function ( respData ) {
+                respData.url = that.url;
                 callback.success(respData);
             },error:function(XMLHttpRequest,textStatus, errorThrown){ 
                 // todo : what to do??            
@@ -1345,8 +1529,8 @@ var rbTServerChannel = {
       });
     } catch(e) {
       rbTAPP.reportError({"exception" : e.message,
-                          "message"   :"server request failed" , 
-                          "url"       : url,
+                          "message"   : "server request failed" , 
+                          "object"    : obj,
                           "log"       : true,
                           "server"    : true
                          });
@@ -1359,6 +1543,7 @@ var rbTServerChannel = {
   */  
   makeRequest : function(obj)
   {
+    var that = obj;
     if (!obj)
       return;
     if (!rbTAPP.isrbTAlive()) {
@@ -1366,8 +1551,10 @@ var rbTServerChannel = {
         obj.async = obj.async || "async";
         this.queueReq({url:obj.url, params:obj.params, callback:obj.cb, async:obj.async});
       }
-      else
+      else {
         this.queueReq({event:obj.event, params:obj.params, callback:obj.cb});
+      }
+      this.reqQFlushInterval();
       return;
     } else {
       this.flushReqQueue();
@@ -1376,11 +1563,12 @@ var rbTServerChannel = {
       if (obj.event) {
         rbTServerChannel.makeEventRequest(obj.event, obj.params, obj.cb);
       } else if (obj.url) {
-        rbTServerChannel.makeGetRequest(obj.url, obj.params, obj.cb);
+        rbTServerChannel.makeGetRequest(obj);
       } else throw new Error("Wrong server req data");
     } catch (e) {
       rbTAPP.reportError({"exception" : e.message,
-                          "message"   :"server request params are not valid" , 
+                          "message"   : "server request params are not valid" , 
+                          "url"       : that.url,
                           "log"       : true,
                           "server"    : true
                          });
@@ -1388,7 +1576,7 @@ var rbTServerChannel = {
 
   },
    
-   /** 
+  /** 
   *  Request server to create session
   *  FIXME : NEED TO KNOW HOW SESSION WILL BE CREATED, BASED ON THAT WE WILL REMOVE MULTIPLE AJAX 
   *  @return void
@@ -1399,6 +1587,19 @@ var rbTServerChannel = {
     callback = this.extendCallbacks(callback);
     this.makeGetRequest(url, null, callback);
   }, 
+
+  /** 
+  *  Request server to app details
+  *  FIXME : IF THERE IS ANYTHING MISSING
+  *  @return void
+  */  
+  appDetails : function(params, callback)
+  {
+    "use strict";
+    callback = this.extendCallbacks(callback);
+    this.makeGetRequest(this.url.details, null, callback);
+  }, 
+
 
   /** 
   *  Send ROI to server
@@ -1419,7 +1620,6 @@ var rbTServerChannel = {
   */ 
   reportError : function(params)
   {
-
     "use strict";
     var callback = this.extendCallbacks(callback);
     this.makeGetRequest(this.url.reportError, params, callback);
@@ -1451,9 +1651,6 @@ var rbTSystemVar = {
   // All properties will be set here
   properties : {},
 
-  // To get all properties
-  allProperties : "browser_info,referrer_info,device_info,screen_info,viewport_info,locale_info,plugins_info,time_info",
-
   /** Initialize system variable script
    *  @return void
    */
@@ -1467,7 +1664,7 @@ var rbTSystemVar = {
       if (!sysVarInCookie) {
         return true; 
       } else {
-        var currentSysVar = this.getAllProperty();
+        var currentSysVar = this.getProperty();
         return (sysVarInCookie === currentSysVar) ? false : true;
       }
     }
@@ -1482,9 +1679,9 @@ var rbTSystemVar = {
     if (isSystemVarDirty.call(this)) {
       // Put current sys var in cookie and send it to server 
       // for update only if we have cookie miss 
-      var systemVars = this.getAllProperty();
+      var systemVars = this.getProperty();
       this.setPropertyInCookie(systemVars);
-      rbTAPP.setSystemProperty(systemVars);
+      //rbTAPP.setSystemProperty(systemVars);
     }
   },
 
@@ -1501,107 +1698,28 @@ var rbTSystemVar = {
 
 
   /** Get system variable property
-   *  Following supported
-   *  1). "browser_info"
-          return -> 
-          {
-             browser : browser_name,
-             os      : os_name,
-             version : version_number
-
-          }
-
-      2). "referrer_info"
-          return ->
-          {
-            host: "127.0.1.1"
-            path: "/~sammy/"
-            port: 80
-            protocol: "http:"
-          }
-      3). "device_info"
-          return ->
-          {
-            is_mobile: false
-            is_phone: false
-            is_tablet: false
-          } 
-      4). "screen_info"
-          return ->
-          {
-            height: 768,
-            width: 1366
-          }
-      5). "viewport_info"
-          return ->
-          {
-            height: 768,
-            width: 1366
-          }
-      6). "locale_info"
-          return ->
-          {
-            country: "us",
-            lang: "en
-          }
-      7). "plugins_info"
-          return ->
-          {
-            flash: true
-            java: false
-            quicktime: true
-            silverlight: false
-          }
-      8). "time_info"
-          return ->
-          {
-            observes_dst: false
-            tz_offset: 5.5
-          }
-   *
-   *   @param {string} type
-   *   @return {object} value
-   */
-
+    'browser' : 'String'
+    'browser_version' : 'String'
+    'operatingsystem' : 'String'
+    'referrer[host]' : 'String'
+    'referrer[path]' : 'String'
+    'referrer[name]' : 'String'
+    'device[type]' : 'String'
+    'device[name]' : 'String'
+    'screen[height]' : 'Number'
+    'screen[width]' :  'Number'
+    'viewport[height]' : 'Number'
+    'viewport[width]' : 'Number'
+    'country' : 'String'
+    'language' : 'String'
+    'plugins' : 'Array'
+    'timezone' : 'String'
+    'day_light_saving' : 'Boolean'
+  */
   getProperty : function(propertyTypes)
   {
     "use strict";
-    var types = propertyTypes.split(",");
-    var propertyCnf = {};
-    for (var i = 0; i < types.length ; ++i) {
-      switch(types[i]) {
-      case "browser_info":
-          propertyCnf[types[i]] =  this.properties.browser; 
-          break;
-      case "referrer_info":
-          propertyCnf[types[i]] =  this.properties.current_session.referrer_info; 
-          break;
-      case "device_info" :
-          propertyCnf[types[i]] =  this.properties.device; 
-          break;
-      case "screen_info" :
-          propertyCnf[types[i]] =  this.properties.device.screen; 
-          break;
-      case "viewport_info" :
-          propertyCnf[types[i]] =  this.properties.device.viewport; 
-          break;
-      case "locale_info":
-          propertyCnf[types[i]] =  this.properties.locale; 
-          break;
-      case "plugins_info":
-          propertyCnf[types[i]] =  this.properties.plugins; 
-          break;
-      case "time_info":
-          propertyCnf[types[i]] =  this.properties.time; 
-          break;
-      }
-    }
-    return propertyCnf;
-  },
-
-  getAllProperty : function()
-  {
-    return this.getProperty(this.allProperties);
+    return this.properties;
   },
 
   setPropertyInCookie : function(property)
@@ -1609,10 +1727,39 @@ var rbTSystemVar = {
     rbTCookie.setCookie(rbTCookie.defaultCookies.systemProp, JSON.stringify(property));
   },
 
+  setEJProp : function(json)
+  {
+     rbTSystemVar.setProperty("country",json.CountryName); 
+     rbTSystemVar.setProperty("timezone",json.LocalTimeZone); 
+  },
+
+  setSessionJSProp : function(json)
+  {
+    rbTAPP.log({"message":"System Properties got through Session JS","data":json});
+    this.setProperty("browser",json.browser.browser);
+    this.setProperty("browser_version",json.browser.version);
+    this.setProperty("operatingsystem",json.browser.os);
+    this.setProperty("referrer",json.current_session.referrer_info);
+    this.setProperty("device",json.device.type);
+    this.setProperty("screen",json.device.screen);
+    this.setProperty("viewport",json.device.viewport);
+    this.setProperty("plugins",json.plugins);
+    this.setProperty("language",json.locale.lang);
+    this.setProperty("day_light_saving",json.time.observes_dst);
+  },
 
 };
 
-
+var backcode="1102012";
+function EasyjQuery_Cache_IP(fname,json) {
+  rbTAPP.log({"message":"easy jquery response","data":json});
+  eval(fname + "(json);");
+}
+function EasyjQuery_Get_IP(fname,is_full) {
+  var full_version = "";
+  jQuery.getScript("http://api.easyjquery.com/ips/?callback=" + fname + full_version);
+}
+  
 
 
 /**
@@ -1623,6 +1770,8 @@ var rbTSystemVar = {
  * This version uses google's jsapi library for location services.
  * For details, see: https://github.com/codejoust/session.js
  */
+
+// FIXME : NOT ALL PROPERTIES FROM SESSION.JS IS NEEDED NOW..GETTING SOMETHINGS FROM EASYJQUERY
 
 var session_fetch = (function(win, doc, nav)
 {
@@ -1671,7 +1820,6 @@ var session_fetch = (function(win, doc, nav)
     // If the module has arguments,
     //   it _needs_ to return a callback function.
     var unloaded_modules = {
-      api_version: API_VERSION,
       locale: modules.locale(),
       current_session: modules.session(),
       original_session: modules.session(
@@ -1680,9 +1828,11 @@ var session_fetch = (function(win, doc, nav)
       browser: modules.browser(),
       plugins: modules.plugins(),
       time: modules.time(),
-      device: modules.device()
+      device: modules.device(),
     };
     // Location switch
+    // FIXME :: NOW NOT GETTING LOCATION INFO FROM SESSION JS, INSTEAD GETTING FROM EASYJQUERY
+    /*
     if (options.use_html5_location){
       unloaded_modules.location = modules.html5_location();
     } else if (options.ipinfodb_key){
@@ -1690,6 +1840,7 @@ var session_fetch = (function(win, doc, nav)
     } else if (options.gapi_location){
       unloaded_modules.location = modules.gapi_location();
     }
+    */
     // Cache win.session.start
     if (win.session && win.session.start){
       var start = win.session.start;
@@ -1726,12 +1877,19 @@ var session_fetch = (function(win, doc, nav)
 
     /* set the properties in our rbT hash */
     (function setrbTProperties() {
+      var sessionJSProp = {};
       for (property in unloaded_modules) {
-        rbTSystemVar.setProperty(property, unloaded_modules[property] );
+        //rbTSystemVar.setProperty(property, unloaded_modules[property] );
+        sessionJSProp[property] = unloaded_modules[property];
       }
+      rbTSystemVar.setSessionJSProp(sessionJSProp);
     })();
-    //setrbTProperties();
+    EasyjQuery_Get_IP("rbTSystemVar.setEJProp");
   };
+
+
+
+
 
 
   // Browser (and OS) detection
@@ -1829,6 +1987,12 @@ var session_fetch = (function(win, doc, nav)
       device.is_tablet = !!nav.userAgent.match(/(iPad|SCH-I800|xoom|kindle)/i);
       device.is_phone = !device.is_tablet && !!nav.userAgent.match(/(iPhone|iPod|blackberry|android 0.5|htc|lg|midp|mmp|mobile|nokia|opera mini|palm|pocket|psp|sgh|smartphone|symbian|treo mini|Playstation Portable|SonyEricsson|Samsung|MobileExplorer|PalmSource|Benq|Windows Phone|Windows Mobile|IEMobile|Windows CE|Nintendo Wii)/i);
       device.is_mobile = device.is_tablet || device.is_phone;
+      if (device.is_mobile) {
+        var name = nav.userAgent.match(/(iPhone|iPod|blackberry|android 0.5|htc|lg|midp|mmp|mobile|nokia|opera mini|palm|pocket|psp|sgh|smartphone|symbian|treo mini|Playstation Portable|SonyEricsson|Samsung|MobileExplorer|PalmSource|Benq|Windows Phone|Windows Mobile|IEMobile|Windows CE|Nintendo Wii|SCH-I800|xoom|kindle)/ig);
+        if (name)
+          name = name[0];
+      }
+      device.type = { type: device.is_mobile ? "mobile" : "pc", name: name || browser.detect().browser};
       return device;
     },
     plugins: function(){
@@ -2174,7 +2338,7 @@ var rbTCookie = {
   // If we do not send following params while setting cookies, defaults will be used. 
   defaultOptions : {
     expire : 24 * 60 * 60 * 1000,  // in hours
-    path : "/",
+    path : "rulebot",
     domain : window.location.hostname,
     secure: false
   },
@@ -2386,7 +2550,7 @@ RBT.prototype.isAlive = function()
 RBT.prototype.sendEvent = function(event, params)
 {
   "use strict";
-  if (!event || typeof(event) != "string" || event == "" ) {
+  if (!event || typeof(event) != "string" || event === "" ) {
     return;
   }
   rbTServerChannel.makeRequest({"event" : event, 
@@ -2408,7 +2572,7 @@ RBT.prototype.identify = function(params)
   "use strict";
   rbTServerChannel.makeRequest({"url"    : rbTServerChannel.url.identify, 
                                 "params" : params,
-                                "cb"     : { success: rbTServerResponse.setActor,
+                                "cb"     : { success: rbTServerResponse.setActorID,
                                              error  : rbTServerResponse.defaultError
                                            }
                               });
@@ -2422,14 +2586,17 @@ RBT.prototype.identify = function(params)
 * @param {object} params Option based on which actor property will be set
 * @return void
 */
-RBT.prototype.setUserProperty = function(params)
+RBT.prototype.setActor = function(params)
 {
   "use strict";
-  rbTServerChannel.makeRequest({"url"   : rbTServerChannel.url.setUserProperty, 
-                                "params": params,
-                                "cb"    : { success: rbTServerResponse.setUserProperty,
-                                            error  : rbTServerResponse.defaultError
-                                          }
+  if (rbTActor.propExist(params))
+    return;
+  rbTServerChannel.makeRequest({"url"        : rbTServerChannel.url.setActor, 
+                                "params"     : params,
+                                "set_actor"  : true,
+                                "cb"         : { success: rbTServerResponse.setActorProperty,
+                                                 error  : rbTServerResponse.defaultError
+                                               }
                               });
 };
 
@@ -2554,6 +2721,7 @@ var rbJSON = {
       rbTAPP.setAppID(appid);
       rbTAPP.setAccountID(accid);
       rbTUtils.includeJQIfNeeded();
+      window.rb = new RBT();
     }
   } catch (e) {
     rbTAPP.reportError({"exception" : e.message, 
@@ -2566,22 +2734,14 @@ var rbJSON = {
 
 function testGanga()
 {
-  rb.sendEvent("sample_event",{"a":101});
+  //rb.sendEvent("sample_event",{"a":101});
+  //rb.identify({"uid":"83.samarth@gmail.com"});
+  rb.setActor({"name":"samarth","age":"29"});
+
+  console.log("ENDING TESTING SEQUENCE");
 }
 
-function waitForRBT()
-{
-  if(!rbTAPP.isrbTAlive())
-  {
-    window.setTimeout(waitForRBT, 500);
-  }
-  else
-  {
-    testGanga();
-  }
-}
-
-waitForRBT();
+testGanga();
 
 
 
@@ -2608,6 +2768,7 @@ rbT.templateLib = {
 	 	  'topbar.generic.twitterfollow':'rbTemplTopbarGenericTwitterfollowHTML',
 	 	  'bottombar.generic.twitterfollow':'rbTemplBottombarGenericTwitterfollowHTML',
 	 	  'topbar.generic.fblike':'rbTemplTopbarGenericFblikeHTML',
+	 	  'uservoice.generic.normal':'rbTemplUservoiceGenericNormalHTML',
 	 	  'bottombar.generic.twittershare':'rbTemplBottombarGenericTwittershareHTML',
 	 	  'modal.generic.normal':'rbTemplModalGenericNormalHTML',
 	 	  'bottombar.generic.normal':'rbTemplBottombarGenericNormalHTML',
@@ -2617,148 +2778,184 @@ rbT.templateLib = {
 
 
 
+ rbT.templateName = {
+	 			'bottombar.generic.fblike':'Facebook Like Bottombar',
+	 			'topbar.generic.normal':'Normal Topbar',
+	 			'chat.generic.normal':'Chat Window',
+	 			'topbar.generic.twitterfollow':'Twitter Follow Topbar',
+	 			'bottombar.generic.twitterfollow':'Twitter Follow Bottombar',
+	 			'topbar.generic.fblike':'Facebook Like Topbar',
+	 			'uservoice.generic.normal':'User Voice Feedback',
+	 			'bottombar.generic.twittershare':'Twitter Share Bottombar',
+	 			'modal.generic.normal':'Modal Window',
+	 			'bottombar.generic.normal':'Normal Bottombar',
+	 			'topbar.generic.twittershare':'Twitter Share Topbar'
+ 	 	 	 	 }; 
+
+
+
  rbT.templateArgs = {
-	 	  'bottombar.generic.fblike':[
-	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'#F2F0F0'},
-	 	 	 	 	 	 {key:'rb.t.nr.textFontsize',value:'15'},
-	 	 	 	 	 	 {key:'rb.t.ft.textFontfamily',value:'Arial'},
-	 	 	 	 	 	 {key:'rb.f.nr.baseZindex',value:'1000'},
-	 	 	 	 	 	 {key:'rb.t.nr.baseWidth',value:'100'},
-	 	 	 	 	 	 {key:'rb.t.nr.baseHeight',value:'40'},
-	 	 	 	 	 	 {key:'rb.t.cr.baseBgColor',value:'#3C5891'},
-	 	 	 	 	 	 {key:'rb.t.an.baseTextalign',value:'center'},
-	 	 	 	 	 	 {key:'rb.t.sg.textLeft',value:'Hello Hello'},
-	 	 	 	 	 	 {key:'rb.t.ul.facebookPage',value:'http://www.google.com'},
-	 	 	 	 	 	 {key:'rb.t.sg.textRight',value:'Hello Hello'},
-	 	 	 	 	 ],
-	 	  'topbar.generic.normal':[
-	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'#333'},
-	 	 	 	 	 	 {key:'rb.t.nr.textFontsize',value:'15'},
-	 	 	 	 	 	 {key:'rb.t.ft.textFontfamily',value:'Arial'},
-	 	 	 	 	 	 {key:'rb.f.nr.baseZindex',value:'100'},
-	 	 	 	 	 	 {key:'rb.t.nr.baseWidth',value:'100'},
-	 	 	 	 	 	 {key:'rb.t.nr.baseHeight',value:'40'},
-	 	 	 	 	 	 {key:'rb.t.cr.baseBgColor',value:'#DCDCDC'},
-	 	 	 	 	 	 {key:'rb.t.an.baseTextalign',value:'center'},
-	 	 	 	 	 	 {key:'rb.t.sg.textLeft',value:'Hello Hello Hello Hello'},
-	 	 	 	 	 	 {key:'rb.t.nr.btnFontSize',value:'14'},
-	 	 	 	 	 	 {key:'rb.t.cr.btnBgColor',value:'#548AC7'},
-	 	 	 	 	 	 {key:'rb.t.cr.btnColor',value:'white'},
-	 	 	 	 	 	 {key:'rb.t.ul.btnLink',value:'http://www.google.com'},
-	 	 	 	 	 	 {key:'rb.t.sg.btnLable',value:'Click'},
-	 	 	 	 	 	 {key:'rb.t.sg.textRight',value:'Hello Hello'},
-	 	 	 	 	 ],
-	 	  'chat.generic.normal':[
-	 	 	 	 	 	 {key:'rb.t.sg.olarkIdentity',value:'\'6679-845-10-6199\''},
-	 	 	 	 	 	 {key:'rb.t.sg.olarkIdentity',value:'\'6679-845-10-6199\''},
-	 	 	 	 	 ],
-	 	  'topbar.generic.twitterfollow':[
-	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'white'},
-	 	 	 	 	 	 {key:'rb.t.nr.textFontsize',value:'17'},
-	 	 	 	 	 	 {key:'rb.t.cr.textShadow',value:'black'},
-	 	 	 	 	 	 {key:'rb.t.ft.textFontfamily',value:'Arial'},
-	 	 	 	 	 	 {key:'rb.f.nr.baseZindex',value:'1000'},
-	 	 	 	 	 	 {key:'rb.t.nr.baeWidth',value:'100'},
-	 	 	 	 	 	 {key:'rb.t.nr.baseHeight',value:'50'},
-	 	 	 	 	 	 {key:'rb.t.cr.baeBgColor',value:'#0B8AB8'},
-	 	 	 	 	 	 {key:'rb.t.an.baseTextalign',value:'center'},
-	 	 	 	 	 	 {key:'rb.t.sg.textLeft',value:'Hello Hello'},
-	 	 	 	 	 	 {key:'rb.t.sg.twitterAccount',value:'@actwitty'},
-	 	 	 	 	 	 {key:'rb.t.sg.twitterAccount',value:'@actwitty'},
-	 	 	 	 	 	 {key:'rb.t.sg.textRight',value:'Hello Hello'},
-	 	 	 	 	 ],
-	 	  'bottombar.generic.twitterfollow':[
-	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'white'},
-	 	 	 	 	 	 {key:'rb.t.nr.textFontsize',value:'17'},
-	 	 	 	 	 	 {key:'rb.t.cr.textShadow',value:'black'},
-	 	 	 	 	 	 {key:'rb.t.ft.textFontfamily',value:'Arial'},
-	 	 	 	 	 	 {key:'rb.f.nr.baseZindex',value:'1000'},
-	 	 	 	 	 	 {key:'rb.t.nr.baeWidth',value:'100'},
-	 	 	 	 	 	 {key:'rb.t.nr.baseHeight',value:'50'},
-	 	 	 	 	 	 {key:'rb.t.cr.baeBgColor',value:'#0B8AB8'},
-	 	 	 	 	 	 {key:'rb.t.an.baseTextalign',value:'center'},
-	 	 	 	 	 	 {key:'rb.t.sg.textLeft',value:'Hello Hello'},
-	 	 	 	 	 	 {key:'rb.t.sg.twitterAccount',value:'@actwitty'},
-	 	 	 	 	 	 {key:'rb.t.sg.twitterAccount',value:'@actwitty'},
-	 	 	 	 	 	 {key:'rb.t.sg.textRight',value:'Hello Hello'},
-	 	 	 	 	 ],
-	 	  'topbar.generic.fblike':[
-	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'#F2F0F0'},
-	 	 	 	 	 	 {key:'rb.t.nr.textFontsize',value:'16'},
-	 	 	 	 	 	 {key:'rb.t.ft.textFontfamily',value:'Arial'},
-	 	 	 	 	 	 {key:'rb.f.nr.baseZindex',value:'1000'},
-	 	 	 	 	 	 {key:'rb.t.nr.baseWidth',value:'100'},
-	 	 	 	 	 	 {key:'rb.t.nr.baseHeight',value:'40'},
-	 	 	 	 	 	 {key:'rb.t.cr.baseBgColor',value:'#3C5891'},
-	 	 	 	 	 	 {key:'rb.t.an.baseTextalign',value:'center'},
-	 	 	 	 	 	 {key:'rb.t.sg.textLeft',value:'Hello Hello'},
-	 	 	 	 	 	 {key:'rb.t.ul.facebookPage=%%http://www.google.com',value:''},
-	 	 	 	 	 	 {key:'rb.t.sg.textRight',value:'Hello Hello'},
-	 	 	 	 	 ],
-	 	  'bottombar.generic.twittershare':[
-	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'white'},
-	 	 	 	 	 	 {key:'rb.t.nr.textFontsize',value:'17'},
-	 	 	 	 	 	 {key:'rb.t.cr.textShadow',value:'black'},
-	 	 	 	 	 	 {key:'rb.t.ft.textFontfamily',value:'Arial'},
-	 	 	 	 	 	 {key:'rb.f.nr.baseZindex',value:'1000'},
-	 	 	 	 	 	 {key:'rb.t.nr.baeWidth',value:'100'},
-	 	 	 	 	 	 {key:'rb.t.nr.baseHeight',value:'50'},
-	 	 	 	 	 	 {key:'rb.t.cr.baeBgColor',value:'#0B8AB8'},
-	 	 	 	 	 	 {key:'rb.t.an.baseTextalign',value:'center'},
-	 	 	 	 	 	 {key:'rb.t.sg.leftText',value:'Hello Hello'},
-	 	 	 	 	 	 {key:'rb.t.sg.twitterSharetext',value:'Twteet please'},
-	 	 	 	 	 	 {key:'rb.t.sg.rightText',value:'Hello Hello'},
-	 	 	 	 	 ],
-	 	  'modal.generic.normal':[
-	 	 	 	 	 	 {key:'rb.f.nr.transBlockZindex',value:'1000'},
-	 	 	 	 	 	 {key:'rb.f.nr.baseZindex',value:'1005'},
-	 	 	 	 	 	 {key:'rb.t.cr.baseBgColor',value:'white'},
-	 	 	 	 	 	 {key:'rb.t.cr.headingBgColor',value:'#e7e7e7'},
-	 	 	 	 	 	 {key:'rb.t.cr.modalHeadingColor',value:'#525252'},
-	 	 	 	 	 	 {key:'rb.t.nr.modalHeadingFontsize',value:'20'},
-	 	 	 	 	 	 {key:'rb.t.ft.headingFontfamily',value:'Arial'},
-	 	 	 	 	 	 {key:'rb.t.cr.modalHeadingTextShadow#6e6e6e',value:''},
-	 	 	 	 	 	 {key:'rb.t.sg.modalHeadingText',value:'This is the Heading '},
-	 	 	 	 	 	 {key:'rb.t.cr.modalTextColor',value:'#525252'},
-	 	 	 	 	 	 {key:'rb.t.nr.modalTextFontsize',value:'12'},
-	 	 	 	 	 	 {key:'rb.t.ft.textFontfamily',value:'Arial'},
-	 	 	 	 	 	 {key:'rb.t.sg.modalText',value:'Hello Hello Hello Hello Hello hello heello bjashsdgfsdhvfhsdvcfhsdvhcsd hvhvchjsdvchjsdvchjvsdchvsdhvcjhsdvjvh '},
-	 	 	 	 	 	 {key:'rb.t.sg.modalImgPath',value:'../../../images/rails.png'},
-	 	 	 	 	 	 {key:'rb.t.cr.buttonBgColor',value:'#3B5998'},
-	 	 	 	 	 	 {key:'rb.t.ul.modalBtnLink',value:'http://www.google.com'},
-	 	 	 	 	 	 {key:'rb.t.sg.modalBtnLable',value:'Click'},
-	 	 	 	 	 ],
-	 	  'bottombar.generic.normal':[
-	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'#333'},
-	 	 	 	 	 	 {key:'rb.t.nr.textFontsize',value:'15'},
-	 	 	 	 	 	 {key:'rb.t.ft.textFontfamily',value:'Arial'},
-	 	 	 	 	 	 {key:'rb.f.nr.baseZindex',value:'100'},
-	 	 	 	 	 	 {key:'rb.t.nr.baseWidth',value:'100'},
-	 	 	 	 	 	 {key:'rb.t.nr.baseHeight',value:'40'},
-	 	 	 	 	 	 {key:'rb.t.cr.baseBgColor',value:'#DCDCDC'},
-	 	 	 	 	 	 {key:'rb.t.an.baseTextalign',value:'center'},
-	 	 	 	 	 	 {key:'rb.t.sg.textLeft',value:'Hello Hello'},
-	 	 	 	 	 	 {key:'rb.t.nr.btnFontSize',value:'14'},
-	 	 	 	 	 	 {key:'rb.t.cr.btnBgColor',value:'#548AC7'},
-	 	 	 	 	 	 {key:'rb.t.cr.btnColor',value:'white'},
-	 	 	 	 	 	 {key:'rb.t.ul.btnLink',value:'http://www.google.com'},
-	 	 	 	 	 	 {key:'rb.t.sg.btnLable',value:'Click'},
-	 	 	 	 	 	 {key:'rb.t.sg.textRight',value:'Hello Hello'},
-	 	 	 	 	 ],
-	 	  'topbar.generic.twittershare':[
-	 	 	 	 	 	 {key:'rb.t.cr.textColor ',value:'white'},
-	 	 	 	 	 	 {key:'rb.t.nr.textFontsize',value:'17'},
-	 	 	 	 	 	 {key:'rb.t.cr.textShadow',value:'black'},
-	 	 	 	 	 	 {key:'rb.t.ft.textFontfamily',value:'Arial'},
-	 	 	 	 	 	 {key:'rb.f.nr.baseZindex',value:'1000'},
-	 	 	 	 	 	 {key:'rb.t.nr.baeWidth',value:'100'},
-	 	 	 	 	 	 {key:'rb.t.nr.baseHeight',value:'50'},
-	 	 	 	 	 	 {key:'rb.t.cr.baeBgColor',value:'#0B8AB8'},
-	 	 	 	 	 	 {key:'rb.t.an.baseTextalign',value:'center'},
-	 	 	 	 	 	 {key:'rb.t.sg.leftText',value:'Hello Hello'},
-	 	 	 	 	 	 {key:'rb.t.sg.twitterSharetext',value:'Tweet Please'},
-	 	 	 	 	 	 {key:'rb.t.sg.rightText',value:'Hello Hello'},
-	 	 	 	 	 ]
+	 	  'bottombar.generic.fblike':{
+	 	 	 	 	 	 'rb.t.cr.textColor ':'#F2F0F0',
+	 	 	 	 	 	 'rb.t.nr.textFontsize':'15',
+	 	 	 	 	 	 'rb.t.ft.textFontfamily':'Arial',
+	 	 	 	 	 	 'rb.t.sg.textFontWeight':'bold',
+	 	 	 	 	 	 'rb.f.nr.baseZindex':'1000',
+	 	 	 	 	 	 'rb.t.nr.baseWidth':'100',
+	 	 	 	 	 	 'rb.t.nr.baseHeight':'40',
+	 	 	 	 	 	 'rb.t.cr.baseBgColor':'#3C5891',
+	 	 	 	 	 	 'rb.t.an.baseTextalign':'center',
+	 	 	 	 	 	 'rb.t.sg.textLeft':'Hello Hello',
+	 	 	 	 	 	 'rb.t.ul.facebookPage':'http://www.google.com',
+	 	 	 	 	 	 'rb.t.sg.textRight':'Hello Hello',
+	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'10'
+	 	 	 	 	 },
+	 	  'topbar.generic.normal':{
+	 	 	 	 	 	 'rb.t.cr.textColor ':'#333',
+	 	 	 	 	 	 'rb.t.nr.textFontsize':'15',
+	 	 	 	 	 	 'rb.t.ft.textFontfamily':'Arial',
+	 	 	 	 	 	 'rb.t.sg.textFontWeight':'bold',
+	 	 	 	 	 	 'rb.f.nr.baseZindex':'100',
+	 	 	 	 	 	 'rb.t.nr.baseWidth':'100',
+	 	 	 	 	 	 'rb.t.nr.baseHeight':'40',
+	 	 	 	 	 	 'rb.t.cr.baseBgColor':'#DCDCDC',
+	 	 	 	 	 	 'rb.t.an.baseTextalign':'center',
+	 	 	 	 	 	 'rb.t.sg.textLeft':'Hello Hello Hello Hello',
+	 	 	 	 	 	 'rb.t.nr.btnFontSize':'14',
+	 	 	 	 	 	 'rb.t.cr.btnBgColor':'#548AC7',
+	 	 	 	 	 	 'rb.t.cr.btnColor':'white',
+	 	 	 	 	 	 'rb.t.ul.btnLink':'http://www.google.com',
+	 	 	 	 	 	 'rb.t.sg.btnLable':'Click',
+	 	 	 	 	 	 'rb.t.sg.textRight':'Hello Hello',
+	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'100'
+	 	 	 	 	 },
+	 	  'chat.generic.normal':{
+	 	 	 	 	 	 'rb.t.sg.olarkIdentity':'\'6679-845-10-6199\'',
+	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'10'
+	 	 	 	 	 },
+	 	  'topbar.generic.twitterfollow':{
+	 	 	 	 	 	 'rb.t.cr.textColor ':'white',
+	 	 	 	 	 	 'rb.t.nr.textFontsize':'17',
+	 	 	 	 	 	 'rb.t.cr.textShadow':'black',
+	 	 	 	 	 	 'rb.t.ft.textFontfamily':'Arial',
+	 	 	 	 	 	 'rb.t.sg.textFontWeight':'bold',
+	 	 	 	 	 	 'rb.f.nr.baseZindex':'1000',
+	 	 	 	 	 	 'rb.t.nr.baeWidth':'100',
+	 	 	 	 	 	 'rb.t.nr.baseHeight':'50',
+	 	 	 	 	 	 'rb.t.cr.baeBgColor':'#0B8AB8',
+	 	 	 	 	 	 'rb.t.an.baseTextalign':'center',
+	 	 	 	 	 	 'rb.t.sg.textLeft':'Hello Hello',
+	 	 	 	 	 	 'rb.t.sg.twitterAccountLink':'@actwitty',
+	 	 	 	 	 	 'rb.t.sg.twitterAccountLable':'@actwitty',
+	 	 	 	 	 	 'rb.t.sg.textRight':'Hello Hello',
+	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'100'
+	 	 	 	 	 },
+	 	  'bottombar.generic.twitterfollow':{
+	 	 	 	 	 	 'rb.t.cr.textColor ':'white',
+	 	 	 	 	 	 'rb.t.nr.textFontsize':'17',
+	 	 	 	 	 	 'rb.t.cr.textShadow':'black',
+	 	 	 	 	 	 'rb.t.ft.textFontfamily':'Arial',
+	 	 	 	 	 	 'rb.t.sg.textFontWeight':'bold',
+	 	 	 	 	 	 'rb.f.nr.baseZindex':'1000',
+	 	 	 	 	 	 'rb.t.nr.baeWidth':'100',
+	 	 	 	 	 	 'rb.t.nr.baseHeight':'50',
+	 	 	 	 	 	 'rb.t.cr.baeBgColor':'#0B8AB8',
+	 	 	 	 	 	 'rb.t.an.baseTextalign':'center',
+	 	 	 	 	 	 'rb.t.sg.textLeft':'Hello Hello',
+	 	 	 	 	 	 'rb.t.sg.twitterAccountLink':'@actwitty',
+	 	 	 	 	 	 'rb.t.sg.twitterAccountLable':'@actwitty',
+	 	 	 	 	 	 'rb.t.sg.textRight':'Hello Hello',
+	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'100'
+	 	 	 	 	 },
+	 	  'topbar.generic.fblike':{
+	 	 	 	 	 	 'rb.t.cr.textColor ':'#F2F0F0',
+	 	 	 	 	 	 'rb.t.nr.textFontsize':'16',
+	 	 	 	 	 	 'rb.t.ft.textFontfamily':'Arial',
+	 	 	 	 	 	 'rb.t.sg.textFontWeight':'bold',
+	 	 	 	 	 	 'rb.f.nr.baseZindex':'1000',
+	 	 	 	 	 	 'rb.t.nr.baseWidth':'100',
+	 	 	 	 	 	 'rb.t.nr.baseHeight':'40',
+	 	 	 	 	 	 'rb.t.cr.baseBgColor':'#3C5891',
+	 	 	 	 	 	 'rb.t.an.baseTextalign':'center',
+	 	 	 	 	 	 'rb.t.sg.textLeft':'Hello Hello',
+	 	 	 	 	 	 'rb.t.ul.facebookPage':'http://www.google.com',
+	 	 	 	 	 	 'rb.t.sg.textRight':'Hello Hello',
+	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'100'
+	 	 	 	 	 },
+	 	  'uservoice.generic.normal':{
+	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'10'
+	 	 	 	 	 },
+	 	  'bottombar.generic.twittershare':{
+	 	 	 	 	 	 'rb.t.cr.textColor ':'white',
+	 	 	 	 	 	 'rb.t.nr.textFontsize':'17',
+	 	 	 	 	 	 'rb.t.cr.textShadow':'black',
+	 	 	 	 	 	 'rb.t.ft.textFontfamily':'Arial',
+	 	 	 	 	 	 'rb.t.sg.textFontWeight':'bold',
+	 	 	 	 	 	 'rb.f.nr.baseZindex':'1000',
+	 	 	 	 	 	 'rb.t.nr.baeWidth':'100',
+	 	 	 	 	 	 'rb.t.nr.baseHeight':'50',
+	 	 	 	 	 	 'rb.t.cr.baeBgColor':'#0B8AB8',
+	 	 	 	 	 	 'rb.t.an.baseTextalign':'center',
+	 	 	 	 	 	 'rb.t.sg.leftText':'Hello Hello',
+	 	 	 	 	 	 'rb.t.sg.twitterSharetext':'Twteet please',
+	 	 	 	 	 	 'rb.t.sg.rightText':'Hello Hello',
+	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'10'
+	 	 	 	 	 },
+	 	  'modal.generic.normal':{
+	 	 	 	 	 	 'rb.f.nr.transBlockZindex':'1000',
+	 	 	 	 	 	 'rb.f.nr.baseZindex':'1005',
+	 	 	 	 	 	 'rb.t.cr.baseBgColor':'white',
+	 	 	 	 	 	 'rb.t.cr.headingBgColor':'#e7e7e7',
+	 	 	 	 	 	 'rb.t.cr.modalHeadingColor':'#525252',
+	 	 	 	 	 	 'rb.t.nr.modalHeadingFontsize':'20',
+	 	 	 	 	 	 'rb.t.ft.headingFontfamily':'Arial',
+	 	 	 	 	 	 'rb.t.cr.modalHeadingTextShadow':'#6e6e6e',
+	 	 	 	 	 	 'rb.t.sg.modalHeadingText':'This is the Heading ',
+	 	 	 	 	 	 'rb.t.cr.modalTextColor':'#525252',
+	 	 	 	 	 	 'rb.t.nr.modalTextFontsize':'12',
+	 	 	 	 	 	 'rb.t.ft.textFontfamily':'Arial',
+	 	 	 	 	 	 'rb.t.sg.modalText':'Hello Hello Hello Hello Hello hello heello bjashsdgfsdhvfhsdvcfhsdvhcsd hvhvchjsdvchjsdvchjvsdchvsdhvcjhsdvjvh ',
+	 	 	 	 	 	 'rb.t.sg.modalImgPath':'../../../images/rails.png',
+	 	 	 	 	 	 'rb.t.cr.buttonBgColor':'#3B5998',
+	 	 	 	 	 	 'rb.t.ul.modalBtnLink':'http://www.google.com',
+	 	 	 	 	 	 'rb.t.sg.modalBtnLable':'Click',
+	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'10'
+	 	 	 	 	 },
+	 	  'bottombar.generic.normal':{
+	 	 	 	 	 	 'rb.t.cr.textColor ':'#333',
+	 	 	 	 	 	 'rb.t.nr.textFontsize':'15',
+	 	 	 	 	 	 'rb.t.ft.textFontfamily':'Arial',
+	 	 	 	 	 	 'rb.t.sg.textFontWeight':'bold',
+	 	 	 	 	 	 'rb.f.nr.baseZindex':'100',
+	 	 	 	 	 	 'rb.t.nr.baseWidth':'100',
+	 	 	 	 	 	 'rb.t.nr.baseHeight':'40',
+	 	 	 	 	 	 'rb.t.cr.baseBgColor':'#DCDCDC',
+	 	 	 	 	 	 'rb.t.an.baseTextalign':'center',
+	 	 	 	 	 	 'rb.t.sg.textLeft':'Hello Hello',
+	 	 	 	 	 	 'rb.t.nr.btnFontSize':'14',
+	 	 	 	 	 	 'rb.t.cr.btnBgColor':'#548AC7',
+	 	 	 	 	 	 'rb.t.cr.btnColor':'white',
+	 	 	 	 	 	 'rb.t.ul.btnLink':'http://www.google.com',
+	 	 	 	 	 	 'rb.t.sg.btnLable':'Click',
+	 	 	 	 	 	 'rb.t.sg.textRight':'Hello Hello',
+	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'10'
+	 	 	 	 	 },
+	 	  'topbar.generic.twittershare':{
+	 	 	 	 	 	 'rb.t.cr.textColor ':'white',
+	 	 	 	 	 	 'rb.t.nr.textFontsize':'17',
+	 	 	 	 	 	 'rb.t.cr.textShadow':'black',
+	 	 	 	 	 	 'rb.t.ft.textFontfamily':'Arial',
+	 	 	 	 	 	 'rb.t.sg.textFontWeight':'bold',
+	 	 	 	 	 	 'rb.f.nr.baseZindex':'1000',
+	 	 	 	 	 	 'rb.t.nr.baeWidth':'100',
+	 	 	 	 	 	 'rb.t.nr.baseHeight':'50',
+	 	 	 	 	 	 'rb.t.cr.baeBgColor':'#0B8AB8',
+	 	 	 	 	 	 'rb.t.an.baseTextalign':'center',
+	 	 	 	 	 	 'rb.t.sg.leftText':'Hello Hello',
+	 	 	 	 	 	 'rb.t.sg.twitterSharetext':'Tweet Please',
+	 	 	 	 	 	 'rb.t.sg.rightText':'Hello Hello',
+	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'100'
+	 	 	 	 	 }
  	 	 	 	 }; 
  
 
@@ -2767,70 +2964,77 @@ rbT.templateLib = {
 /****************************[[./templates/topbars/rbTemplBottombarGenericFblike.js]]*************************************/ 
 
 
-rbT.rbTemplBottombarGenericFblikeHTML='<style>.rbTextValue   {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     font-family: {{rb.t.ft.textFontfamily}};     text-shadow : #1C2C4C 0px -1px 0px;     font-style: normal;     font-weight: bold;   }</style> <div id="fb-root"></div><script>(function(d, s, id) {  var js, fjs = d.getElementsByTagName(s)[0];  var k = \'hello\';  if (d.getElementById(id)) return;  js = d.createElement(s); js.id = id;  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";  fjs.parentNode.insertBefore(js, fjs);}(document, "script", "facebook-jssdk"));</script><div id="rbBottombarGenericFblikeBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baseWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baseBgColor}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 2px -2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">      <div id="rbBottombarGenericFblikeLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.textLeft}}     </div>    <div id="rbBottombarGenericFblikeRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:10px;width:100px;left:42%;margin-right:20px;height:25px;background-color:#FFFFFF;border-radius:5px;">                      <div class="fb-like" data-href="{{rb.t.ul.facebookPage}}" data-send="false" data-layout="button_count" data-width="47px" data-show-faces="false" data-font="arial"></div>          </div>      <div id="rbBottombarGenericFblikeRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">                  {{rb.t.sg.textRight}}     </div>     <div  style="display:inline; position:absolute;bottom:5px;right:30px;margin-left:20px;color:#FFFFFF;font-weight:bold;">                    <a id="rbBottombarGenericFblikeRoiHelp" class="rbClickable" style= "text-decoration:none;color:#FFFFFF;" href="http://www.rulebot.com" >            ?            </a>       </div>    <div id="rbBottombarGenericFblikeCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; bottom:5px;right:10px;font-weight:bold;" >     X    </div> </div>'
+rbT.rbTemplBottombarGenericFblikeHTML='<!-- {{##Title##}}--><!-- {{##Timer##}}--><style>.rbTextValue   {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     font-family: {{rb.t.ft.textFontfamily}};     text-shadow : #1C2C4C 0px -1px 0px;     font-style: normal;     font-weight:{{rb.t.sg.textFontWeight}};   }</style> <div id="fb-root"></div><script>(function(d, s, id) {  var js, fjs = d.getElementsByTagName(s)[0];  var k = \'hello\';  if (d.getElementById(id)) return;  js = d.createElement(s); js.id = id;  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";  fjs.parentNode.insertBefore(js, fjs);}(document, "script", "facebook-jssdk"));</script><div id="rbBottombarGenericFblikeBaseContainer"  style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baseWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baseBgColor}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 2px -2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">      <div id="rbBottombarGenericFblikeLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.textLeft}}     </div>    <div id="rbBottombarGenericFblikeRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:10px;width:100px;left:42%;margin-right:20px;height:25px;background-color:#FFFFFF;border-radius:5px;cursor:pointer;">                      <div class="fb-like" data-href="{{rb.t.ul.facebookPage}}" data-send="false" data-layout="button_count" data-width="47px" data-show-faces="false" data-font="arial"></div>          </div>      <div id="rbBottombarGenericFblikeRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">                  {{rb.t.sg.textRight}}     </div>     <div  style="display:inline; position:absolute;bottom:5px;right:30px;margin-left:20px;color:#FFFFFF;font-weight:bold;">                    <a id="rbBottombarGenericFblikeRoiHelp" class="rbClickable" style= "text-decoration:none;color:#FFFFFF;" href="http://www.rulebot.com" >            ?            </a>       </div>    <div id="rbBottombarGenericFblikeCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; bottom:5px;right:10px;font-weight:bold;cursor:pointer;" >     X    </div> </div>'
 
 
 
 /****************************[[./templates/topbars/rbTemplBottombarGenericTwitterfollow.js]]*************************************/ 
 
 
-rbT.rbTemplBottombarGenericTwitterfollowHTML='<style>.rbTextValue  {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     text-shadow: 1px 1px {{rb.t.cr.textShadow}};     font-family: {{rb.t.ft.textFontfamily}};     text-shadow: 0 -1px 0 #007AA6;     font-weight: bold;   }</style> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script><div id="rbBottombarGenericTwfollowBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baeWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baeBgColor}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 2px -2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">       <div id="rbBottombarGenericTwfollowLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.textLeft}}     </div>    <div id="rbBottombarGenericTwfollowRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;left:42%;margin-right:20px;">                        <a  data-show-count="false" data-button = "blue" class="twitter-follow-button" href="https://twitter.com/{{rb.t.sg.twitterAccount}}" data-size="large">Follow {{rb.t.sg.twitterAccount}} </a>       </div>       <div id="rbBottombarGenericTwfollowRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:52%; width:40%;overflow:hidden;">                  {{rb.t.sg.textRight}}     </div>     <div  style="display:inline; position:absolute;bottom:5px;right:30px;margin-left:20px;font-weight:bold;">                    <a id="rbBottombarGenericTwfollowRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none ;color:#FFFFFF " href=http://www.rulebot.com"  >            ?            </a>       </div>    <div id="rbBottombarGenericTwfollowCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; bottom:5px;right:10px;font-weight:bold;" >     X     </div> </div>'
+rbT.rbTemplBottombarGenericTwitterfollowHTML='<!-- {{##Title##}}--><!-- {{##Timer##}}--><style>.rbTextValue  {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     text-shadow: 1px 1px {{rb.t.cr.textShadow}};     font-family: {{rb.t.ft.textFontfamily}};     text-shadow: 0 -1px 0 #007AA6;     font-weight:{{rb.t.sg.textFontWeight}};   }</style> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script><div id="rbBottombarGenericTwitterfollowBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baeWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baeBgColor}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 2px -2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">       <div id="rbBottombarGenericTwitterfollowLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.textLeft}}     </div>    <div id="rbBottombarGenericTwitterfollowRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;left:42%;margin-right:20px;cursor:pointer;">                        <a  data-show-count="false" data-button = "blue" class="twitter-follow-button" href="https://twitter.com/{{rb.t.sg.twitterAccountLink}}" data-size="large">Follow {{rb.t.sg.twitterAccountLable}} </a>       </div>       <div id="rbBottombarGenericTwitterfollowRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:52%; width:40%;overflow:hidden;">                  {{rb.t.sg.textRight}}     </div>     <div  style="display:inline; position:absolute;bottom:5px;right:30px;margin-left:20px;font-weight:bold;">                    <a id="rbBottombarGenericTwitterfollowRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none ;color:#FFFFFF " href=http://www.rulebot.com"  >            ?            </a>       </div>    <div id="rbBottombarGenericTwitterfollowCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; bottom:5px;right:10px;font-weight:bold;cursor:pointer;" >     X     </div> </div>'
 
 
 
 /****************************[[./templates/topbars/rbTemplBottombarGenericNormal.js]]*************************************/ 
 
 
-rbT.rbTemplBottombarGenericNormalHTML='<style>  .rbTextValue   {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     font-family: {{rb.t.ft.textFontfamily}};     font-weight: bold;   }</style><div id="rbBottombarGenericNormalBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baseWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baseBgColor}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 2px -2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">   <div id="rbBottombarGenericNormalLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.textLeft}}     </div>   <a id="rbBottombarGenericNormalRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:10px;width:80px;left:42%;margin-right:20px;height:25px; border-radius:5px;text-decoration:none; font-size:{{rb.t.nr.btnFontSize}}px;     background-color:{{rb.t.cr.btnBgColor}};text-shadow: 0px -1px 0px #29588D;       color :{{rb.t.cr.btnColor}};text-align:center;border:1px solid #305580;padding-top:3px" href="{{rb.t.ul.btnLink}}"> {{rb.t.sg.btnLable}} </a>      <div id="rbBottombarGenericNormalRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">                  {{rb.t.sg.textRight}}     </div>    <div  style="display:inline; position:absolute;right:30px; bottom:5px;margin-left:20px;font-weight:bold;">                    <a id="rbBottombarGenericNormalRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none;color:#333" href="http://www.rulebot.com" >            ?            </a>     </div>    <div id="rbBottombarGenericNormalCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#333; bottom:5px;right:10px;font-weight:bold;" >     X    </div> </div>'
+rbT.rbTemplBottombarGenericNormalHTML='<!-- {{##Title##}}--><!-- {{##Timer##}}--><style>  .rbTextValue   {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     font-family: {{rb.t.ft.textFontfamily}};     font-weight:{{rb.t.sg.textFontWeight}};   }</style><div id="rbBottombarGenericNormalBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baseWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baseBgColor}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 2px -2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">   <div id="rbBottombarGenericNormalLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.textLeft}}     </div>   <a id="rbBottombarGenericNormalRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;width:80px;left:42%;margin-right:20px;height:25px; border-radius:5px;text-decoration:none; font-size:{{rb.t.nr.btnFontSize}}px;     background-color:{{rb.t.cr.btnBgColor}};text-shadow: 0px -1px 0px #29588D;       color :{{rb.t.cr.btnColor}};text-align:center;border:1px solid #305580;padding-top:3px;cursor:pointer;" href="{{rb.t.ul.btnLink}}"> {{rb.t.sg.btnLable}} </a>      <div id="rbBottombarGenericNormalRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">                  {{rb.t.sg.textRight}}     </div>    <div  style="display:inline; position:absolute;right:30px; bottom:5px;margin-left:20px;font-weight:bold;">                    <a id="rbBottombarGenericNormalRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none;color:#333" href="http://www.rulebot.com" >            ?            </a>     </div>    <div id="rbBottombarGenericNormalCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#333; bottom:5px;right:10px;font-weight:bold;cursor:pointer;" >     X    </div> </div>'
 
 
 
 /****************************[[./templates/topbars/rbTemplBottombarGenericTwittershare.js]]*************************************/ 
 
 
-rbT.rbTemplBottombarGenericTwittershareHTML='<style>.rbTextValue  {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     text-shadow: 1px 1px {{rb.t.cr.textShadow}};     font-family: {{rb.t.ft.textFontfamily}};     text-shadow: 0 -1px 0 #007AA6;     font-weight: bold;   }</style> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script><div id="rbBottombarGenericTwshareBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baeWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baeBgColor}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 2px -2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">      <div id="rbBottombarGenericTwshareLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.leftText}}     </div>       <div id="rbBottombarGenericTwshareRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;left:42%;margin-right:20px;border-radius:5px;">                      <a href="https://twitter.com/share?text={{rb.t.sg.twitterSharetext}}" class="twitter-share-button" data-count="none" data-lang="en" data-size="large">Tweet</a>       </div>       <div id="rbBottombarGenericTwshareRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:47%; width:40%;overflow:hidden;">                  {{rb.t.sg.rightText}}     </div>     <div  style="display:inline; position:absolute;bottom:5px;right:30px;margin-left:20px;font-weight:bold;">                    <a id="rbBottombarGenericTwshareRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none ;color:#FFFFFF; " href="http://www.rulebot.com"  >            ?            </a>       </div>    <div id="rbBottombarGenericTwshareCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; bottom:5px;right:10px;font-weight:bold;" >     X     </div> </div>'
+rbT.rbTemplBottombarGenericTwittershareHTML='<!-- {{##Title##}}--><!-- {{##Timer##}}--><style>.rbTextValue  {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     text-shadow: 1px 1px {{rb.t.cr.textShadow}};     font-family: {{rb.t.ft.textFontfamily}};     text-shadow: 0 -1px 0 #007AA6;     font-weight:{{rb.t.sg.textFontWeight}};   }</style> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script><div id="rbBottombarGenericTwittershareBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baeWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baeBgColor}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 2px -2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">      <div id="rbBottombarGenericTwittershareLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.leftText}}     </div>       <div id="rbBottombarGenericTwittershareRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;left:42%;margin-right:20px;border-radius:5px;cursor:pointer;">                      <a href="https://twitter.com/share?text={{rb.t.sg.twitterSharetext}}" class="twitter-share-button" data-count="none" data-lang="en" data-size="large">Tweet</a>       </div>       <div id="rbBottombarGenericTwittershareRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:47%; width:40%;overflow:hidden;">                  {{rb.t.sg.rightText}}     </div>     <div  style="display:inline; position:absolute;bottom:5px;right:30px;margin-left:20px;font-weight:bold;">                    <a id="rbBottombarGenericTwittershareRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none ;color:#FFFFFF; " href="http://www.rulebot.com"  >            ?            </a>       </div>    <div id="rbBottombarGenericTwittershareCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; bottom:5px;right:10px;font-weight:bold;cursor:pointer;" >     X     </div> </div>'
 
 
 
 /****************************[[./templates/topbars/rbTemplTopbarGenericFblike.js]]*************************************/ 
 
 
-rbT.rbTemplTopbarGenericFblikeHTML='<style>.rbTextValue   {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     font-family: {{rb.t.ft.textFontfamily}};     text-shadow : #1C2C4C 0px -1px 0px;     font-style: normal;     font-weight: bold;   }</style> <div id="fb-root"></div><script>(function(d, s, id) {  var js, fjs = d.getElementsByTagName(s)[0];  if (d.getElementById(id)) return;  js = d.createElement(s); js.id = id;  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";  fjs.parentNode.insertBefore(js, fjs);}(document, "script", "facebook-jssdk"));</script><div id="rbTopbarGenericFblikeBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baseWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baseBgColor}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 2px 2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">    <div id="rbTopbarGenericFblikeLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.textLeft}}     </div>             <div id="rbTopbarGenericFblikeRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:10px;width:80px;left:42%;margin-right:20px;height:25px;background-color:#FFFFFF;border-radius:5px;">                      <div class="fb-like" data-href="{{rb.t.ul.facebookPage=%%http://www.google.com}}" data-send="false" data-layout="button_count" data-width="250px" data-show-faces="false" data-font="arial"></div>          </div>         <div id="rbBottombarGenericFblikeRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">                  {{rb.t.sg.textRight}}     </div>   <div  style="display:inline; position:absolute;top:5px;right:30px;margin-left:20px;color:#FFFFFF;font-weight:bold;">                    <a id="rbTopbarGenericFblikeRoiHelp" class="rbClickable" style= "text-decoration:none;color:#FFFFFF;" href="http://www.rulebot.com"  >            ?            </a>       </div>   <div id="rbTopbarGenericFblikeCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; top:5px;right:10px;font-weight:bold;" >     X   </div>     </div>'
+rbT.rbTemplTopbarGenericFblikeHTML='<!-- {{##Title##}}--><!-- {{##Timer##}}--><style>.rbTextValue   {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     font-family: {{rb.t.ft.textFontfamily}};     text-shadow : #1C2C4C 0px -1px 0px;     font-style: normal;     font-weight:{{rb.t.sg.textFontWeight}};   }</style> <div id="fb-root"></div><script>(function(d, s, id) {  var js, fjs = d.getElementsByTagName(s)[0];  if (d.getElementById(id)) return;  js = d.createElement(s); js.id = id;  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";  fjs.parentNode.insertBefore(js, fjs);}(document, "script", "facebook-jssdk"));</script><div id="rbTopbarGenericFblikeBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baseWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baseBgColor}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 2px 2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">    <div id="rbTopbarGenericFblikeLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.textLeft}}     </div>             <div id="rbTopbarGenericFblikeRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:10px;width:80px;left:42%;margin-right:20px;height:25px;background-color:#FFFFFF;border-radius:5px;cursor:pointer;">                      <div class="fb-like" data-href="{{rb.t.ul.facebookPage}}" data-send="false" data-layout="button_count" data-width="250px" data-show-faces="false" data-font="arial"></div>          </div>         <div id="rbBottombarGenericFblikeRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">                  {{rb.t.sg.textRight}}     </div>   <div  style="display:inline; position:absolute;top:5px;right:30px;margin-left:20px;color:#FFFFFF;font-weight:bold;">                    <a id="rbTopbarGenericFblikeRoiHelp" class="rbClickable" style= "text-decoration:none;color:#FFFFFF;" href="http://www.rulebot.com"  >            ?            </a>       </div>   <div id="rbTopbarGenericFblikeCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; top:5px;right:10px;font-weight:bold;cursor:pointer;" >     X   </div>     </div>'
 
 
 
 /****************************[[./templates/topbars/rbTemplTopbarGenericTwitterfollow.js]]*************************************/ 
 
 
-rbT.rbTemplTopbarGenericTwitterfollowHTML='<style>.rbTextValue  {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     text-shadow: 1px 1px {{rb.t.cr.textShadow}};     font-family: {{rb.t.ft.textFontfamily}};     text-shadow: 0 -1px 0 #007AA6;     font-weight: bold;   }</style> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script><div id="rbTopbarGenericTwfollowBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baeWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baeBgColor}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 2px 2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">          <div id="rbTopbarGenericTwfollowLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.textLeft}}     </div>           <div id="rbTopbarGenericTwfollowRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;left:42%;margin-right:20px;">                        <a  data-show-count="false" data-button = "blue" class="twitter-follow-button" href="https://twitter.com/{{rb.t.sg.twitterAccount}}" data-size="large">Follow {{rb.t.sg.twitterAccount}} </a>       </div>           <div id="rbTopbarGenericTwfollowRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:52%; width:40%;overflow:hidden;">                  {{rb.t.sg.textRight}}     </div>   <div style="display:inline; position:absolute;top:5px;right:30px;margin-left:20px;font-weight:bold;">                    <a id="rbTopbarGenericTwfollowRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none ;color:#FFFFFF; " href="http://www.rulebot.com"  >            ?            </a>       </div>  <div id="rbTopbarGenericTwfollowCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; top:5px;right:10px;font-weight:bold;" >     X  </div> </div>'
+rbT.rbTemplTopbarGenericTwitterfollowHTML='<!-- {{##Title##}}--><!-- {{##Timer##}}--><style>.rbTextValue  {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     text-shadow: 1px 1px {{rb.t.cr.textShadow}};     font-family: {{rb.t.ft.textFontfamily}};     text-shadow: 0 -1px 0 #007AA6;     font-weight:{{rb.t.sg.textFontWeight}};   }</style> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script><div id="rbTopbarGenericTwitterfollowBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baeWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baeBgColor}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 2px 2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">          <div id="rbTopbarGenericTwitterfollowLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.textLeft}}     </div>           <div id="rbTopbarGenericTwitterfollowRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;left:42%;margin-right:20px;cursor:pointer;">                        <a  data-show-count="false" data-button = "blue" class="twitter-follow-button" href="https://twitter.com/{{rb.t.sg.twitterAccountLink}}" data-size="large">Follow {{rb.t.sg.twitterAccountLable}} </a>       </div>           <div id="rbTopbarGenericTwitterfollowRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:52%; width:40%;overflow:hidden;">                  {{rb.t.sg.textRight}}     </div>   <div style="display:inline; position:absolute;top:5px;right:30px;margin-left:20px;font-weight:bold;">                    <a id="rbTopbarGenericTwitterfollowRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none ;color:#FFFFFF; " href="http://www.rulebot.com"  >            ?            </a>       </div>  <div id="rbTopbarGenericTwitterfollowCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; top:5px;right:10px;font-weight:bold;cursor:pointer;" >     X  </div> </div>'
 
 
 
 /****************************[[./templates/topbars/rbTemplTopbarGenericNormal.js]]*************************************/ 
 
 
-rbT.rbTemplTopbarGenericNormalHTML='<style>  .rbTextValue   {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     font-family: {{rb.t.ft.textFontfamily}};     font-weight: bold;   }</style><div id="rbTopbarGenericNormalBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baseWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baseBgColor}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 2px 2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">  <div id="rbTopbarGenericNormalLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.textLeft}}  </div>    <a id="rbTopbarGenericNormalRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;width:80px;left:42%;margin-right:20px;height:25px; border-radius:5px;text-decoration:none; font-size:{{rb.t.nr.btnFontSize}}px; background-color:{{rb.t.cr.btnBgColor}};text-shadow: 0px -1px 0px #29588D;   color :{{rb.t.cr.btnColor}};text-align:center;border:1px solid #305580; padding-top:3px;" href="{{rb.t.ul.btnLink}}"> {{rb.t.sg.btnLable}} </a>    <div id="rbTopbarGenericNormalRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">                  {{rb.t.sg.textRight}}    </div>           <div  style="display:inline; position:absolute;right:30px; top:5px;margin-left:20px;font-weight:bold;">                    <a id="rbTopbarGenericNormalRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none;color:#333" href="http://www.rulebot.com"  >            ?            </a>     </div><div id="rbTopbarGenericNormalCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#333; top:5px;right:10px;font-weight:bold;" >     X</div> </div>'
+rbT.rbTemplTopbarGenericNormalHTML='<!-- {{##Title##}}--><!-- {{##Timer##}}--><style>  .rbTextValue   {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     font-family: {{rb.t.ft.textFontfamily}};     font-weight:{{rb.t.sg.textFontWeight}};   }</style><div id="rbTopbarGenericNormalBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baseWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baseBgColor}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 2px 2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">  <div id="rbTopbarGenericNormalLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.textLeft}}  </div>    <a id="rbTopbarGenericNormalRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;width:80px;left:42%;margin-right:20px;height:25px; border-radius:5px;text-decoration:none; font-size:{{rb.t.nr.btnFontSize}}px; background-color:{{rb.t.cr.btnBgColor}};text-shadow: 0px -1px 0px #29588D;   color :{{rb.t.cr.btnColor}};text-align:center;border:1px solid #305580; padding-top:3px;cursor:pointer;" href="{{rb.t.ul.btnLink}}"> {{rb.t.sg.btnLable}} </a>    <div id="rbTopbarGenericNormalRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">                  {{rb.t.sg.textRight}}    </div>           <div  style="display:inline; position:absolute;right:30px; top:5px;margin-left:20px;font-weight:bold;">                    <a id="rbTopbarGenericNormalRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none;color:#333" href="http://www.rulebot.com"  >            ?            </a>     </div><div id="rbTopbarGenericNormalCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#333; top:5px;right:10px;font-weight:bold;cursor:pointer;" >     X</div> </div>'
 
 
 
 /****************************[[./templates/topbars/rbTemplTopbarGenericTwittershare.js]]*************************************/ 
 
 
-rbT.rbTemplTopbarGenericTwittershareHTML='<style>.rbTextValue  {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     text-shadow: 1px 1px {{rb.t.cr.textShadow}};     font-family: {{rb.t.ft.textFontfamily}};     text-shadow: 0 -1px 0 #007AA6;     font-weight: bold;   }</style> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script><div id="rbTopbarGenericTwshareBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baeWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baeBgColor}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 2px 2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">        <div id="rbTopbarGenericTwshareLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.leftText}}  </div>   <div id="rbTopbarGenericTwshareRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;left:42%;margin-right:20px;border-radius:5px;">                      <a href="https://twitter.com/share?text={{rb.t.sg.twitterSharetext}}" class="twitter-share-button" data-count="none" data-lang="en" data-size="large">Tweet</a>       </div>     <div id="rbBottombarGenericTwshareRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:47%; width:40%;overflow:hidden;">                  {{rb.t.sg.rightText}}  </div>       <div  style="display:inline; position:absolute;top:5px;right:30px;margin-left:20px;font-weight:bold;">                    <a id="rbTopbarGenericTwshareRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none ;color:#FFFFFF; " href="http://www.rulebot.com"  >            ?            </a>       </div>    <div id="rbTopbarGenericTwshareCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; top:5px;right:10px;font-weight:bold;" >     X     </div> </div>'
+rbT.rbTemplTopbarGenericTwittershareHTML='<!-- {{##Title##}}--><!-- {{##Timer##}}--><style>.rbTextValue  {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     text-shadow: 1px 1px {{rb.t.cr.textShadow}};     font-family: {{rb.t.ft.textFontfamily}};     text-shadow: 0 -1px 0 #007AA6;     font-weight:{{rb.t.sg.textFontWeight}};   }</style> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script><div id="rbTopbarGenericTwittershareBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baeWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baeBgColor}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 2px 2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">        <div id="rbTopbarGenericTwittershareLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.sg.leftText}}  </div>   <div id="rbTopbarGenericTwittershareRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;left:42%;margin-right:20px;border-radius:5px;cursor:pointer;">                      <a href="https://twitter.com/share?text={{rb.t.sg.twitterSharetext}}" class="twitter-share-button" data-count="none" data-lang="en" data-size="large">Tweet</a>       </div>     <div id="rbBottombarGenericTwittershareRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:47%; width:40%;overflow:hidden;">                  {{rb.t.sg.rightText}}  </div>       <div  style="display:inline; position:absolute;top:5px;right:30px;margin-left:20px;font-weight:bold;">                    <a id="rbTopbarGenericTwittershareRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none ;color:#FFFFFF; " href="http://www.rulebot.com"  >            ?            </a>       </div>    <div id="rbTopbarGenericTwittershareCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; top:5px;right:10px;font-weight:bold;cursor:pointer;cursor:pointer;" >     X     </div> </div>'
 
 
 
 /****************************[[./templates/topbars/rbTemplChatGenericNormal.js]]*************************************/ 
 
 
-rbT.rbTemplChatGenericNormalHTML='<script data-cfasync="false" type=\'text/javascript\'>window.olark||(function(c){var f=window,d=document,l=f.location.protocol=="https:"?"https:":"http:",z=c.name,r="load";var nt=function(){f[z]=function(){(a.s=a.s||[]).push(arguments)};var a=f[z]._={},q=c.methods.length;while(q--){(function(n){f[z][n]=function(){f[z]("call",n,arguments)}})(c.methods[q])}a.l=c.loader;a.i=nt;a.p={0:+new Date};a.P=function(u){a.p[u]=new Date-a.p[0]};function s(){a.P(r);f[z](r)}f.addEventListener?f.addEventListener(r,s,false):f.attachEvent("on"+r,s);var ld=function(){function p(hd){hd="head";return["<",hd,"></",hd,"><",i,\' onl\' + \'oad="var d=\',g,";d.getElementsByTagName(\'head\')[0].",j,"(d.",h,"(\'script\')).",k,"=\'",l,"//",a.l,"\'",\'"\',"></",i,">"].join("")}var i="body",m=d[i];if(!m){return setTimeout(ld,100)}a.P(1);var j="appendChild",h="createElement",k="src",n=d[h]("div"),v=n[j](d[h](z)),b=d[h]("iframe"),g="document",e="domain",o;n.style.display="none";m.insertBefore(n,m.firstChild).id=z;b.frameBorder="0";b.id=z+"-loader";if(/MSIE[ ]+6/.test(navigator.userAgent)){b.src="javascript:false"}b.allowTransparency="true";v[j](b);try{b.contentWindow[g].open()}catch(w){c[e]=d[e];o="javascript:var d="+g+".open();d.domain=\'"+d.domain+"\';";b[k]=o+"void(0);"}try{var t=b.contentWindow[g];t.write(p());t.close()}catch(x){b[k]=o+\'d.write("\'+p().replace(/"/g,String.fromCharCode(92)+\'"\')+\'");d.close();\'}a.P(2)};ld()};nt()})({loader: "static.olark.com/jsclient/loader0.js",name:"olark",methods:["configure","extend","declare","identify"]});olark.identify({{rb.t.sg.olarkIdentity}});</script><noscript><a href="https://www.olark.com/site/{{rb.t.sg.olarkIdentity}}/contact" title="Contact us" target="_blank">Questions? Feedback?</a> powered by <a href="http://www.olark.com?welcome" title="Olark live chat software">Olark live chat software</a></noscript>'
+rbT.rbTemplChatGenericNormalHTML='<!-- {{##Title##}}--><!-- {{##Timer##}}--><div id="rbChatGenericNormalBaseContainer"><script data-cfasync="false" type=\'text/javascript\'>window.olark||(function(c){var f=window,d=document,l=f.location.protocol=="https:"?"https:":"http:",z=c.name,r="load";var nt=function(){f[z]=function(){(a.s=a.s||[]).push(arguments)};var a=f[z]._={},q=c.methods.length;while(q--){(function(n){f[z][n]=function(){f[z]("call",n,arguments)}})(c.methods[q])}a.l=c.loader;a.i=nt;a.p={0:+new Date};a.P=function(u){a.p[u]=new Date-a.p[0]};function s(){a.P(r);f[z](r)}f.addEventListener?f.addEventListener(r,s,false):f.attachEvent("on"+r,s);var ld=function(){function p(hd){hd="head";return["<",hd,"></",hd,"><",i,\' onl\' + \'oad="var d=\',g,";d.getElementsByTagName(\'head\')[0].",j,"(d.",h,"(\'script\')).",k,"=\'",l,"//",a.l,"\'",\'"\',"></",i,">"].join("")}var i="body",m=d[i];if(!m){return setTimeout(ld,100)}a.P(1);var j="appendChild",h="createElement",k="src",n=d[h]("div"),v=n[j](d[h](z)),b=d[h]("iframe"),g="document",e="domain",o;n.style.display="none";m.insertBefore(n,m.firstChild).id=z;b.frameBorder="0";b.id=z+"-loader";if(/MSIE[ ]+6/.test(navigator.userAgent)){b.src="javascript:false"}b.allowTransparency="true";v[j](b);try{b.contentWindow[g].open()}catch(w){c[e]=d[e];o="javascript:var d="+g+".open();d.domain=\'"+d.domain+"\';";b[k]=o+"void(0);"}try{var t=b.contentWindow[g];t.write(p());t.close()}catch(x){b[k]=o+\'d.write("\'+p().replace(/"/g,String.fromCharCode(92)+\'"\')+\'");d.close();\'}a.P(2)};ld()};nt()})({loader: "static.olark.com/jsclient/loader0.js",name:"olark",methods:["configure","extend","declare","identify"]});olark.identify({{rb.t.sg.olarkIdentity}});olark.configure(\'box.width\', 200);olark.configure(\'box.height\', 100);</script></div>'
 
 
 
 /****************************[[./templates/topbars/rbTemplModalGenericNormal.js]]*************************************/ 
 
 
-rbT.rbTemplModalGenericNormalHTML='<style>#rbModalGenericNormalTranblockContainer {          visibility: visible;         position: fixed;          left: 0px;          top: 0px;           width:100%;           height:100%;       background-color:black;          z-index:{{rb.f.nr.transBlockZindex}};      opacity:0.6;      filter:alpha(opacity=60);}#rbModalGenericNormalBaseContainer{          visibility: visible;         position: fixed;          left: 0px;          top: 0px;           width:100%;           height:100%;      z-index:{{rb.f.nr.baseZindex}}; }#rbModalGenericNormalSubsubContainer        {                 width:500px; 	           height: 300px;             background-color:{{rb.t.cr.baseBgColor}};               border:4px solid #a3a3a3;                position: fixed;             border-radius:5px;             top : 30%;             left : 30%;        }  </style><div id="rbModalGenericNormalTranblockContainer"></div> <div id="rbModalGenericNormalBaseContainer">		<div id="rbModalGenericNormalSubContainer">		<div id="rbModalGenericNormalSubsubContainer"  style="postion:relative;">                                 <div style="top:0px;width:100%;height:18%;left:0px;background-color:{{rb.t.cr.headingBgColor}};">           <div style="top:0%;left:0 %;position:absolute;color:{{rb.t.cr.modalHeadingColor}};width:70%; height:14%;font-size:{{rb.t.nr.modalHeadingFontsize}}px;font-family:{{rb.t.ft.headingFontfamily}}; overflow:hidden;border-top-left-radius:5px;border-top-right-radius:5px;padding:5px;text-shadow:1px 1px {{rb.t.cr.modalHeadingTextShadow#6e6e6e}};">               {{rb.t.sg.modalHeadingText}}           </div>          <div id="rbModalGenericNormalCloseClick" class="rbClickable"  style="top:1%;right:1%;position:absolute;color:black;font-weight:bold; padding:2px;">            X          </div>            </div>           	<div style="top:22%;left:0%;position:absolute;color:{{rb.t.cr.modalTextColor}};width:70%;height:65%;overflow:hidden;font-size:{{rb.t.nr.modalTextFontsize}}px;font-family:{{rb.t.ft.textFontfamily}};text-align:left;border-bottom-left-radius:5px;border-bottom-right-radius:5px;padding:5px;">           	    {{rb.t.sg.modalText}}                         	 </div>             <div style="top:30%;right:5%;width:15%;height:20%;position:absolute;overflow:hidden">              <img src="{{rb.t.sg.modalImgPath}}" alt="image"\>             </div> 			               <button   style="bottom:2%;right:2%;position:absolute;color:white;width:75px;height:25px;text-align:center;background-color:{{rb.t.cr.buttonBgColor}};border-radius:5px;padding-top:2px;border:1px solid #305580 ;font-weight: bold;">               <a  id="rbModalGenericNormalRoiButton" class="rbClickable" style="text-decoration:none;color:white;" href= "{{rb.t.ul.modalBtnLink}}" target="_self" class="rbClickable" >                {{rb.t.sg.modalBtnLable}}               </a>             </button>	      </div>	</div></div>'
+rbT.rbTemplModalGenericNormalHTML='<!-- {{##Title##}}--><!-- {{##Timer##}}--><style>#rbModalGenericNormalTranblockContainer {          visibility: visible;         position: fixed;          left: 0px;          top: 0px;           width:100%;           height:100%;       background-color:black;          z-index:{{rb.f.nr.transBlockZindex}};      opacity:0.6;      filter:alpha(opacity=60);}#rbModalGenericNormalBaseContainer{          visibility: visible;         position: fixed;          left: 0px;          top: 0px;           width:100%;           height:100%;      z-index:{{rb.f.nr.baseZindex}}; }#rbModalGenericNormalSubsubContainer        {                 width:500px; 	           height: 300px;             background-color:{{rb.t.cr.baseBgColor}};               border:4px solid #a3a3a3;                position: fixed;             border-radius:5px;             top : 30%;             left : 30%;        }  </style><div id="rbModalGenericNormalTranblockContainer"></div> <div id="rbModalGenericNormalBaseContainer">		<div id="rbModalGenericNormalSubContainer">		<div id="rbModalGenericNormalSubsubContainer"  style="postion:relative;">                                 <div style="top:0px;width:100%;height:18%;left:0px;background-color:{{rb.t.cr.headingBgColor}};">           <div style="top:0%;left:0 %;position:absolute;color:{{rb.t.cr.modalHeadingColor}};width:70%; height:14%;font-size:{{rb.t.nr.modalHeadingFontsize}}px;font-family:{{rb.t.ft.headingFontfamily}}; overflow:hidden;border-top-left-radius:5px;border-top-right-radius:5px;padding:5px;text-shadow:1px 1px {{rb.t.cr.modalHeadingTextShadow}};">               {{rb.t.sg.modalHeadingText}}           </div>          <div id="rbModalGenericNormalCloseClick" class="rbClickable"  style="top:1%;right:1%;position:absolute;color:black;font-weight:bold; padding:2px;cursor:pointer;">            X          </div>            </div>           	<div style="top:22%;left:0%;position:absolute;color:{{rb.t.cr.modalTextColor}};width:70%;height:65%;overflow:hidden;font-size:{{rb.t.nr.modalTextFontsize}}px;font-family:{{rb.t.ft.textFontfamily}};text-align:left;border-bottom-left-radius:5px;border-bottom-right-radius:5px;padding:5px;">           	    {{rb.t.sg.modalText}}                         	 </div>             <div style="top:30%;right:5%;width:15%;height:20%;position:absolute;overflow:hidden">              <img src="{{rb.t.sg.modalImgPath}}" alt="image"\>             </div> 			               <button   style="bottom:2%;right:2%;position:absolute;color:white;width:75px;height:25px;text-align:center;background-color:{{rb.t.cr.buttonBgColor}};border-radius:5px;padding-top:2px;border:1px solid #305580 ;font-weight: bold;cursor:pointer;">               <a  id="rbModalGenericNormalRoiButton" class="rbClickable" style="text-decoration:none;color:white;" href= "{{rb.t.ul.modalBtnLink}}" target="_self" class="rbClickable" >                {{rb.t.sg.modalBtnLable}}               </a>             </button>	      </div>	</div></div>'
+
+
+
+/****************************[[./templates/topbars/rbTemplUservoiceGenericNormal.js]]*************************************/ 
+
+
+rbT.rbTemplUservoiceGenericNormalHTML='<!-- {{##Title##}}--><!-- {{##Timer##}}--><div id="rbUservoiceGenericNormalBaseContainer">	<script>  var uvOptions = {};  (function() {    var uv = document.createElement(\'script\'); uv.type = \'text/javascript\'; uv.async = true;    uv.src = (\'https:\' == document.location.protocol ? \'https://\' : \'http://\') + \'widget.uservoice.com/QteXP0WAzCiaFH1O2obGg.js\';    var s = document.getElementsByTagName(\'script\')[0]; s.parentNode.insertBefore(uv, s);   })();</script></div>'
 
 
 
@@ -2842,7 +3046,8 @@ rbT.rbTemplModalGenericNormalHTML='<style>#rbModalGenericNormalTranblockContaine
 //templ related timers
 
 rbT.templTimers= {
- 'rbT.templ.displaytimer':'false',
+ 'templ.displaytimer':'false',
+ 'templ.templduration':'100'
 
 };
 
@@ -2854,7 +3059,7 @@ rbT.templatesDisplayLockFlags = {
     'rbT.bottombar.displayLock':'false',
     'rbT.modal.displayLock' :'false',
     'rbT.chat.displayLock' :'false',
-    'rbT.feedback.displayLock' :'false',
+    'rbT.uservoice.displayLock' :'false',
 
 
 };
@@ -3008,7 +3213,15 @@ rbT.sendEventToRBServer = function(){
 
 rbT.sendErrorToRBServer = function(string){
 
-  //TODO: Implement post to server
+  
+/*
+
+ rbTAPP.reportError({"message":string,"server":true});
+
+
+*/
+
+  //TODO: Implement post to server // for console log=true
   console.log(string);
 };
 
@@ -3075,7 +3288,6 @@ rbT.eventHandler = {
 
 		var id = evt.target.id;
 
-		console.log(id);
 
 		var ele = document.getElementById(id);
 
@@ -3119,7 +3331,8 @@ rbT.eventHandler = {
   timeOutHandler : function (tempalteName , timerValue)
 	{
 
-       rbT.templTimer['rbT.templ.displaytimer'] = setInterval(function(){rbT.eventHandler.timerDeleteTempl
+
+       rbT.templTimers['templ.displaytimer'] = setInterval(function(){rbT.eventHandler.timerDeleteTempl
        (tempalteName)},timerValue); 
        
   },
@@ -3130,8 +3343,25 @@ rbT.eventHandler = {
 
        var tempMatch = tempalteName.match(/[a-z]*/g);
 
-       id = "rb" + rbT.makeFirstLetterCapital(tempMatch[0])+rbT.makeFirstLetterCapital(tempMatch[2])+
-            rbT.makeFirstLetterCapital(tempMatch[4])+"BaseContainer";
+ 
+       
+      if(tempMatch[0] != 'modal' )
+       { 
+           id = "rb" + rbT.makeFirstLetterCapital(tempMatch[0])+rbT.makeFirstLetterCapital(tempMatch[2])+rbT.makeFirstLetterCapital(tempMatch[4])+"BaseContainer";
+       }     
+
+
+     else if(tempMatch[0] == 'modal')
+     {
+
+         var id = "rb" + rbT.makeFirstLetterCapital(tempMatch[0])+rbT.makeFirstLetterCapital(tempMatch[2])+rbT.makeFirstLetterCapital(tempMatch[4])+"BaseContainer";
+         var transId = "rb" + rbT.makeFirstLetterCapital(tempMatch[0])+rbT.makeFirstLetterCapital(tempMatch[2])+rbT.makeFirstLetterCapital(tempMatch[4])+"TranblockContainer";
+         var transBase = document.getElementById(transId);
+         if(transBase != 'undefined')
+         transBase.parentNode.removeChild(transBase);
+     } 
+     
+       
         
         rbT.setTemplatesDisplayLockFlags(tempMatch[0],false);
         
@@ -3146,7 +3376,7 @@ rbT.eventHandler = {
          else
          {
             Base.parentNode.removeChild(Base);
-            clearInterval(rbT.templTimer['rbT.templ.displaytimer']);
+            clearInterval(rbT.templTimers['templ.displaytimer']);
 
          }	
 
@@ -3157,10 +3387,11 @@ rbT.eventHandler = {
 
    closeTempl:function(idMatch){
 
+      if(rbT.templTimers['templ.displaytimer'])
+      {
+          clearInterval(rbT.templTimers['templ.displaytimer']);
 
-      
-     console.log(idMatch);
-
+      }
       if(idMatch[0] == 'Topbar' || idMatch[0] == 'Bottombar' )
 
      {   
@@ -3204,7 +3435,11 @@ rbT.eventHandler = {
     var link = evt.target.href;
     window.open(link);
 
-    //TODO
+/*
+         //rbTServerChannel.roi(JSON);
+        //TODO
+
+*/
 
   },  
  
@@ -3242,7 +3477,6 @@ rbT.getTemplateHTMLByNameInternal = function(name){
   
 			var html = rbT[rbT.templateLib[name]];
 
-			console.log(html);
 
             return html;
 		}else{
@@ -3256,12 +3490,20 @@ rbT.getTemplateHTMLByNameInternal = function(name){
 rbT.getTemplateApplyVarsInternal = function(html,vars){
 	//TODO: check instanceOf
 	if(html.length){
-		for (var i =0; i<vars.length; i++) {
-			var value = vars[i]; 
-			var tempVarToBeReplaced = value.key
-            var replaceKey = rbT.keyPrefix + tempVarToBeReplaced + rbT.keySuffix;
-			html = html.replace(replaceKey, value.value);
-		}
+		for (var key in vars) {
+		
+		if(vars.hasOwnProperty(key))
+		{	
+			var value = vars[key] ; 
+			
+			if( key != 'rb.t.nr.templDuration')
+            {
+			  var tempVarToBeReplaced = key;
+              var replaceKey = rbT.keyPrefix + tempVarToBeReplaced + rbT.keySuffix;
+			  html = html.replace(replaceKey, value);
+			} 
+		}	
+	  }
 		return html;	
 	}else{
 	 rbT.sendErrorToRBServer("Bad variable array error for template");
@@ -3317,7 +3559,10 @@ rbT.enableTimeOutHadnlingInternal= function(templateName,timerValue){
 //*************************************************************************************
 rbT.invokeActionScriptInternal=function(action,actionParams){
 
+/*
+
       //TODO get the OS version here based on that action display
+*/      
 
       rbT.init();
       
@@ -3339,39 +3584,61 @@ rbT.invokeActionScriptInternal=function(action,actionParams){
           
           if(pos =='modal')
           {
-               for (var i =0;i<actionParams.length;i++) {
-			    var value = actionParams[i]; 
-			    if( 'rb.f.nr.transBlockZindex' == value.key)
-			    {
-				  value.value =  rbT.findZIndex();
-			    }
-			    else if( 'rb.f.nr.baseZindex' == value.key)
-			    {
-				  value.value =  rbT.findZIndex()+5;
-			    }
+               for (var key in actionParams) {
+
+               	if(actionParams.hasOwnProperty(key))
+               	{
+			         if( 'rb.f.nr.transBlockZindex' == key)
+			       {
+				       actionParams[key] =  rbT.findZIndex();
+			       }
+
+			       else if( 'rb.f.nr.baseZindex' == key)
+			       {
+				      actionParams[key]  =  rbT.findZIndex()+5;
+			       }
+
+			       else if( 'rb.t.nr.durationOfDisplay'== key)
+			       {
+                      rbT.templTimers['templ.templduration']= actionParams[key] ;
+			       }
              
 		       }
+		     }  
          }
           else{
                 
-           for (var j =0;j<actionParams.length;j++) {
-			    var value = actionParams[j]; 
-			   if( 'rb.f.nr.baseZindex' == value.key)
+           for (var key in actionParams) {
+             if(actionParams.hasOwnProperty(key))
+			  {	
+			  if( 'rb.f.nr.baseZindex' == key)
 			  {
-				value.value =  rbT.findZIndex()+5;
+				actionParams[key] =  rbT.findZIndex()+5;
 			  }
+			  else if( 'rb.t.nr.durationOfDisplay'== key)
+              {
+                   rbT.templTimers['templ.templduration']= actionParams[key] ;
+			  }
+
+			 } 
              
 		    } 
 		  }        
 
+		  console.log(html);
+
+		   console.log("\n\n\n\n\n");
+
+
+
           html = rbT.getTemplateApplyVars(html, actionParams);
-  
-         console.log(html);
+          
+          console.log(html);
 
          if (rbT.isTemplateGoodToApply(html)){
            rbT.applyHtmltoPage(html);
            rbT.enableClickHandling();
-           //rbT.enableTimeOutHadnling('topbar.generic.normal',10000);
+           rbT.enableTimeOutHadnling(templateName,rbT.templTimers['templ.templduration']*1000);
 		   rbT.setTemplatesDisplayLockFlags(pos,true);
 
 

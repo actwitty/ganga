@@ -1,3 +1,5 @@
+require 'get_type'
+
 module Utility
   class FormatHash
     # NOTE => Returns serialize for hash mapping to type 
@@ -41,7 +43,7 @@ module Utility
         else
           # process terminal element
           if params[:serialize_to] == "type"
-            schema[e[1][:path]] = "#{e[0].values[0].class}"
+            schema[e[1][:path]] = GetType.get_type(e[0].values[0]) #"#{eval(e[0].values[0]).class}"
           elsif params[:serialize_to] == "value"
             schema[e[1][:path]]= e[0].values[0]
           else

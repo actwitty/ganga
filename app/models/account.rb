@@ -74,20 +74,51 @@ class Account
 
   # INPUT
   ## {  
-  ##    :account_id => "1212121212"      [MANDATORY]
-  ##    :events => true or false         [OPTIONAL] # events 
+  ##    account_id: "1212121212"      [MANDATORY]
+  ##    events: true or false         [OPTIONAL] # events 
+  ##    conversions: true or false    [OPTIONAL] # conversion
+  ##    errors: true or false         [OPTIONAL] # errors
+  ##    actors: true or false         [OPTIONAL] # actors
   ## }
 
   # OUTPUT =>{ 
   ##            account: {id: "445654654645", name: "Sudhanshu & Sons Chaddhi Wale", description: {subscription: "Free", authenticate_app: false}},
   ##            events: [
   ##                      {
-  ##                        app: {id: "343433433", description: {"name": "my app", "domain": "http://myapp.com"}, }
-  ##                        actor: {id: "3433434", description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}} }          
   ##                        name: "sign_in", 
   ##                        properties: [{"k" => "name", "v" => "alok"}, {"k" => "address[city]", "v" => "Bangalore"}]
+  ##                        app_id: "343433433",
+  ##                        actor_id: "3434334"
   ##                        time: 2009-02-19 00:00:00 UTC
   ##                      },
+  ##                      {..}
+  ##                    ],
+  ##            conversions: [
+  ##                            {
+  ##                              id: "32323424355",
+  ##                              properties: [{"k" => "button", "v" => "clicked"}, {"k" => "times", "v" => "40"}],
+  ##                              app_id: "343433433",
+  ##                              actor_id: "3433434",
+  ##                              time: 2009-02-19 23:00:00 UTC
+  ##                            },
+  ##                            {...}
+  ##                         ],
+  ##            errors: [
+  ##                       {
+  ##                          id: "3232342434",
+  ##                          properties: [{"k" => "name", "v" => "Javascript Error"}, {"k" => "reason", "v" => "dont know"}]
+  ##                          app_id: "343433433",
+  ##                          actor_id: "3433434",
+  ##                          time: 2009-02-19 21:00:00 UTC
+  ##                       },
+  ##                       {...}
+  ##                    ],
+  ##            actors: [
+  ##                      {
+  ##                        id: "3433434", 
+  ##                        description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}},
+  ##                        time: 2009-02-19 21:00:00 UTC
+  ##                      }
   ##                      {..}
   ##                    ]
   ##        }
@@ -95,7 +126,7 @@ class Account
 
     Rails.logger.info("Enter Account Read")
 
-    hash = {events: []}
+    hash = {events: [], actors: [], conversions: [], errors: []}
 
     if params[:account_id].blank? 
       raise et("account.invalid_argument_in_read")
@@ -108,14 +139,33 @@ class Account
     hash[:account] = {id: account._id, description: account.description}
 
     if params[:events] == true
-      events = Event.includes(:actor, :app).where( account_id: params[:account_id], meta: false ).limit(AppConstants.limit_events).desc(:_id)
+      events = Event.where( account_id: params[:account_id], meta: false ).limit(AppConstants.limit_events).desc(:_id)
       events.each do |attr|
         hash[:events] << {
-                          app: {id: attr.app_id, description: attr.app.description},
-                          actor: {id: attr.actor_id, description: attr.actor.description}, 
-                          name: attr.name, properties: attr.properties, time: attr.created_at
+                          name: attr.name, properties: attr.properties, app_id: attr.app_id, actor_id: attr.actor_id, time: attr.created_at
                          }
       end
+      Rails.logger.info("Adding Events")
+    end
+
+    if params[:conversions] == true
+      conversions = Conversion.where(account_id: account._id).limit(AppConstants.limit_conversions).desc(:_id)
+      conversions.each {|attr| hash[:conversions] << {id: attr._id, properties: attr.properties, app_id: attr.app_id, actor_id: attr.actor_id, time: attr.created_at}}
+      Rails.logger.info("Adding Conversions")
+    end
+
+    if params[:errors] == true
+      errors = Err.where(account_id: account._id).limit(AppConstants.limit_errors).desc(:_id)
+      errors.each {|attr| hash[:errors] << {id: attr._id, properties: attr.properties, app_id: attr.app_id,  actor_id: attr.actor_id, time: attr.created_at}}
+      Rails.logger.info("Adding Errors")
+    end
+
+    if params[:actors] == true
+      actors = Actor.where(account_id: account._id).limit(AppConstants.limit_actors).desc(:_id)
+      actors.each do |attr|
+        hash[:actors] << {id: attr._id, description: attr.description, time: attr.created_at}  if attr.meta == false                      
+      end
+      Rails.logger.info("Adding Actors")
     end
 
     {:return => hash, :error => nil}  

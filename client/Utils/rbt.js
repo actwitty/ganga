@@ -5,19 +5,16 @@
 
 
 var rbTAPP = {
-    
-
     /* Main configs will be holded here */
     configs : {
       "status" : false
     },
-
     
     /** 
     *  Do following tasks on initialization of the app
     *  1). include jQuery if need be
     *  2). create session.
-    *  3). fetch rules.
+    *  3). fetch configs.
     *  4). check status of last event, if pending, execute it.
     *  5). fetch system properties if cache miss
     *  6). Allow Business to make calls
@@ -33,8 +30,11 @@ var rbTAPP = {
       // 2). Create session Deferred till further discussion
       //rbTAPP.createSession();
 
-      // 3). Initialize rulebot rules
-      rbTRules.init();
+      // 3). Get rulebot app details
+      //rbTRules.init();
+      this.getAppData();
+
+      rbTActor.retFromCookie();
 
       // 4). Initialize system variables  
       rbTSystemVar.init();
@@ -42,7 +42,8 @@ var rbTAPP = {
       // 5). FIXME : Check status of last event, if pending, execute it.
       //rbTRules.executeLastPendingEvent();
 
-      window.rb = new RBT();
+      //rbTServerChannel.flushReqQueue();
+
     },
 
     /**
@@ -52,19 +53,9 @@ var rbTAPP = {
     * @param {object} args Arguments with which callback will be called.
     * @return void   
     */
-    isrbTAlive :  function(callback, args)
+    isrbTAlive :  function()
     {
        return this.configs.status;
-       /*
-       if (this.configs.status) {
-          if (callback)
-             callback(args);
-          return true;
-       }
-       else
-           return false;
-      */
-
     },  
 
     /**
@@ -72,7 +63,6 @@ var rbTAPP = {
     */
     wake_RBT_APP : function()
     {
-      rbTAPP.configs.status = true;
       rbTDebug.log("Initializing RBT APP");
       rbTAPP.initialize();
     },
@@ -107,17 +97,14 @@ var rbTAPP = {
       this.configs.sessionID = id;
     },
 
-    /** 
-    *  Set Actor ID
-    *  @param {string} id 
-    *  @return void
-    */
-    setActorID : function(id)
+    /**
+    *
+    *
+    */   
+    setTransientVar : function(data)
     {
-      //this.configs.ActorID = id;
-      rbTCookie.setCookie("actor_id", respData);
-    },   
-
+      this.configs.transVar = data;
+    },
 
 
     /** 
@@ -147,14 +134,12 @@ var rbTAPP = {
       return this.configs.sessionID;
     },
 
-    /** 
-    *  Get Actor ID
-    *  @return {string} id 
-    */  
-    getActorID : function()
+    /**
+    *
+    */
+    getTransientVar : function()
     {
-      return rbTCookie.getCookie(rbTCookie.defaultCookie.actorID); 
-      //return this.configs.actorID;
+      return this.configs.transVar;
     },
 
 
@@ -188,7 +173,19 @@ var rbTAPP = {
       rbTServerChannel.createSession({success:this.setSessionID});
     },
 
-
+    /** 
+    *  Get Application based configs
+    *  FIXME : THIS NEEDS TO BE DISCUSSED AS WE ARE PLANNING TO HAVE A PROXY IN BETWEEN
+    *  @return {string} TBD 
+    */
+    getAppData : function()
+    {
+      rbTServerChannel.makeGetRequest({ "url"   : rbTServerChannel.url.appDetails,
+                                        "cb"    : { success: rbTServerResponse.setAppDetail,
+                                                    error  : rbTServerResponse.defaultError
+                                                  }
+                                      });
+    },  
 
     /** 
     * Set System properties
@@ -233,13 +230,24 @@ var rbTAPP = {
     reportError : function(params)
     {
       try {
-          if (params.log) 
-            rbTDebug.error(params);
+          rbTDebug.error(params);
           if (params.server) 
             rbTServerChannel.reportError(params);
       } catch(e) {
         // FIXME what to do?
       }
+    },
+    
+    /** 
+    *  log
+    *  @param {object} params Error log message 
+    *  @return void
+    */
+    log : function(params)
+    {
+      if(params && params.message)
+        rbTDebug.log(params.message);
+      rbTDebug.log(params)
     },
 
     /** 
@@ -250,10 +258,90 @@ var rbTAPP = {
     preprocessParams : function(params)
     {
       
-
-      
+     
     }
 };
+
+
+
+/****************************[[rbTActor.js]]*************************************/ 
+
+
+var rbTActor = function() {
+
+  var __id = "";
+  var __prop = {};
+
+  return {
+
+      /**
+      *
+      *
+      */
+      retFromCookie : function()
+      {
+      	rbTDebug.log("retrieveing data for actor from cookie");
+        if (rbTCookie.getCookie(rbTCookie.defaultCookies.actorProp))
+          this.setProperties(rbTCookie.getCookie(rbTCookie.defaultCookies.actorProp)); 
+        if (rbTCookie.getCookie(rbTCookie.defaultCookies.actorID))
+          this.setID(rbTCookie.getCookie(rbTCookie.defaultCookies.actorID));
+      },
+
+      /** 
+      *  Get Actor ID
+      *  @return {string} id 
+      */  
+      getID : function()
+      {
+        return __id;
+        //return rbTCookie.getCookie(rbTCookie.defaultCookies.actorID); 
+      },
+      
+      /**
+      *
+      *
+      */
+      getProperties : function()
+      {
+        return __prop;
+      },
+
+      /** 
+      *  Set Actor ID
+      *  @param {string} id 
+      *  @return void
+      */
+      setID : function(id)
+      {
+        rbTCookie.setCookie(rbTCookie.defaultCookies.actorID, id);
+        __id = id;
+      },
+
+      /**
+      *
+      *
+      */
+      setProperties : function(prop)
+      {
+        __prop = prop;
+        rbTCookie.setCookie(rbTCookie.defaultCookies.actorProp, JSON.stringify(prop));
+      },
+
+      /**
+      *
+      *
+      */
+      propExist : function(prop)
+      {
+        var a = JSON.stringify(__prop).replace(/(^{)|(}$)/g, "");
+        var b = JSON.stringify(prop).replace(/(^{)|(}$)/g, "");
+        rbTDebug.log({"stored" : a , "passed" : b, "message":"actor prop existence"});
+        return (a.indexOf(b) >= 0) ? true : false;
+      }
+
+  };
+
+}();
 
 
 
@@ -277,17 +365,20 @@ window.rbTDebug=(function(){var i=this,b=Array.prototype.slice,d=i.console,h={},
 /****************************[[rbTRules.js]]*************************************/ 
 
 
-var TEST_RBT_RULE_JSON = {"customer":{
-                        "name" :"samarth",
-                        "email":"gmail.com",
-                        "val1":123,
-                        "val2":321,
-                        "swh":"actwitty",
-                        "ewh":"actwitty",
-                        "cns":"actwitty",
-                        "drg":"3/3/2011"
-                      }
-          };
+var TEST_RBT_RULE_JSON = {
+                            "customer":{
+                                        "name" :"samarth",
+                                        "email":"gmail.com",
+                                        "val1":123,
+                                        "val2":321,
+                                        "swh":"actwitty",
+                                        "ewh":"actwitty",
+                                        "cns":"actwitty",
+                                        "drg":"3/3/2011",
+                                        "rgx":"deosamarth",
+                                        "set":"abc",
+                                       }
+                         };
 
 var rbTRules = {
 
@@ -312,103 +403,7 @@ var rbTRules = {
           'Number': [ 'gtn','ltn','eql','btn','set'] 
   },
 
-  sample_json : [
-        {
-          id: '1010101010',
-          name  : "sample_name", 
-          event : "sample_event",
-          action: "topbar.generic.normal",
-          action_param :
-                  [
-                     {key:'rb.t.cr.textColor ',value:'#333'},
-                     {key:'rb.t.nr.textFontsize',value:'15'},
-                     {key:'rb.t.ft.textFontfamily',value:'Arial'},
-                     {key:'rb.f.nr.baseZindex',value:'100'},
-                     {key:'rb.t.nr.baseWidth',value:'100'},
-                     {key:'rb.t.nr.baseHeight',value:'40'},
-                     {key:'rb.t.cr.baseBgColor',value:'#DCDCDC'},
-                     {key:'rb.t.an.baseTextalign',value:'center'},
-                     {key:'rb.t.sg.textLeft',value:'Hello Hello Hello Hello'},
-                     {key:'rb.t.nr.btnFontSize',value:'14'},
-                     {key:'rb.t.cr.btnBgColor',value:'#548AC7'},
-                     {key:'rb.t.cr.btnColor',value:'white'},
-                     {key:'rb.t.ul.btnLink',value:'http://www.google.com'},
-                     {key:'rb.t.sg.btnLable',value:'Click'},
-                     {key:'rb.t.sg.textRight',value:'Hello Hello'},
-                     {key:'rb.t.ul.helpLink',value:'http://www.rulebot.com'},
-                  ],
-          conditions : [
-                // event based condition
-                { 
-                  property: "#customer.email",
-                  type : "String",
-                  negation: 'false',
-                  operation: 'eql',
-                  value1: 'gmail.com',
-                  connect: 'and' 
-                },
-                // negate condition
-                { 
-                  property: "#customer.name",
-                  type : "String",
-                  negation: 'true',
-                  operation: 'swh',
-                  value1: 'a',
-                  connect: 'and' 
-                },
-                // actor_property based condition
-                {
-                  property: "$customer.val1",
-                  type : "Number",
-                  negation: 'false',
-                  operation: 'gtn',
-                  value1: 2,
-                  connect: 'and' 
-                },
-                // system_property based condition
-                {
-                  property: "#customer.val2",
-                  type : "Number",
-                  negation: 'false',
-                  operation: 'ltn',
-                  value1: 3000,
-                  connect: 'and' 
-                },
-                {
-                  property: "#customer.swh",
-                  type : "String",
-                  negation: 'false',
-                  operation: 'swh',
-                  value1: 'act',
-                  connect: 'and' 
-                },
-                {
-                  property: "#customer.ewh",
-                  type : "String",
-                  negation: 'false',
-                  operation: 'ewh',
-                  value1: 'tty',
-                  connect: 'and' 
-                },
-                {
-                  property: "#customer.cns",
-                  type : "String",
-                  negation: 'false',
-                  operation: 'cns',
-                  value1: 'wit',
-                  connect: 'and' 
-                },
-                {
-                  property: "#customer.drg",
-                  type : "Date",
-                  negation: 'false',
-                  operation: 'drg',
-                  value1: "2/2/2011",
-                  value2: "4/4/2011"
-                },
-              ]
-        }
-  ],
+  
   
   /**
   * Initialize Rules for business
@@ -443,7 +438,7 @@ var rbTRules = {
   setRulesTable : function(rules)
   {
     "use strict";
-    rules = this.sample_json;
+    //rules = this.sample_json;
     var ruleString = "";
 
 
@@ -517,10 +512,14 @@ var rbTRules = {
             $("#result").text("RULES FAILED");
           }
     } catch (e) {
+      if (this.ruleTable[event])
+        var ruleStr = this.ruleTable[event].ruleString || "--";
+      else
+        var ruleStr = "Rule string cannot be formed!";  
       rbTAPP.reportError({"exception"  : e.message,
                           "message"    : "rule execution on event failed" , 
                           "event_name" : event,
-                          "rule_string": this.ruleTable[event].ruleString
+                          "rule_string": ruleStr
                          });
     } 
   },
@@ -693,6 +692,7 @@ var rbTRules = {
   /* 
      RULE FUNCTIONS 
      We should be having try-catch in all rule functions.
+     FIXME :: MERGE ALL IN ONE FUNCTION WITH CONDITION TO SAVE SPACE
   */
   rule : 
   {
@@ -915,9 +915,8 @@ var rbTRules = {
         if (!rbTRules.isValidRule(t,"rgx",a,b))
           return false;
         var prop = rbTRules.evalProperty(a);
-        var res;
-        regexp = new RegExp(b, 'gi');
-        res = regexp.test(prop);
+        var regexp = new RegExp(b, 'gi');
+        var res = regexp.test(prop);
         return (x === "true") ? !res : res;
       } catch (e) {
         rbTAPP.reportError({"exception" : e.message,
@@ -943,9 +942,8 @@ var rbTRules = {
         if (!rbTRules.isValidRule(t,"dag",a,b))
           return false;
         var prop = rbTRules.evalProperty(a);
-        var res;
-        regexp = new RegExp(b, 'gi');
-        res = regexp.test(prop) ;
+        var regexp = new RegExp(b, 'gi');
+        var res = regexp.test(prop) ;
         return (x === "true") ? !res : res;
       } catch (e) {
         rbTAPP.reportError({"exception" : e.message,
@@ -972,8 +970,7 @@ var rbTRules = {
         if (!rbTRules.isValidRule(t,"drg",a,b,c))
           return false;
         var prop = rbTRules.evalProperty(a,t);
-        var res;
-        res = (prop >= rbTRules.valueDataType(prop, b) && prop <= rbTRules.valueDataType(prop, c));
+        var res = (prop >= rbTRules.valueDataType(prop, b) && prop <= rbTRules.valueDataType(prop, c));
         return (x === "true") ? !res : res;
       } catch (e) {
         rbTAPP.reportError({"exception" : e.message,
@@ -1020,20 +1017,20 @@ var rbTServerResponse = {
   *   
   *  @return void
   */ 
-  defaultSuccessCallback : function()
+  defaultSuccessCallback : function(respData)
   {
     // FIXME : what to do?
-    rbTDebug.log("Success callback : default server response");
+    rbTAPP.log({"message": "Success callback : default server response","data":respData});
   },
   /** 
   *  Handle default error callback if not mentioned explicitly
   *   
   *  @return void
   */ 
-  defaultErrorCallback : function()
+  defaultErrorCallback : function(respData)
   {
     // FIXME : what to do?
-    rbTDebug.warn("Success callback : default server response");
+    rbTAPP.log({"message": "Error callback : default server response","data":respData});
   },
 
 
@@ -1042,17 +1039,27 @@ var rbTServerResponse = {
   * @param {object} respData Actor identification details
   * @return void
   */
-  setActor : function(respData)
+  setActorID : function(respData)
   { 
     "use strict";
+    rbTAPP.log({"message": "Setting actor details with server resp","data":respData});
     try {
-      if (respData) {
+      if (respData && respData.id) {
         // FIXME :: Flush and reset all cookies if there is a change in actor.
         // WAITING AS THERE ARE SOME CHANGES IN BACKEND.
-        rbTCookie.setCookie(rbTCookie.defaultCookies.actor, JSON.stringify(respData));
-
+        var oldActorId = rbTCookie.getCookie(rbTCookie.defaultCookies.actorID);
+        if (!oldActorId || oldActorId !== respData.id) {
+          rbTCookie.setCookie(rbTCookie.defaultCookies.actorID, JSON.stringify(respData.actor_id));
+          rbTServerChannel.makeRequest({"url"       : rbTServerChannel.url.readActor, 
+                                        "set_actor_prop" : true,
+                                        "cb"        : { success: rbTServerResponse.setActorProperty,
+                                                        error  : rbTServerResponse.defaultError
+                                                      }
+                                       });
+        }
+        rbTAPP.setActorID(respData.actor_id);
       } else {
-        throw "there is no data";
+        throw new Error("there is no server resp data");
       }
     } catch(e) {
       rbTAPP.reportError({"exception" : e.message,
@@ -1068,15 +1075,17 @@ var rbTServerResponse = {
   * @param {object} respData Actor identification details
   * @return void
   */
-  setUserProperty : function(respData)
+  setActorProperty : function(respData)
   {
-     "use strict";
+    "use strict";
+    rbTAPP.log({"message": "Setting actor details with server resp","data":respData});
+
     // FIXME : check for which property to set
     try {
       if (respData) {
         rbTCookie.setCookie(rbTCookie.defaultCookies.actorprop, JSON.stringify(respData));
       } else {
-        throw "there is no data";
+        throw "there is no data for setting actor property";
       }
     } catch(e) {
       rbTAPP.reportError({"exception" : e.message,
@@ -1094,6 +1103,8 @@ var rbTServerResponse = {
   setSystemProperty : function(respData)
   {
     "use strict";
+    rbTAPP.log({"message": "Setting system property with server resp","data":respData});
+
     // FIXME : check for which property to set
     try {
       if (respData) {
@@ -1117,6 +1128,7 @@ var rbTServerResponse = {
   handleEvent : function(respData)
   {
     "use strict";
+    rbTAPP.log({"message": "Handling event with server resp","data":respData});
     try {
       if(respData && respData.actor) {
         rbTCookie.setCookie(rbTCookie.defaultCookies.actor, respData.actor);
@@ -1140,6 +1152,8 @@ var rbTServerResponse = {
   setRules : function(respData)
   {
     "use strict";
+    rbTAPP.log({"message": "Setting rules with server resp","data":respData});
+
     try {
       if(respData) {
         rbTRules.setRulesTable(respData);
@@ -1152,8 +1166,135 @@ var rbTServerResponse = {
                           "data"      : respData
                         });
     }
-  }
+  },
 
+
+  /**
+  * Set App Specific configs
+  * @param {object} respData Data in response to server.
+  */
+  setAppDetail : function(respData)
+  {
+    rbTAPP.log({"message": "Setting app details with server resp","data":respData});
+    var sample_rule_json = [
+        {
+          id: '1010101010',
+          name  : "sample_name", 
+          event : "sample_event",
+          action: "topbar.generic.normal",
+          action_param :
+                  [
+                     {key:'rb.t.cr.textColor ',value:'#333'},
+                     {key:'rb.t.nr.textFontsize',value:'15'},
+                     {key:'rb.t.ft.textFontfamily',value:'Arial'},
+                     {key:'rb.f.nr.baseZindex',value:'100'},
+                     {key:'rb.t.nr.baseWidth',value:'100'},
+                     {key:'rb.t.nr.baseHeight',value:'40'},
+                     {key:'rb.t.cr.baseBgColor',value:'#DCDCDC'},
+                     {key:'rb.t.an.baseTextalign',value:'center'},
+                     {key:'rb.t.sg.textLeft',value:'Hello Hello Hello Hello'},
+                     {key:'rb.t.nr.btnFontSize',value:'14'},
+                     {key:'rb.t.cr.btnBgColor',value:'#548AC7'},
+                     {key:'rb.t.cr.btnColor',value:'white'},
+                     {key:'rb.t.ul.btnLink',value:'http://www.google.com'},
+                     {key:'rb.t.sg.btnLable',value:'Click'},
+                     {key:'rb.t.sg.textRight',value:'Hello Hello'},
+                     {key:'rb.t.ul.helpLink',value:'http://www.rulebot.com'},
+                  ],
+          conditions : [
+                // event based condition
+                { 
+                  property: "#customer.email",
+                  type : "String",
+                  negation: 'false',
+                  operation: 'eql',
+                  value1: 'gmail.com',
+                  connect: 'and' 
+                },
+                // negate condition
+                { 
+                  property: "#customer.name",
+                  type : "String",
+                  negation: 'true',
+                  operation: 'swh',
+                  value1: 'a',
+                  connect: 'and' 
+                },
+                // actor_property based condition
+                {
+                  property: "$customer.val1",
+                  type : "Number",
+                  negation: 'false',
+                  operation: 'gtn',
+                  value1: 2,
+                  connect: 'and' 
+                },
+                // system_property based condition
+                {
+                  property: "#customer.val2",
+                  type : "Number",
+                  negation: 'false',
+                  operation: 'ltn',
+                  value1: 3000,
+                  connect: 'and' 
+                },
+                {
+                  property: "#customer.swh",
+                  type : "String",
+                  negation: 'false',
+                  operation: 'swh',
+                  value1: 'act',
+                  connect: 'and' 
+                },
+                {
+                  property: "#customer.ewh",
+                  type : "String",
+                  negation: 'false',
+                  operation: 'ewh',
+                  value1: 'tty',
+                  connect: 'and' 
+                },
+                {
+                  property: "#customer.cns",
+                  type : "String",
+                  negation: 'false',
+                  operation: 'cns',
+                  value1: 'wit',
+                  connect: 'and' 
+                },
+                {
+                  property: "#customer.drg",
+                  type : "Date",
+                  negation: 'false',
+                  operation: 'drg',
+                  value1: "2/2/2011",
+                  value2: "4/4/2011",
+                  connect: 'and'
+                },
+                // regex
+                {
+                  property: "#customer.rgx",
+                  type : "String",
+                  negation: 'false',
+                  operation: 'rgx',
+                  value1: 'sam',
+                  connect: 'and' 
+                },
+                // set
+                {
+                  property: "#customer.set",
+                  type : "String",
+                  negation: 'false',
+                  operation: 'set',
+                }
+              ]
+        },
+    ];
+    
+    rbTRules.setRulesTable(sample_rule_json);
+
+    rbTAPP.configs.status = true;
+  }
 
 };
 
@@ -1163,16 +1304,24 @@ var rbTServerResponse = {
 
 var rbTServerChannel = {
   
+  rbt_url : "http://localhost:3000/",
+
+  serverUrl : function(url)
+  {
+    return this.rbt_url + url + ".jsonp";
+  }, 
+
   /* All server url routes to be mapped here */
   url : {
     "createSession"     : "",
-    "fireEvent"         : "http://localhost:3000/event/create",
-    "identify"          : "",
-    "setUserProperty"   : "",
-    "setSystemProperty" : "",
-    "getRules"          : "",
+    "appDetails"        : "app/read",
+    "fireEvent"         : "event/create",
+    "identify"          : "actor/identify",
+    "readActor"         : "actor/read",
+    "createActor"       : "actor/create",
+    "setActor"          : "actor/set",
+    "roi"               : "",
     "reportError"       : "",
-    "roi"               : ""
   },
 
   // Server request queue
@@ -1204,9 +1353,11 @@ var rbTServerChannel = {
   {
     for (var req in this.queue) {
       if (this.queue[req].event) {
-        this.makeEventRequest(this.queue[req].event, this.queue[req].params, this.queue[req].callback);
+        //this.makeEventRequest(this.queue[req].event, this.queue[req].params, this.queue[req].callback);
+        this.makeEventRequest(this.queue[req]);
       } else {
-        this.makeGetRequest(this.queue[req].url, this.queue[req].params, this.queue[req].callback, this.queue[req].async);
+        //this.makeGetRequest(this.queue[req].url, this.queue[req].params, this.queue[req].callback, this.queue[req].async);
+        this.makeGetRequest(this.queue[req]);
       }
     }
   },
@@ -1216,7 +1367,7 @@ var rbTServerChannel = {
   * Check for App status, if alive , flush all req queue and clear interval.
   *
   */
-  reqFlushIntervalId : function()
+  reqQFlushInterval : function()
   {
       var interval = setInterval(function() {
         if (rbTAPP.isrbTAlive()) {
@@ -1237,14 +1388,37 @@ var rbTServerChannel = {
   makeRequestData : function(event, reqData)
   {
     var requestData = {};
-
+    if (event) {
+      requestData = {};
+      requestData["properties"] = reqData ? rbJSON.typify(reqData) : {};
+      requestData["event"] = event;  
+    }
     requestData["app_id"] = rbTAPP.getAppID(); // mandatory
-    requestData["account_id"] = rbTAPP.getAccountID(); // mandatory
-   
-    if (event)
-      requestData["event"] = event;
-    if (reqData)
-      requestData["properties"] = rbJSON.typify(reqData);
+    requestData["account_id"] = rbTAPP.getAccountID(); // mandatory  
+
+    return requestData;
+  },
+
+  /**
+  *
+  *
+  *
+  */
+  extendReqData : function(obj, reqData)
+  {
+    if (!obj || !reqData)
+      return {};
+    var requestData = reqData;
+
+    if (obj.set_actor) {
+      obj.params = obj.params || {};
+      requestData["properties"] = {"profile":reqData ? rbJSON.typify(obj.params) : {}};
+      requestData["actor_id"] = rbTAPP.getActorID() || "";
+    } else if(obj.set_actor_prop) {
+      requestData["actor_id"] = rbTAPP.getActorID() || "";
+    }
+
+
     return requestData;
   },
 
@@ -1255,25 +1429,30 @@ var rbTServerChannel = {
   *  @param {object} callback
   *  @return {object}
   */
-  makeEventRequest :  function(event, params, callback)
+  //makeEventRequest :  function(event, params, callback)
+  makeEventRequest :  function(obj)
   {
     "use strict";
+    var that = obj;
     try {
-      var reqServerData = this.makeRequestData(event, params);
-      callback = this.extendCallbacks(callback);
+      var reqServerData = this.makeRequestData(obj.event, obj.params );
+      var callback = this.extendCallbacks(obj.callback);
+      var that = obj;
       jQuery.ajax({
-            url: rbTServerChannel.url.fireEvent,
+            url: this.serverUrl(rbTServerChannel.url.fireEvent),
             type: 'GET',
-            dataType: 'json',
+            dataType: 'jsonp',
+            contentType : 'application/javascript',
             data: reqServerData,
+            crossDomain:true,
+            timeout : 10000,
             beforeSend: function() {
-                // FIXME : add status to cookie
-                rbTCookie.setCookie("lastevent", event);
+                rbTCookie.setCookie("lastevent", that.event);
             },
             success: function ( respData ) {
                 rbTCookie.deleteCookie("lastevent");
                 // FIXME :: ADDED ONLY TO TEST CLIENT SIDE
-                rbTRules.executeRulesOnEvent(event);
+                rbTRules.executeRulesOnEvent(that.event);
 
                 // FIXME : Currently we do not know the format of response we will get from server.
                 if (respData && respData.actor) { 
@@ -1283,7 +1462,7 @@ var rbTServerChannel = {
             },
             error:function(XMLHttpRequest,textStatus, errorThrown){ 
                 // FIXME :: ADDED ONLY TO TEST CLIENT SIDE
-                rbTRules.executeRulesOnEvent(event);
+                rbTRules.executeRulesOnEvent(that.event);
 
                 callback.error(); 
                 
@@ -1292,8 +1471,8 @@ var rbTServerChannel = {
     } catch(e) {
       rbTAPP.reportError({"exception" : e.message,
                           "message"   :"server event request failed" , 
-                          "event"     : event,
-                          "reqData"   : JSON.stringify(reqData),
+                          "event"     : that.event,
+                          "obj"       : JSON.stringify(that),
                           "log"       : "error" 
                          }); 
     }
@@ -1306,25 +1485,30 @@ var rbTServerChannel = {
   *   
   *  @return void
   */  
-  makeGetRequest : function(url, params, callback, async)
+  //makeGetRequest : function(url, params, callback, async)
+  makeGetRequest : function(obj)
   {
     "use strict";
+    var that = obj;
     try {
-       var reqServerData = this.makeRequestData(undefined, params);
-      callback = this.extendCallbacks(callback);
-      if (async && async === "noasync")
+      var reqServerData = this.extendReqData(obj,this.makeRequestData(undefined, obj.params));
+      var callback = this.extendCallbacks(obj.cb);
+      if (obj.async && obj.async === "noasync")
         var asyncSt = false;
       else 
         var asyncSt = true;
-
+      //reqServerData["format"]="javascript";
       jQuery.ajax({
-            url: url,
+            url: this.serverUrl(obj.url),
             async: asyncSt,
             type: 'GET',
-            dataType: 'json',
-            contentType: 'application/json',
+            dataType: 'jsonp',
+            contentType : 'application/javascript',
             data: reqServerData,
+            crossDomain:true,
+            timeout : 10000,
             success: function ( respData ) {
+                respData.url = that.url;
                 callback.success(respData);
             },error:function(XMLHttpRequest,textStatus, errorThrown){ 
                 // todo : what to do??            
@@ -1333,8 +1517,8 @@ var rbTServerChannel = {
       });
     } catch(e) {
       rbTAPP.reportError({"exception" : e.message,
-                          "message"   :"server request failed" , 
-                          "url"       : url,
+                          "message"   : "server request failed" , 
+                          "object"    : obj,
                           "log"       : true,
                           "server"    : true
                          });
@@ -1347,6 +1531,7 @@ var rbTServerChannel = {
   */  
   makeRequest : function(obj)
   {
+    var that = obj;
     if (!obj)
       return;
     if (!rbTAPP.isrbTAlive()) {
@@ -1354,8 +1539,10 @@ var rbTServerChannel = {
         obj.async = obj.async || "async";
         this.queueReq({url:obj.url, params:obj.params, callback:obj.cb, async:obj.async});
       }
-      else
+      else {
         this.queueReq({event:obj.event, params:obj.params, callback:obj.cb});
+      }
+      this.reqQFlushInterval();
       return;
     } else {
       this.flushReqQueue();
@@ -1364,11 +1551,12 @@ var rbTServerChannel = {
       if (obj.event) {
         rbTServerChannel.makeEventRequest(obj.event, obj.params, obj.cb);
       } else if (obj.url) {
-        rbTServerChannel.makeGetRequest(obj.url, obj.params, obj.cb);
+        rbTServerChannel.makeGetRequest(obj);
       } else throw new Error("Wrong server req data");
     } catch (e) {
       rbTAPP.reportError({"exception" : e.message,
-                          "message"   :"server request params are not valid" , 
+                          "message"   : "server request params are not valid" , 
+                          "url"       : that.url,
                           "log"       : true,
                           "server"    : true
                          });
@@ -1376,7 +1564,7 @@ var rbTServerChannel = {
 
   },
    
-   /** 
+  /** 
   *  Request server to create session
   *  FIXME : NEED TO KNOW HOW SESSION WILL BE CREATED, BASED ON THAT WE WILL REMOVE MULTIPLE AJAX 
   *  @return void
@@ -1387,6 +1575,19 @@ var rbTServerChannel = {
     callback = this.extendCallbacks(callback);
     this.makeGetRequest(url, null, callback);
   }, 
+
+  /** 
+  *  Request server to app details
+  *  FIXME : IF THERE IS ANYTHING MISSING
+  *  @return void
+  */  
+  appDetails : function(params, callback)
+  {
+    "use strict";
+    callback = this.extendCallbacks(callback);
+    this.makeGetRequest(this.url.details, null, callback);
+  }, 
+
 
   /** 
   *  Send ROI to server
@@ -1407,7 +1608,6 @@ var rbTServerChannel = {
   */ 
   reportError : function(params)
   {
-
     "use strict";
     var callback = this.extendCallbacks(callback);
     this.makeGetRequest(this.url.reportError, params, callback);
@@ -1439,9 +1639,6 @@ var rbTSystemVar = {
   // All properties will be set here
   properties : {},
 
-  // To get all properties
-  allProperties : "browser_info,referrer_info,device_info,screen_info,viewport_info,locale_info,plugins_info,time_info",
-
   /** Initialize system variable script
    *  @return void
    */
@@ -1455,7 +1652,7 @@ var rbTSystemVar = {
       if (!sysVarInCookie) {
         return true; 
       } else {
-        var currentSysVar = this.getAllProperty();
+        var currentSysVar = this.getProperty();
         return (sysVarInCookie === currentSysVar) ? false : true;
       }
     }
@@ -1470,9 +1667,9 @@ var rbTSystemVar = {
     if (isSystemVarDirty.call(this)) {
       // Put current sys var in cookie and send it to server 
       // for update only if we have cookie miss 
-      var systemVars = this.getAllProperty();
+      var systemVars = this.getProperty();
       this.setPropertyInCookie(systemVars);
-      rbTAPP.setSystemProperty(systemVars);
+      //rbTAPP.setSystemProperty(systemVars);
     }
   },
 
@@ -1489,107 +1686,28 @@ var rbTSystemVar = {
 
 
   /** Get system variable property
-   *  Following supported
-   *  1). "browser_info"
-          return -> 
-          {
-             browser : browser_name,
-             os      : os_name,
-             version : version_number
-
-          }
-
-      2). "referrer_info"
-          return ->
-          {
-            host: "127.0.1.1"
-            path: "/~sammy/"
-            port: 80
-            protocol: "http:"
-          }
-      3). "device_info"
-          return ->
-          {
-            is_mobile: false
-            is_phone: false
-            is_tablet: false
-          } 
-      4). "screen_info"
-          return ->
-          {
-            height: 768,
-            width: 1366
-          }
-      5). "viewport_info"
-          return ->
-          {
-            height: 768,
-            width: 1366
-          }
-      6). "locale_info"
-          return ->
-          {
-            country: "us",
-            lang: "en
-          }
-      7). "plugins_info"
-          return ->
-          {
-            flash: true
-            java: false
-            quicktime: true
-            silverlight: false
-          }
-      8). "time_info"
-          return ->
-          {
-            observes_dst: false
-            tz_offset: 5.5
-          }
-   *
-   *   @param {string} type
-   *   @return {object} value
-   */
-
+    'browser' : 'String'
+    'browser_version' : 'String'
+    'operatingsystem' : 'String'
+    'referrer[host]' : 'String'
+    'referrer[path]' : 'String'
+    'referrer[name]' : 'String'
+    'device[type]' : 'String'
+    'device[name]' : 'String'
+    'screen[height]' : 'Number'
+    'screen[width]' :  'Number'
+    'viewport[height]' : 'Number'
+    'viewport[width]' : 'Number'
+    'country' : 'String'
+    'language' : 'String'
+    'plugins' : 'Array'
+    'timezone' : 'String'
+    'day_light_saving' : 'Boolean'
+  */
   getProperty : function(propertyTypes)
   {
     "use strict";
-    var types = propertyTypes.split(",");
-    var propertyCnf = {};
-    for (var i = 0; i < types.length ; ++i) {
-      switch(types[i]) {
-      case "browser_info":
-          propertyCnf[types[i]] =  this.properties.browser; 
-          break;
-      case "referrer_info":
-          propertyCnf[types[i]] =  this.properties.current_session.referrer_info; 
-          break;
-      case "device_info" :
-          propertyCnf[types[i]] =  this.properties.device; 
-          break;
-      case "screen_info" :
-          propertyCnf[types[i]] =  this.properties.device.screen; 
-          break;
-      case "viewport_info" :
-          propertyCnf[types[i]] =  this.properties.device.viewport; 
-          break;
-      case "locale_info":
-          propertyCnf[types[i]] =  this.properties.locale; 
-          break;
-      case "plugins_info":
-          propertyCnf[types[i]] =  this.properties.plugins; 
-          break;
-      case "time_info":
-          propertyCnf[types[i]] =  this.properties.time; 
-          break;
-      }
-    }
-    return propertyCnf;
-  },
-
-  getAllProperty : function()
-  {
-    return this.getProperty(this.allProperties);
+    return this.properties;
   },
 
   setPropertyInCookie : function(property)
@@ -1597,10 +1715,39 @@ var rbTSystemVar = {
     rbTCookie.setCookie(rbTCookie.defaultCookies.systemProp, JSON.stringify(property));
   },
 
+  setEJProp : function(json)
+  {
+     rbTSystemVar.setProperty("country",json.CountryName); 
+     rbTSystemVar.setProperty("timezone",json.LocalTimeZone); 
+  },
+
+  setSessionJSProp : function(json)
+  {
+    rbTAPP.log({"message":"System Properties got through Session JS","data":json});
+    this.setProperty("browser",json.browser.browser);
+    this.setProperty("browser_version",json.browser.version);
+    this.setProperty("operatingsystem",json.browser.os);
+    this.setProperty("referrer",json.current_session.referrer_info);
+    this.setProperty("device",json.device.type);
+    this.setProperty("screen",json.device.screen);
+    this.setProperty("viewport",json.device.viewport);
+    this.setProperty("plugins",json.plugins);
+    this.setProperty("language",json.locale.lang);
+    this.setProperty("day_light_saving",json.time.observes_dst);
+  },
 
 };
 
-
+var backcode="1102012";
+function EasyjQuery_Cache_IP(fname,json) {
+  rbTAPP.log({"message":"easy jquery response","data":json});
+  eval(fname + "(json);");
+}
+function EasyjQuery_Get_IP(fname,is_full) {
+  var full_version = "";
+  jQuery.getScript("http://api.easyjquery.com/ips/?callback=" + fname + full_version);
+}
+  
 
 
 /**
@@ -1611,6 +1758,8 @@ var rbTSystemVar = {
  * This version uses google's jsapi library for location services.
  * For details, see: https://github.com/codejoust/session.js
  */
+
+// FIXME : NOT ALL PROPERTIES FROM SESSION.JS IS NEEDED NOW..GETTING SOMETHINGS FROM EASYJQUERY
 
 var session_fetch = (function(win, doc, nav)
 {
@@ -1659,7 +1808,6 @@ var session_fetch = (function(win, doc, nav)
     // If the module has arguments,
     //   it _needs_ to return a callback function.
     var unloaded_modules = {
-      api_version: API_VERSION,
       locale: modules.locale(),
       current_session: modules.session(),
       original_session: modules.session(
@@ -1668,9 +1816,11 @@ var session_fetch = (function(win, doc, nav)
       browser: modules.browser(),
       plugins: modules.plugins(),
       time: modules.time(),
-      device: modules.device()
+      device: modules.device(),
     };
     // Location switch
+    // FIXME :: NOW NOT GETTING LOCATION INFO FROM SESSION JS, INSTEAD GETTING FROM EASYJQUERY
+    /*
     if (options.use_html5_location){
       unloaded_modules.location = modules.html5_location();
     } else if (options.ipinfodb_key){
@@ -1678,6 +1828,7 @@ var session_fetch = (function(win, doc, nav)
     } else if (options.gapi_location){
       unloaded_modules.location = modules.gapi_location();
     }
+    */
     // Cache win.session.start
     if (win.session && win.session.start){
       var start = win.session.start;
@@ -1714,12 +1865,19 @@ var session_fetch = (function(win, doc, nav)
 
     /* set the properties in our rbT hash */
     (function setrbTProperties() {
+      var sessionJSProp = {};
       for (property in unloaded_modules) {
-        rbTSystemVar.setProperty(property, unloaded_modules[property] );
+        //rbTSystemVar.setProperty(property, unloaded_modules[property] );
+        sessionJSProp[property] = unloaded_modules[property];
       }
+      rbTSystemVar.setSessionJSProp(sessionJSProp);
     })();
-    //setrbTProperties();
+    EasyjQuery_Get_IP("rbTSystemVar.setEJProp");
   };
+
+
+
+
 
 
   // Browser (and OS) detection
@@ -1817,6 +1975,12 @@ var session_fetch = (function(win, doc, nav)
       device.is_tablet = !!nav.userAgent.match(/(iPad|SCH-I800|xoom|kindle)/i);
       device.is_phone = !device.is_tablet && !!nav.userAgent.match(/(iPhone|iPod|blackberry|android 0.5|htc|lg|midp|mmp|mobile|nokia|opera mini|palm|pocket|psp|sgh|smartphone|symbian|treo mini|Playstation Portable|SonyEricsson|Samsung|MobileExplorer|PalmSource|Benq|Windows Phone|Windows Mobile|IEMobile|Windows CE|Nintendo Wii)/i);
       device.is_mobile = device.is_tablet || device.is_phone;
+      if (device.is_mobile) {
+        var name = nav.userAgent.match(/(iPhone|iPod|blackberry|android 0.5|htc|lg|midp|mmp|mobile|nokia|opera mini|palm|pocket|psp|sgh|smartphone|symbian|treo mini|Playstation Portable|SonyEricsson|Samsung|MobileExplorer|PalmSource|Benq|Windows Phone|Windows Mobile|IEMobile|Windows CE|Nintendo Wii|SCH-I800|xoom|kindle)/ig);
+        if (name)
+          name = name[0];
+      }
+      device.type = { type: device.is_mobile ? "mobile" : "pc", name: name || browser.detect().browser};
       return device;
     },
     plugins: function(){
@@ -2162,7 +2326,7 @@ var rbTCookie = {
   // If we do not send following params while setting cookies, defaults will be used. 
   defaultOptions : {
     expire : 24 * 60 * 60 * 1000,  // in hours
-    path : "/",
+    path : "rulebot",
     domain : window.location.hostname,
     secure: false
   },
@@ -2374,7 +2538,7 @@ RBT.prototype.isAlive = function()
 RBT.prototype.sendEvent = function(event, params)
 {
   "use strict";
-  if (!event || typeof(event) != "string" || event == "" ) {
+  if (!event || typeof(event) != "string" || event === "" ) {
     return;
   }
   rbTServerChannel.makeRequest({"event" : event, 
@@ -2396,7 +2560,7 @@ RBT.prototype.identify = function(params)
   "use strict";
   rbTServerChannel.makeRequest({"url"    : rbTServerChannel.url.identify, 
                                 "params" : params,
-                                "cb"     : { success: rbTServerResponse.setActor,
+                                "cb"     : { success: rbTServerResponse.setActorID,
                                              error  : rbTServerResponse.defaultError
                                            }
                               });
@@ -2410,14 +2574,17 @@ RBT.prototype.identify = function(params)
 * @param {object} params Option based on which actor property will be set
 * @return void
 */
-RBT.prototype.setUserProperty = function(params)
+RBT.prototype.setActor = function(params)
 {
   "use strict";
-  rbTServerChannel.makeRequest({"url"   : rbTServerChannel.url.setUserProperty, 
-                                "params": params,
-                                "cb"    : { success: rbTServerResponse.setUserProperty,
-                                            error  : rbTServerResponse.defaultError
-                                          }
+  if (rbTActor.propExist(params))
+    return;
+  rbTServerChannel.makeRequest({"url"        : rbTServerChannel.url.setActor, 
+                                "params"     : params,
+                                "set_actor"  : true,
+                                "cb"         : { success: rbTServerResponse.setActorProperty,
+                                                 error  : rbTServerResponse.defaultError
+                                               }
                               });
 };
 
@@ -2542,6 +2709,7 @@ var rbJSON = {
       rbTAPP.setAppID(appid);
       rbTAPP.setAccountID(accid);
       rbTUtils.includeJQIfNeeded();
+      window.rb = new RBT();
     }
   } catch (e) {
     rbTAPP.reportError({"exception" : e.message, 
@@ -2554,20 +2722,12 @@ var rbJSON = {
 
 function testGanga()
 {
-  rb.sendEvent("sample_event",{"a":101});
+  //rb.sendEvent("sample_event",{"a":101});
+  //rb.identify({"uid":"83.samarth@gmail.com"});
+  rb.setActor({"name":"samarth","age":"29"});
+
+  console.log("ENDING TESTING SEQUENCE");
 }
 
-function waitForRBT()
-{
-  if(!rbTAPP.isrbTAlive())
-  {
-    window.setTimeout(waitForRBT, 500);
-  }
-  else
-  {
-    testGanga();
-  }
-}
-
-waitForRBT();
+testGanga();
 

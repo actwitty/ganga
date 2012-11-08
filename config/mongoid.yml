@@ -69,6 +69,7 @@ production:
   # Configure Mongoid specific options. (optional)
   options:
     use_utc: true
+    identity_map_enabled: true
 
 test:
   sessions:
@@ -78,4 +79,5 @@ test:
         - localhost:27017
       options:
         consistency: :strong
+        identity_map_enabled: true
 

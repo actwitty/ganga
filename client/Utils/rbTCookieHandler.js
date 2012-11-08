@@ -5,7 +5,7 @@ var rbTCookie = {
   // If we do not send following params while setting cookies, defaults will be used. 
   defaultOptions : {
     expire : 24 * 60 * 60 * 1000,  // in hours
-    path : "/",
+    path : "rulebot",
     domain : window.location.hostname,
     secure: false
   },
