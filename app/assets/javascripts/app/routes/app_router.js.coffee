@@ -80,7 +80,7 @@ App.Router = Ember.Router.extend
       deleteProjectConfirmed: (router, event) ->
         editController = router.get('projectEditController')
         editController.deleteProject()
-        event.preventDefault()
+        
         
       # event -------------------------------------------
       listProject: (router, event) ->          

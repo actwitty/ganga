@@ -1,17 +1,29 @@
 App.ProjectEditView = Ember.View.extend
   templateName: 'home_page/projects/project_edit'
-  showHelpInfo: true
   
 
-  showInfo: (-> 
-    @get("showHelpInfo") is true
-  ).property("showHelpInfo")
+  init: ->
+    @_super()
 
+    newProj =  App.get 'router.projectEditController.isNew'
+    msgContext = {}    
+    if newProj is true
+      #HELP DOC LINK
+      msgContext = 
+                    header: "Register new application"
+                    message: "You can create an application id for a domain name of the form 'http://www.yourdomain.com'"
+                    href: "/help#createNewApp"
+                    buttonText: "Know More"                    
+    else
+      #HELP DOC LINK      
+      msgContext = 
+                    header: "Update an existing application"
+                    message: "You can change the credentials of the application."
+                    href: "/help#updateApp"
+                    buttonText: "Learn"
 
-  hideInfo: (event) ->
-  	@set 'showHelpInfo', false
-  	event.preventDefault()  
-
+    app = App.get("router.applicationController")
+    app.set('msgContext', msgContext)
   confirmDeletion: ->
     current_this = @
     # -----------------------------------------------------

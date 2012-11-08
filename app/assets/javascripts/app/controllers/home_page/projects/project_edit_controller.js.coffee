@@ -1,8 +1,5 @@
 App.ProjectEditController = Em.ObjectController.extend
   isNew : false
-  isBusy: false
-  isError: false
-  isSuccess: false
   content: null
 
   updateUrl: 'app/update'

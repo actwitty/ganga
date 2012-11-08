@@ -100,7 +100,6 @@ App.RulesController = Em.ArrayController.extend
 
   #########################################################
   loadSystemSchema: ->
-    project = App.get('router.projectsController').get('selected')
     props = {}
     for k,v of App.systemSchema      
       prop = 
@@ -114,18 +113,19 @@ App.RulesController = Em.ArrayController.extend
   #########################################################
   loadActorSchema: ->
     project = App.get('router.projectsController').get('selected')
-    schema = project.get('schema')     
-    props = {}
-    if "actor" of project.schema
-      actor_p = project.schema.actor
-      for k,v of actor_p      
-        prop = 
-               'show': k       
-               'actual': k
-               'type': v
-               'scope': 'a'
-        props[k] = prop
-    @set 'actorSchema', props
+    if project isnt null
+      schema = project.get('schema')     
+      props = {}
+      if "actor" of project.schema
+        actor_p = project.schema.actor
+        for k,v of actor_p      
+          prop = 
+                 'show': k       
+                 'actual': k
+                 'type': v
+                 'scope': 'a'
+          props[k] = prop
+      @set 'actorSchema', props
 
   #########################################################
   loadEventSchema: ->    
@@ -158,19 +158,20 @@ App.RulesController = Em.ArrayController.extend
     events = []
     @set 'events', events
     project = App.get('router.projectsController').get('selected')
-    event_p = {}
+    if project isnt null
+      event_p = {}
 
-    if "schema" of project
-      if "events" of project.schema
-        event_p = project.schema.events
+      if "schema" of project
+        if "events" of project.schema
+          event_p = project.schema.events
 
-        for k,v of event_p 
-          events.push k
+          for k,v of event_p 
+            events.push k
 
-    if events.length is 0
-      events.push 'beacon'
-        
-    @set 'events', events 
+      if events.length is 0
+        events.push 'beacon'
+          
+      @set 'events', events 
 
 
         
@@ -194,11 +195,12 @@ App.RulesController = Em.ArrayController.extend
     @set 'content', []
     @set 'selected', null
 
-    project =  App.get('router.projectsController').get('selected')    
-    @loadSystemSchema()
-    @loadActorSchema()
-    @loadEvents()
-    @loadRules()
+    project =  App.get('router.projectsController').get('selected') 
+    if project isnt null   
+      @loadSystemSchema()
+      @loadActorSchema()
+      @loadEvents()
+      @loadRules()
   ).observes('App.router.projectsController.selected')
   #########################################################
   # Create a Rule

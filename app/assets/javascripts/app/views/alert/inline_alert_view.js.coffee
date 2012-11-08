@@ -1,29 +1,35 @@
 App.InlineAlertView = Ember.View.extend
   templateName: 'alert/inline_alert'
 
-  alertClass: ''
-  displayText: ''
-  header: ''
-  alertShowClass: 'hide'
-  
-
+  #-----------------------------------------------------------
   bootstrap: 
             error: 'alert alert-error'
             success: 'alert alert-success'
             info: 'alert alert-info'
             block: 'alert alert-block'
 
+            
+  alertClass: ''
+  displayText: ''
+  header: ''
+  alertShowClass: 'hide'
+  
+  
+
+  #-----------------------------------------------------------
   closeOnAlert: (event) ->    
     @set 'alertShowClass', 'hide'
     
 
     
-
+  #-----------------------------------------------------------
   init: ->    
     @_super()
     controller = App.get("router.applicationController")
     controller.set('errorMessage', {})
 
+
+  #------------------------------------------------------------
   errorChangeObserve: (->    
     
     classes = @get 'bootstrap'

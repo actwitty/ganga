@@ -2,7 +2,7 @@ App.ApplicationController = Ember.ObjectController.extend
   transaction: null
   content: []
 
-  # 
+  #------------------------------------------
   errorMessage: {}
   setInlineAlert: (classIn,headerIn,messageIn) ->    
     errorMessage = 
@@ -10,5 +10,9 @@ App.ApplicationController = Ember.ObjectController.extend
                     header: headerIn
                     message: messageIn    
     @set 'errorMessage', errorMessage
+  #------------------------------------------
+  #------------------------------------------
+  msgContext: {}
+  #------------------------------------------
 
 
