@@ -1,4 +1,4 @@
-App.ProjectEditController = Em.ObjectController.extend(
+App.ProjectEditController = Em.ObjectController.extend
   isNew : false
   isBusy: false
   isError: false
@@ -12,35 +12,13 @@ App.ProjectEditController = Em.ObjectController.extend(
   projectChanged: (->
    @set('content',App.get('router.projectsController').get('selected'))
   ).observes('App.router.projectsController.selected')
-
-  resetStates: ->
-  	@set 'isBusy', false
-  	@set 'isError', false
-  	@set 'isSuccess', false
-
   
 
-  stateIsBusy: (-> 
-    @get("isBusy") is true
-  ).property("isBusy")
-
-  stateIsError: (->
-    @get("isError") is true
-  ).property("isError")
-
-  stateIsSuccess: (->
-    @get("isSuccess") is true
-  ).property("isSuccess")
-
-
-  deleteProject: ->
-    @set 'isBusy', true
-
+  deleteProject: ->   
     url = @deleteUrl
     controllerObj = this
     if @get("isNew") is false      
       del_app_id = @get('content').get('app_id')
-    
 
       # Success callback -------------------------
       success= (data) ->
@@ -49,44 +27,66 @@ App.ProjectEditController = Em.ObjectController.extend(
           projsController = App.router.get('projectsController')
           content = controllerObj.get('content')
           projsController.deleteProj(content)    
-
-
-        controllerObj.set 'isBusy', false
+        
         App.get("router").send("listProject")
       # Error callback -------------------------
       error= ()->
-        controllerObj.set 'isBusy', false
 
-      App.getRequest url, {app_id : del_app_id}, success, error
+      App.postRequest url, {app_id : del_app_id}, success, error
 
     else
       return false
 
-  postProject: ->  	
-  	@set 'isBusy', true
-  	url = @updateUrl
-  	if @get("isNew") is true
-  	  url = @createUrl
+  validateEdit: ->
+    project = @get 'content'
 
-  	 controllerObj = this
+    name = project.get 'description.name'
+    email = project.get 'description.email'
+    domain = project.get 'description.domain'
+    
+    nameReg = /^[-a-zA-Z0-9_ ]+$/
+    urlReg = /http(s?):\/\/www\.[A-Za-z0-9\.-]{3,}\.[A-Za-z]{3}/
+    emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/    
+    if email is null or name is null and domain is null or
+       email.length is 0 or name.length is 0 or domain.length is 0 or
+       not emailReg.test(email) or not nameReg.test(name) or not urlReg.test(domain)      
+      message = "Domain, email and name are mandatory. Please correct the settings"
+      App.get('router.applicationController').setInlineAlert('error', 'Validation Failed !', message )   
+      false
+    else
+      true
 
-    # Success callback -------------------------
-  	success= (data) ->
-      controllerObj.set 'isBusy', false
-      controllerObj.set 'isSuccess', true
-      projsController = App.router.get('projectsController')
-      if controllerObj.get("isNew") is true
-      	newProj = App.Project.create(data)
-      	projsController.addNewProj(newProj)      	      	      	
-      else
-      	#TODO handle error
-      controllerObj.set 'isBusy', false
-    # Error Callback -------------------------  	
-    error= () ->
-      controllerObj.set 'isBusy', false
-      controllerObj.set 'isError', false
-      
-    content = @get 'content'    
-    App.getRequest url, content.filterData(), success, error
+
+  postProject: ->       
+    validated = @validateEdit()
+    
+    if validated is true
+      url = @updateUrl
+
+      if @get("isNew") is true
+        url = @createUrl
+
+       controllerObj = this
+
+
+
+      # Success callback -------------------------
+      success= (data) ->
+        projsController = App.router.get('projectsController')
+        if controllerObj.get("isNew") is true
+          newProj = App.Project.create(data)
+          projsController.addNewProj(newProj)                       
+          projsController.set 'selected', newProj
+          App.get("router").send "forceProjectRules", newProj 
+        else
+          message = "Application changes updated at the server."
+          App.get('router.applicationController').setInlineAlert('success', 'Application updated!', message )   
+        
+      # Error Callback -------------------------    
+      error= () ->
+        message = "Unable to save the editted project, there is some problem."
+        App.get('router.applicationController').setInlineAlert('error', 'Failed to communicate!', message )   
+        
+      content = @get 'content'    
+      App.postRequest url, content.filterData(), success, error
   
- )

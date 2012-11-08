@@ -74,6 +74,10 @@ App.Router = Ember.Router.extend
         
       # event -------------------------------------------
       deleteProject: (router, event) ->
+        event.view.confirmDeletion()
+        event.preventDefault()
+      # event -------------------------------------------
+      deleteProjectConfirmed: (router, event) ->
         editController = router.get('projectEditController')
         editController.deleteProject()
         event.preventDefault()
@@ -88,7 +92,11 @@ App.Router = Ember.Router.extend
         project = event.context      
         router.get('projectsController').loadProjectRules(project)
         event.preventDefault()
+      forceProjectRules: (router, project) ->
+        router.get('projectsController').loadProjectRules(project)
+        event.preventDefault()
 
+      # event -------------------------------------------
       projectRulesLoaded: (router, project) ->
         router.get('projectsController').set('selected', project)  
         App.get('router').transitionTo('loggedInState.projectConfigState.showRulesState.indexState')
@@ -124,8 +132,7 @@ App.Router = Ember.Router.extend
         #SETUP
         route: '/edit'
         connectOutlets: (router) ->
-          editController = router.get('projectEditController')           
-          editController.resetStates()   
+          editController = router.get('projectEditController')                      
           homeController = router.get('homeController')
           homeController.connectOutlet({name: 'projectEdit', outletName: 'homeContentOutlet'} ) 
         #EVENTS

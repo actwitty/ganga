@@ -1,10 +1,15 @@
-App.Project = Ember.Object.extend(      
-  created_at: null
+App.Project = Ember.Object.extend  
   app_id: null
   account_id: null
   schema: null
   rules: null
-  description: {email: null, address: null, domain: 'http://', name: null}   
+  description: 
+              email: null
+              address: null
+              domain: 'http://'
+              name: null
+              super_actor_id: null
+              created_at: null
   hasManyRules: null
 
 
@@ -35,10 +40,11 @@ App.Project = Ember.Object.extend(
     }
    
   created_time: (->
-    time = @get('created_at')    
+    time = @get('description.created_at') 
+    console.log @get 'description'
     date = new Date (time)
     date.toString()
-  ).property('created_at')
+  ).property('description.created_at')
 
   filterData: ->
     data = {}
@@ -48,4 +54,3 @@ App.Project = Ember.Object.extend(
     return data
 
 
-)

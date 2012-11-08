@@ -2,7 +2,7 @@ require 'pp'
 class ApplicationController < ActionController::Base
   #protect_from_forgery
 
-  respond_to :json
+  respond_to :json, :html
 
   #before_filter :set_locale
   #before_filter :set_access_control_headers

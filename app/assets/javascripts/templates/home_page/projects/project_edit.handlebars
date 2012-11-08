@@ -15,6 +15,7 @@
 {{/if}}
 
 {{view App.AlertView alertParamsBinding="view.alert"}}
+{{view App.InlineAlertView }}
 
 {{#if controller.isNew}}
 	<div/>
@@ -32,7 +33,7 @@
 			App Name:
 		</div>
 		<div class="input_div">
-			{{view App.RequiredAFTextField valueBinding="description.name" placeholder="App Name" name="App Name"}}
+			{{view App.RequiredNameField valueBinding="description.name" placeholder="App Name" name="App Name"}}
 		</div>
 	</div>
 
@@ -41,7 +42,7 @@
 			App Domain:
 		</div>
 		<div class="input_div">		
-			{{view App.RequiredTextField valueBinding="description.domain" placeholder="App Domain" name="App Domain"}}
+			{{view App.RequiredUrlField valueBinding="description.domain" placeholder="App Domain" name="App Domain"}}
 		</div>
 	</div>
 

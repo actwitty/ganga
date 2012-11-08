@@ -48,7 +48,7 @@ class AppsController < ApplicationController
     raise ret[:error] if !ret[:error].blank?
 
  		hash = ret[:return].attributes
-		hash["id"] = hash["_id"]
+		hash["app_id"] = hash["_id"]
 		hash.delete("_id")
 
 	  respond_with(hash, status: 200, :location => "nil")			
