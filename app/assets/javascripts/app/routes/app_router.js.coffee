@@ -68,7 +68,8 @@ App.Router = Ember.Router.extend
       newProject: (router, event) ->        
         editController = router.get('projectEditController')
         editController.set('content', App.Project.create())
-        router.transitionTo('loggedInState.newProjectState')
+        editController.set('isNew', true)
+        router.transitionTo('loggedInState.editProjectState')
         event.preventDefault()
         
       # event -------------------------------------------
@@ -115,24 +116,31 @@ App.Router = Ember.Router.extend
           homeController.connectOutlet({name: 'bareBone',outletName: 'homeContentOutlet'} )
 
       #state -------------------------------------
-      newProjectState: Ember.Route.extend
-        route: '/new'
-        connectOutlets: (router) ->          
-          editController = router.get('projectEditController') 
-          editController.set('isNew', true)
-          editController.resetStates()
-          homeController = router.get('homeController')
-          homeController.connectOutlet({name: 'projectEdit', outletName: 'homeContentOutlet'} )
+        
+        #EVENTS
+
       #state -------------------------------------
       editProjectState: Ember.Route.extend
         #SETUP
         route: '/edit'
         connectOutlets: (router) ->
-          editController = router.get('projectEditController') 
-          editController.set('isNew', false)
+          editController = router.get('projectEditController')           
           editController.resetStates()   
           homeController = router.get('homeController')
           homeController.connectOutlet({name: 'projectEdit', outletName: 'homeContentOutlet'} ) 
+        #EVENTS
+        updateProject: (router, event) ->
+          projController = App.router.get('projectEditController')
+          projController.postProject()
+          event.preventDefault()
+
+        submitNewProject: (router, event) ->
+          projController = App.router.get('projectEditController')
+          projController.postProject()
+          event.preventDefault()          
+
+        cancelProjectEdit: (router, event) ->
+          event.view.confirmCancellation()
 
       #state -------------------------------------
       listProjectState: Ember.Route.extend
@@ -149,6 +157,7 @@ App.Router = Ember.Router.extend
           # Context comes as argument
           project = event.context
           editController = router.get('projectEditController')
+          editController.set('isNew', false)
           router.get('projectsController').set('selected', project)  
           router.transitionTo('loggedInState.editProjectState')        
           event.preventDefault()

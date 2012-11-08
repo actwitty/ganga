@@ -1,0 +1,10 @@
+{{#if view.message}}
+  <div style="width:100%;display:block;">
+    <div style="width:600px;display:block;margin:auto;margin-top:0px;">
+      <div {{bindAttr class="view.class"}}>
+        <a class="close" data-dismiss="alert">×</a>
+        <div id="flash_notice">{{view.message}}</div>
+      </div>
+    </div>
+  </div>
+{{/if}}

@@ -48,14 +48,16 @@ App.ProjectEditController = Em.ObjectController.extend(
         if data.status is true          
           projsController = App.router.get('projectsController')
           content = controllerObj.get('content')
-          projsController.deleteProj(content)          
+          projsController.deleteProj(content)    
+
 
         controllerObj.set 'isBusy', false
+        App.get("router").send("listProject")
       # Error callback -------------------------
       error= ()->
         controllerObj.set 'isBusy', false
 
-      App.postRequest url, {app_id : del_app_id}, success, error
+      App.getRequest url, {app_id : del_app_id}, success, error
 
     else
       return false
@@ -85,6 +87,6 @@ App.ProjectEditController = Em.ObjectController.extend(
       controllerObj.set 'isError', false
       
     content = @get 'content'    
-    App.postRequest url, content.filterData(), success, error
+    App.getRequest url, content.filterData(), success, error
   
  )

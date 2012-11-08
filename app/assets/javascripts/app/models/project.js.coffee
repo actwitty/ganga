@@ -4,7 +4,7 @@ App.Project = Ember.Object.extend(
   account_id: null
   schema: null
   rules: null
-  description: {email: null, address: null, domain: null, name: null}   
+  description: {email: null, address: null, domain: 'http://', name: null}   
   hasManyRules: null
 
 

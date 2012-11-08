@@ -14,6 +14,7 @@
 	</div>
 {{/if}}
 
+{{view App.AlertView alertParamsBinding="view.alert"}}
 
 {{#if controller.isNew}}
 	<div/>
@@ -50,7 +51,7 @@
 			App Email:
 		</div>
 		<div class="input_div">				
-			{{view App.NonRequiredTextField valueBinding="description.email" placeholder="Admin Email" name="App Admin Email"}}
+			{{view App.RequiredEmailField valueBinding="description.email" placeholder="Admin Email" name="App Admin Email"}}
 		</div>
 	</div>
 
@@ -65,15 +66,13 @@
 
 	<div class="single">
 		{{#if controller.isNew}}
-			<div class="input-prepend">   
-     			<a class='btn btn-large btn-primary edit_btns'  {{action "submitNewProject" target="App.projectEditView"}} > Create App</a>   
-    		</div>
+			<a class='btn btn-large btn-success edit_btns'  {{action "submitNewProject"}} > Create App</a>   
 		{{else}}
-			<a class='btn btn-large btn-primary edit_btns'   {{action "updateProject" target="App.projectEditView"}} > Update App</a>  
+			<a class='btn btn-large btn-success edit_btns'   {{action "updateProject"}} > Update App</a>  
 
 		{{/if}}
 
-		<a class='btn btn-large btn-inverse edit_btns'  {{action "listProject" }} > Cancel </a>  		
+		<a class='btn btn-large  edit_btns'  {{action "cancelProjectEdit" }} > Cancel </a>  		
 	</div>
 </div>
 {{#if controller.stateIsBusy}}
