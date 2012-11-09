@@ -2,7 +2,11 @@ App.BannerView = Ember.View.extend
   templateName: 'banner/banner'
   showHideClass: 'hide'
   msgContextBinding: 'App.router.applicationController.msgContext'
-  
+
+  init: ->
+    @_super()
+    @msgContextChangeObserve()
+    
   msgContextChangeObserve: (-> 
     msgContext  = @get 'msgContext'
     if msgContext .hasOwnProperty('message')
@@ -12,6 +16,6 @@ App.BannerView = Ember.View.extend
 
   ).observes('msgContext')
 
-  # hideInfo: (event) ->
-  #   @set 'showHideClass', 'hide'
-  #   event.preventDefault()
+  hideInfo: (event) ->
+    @set 'showHideClass', 'hide'
+    event.preventDefault()
