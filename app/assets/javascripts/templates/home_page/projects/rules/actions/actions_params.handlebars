@@ -1,3 +1,4 @@
+{{view App.InlineAlertView }}
 {{#each template_config in view.actionParams}}
   
   {{#shouldShow template_config.key}}
@@ -8,7 +9,7 @@
           {{getTemplatePlaceHolder template_config.key}}
         </div>
         <div class="value">
-          {{view App.RequiredAFTextField valueBinding="template_config.value" class="in" }}
+          {{view App.RequiredNumberOnly name='Numeric field' valueBinding="template_config.value" class="in" }}
         </div>
       </div>
     {{/isNumeric}}
@@ -69,7 +70,7 @@
           {{getTemplatePlaceHolder template_config.key}}
         </div>
         <div class="value">
-          {{view App.RequiredAFTextField valueBinding="template_config.value" class="in"}}
+          {{view App.RequiredUrlField name='Url ' valueBinding="template_config.value" class="in"}}
         </div>
       </div>        
     {{/isUrl}}

@@ -1,11 +1,10 @@
-{{#if view.displayText}}
-  <div style="width:100%;" {{bindAttr class="view.alertShowClass"}}>
-    <div style="width:600px;display:block;margin:auto;margin-top:0px;">
-      <div {{bindAttr class="view.alertClass"}}>
-        <a class="close"  {{action closeOnAlert target="App.inlineAlertView"}}>×</a>
-        <h4><b>{{view.header}}</b></h4>
-        <div id="flash_notice">{{view.displayText}}</div>
-      </div>
-    </div>
-  </div>
-{{/if}}
+
+<div style="width:100%;" {{bindAttr class="view.alertShowClass"}}>
+	<div style="width:600px;display:block;margin:auto;margin-top:0px;">
+	  <div {{bindAttr class="view.alertClass"}}>
+	    <a class="close"  {{action closeOnAlert target="App.inlineAlertView"}}>×</a>
+	    <h4><b>{{view.header}}</b></h4>
+	    <div id="flash_notice">{{view.displayText}}</div>
+	  </div>
+	</div>
+</div>

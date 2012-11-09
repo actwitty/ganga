@@ -24,7 +24,7 @@ App.InlineAlertView = Ember.View.extend
     
   #-----------------------------------------------------------
   init: ->    
-    @_super()
+    @_super()    
     controller = App.get("router.applicationController")
     controller.set('errorMessage', {})
 
@@ -49,14 +49,14 @@ App.InlineAlertView = Ember.View.extend
       @set 'header', ''
 
     
-    if errorMessage.hasOwnProperty('message') and errorMessage.message.length isnt 0
+    if errorMessage.hasOwnProperty('message') and errorMessage.message.length isnt 0      
       @set 'displayText', errorMessage.message      
-      @set 'alertShowClass', 'showBlock'
+      @set 'alertShowClass', 'show_block'
     else   
+      console.log 'BAILING OUT'
       @set 'header', ''
       @set 'alertClass', ''
-      @set 'displayText', ''
-      hide = @get 'hideStyle'
+      @set 'displayText', null
       @set 'alertShowClass', 'hide'
 
   ).observes('App.router.applicationController.errorMessage')

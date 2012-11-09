@@ -1,20 +1,8 @@
-{{#if view.showInfo}}
-  <div class="message">
-      <a alt="close" class="close_button" {{action "hideInfo" target="App.conditionsView"}}></a>
-
-      <div class="message_text_container">
-          <h3> Configure the rules for this app </h3>
-          There are no rules set for this application
-
-      </div>
-
-      <a href="/" class="info_btn_pos btn btn-info">
-          Learn more      
-      </a>
-  </div>
-{{/if}}
-
+{{view App.BusyView}}
+{{view App.BannerView }}
 {{view App.AlertView alertParamsBinding="view.alert"}}
+{{view App.InlineAlertView }}
+
 
 <div class="rule_edit">
 

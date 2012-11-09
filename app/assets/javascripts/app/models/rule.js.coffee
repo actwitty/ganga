@@ -7,6 +7,7 @@ App.Rule = Ember.Object.extend
   action_param: null
   conditions: null
 
+
   hasManyConditions: []
   actionParamArr: []
 
@@ -57,6 +58,11 @@ App.Rule = Ember.Object.extend
         param.value = action_param[property]      
         actionParamArr.push(param)
     @set 'actionParamArr', actionParamArr
+
+  displayAction: (->
+    action = @get 'action'
+    rbT.templateName[action]
+  ).property('action')
 
   
 

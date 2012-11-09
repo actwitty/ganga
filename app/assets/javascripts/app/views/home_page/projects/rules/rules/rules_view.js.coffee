@@ -16,10 +16,11 @@ App.RulesView = Ember.View.extend(
     else
       #HELP DOC LINK      
       msgContext = 
-                    header: "Start setting rules for this application"
-                    message: "You have not set a trigger rule for this application. Click the button below to start with a new rule"
-                    href: "/help#firstRule"
-                    buttonText: "Learn"
+                    header: "Manage rules set for this application"
+                    message: "You can manage the conditions for trigger of each rule for the application"
+                    href: "/help#manageRules"
+                    buttonText: "Know More"        
+      
 
     app = App.get("router.applicationController")
     app.set('msgContext', msgContext)
