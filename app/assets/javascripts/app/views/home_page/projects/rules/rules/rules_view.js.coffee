@@ -1,4 +1,4 @@
-App.RulesView = Ember.View.extend(
+App.RulesView = Ember.View.extend
   templateName: 'home_page/projects/rules/rules'
 
   init: ->
@@ -25,11 +25,41 @@ App.RulesView = Ember.View.extend(
     app = App.get("router.applicationController")
     app.set('msgContext', msgContext)
 
+  # --------------------------------------------------------
+  confirmDeletion: (rule)->
+    current_this = @
+    showAlertOnDelete = ->    
+      alert = 
+              activate: true
+              header: 
+                      main : "Delete the rule "
+                      note : "You have requested to delete this rule."
+              detail: "Clicking yes will delete the triggers associated with this rule ? "
+              first_btn:
+                        class : "btn-danger"
+                        text  : "Yes"
+                        callback : (context)->
+                                  alert = context.get 'alert'
+                                  alert.activate = false
+                                  alert= null  
+                                  context.set 'alert', alert
+                                  # TODO: May be route it through the App Router
+                                  App.get("router").send("deletionConfirmed", rule)                                  
+                                  event.preventDefault()                              
+                        context : current_this
+              second_btn:
+                        class : "btn-success"
+                        text  : "No"
+                        callback : (context)->
+                                  alert = context.get 'alert'
+                                  alert.activate = false
+                                  alert= null  
+                                  context.set 'alert', alert                                    
+                                  event.preventDefault()
+                        context : current_this
+    
+      current_this.set 'alert', alert
 
-  deleteRule: (event) ->
-    rule = event.context
-    App.get('router.rulesController.selected')
+    showAlertOnDelete()
 
-    event.preventDefault()    
   
-)

@@ -73,7 +73,7 @@ App.RequiredNameField = Ember.TextField.extend
     if name.length is 0
       name =  ''
       message = @get ('name')
-      message = message.concat(' cannot be blank, can be only alphabets, numerics, underscore')
+      message = message.concat(' cannot be blank, can be only alphabets, numerics, underscore or hyphen')
       App.get('router.applicationController').setInlineAlert('error', 'Validation Failed !', message ) 
     else
       if nameReg.test(name) is true

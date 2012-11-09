@@ -5,7 +5,14 @@
 {{#if controller.content.length}}
 
     <div class="rule_list">
-      <h3> {{controller.content.length}} Rules are configured for the application </h3>
+      <div class="add_rule_box">
+        <div class="btn_box">
+           <a class="btn btn-large btn-success" {{action createRule}}> Add a new rule </a>
+        </div>
+      </div>
+      <div class="label_box">
+        <h3> {{controller.content.length}} Rules are configured for the application </h3>
+      </div>
       {{#each rule in controller.content}}   
 
         
@@ -36,7 +43,7 @@
               </div>
 
               <div class='event'>
-                {{rule.event}}
+                {rule.event}
               </div>       
                  
             </div>

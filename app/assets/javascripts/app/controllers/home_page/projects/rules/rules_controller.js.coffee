@@ -235,7 +235,25 @@ App.RulesController = Em.ArrayController.extend
     App.getRequest  url, json, success, error
   #########################################################
   # Delete a Rule
-  deleteRule: ->
+  deleteRule: (rule)->
+    url = @get 'url.delete'
+    controllerObj = this
+    del_app_id = App.get('router.projectsController.selected.app_id')
+    console.log del_app_id
+    del_rule_id = rule.get('id')
+    # Success callback -------------------------
+    success= (data) ->
+       
+      if data.status is true                   
+        content = controllerObj.get('content')
+        content.removeObject(rule)         
+        App.get('router.applicationController').setInlineAlert('success', 'Successfully Deleted !', 'Rule has been removed permanently.' )        
+    # Error callback -------------------------
+    error= ()->
+      App.get('router.applicationController').setInlineAlert('error', 'Deletion Failed !', 'Failed to delete the rule' ) 
+    App.getRequest url, {app_id : del_app_id, rule_id: del_rule_id}, success, error
+
+      
 
 
 

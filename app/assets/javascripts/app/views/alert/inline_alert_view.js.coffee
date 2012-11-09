@@ -53,7 +53,6 @@ App.InlineAlertView = Ember.View.extend
       @set 'displayText', errorMessage.message      
       @set 'alertShowClass', 'show_block'
     else   
-      console.log 'BAILING OUT'
       @set 'header', ''
       @set 'alertClass', ''
       @set 'displayText', null
