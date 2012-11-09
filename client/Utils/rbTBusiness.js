@@ -1,8 +1,8 @@
 /* MAIN BUSINESS SPECIFIC CALLS */
 var RBT = function() {
-	this._appID = rbTAPP.getAppID();
-	this._accountID = rbTAPP.getAccountID();
-	this._status = rbTAPP.isrbTAlive();
+	this._appID = trigger_fish.rbTAPP.getAppID();
+	this._accountID = trigger_fish.rbTAPP.getAccountID();
+	this._status = trigger_fish.rbTAPP.isrbTAlive();
 };
 
 
@@ -13,7 +13,7 @@ var RBT = function() {
 */
 RBT.prototype.isAlive = function()
 {
-	this._status = rbTAPP.isrbTAlive();
+	this._status = trigger_fish.rbTAPP.isrbTAlive();
 	return this._status;
 };
 
@@ -31,10 +31,10 @@ RBT.prototype.sendEvent = function(event, params)
   if (!event || typeof(event) != "string" || event === "" ) {
     return;
   }
-  rbTServerChannel.makeRequest({"event" : event, 
+  trigger_fish.rbTServerChannel.makeRequest({"event" : event, 
                                 "params": params,
-                                "cb"    : { success: rbTServerResponse.handleEvent,
-                                            error  : rbTServerResponse.defaultError
+                                "cb"    : { success: trigger_fish.rbTServerResponse.handleEvent,
+                                            error  : trigger_fish.rbTServerResponse.defaultError
                                           }
                               });
 };
@@ -48,10 +48,11 @@ RBT.prototype.sendEvent = function(event, params)
 RBT.prototype.identify = function(params)
 {
   "use strict";
-  rbTServerChannel.makeRequest({"url"    : rbTServerChannel.url.identify, 
-                                "params" : params,
-                                "cb"     : { success: rbTServerResponse.setActorID,
-                                             error  : rbTServerResponse.defaultError
+  trigger_fish.rbTServerChannel.makeRequest({"url"     : trigger_fish.rbTServerChannel.url.identify, 
+                                "params"  : params,
+                                "identify": true,
+                                "cb"      : { success: trigger_fish.rbTServerResponse.setActorID,
+                                             error  : trigger_fish.rbTServerResponse.defaultError
                                            }
                               });
 };
@@ -67,13 +68,13 @@ RBT.prototype.identify = function(params)
 RBT.prototype.setActor = function(params)
 {
   "use strict";
-  if (rbTActor.propExist(params))
+  if (trigger_fish.rbTActor.propExist(params))
     return;
-  rbTServerChannel.makeRequest({"url"        : rbTServerChannel.url.setActor, 
+  trigger_fish.rbTServerChannel.makeRequest({"url"        : trigger_fish.rbTServerChannel.url.setActor, 
                                 "params"     : params,
                                 "set_actor"  : true,
-                                "cb"         : { success: rbTServerResponse.setActorProperty,
-                                                 error  : rbTServerResponse.defaultError
+                                "cb"         : { success: trigger_fish.rbTServerResponse.setActorProperty,
+                                                 error  : trigger_fish.rbTServerResponse.defaultError
                                                }
                               });
 };
