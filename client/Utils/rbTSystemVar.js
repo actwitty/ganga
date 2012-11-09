@@ -1,5 +1,5 @@
 /* Rule Bot scope to handle systems variables */
-var rbTSystemVar = {
+trigger_fish.rbTSystemVar = {
 
   // All properties will be set here
   properties : {},
@@ -7,12 +7,12 @@ var rbTSystemVar = {
   /** Initialize system variable script
    *  @return void
    */
-  init : function()
+  init : function(respData)
   {
     "use strict";
     function isSystemVarDirty()
     {
-      var sysVarInCookie = rbTCookie.getCookie(rbTCookie.defaultCookies.systemProp);
+      var sysVarInCookie = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.systemProp);
       
       if (!sysVarInCookie) {
         return true; 
@@ -34,10 +34,20 @@ var rbTSystemVar = {
       // for update only if we have cookie miss 
       var systemVars = this.getProperty();
       this.setPropertyInCookie(systemVars);
+      var schema = respData.app.schema;
+      this.notifyServerOfChange(schema?schema.system:undefined);
       //rbTAPP.setSystemProperty(systemVars);
     }
   },
 
+  /**
+  *
+  *
+  */
+  notifyServerOfChange : function(systemVarsDesired)
+  {
+    trigger_fish.rbTAPP.log({"message":"System variables desired from dashboard","variables":systemVarsDesired});
+  },
 
   /** Set system variable property
    *  @param {string} type
@@ -71,24 +81,23 @@ var rbTSystemVar = {
   */
   getProperty : function(propertyTypes)
   {
-    "use strict";
     return this.properties;
   },
 
   setPropertyInCookie : function(property)
   {
-    rbTCookie.setCookie(rbTCookie.defaultCookies.systemProp, JSON.stringify(property));
+    trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.systemProp, JSON.stringify(property));
   },
 
   setEJProp : function(json)
   {
-     rbTSystemVar.setProperty("country",json.CountryName); 
-     rbTSystemVar.setProperty("timezone",json.LocalTimeZone); 
+     this.setProperty("country",json.CountryName); 
+     this.setProperty("timezone",json.LocalTimeZone); 
   },
 
   setSessionJSProp : function(json)
   {
-    rbTAPP.log({"message":"System Properties got through Session JS","data":json});
+    trigger_fish.rbTAPP.log({"message":"System Properties got through Session JS","data":json});
     this.setProperty("browser",json.browser.browser);
     this.setProperty("browser_version",json.browser.version);
     this.setProperty("operatingsystem",json.browser.os);
@@ -105,7 +114,7 @@ var rbTSystemVar = {
 
 var backcode="1102012";
 function EasyjQuery_Cache_IP(fname,json) {
-  rbTAPP.log({"message":"easy jquery response","data":json});
+  trigger_fish.rbTAPP.log({"message":"easy jquery response","data":json});
   eval(fname + "(json);");
 }
 function EasyjQuery_Get_IP(fname,is_full) {
@@ -235,9 +244,9 @@ var session_fetch = (function(win, doc, nav)
         //rbTSystemVar.setProperty(property, unloaded_modules[property] );
         sessionJSProp[property] = unloaded_modules[property];
       }
-      rbTSystemVar.setSessionJSProp(sessionJSProp);
+      trigger_fish.rbTSystemVar.setSessionJSProp(sessionJSProp);
     })();
-    EasyjQuery_Get_IP("rbTSystemVar.setEJProp");
+    EasyjQuery_Get_IP("trigger_fish.rbTSystemVar.setEJProp");
   };
 
 

@@ -1,4 +1,4 @@
-var rbJSON = {
+trigger_fish.rbJSON = {
 
   "rb" : {},
   "header" : "rbJSON.rb",
@@ -73,10 +73,11 @@ var rbJSON = {
 
   typify : function(obj)
   {
-    this.rb = {};
+    /*this.rb = {};
     this.state = [];
     this.extend(obj);
-    return this.rb;
+    return this.rb;*/
+    return obj;
   }
 
 };

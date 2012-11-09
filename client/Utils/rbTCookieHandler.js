@@ -1,4 +1,4 @@
-var rbTCookie = {
+trigger_fish.rbTCookie = {
 
   namePrefix : "RBT__",
 
@@ -54,7 +54,7 @@ var rbTCookie = {
         return false;
       }
     } catch(e) {
-      rbTAPP.reportError({"exception" : e.message,
+      trigger_fish.rbTAPP.reportError({"exception" : e.message,
                           "message"   : "cookie existence failed",
                           "name"      : cookieName,
                           "log"       : true 
@@ -121,7 +121,7 @@ var rbTCookie = {
 
     } catch(e) {
       // FIXME  what to do?
-      rbTAPP.reportError({"exception" : e.message,
+      trigger_fish.rbTAPP.reportError({"exception" : e.message,
                           "message"   : "cookie set failed",
                           "name"      : cookieName,
                           "value"     : cookieValue,
@@ -147,7 +147,7 @@ var rbTCookie = {
                           "; expires=Thu, 01-Jan-70 00:00:01 GMT";
     } catch (e) {
       // FIXME what to do?
-      rbTAPP.reportError({"exception" : e.message,
+      trigger_fish.rbTAPP.reportError({"exception" : e.message,
                           "message"   : "cookie delete failed",
                           "name"      : cookieName,
                           "log"       : true 
@@ -174,7 +174,7 @@ var rbTCookie = {
       }
     } catch(e) {
       // FIXME what to do?
-      rbTAPP.reportError({"exception" : e.message,
+      trigger_fish.rbTAPP.reportError({"exception" : e.message,
                           "message"   : "cookie flush all failed",
                           "log"       : true 
                          });

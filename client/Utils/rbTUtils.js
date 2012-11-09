@@ -1,4 +1,4 @@
-var rbTUtils = {
+trigger_fish.rbTUtils = {
   /** Initialize jquery if needed be
     *  @return void
     *
@@ -7,7 +7,7 @@ var rbTUtils = {
   {
     function includeJQ()
     { 
-      this.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",rbTAPP.wake_RBT_APP);
+      this.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",trigger_fish.rbTAPP.wake_RBT_APP);
     }
 
     if (typeof jQuery != 'undefined') {
@@ -65,7 +65,7 @@ var rbTUtils = {
         if(!this.readyState ||
             this.readyState == "loaded" || 
             this.readyState == "complete") {
-            rbTDebug.log("Script "+ url +"loaded successfully");
+            trigger_fish.rbTDebug.log("Script "+ url +"loaded successfully");
             if (callback) {
               if (params)
                 callback(params);
