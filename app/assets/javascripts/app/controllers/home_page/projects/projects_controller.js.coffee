@@ -50,7 +50,7 @@ App.ProjectsController = Em.ArrayController.extend
       error= () ->
         #Todo error handling
       json = 
-            app_id : project.get 'app_id'
+            app_id : project.get 'id'
             events : false
       App.getRequest @get('rules_load'), json, success, error
     else
