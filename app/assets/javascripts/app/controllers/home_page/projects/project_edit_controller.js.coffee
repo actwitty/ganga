@@ -42,7 +42,7 @@ App.ProjectEditController = Em.ObjectController.extend
     domain = project.get 'description.domain'
     
     nameReg = /^[-a-zA-Z0-9_ ]+$/
-    urlReg = /http(s?):\/\/www\.[A-Za-z0-9\.-]{3,}\.[A-Za-z]{3}/
+    urlReg = /http(s?):\/\/www\.[A-Za-z0-9\.-]{3,}\.[A-Za-z]{2,4}/
     emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/    
     if email is null or name is null and domain is null or
        email.length is 0 or name.length is 0 or domain.length is 0 or

@@ -57,8 +57,7 @@ App.ConditionsView = Ember.View.extend
 
 
   # -----------------------------------------------------
-  cancelRuleEditHandler: (event) ->
-    # -----------------------------------------------------
+  cancelRuleEditHandler: (event) ->    
     current_this = @
     showAlertOnCancel = ->    
 

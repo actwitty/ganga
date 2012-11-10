@@ -90,9 +90,9 @@ App.RulesController = Em.ArrayController.extend
     rule = @get 'selected'
        
     if editState is 'new'        
-      @createRule(project.get('app_id'), rule.serialize())
+      @createRule(project.get('app_id'), rule)
     else  
-      @updateRule(project.get('app_id'), rule.serialize())                    
+      @updateRule(project.get('app_id'), rule)                    
       
   #########################################################
   translatePropertyName: (property) ->    
@@ -204,22 +204,25 @@ App.RulesController = Em.ArrayController.extend
   ).observes('App.router.projectsController.selected')
   #########################################################
   # Create a Rule
-  createRule: (proj_app_id, rule_data)->
-    
+  createRule: (proj_app_id, ruleNew)->
+    controllerObj = this
     success= (data) ->
+      if data.hasOwnProperty('rule_id')
+        ruleNew.set 'id', data.rule_id
+        controllerObj.get('content').pushObject(ruleNew)
       App.get("router").send("reenterProjectRules")
     error= () ->
       # TODO: Pop out error
     url = @get 'url.create'
     json = 
             app_id : proj_app_id
-            rule : rule_data
+            rule : ruleNew.serialize()
     console.log json
     App.getRequest  url, json, success, error
 
   #########################################################
   # Update a Rule  
-  updateRule: (proj_app_id, rule_data)->
+  updateRule: (proj_app_id, ruleNew)->
 
     success= (data) ->
       App.get("router").send("reenterProjectRules")
@@ -228,7 +231,7 @@ App.RulesController = Em.ArrayController.extend
     url = @get 'url.update'
     json = 
             app_id : proj_app_id
-            rule : rule_data
+            rule : ruleNew.serialize()
             rule_id : rule_data.id
     rule_data.id = null
 
