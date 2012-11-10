@@ -34,7 +34,7 @@ App.operationsList =
                                 'cns' : 'contains'
                                 'rgx' : 'regular exp'
                                 'set' : 'set'
-                      'Fixnum' :  
+                      'Number' :  
                                 'gtn' : 'greater than'
                                 'ltn' : 'lesser than'
                                 'eql' : 'equal to'

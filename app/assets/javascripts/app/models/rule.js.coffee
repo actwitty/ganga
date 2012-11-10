@@ -20,14 +20,12 @@ App.Rule = Ember.Object.extend
         break
 
       action_param = {}
-      @set 'action', defaultAction
-      console.log @get 'action'
-      console.log rbT.templateArgs[defaultAction]  
+      @set 'action', defaultAction      
       for property of  rbT.templateArgs[defaultAction]  
         action_param[property] = rbT.templateArgs[defaultAction][property]
 
       @set 'action_param', action_param
-      console.log 
+      
   init: ->
     @_super  
     hasManyConditions = []

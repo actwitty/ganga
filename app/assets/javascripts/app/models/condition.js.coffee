@@ -1,18 +1,18 @@
 #TODO: I don't have a clear idea on how to use this in a non DS/REST Manager setup, parked this definition
 App.Condition = Ember.Object.extend
-  property: null
+  property: 'browser'
   type: 'String'
   scope: 'e'
   negation: 'false'
-  operation: null
-  value1: null
-  value2: null
+  operation: 'eql'
+  value1: ''
+  value2: ''
   connect: 'and'
   valueOptions: null
       
   opList: null
   init: ->
-    @_super()
+    @_super()    
     operation = @get 'operation'     
 
     type = @get 'type'
@@ -23,6 +23,7 @@ App.Condition = Ember.Object.extend
         if App.operationsList[type].hasOwnProperty(op)
           @set 'operation', op
           break
+
     property = @get 'property'
     if App.LimitedValueList.hasOwnProperty(property)
       @set 'valueOptions', App.LimitedValueList[property]
