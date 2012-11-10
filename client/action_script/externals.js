@@ -1,9 +1,9 @@
 
-rbT.facebook = {
+trigger_fish.rbT.facebook = {
 	setContext: function(context){
 		//
-        //  rbT.facebook.likePage
-		//  rbT.facebook.appID
+        //  trigger_fish.rbT.facebook.likePage
+		//  trigger_fish.rbT.facebook.appID
 
 	},
 	getHTML: {
@@ -19,7 +19,7 @@ rbT.facebook = {
 
 }
 
-rbT.twitter = {
+trigger_fish.rbT.twitter = {
 
 
 };

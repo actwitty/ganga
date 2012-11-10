@@ -1,6 +1,6 @@
 "use strict";
 
-rbT.eventHandler = {
+trigger_fish.rbT.eventHandler = {
 	
  //**************************************************************************************** 
 	init: function(){
@@ -9,7 +9,7 @@ rbT.eventHandler = {
         
         for(var i = 0; i<eles.length; i++){
 
-			eles[i].onclick= rbT.eventHandler.clickListner;
+			eles[i].onclick= trigger_fish.rbT.eventHandler.clickListner;
 
 		}
  },
@@ -33,18 +33,18 @@ rbT.eventHandler = {
    {
      if ( idMatch[3] == 'Close')
      {
-        rbT.eventHandler.closeTempl(idMatch);
+        trigger_fish.rbT.eventHandler.closeTempl(idMatch);
      }
   
     else if ( idMatch[3] == 'Roi' )
     {
-         rbT.eventHandler.roiFromTemplClick(idMatch,evt);
+         trigger_fish.rbT.eventHandler.roiFromTemplClick(idMatch,evt);
 
     }
 
   }
   else{
-          rbT.sendErrorToRBServer(" Close or ROI Click is Not valid ");
+          trigger_fish.rbT.sendErrorToRBServer(" Close or ROI Click is Not valid ");
 
   }
 
@@ -66,7 +66,7 @@ rbT.eventHandler = {
 	{
 
 
-       rbT.templTimers['templ.displaytimer'] = setInterval(function(){rbT.eventHandler.timerDeleteTempl
+       trigger_fish.rbT.templTimers['templ.displaytimer'] = setInterval(function(){trigger_fish.rbT.eventHandler.timerDeleteTempl
        (tempalteName)},timerValue); 
        
   },
@@ -81,15 +81,15 @@ rbT.eventHandler = {
        
       if(tempMatch[0] != 'modal' )
        { 
-           id = "rb" + rbT.makeFirstLetterCapital(tempMatch[0])+rbT.makeFirstLetterCapital(tempMatch[2])+rbT.makeFirstLetterCapital(tempMatch[4])+"BaseContainer";
+           id = "rb" + trigger_fish.rbT.makeFirstLetterCapital(tempMatch[0])+trigger_fish.rbT.makeFirstLetterCapital(tempMatch[2])+trigger_fish.rbT.makeFirstLetterCapital(tempMatch[4])+"BaseContainer";
        }     
 
 
      else if(tempMatch[0] == 'modal')
      {
 
-         var id = "rb" + rbT.makeFirstLetterCapital(tempMatch[0])+rbT.makeFirstLetterCapital(tempMatch[2])+rbT.makeFirstLetterCapital(tempMatch[4])+"BaseContainer";
-         var transId = "rb" + rbT.makeFirstLetterCapital(tempMatch[0])+rbT.makeFirstLetterCapital(tempMatch[2])+rbT.makeFirstLetterCapital(tempMatch[4])+"TranblockContainer";
+         var id = "rb" + trigger_fish.rbT.makeFirstLetterCapital(tempMatch[0])+trigger_fish.rbT.makeFirstLetterCapital(tempMatch[2])+trigger_fish.rbT.makeFirstLetterCapital(tempMatch[4])+"BaseContainer";
+         var transId = "rb" + trigger_fish.rbT.makeFirstLetterCapital(tempMatch[0])+trigger_fish.rbT.makeFirstLetterCapital(tempMatch[2])+trigger_fish.rbT.makeFirstLetterCapital(tempMatch[4])+"TranblockContainer";
          var transBase = document.getElementById(transId);
          if(transBase != 'undefined')
          transBase.parentNode.removeChild(transBase);
@@ -97,20 +97,20 @@ rbT.eventHandler = {
      
        
         
-        rbT.setTemplatesDisplayLockFlags(tempMatch[0],false);
+        trigger_fish.rbT.setTemplatesDisplayLockFlags(tempMatch[0],false);
         
         var Base = document.getElementById(id);
 
          if( typeof Base === 'undefined')
          {
-         	  rbT.sendErrorToRBServer("Not able to find template Base for timeout Delete ");
+         	  trigger_fish.rbT.sendErrorToRBServer("Not able to find template Base for timeout Delete ");
 
          }
 
          else
          {
             Base.parentNode.removeChild(Base);
-            clearInterval(rbT.templTimers['templ.displaytimer']);
+            clearInterval(trigger_fish.rbT.templTimers['templ.displaytimer']);
 
          }	
 
@@ -121,9 +121,9 @@ rbT.eventHandler = {
 
    closeTempl:function(idMatch){
 
-      if(rbT.templTimers['templ.displaytimer'])
+      if(trigger_fish.rbT.templTimers['templ.displaytimer'])
       {
-          clearInterval(rbT.templTimers['templ.displaytimer']);
+          clearInterval(trigger_fish.rbT.templTimers['templ.displaytimer']);
 
       }
       if(idMatch[0] == 'Topbar' || idMatch[0] == 'Bottombar' )
@@ -152,10 +152,10 @@ rbT.eventHandler = {
       {
          Base.parentNode.removeChild(Base);
 
-         rbT.setTemplatesDisplayLockFlags(rbT.makeFirstLetterSmall(idMatch[0]),false);
+         trigger_fish.rbT.setTemplatesDisplayLockFlags(trigger_fish.rbT.makeFirstLetterSmall(idMatch[0]),false);
          
       }else{
-            rbT.sendErrorToRBServer("Not able to find template Base for Normal X Delete ");
+            trigger_fish.rbT.sendErrorToRBServer("Not able to find template Base for Normal X Delete ");
 
       }
 
@@ -167,18 +167,38 @@ rbT.eventHandler = {
   roiFromTemplClick:function(idMatch,evt){
 
     var link = evt.target.href;
+    
     window.open(link);
+    
+    params={};
+
+   params.button = "";
+    
+    for(var i=0 ; i<idMatch.length ; i++)
+    {  
+           params.button = params.button + idMatch[i]
+
+    }
+
+    params.button = params.button + " " +"Clicked"
+    
 
 /*
-         //rbTServerChannel.roi(JSON);
+         //trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
         //TODO
 
 */
 
   },  
+
+//*********************************************************************************************************
+
+  roiCallBackfromServerResponse:function(params){
+
+  
+  //TODO handle the server response with Data
+
+  },  
  
-
-
-
-
+ 
 };
