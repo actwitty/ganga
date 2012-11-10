@@ -192,89 +192,147 @@ trigger_fish.rbTServerResponse = {
           conditions : [
                 // event based condition
                 { 
-                  property: "#customer.email",
+                  property: "customer[email]",
                   type : "String",
                   negation: 'false',
                   operation: 'eql',
                   value1: 'gmail.com',
+                  scope: "a",
                   connect: 'and' 
                 },
+                
                 // negate condition
                 { 
-                  property: "#customer.name",
+                  property: "customer[name]",
                   type : "String",
                   negation: 'true',
                   operation: 'swh',
                   value1: 'a',
+                  scope: "a",
                   connect: 'and' 
                 },
                 // actor_property based condition
                 {
-                  property: "$customer.val1",
+                  property: "customer[val1]",
                   type : "Number",
                   negation: 'false',
                   operation: 'gtn',
                   value1: 2,
+                  scope: "a",
                   connect: 'and' 
                 },
                 // system_property based condition
                 {
-                  property: "#customer.val2",
+                  property: "customer[val2]",
                   type : "Number",
                   negation: 'false',
                   operation: 'ltn',
                   value1: 3000,
+                  scope: "a",
                   connect: 'and' 
                 },
+                // starts with
                 {
-                  property: "#customer.swh",
+                  property: "customer[swh]",
                   type : "String",
                   negation: 'false',
                   operation: 'swh',
                   value1: 'act',
+                  scope: "a",
                   connect: 'and' 
                 },
+                // ends with
                 {
-                  property: "#customer.ewh",
+                  property: "customer[ewh]",
                   type : "String",
                   negation: 'false',
                   operation: 'ewh',
                   value1: 'tty',
+                  scope: "a",
                   connect: 'and' 
                 },
+                // contains
                 {
-                  property: "#customer.cns",
+                  property: "customer[cns]",
                   type : "String",
                   negation: 'false',
                   operation: 'cns',
                   value1: 'wit',
+                  scope: "a",
                   connect: 'and' 
                 },
+                // date range
                 {
-                  property: "#customer.drg",
+                  property: "customer[drg]",
                   type : "Date",
                   negation: 'false',
                   operation: 'drg',
                   value1: "2/2/2011",
                   value2: "4/4/2011",
+                  scope: "a",
+                  connect: 'and'
+                },
+                // days ago
+                {
+                  property: "customer[dag]",
+                  type : "Date",
+                  negation: 'false',
+                  operation: 'dag',
+                  value1: "4",
+                  scope: "a",
                   connect: 'and'
                 },
                 // regex
                 {
-                  property: "#customer.rgx",
+                  property: "customer[rgx]",
                   type : "String",
                   negation: 'false',
                   operation: 'rgx',
                   value1: 'sam',
+                  scope: "a",
                   connect: 'and' 
                 },
                 // set
                 {
-                  property: "#customer.set",
+                  property: "customer[set]",
                   type : "String",
                   negation: 'false',
+                  scope: "a",
                   operation: 'set',
-                }
+                  connect: 'and'
+                },
+
+                // cns in systems
+                {
+                  property: "country",            
+                  type: "String",                         
+                  negation: "false",
+                  operation: "cns",
+                  value1: 'IN',
+                  scope: "s",
+                  connect: 'and'
+                },
+
+                // eql in systems
+                {
+                  property: "device[name]",             
+                  type: "String",                        
+                  negation: "false",
+                  operation: "eql",
+                  value1: 'Chrome',
+                  scope: "s",
+                  connect: 'and'
+                },
+                // eql in event transient var
+                {
+                  property: "name",             
+                  type: "String",                        
+                  negation: "false",
+                  operation: "eql",
+                  value1: 'samarth',
+                  scope: "e",
+                },
+                
               ]
         },
     ];

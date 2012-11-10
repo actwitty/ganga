@@ -1,5 +1,8 @@
 var trigger_fish = {};
 
+
+
+
 trigger_fish.rbTAPP = {
     /* Main configs will be holded here */
     configs : {
