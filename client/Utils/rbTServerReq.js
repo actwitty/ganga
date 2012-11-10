@@ -89,7 +89,7 @@ trigger_fish.rbTServerChannel = {
     if (event) {
       requestData = {};
       requestData["properties"] = reqData ? reqData:{};
-      requestData["event"] = event;  
+      requestData["name"] = event;  
     }
     requestData["app_id"] = trigger_fish.rbTAPP.getAppID(); // mandatory
     requestData["account_id"] = trigger_fish.rbTAPP.getAccountID(); // mandatory  

@@ -6,6 +6,9 @@
 
 var trigger_fish = {};
 
+
+
+
 trigger_fish.rbTAPP = {
     /* Main configs will be holded here */
     configs : {
@@ -108,6 +111,13 @@ trigger_fish.rbTAPP = {
       this.configs.transVar = data;
     },
 
+    /**
+    *
+    */
+    setAppDetail : function(data)
+    {
+      this.configs.appData = data;
+    },
 
     /** 
     *  Get App ID
@@ -144,6 +154,13 @@ trigger_fish.rbTAPP = {
       return this.configs.transVar;
     },
 
+    /**
+    *
+    */
+    getAppDetail : function()
+    {
+      return this.configs.appData;
+    },
 
     /** 
     *  Get Application configs
@@ -358,16 +375,17 @@ trigger_fish.rbTDebug=(function(){var i=this,b=Array.prototype.slice,d=i.console
 
 var TEST_RBT_RULE_JSON = {
                             "customer":{
-                                        "name" :"samarth",
-                                        "email":"gmail.com",
-                                        "val1":123,
-                                        "val2":321,
-                                        "swh":"actwitty",
-                                        "ewh":"actwitty",
-                                        "cns":"actwitty",
-                                        "drg":"3/3/2011",
-                                        "rgx":"deosamarth",
-                                        "set":"abc",
+                                        "name" :["samarth"],
+                                        "email":["gmail.com"],
+                                        "val1":[123],
+                                        "val2":[321],
+                                        "swh":["actwitty"],
+                                        "ewh":["actwitty"],
+                                        "cns":["actwitty"],
+                                        "drg":["3/3/2011"],
+                                        "dag":["11/7/2012"],
+                                        "rgx":["deosamarth"],
+                                        "set":["abc"],
                                        }
                          };
 
@@ -419,10 +437,13 @@ trigger_fish.rbTRules = {
     }
     function ruleParams(rule)
     {
-      if (rule.value2)
+      /*if (rule.value2)
         var params = "('"+rule.type+"','"+rule.negation+"','"+rule.property+"','"+rule.value1+"','"+ rule.value2+"')";
       else
         var params = "('"+rule.type+"','"+rule.negation+"' ,'"+rule.property+"','"+rule.value1+"')";  
+      */
+
+      var params = "('"+JSON.stringify(rule)+"')";
 
       return params;
     }
@@ -431,15 +452,18 @@ trigger_fish.rbTRules = {
         jQuery.each(rules, function(index, ruleList) {
           ruleString = " ";
           for (var rule in ruleList.conditions) {
-            ruleString = ruleString + "rbTRules.rule." + ruleList.conditions[rule].operation + 
-                    ruleParams(ruleList.conditions[rule]) + ruleConnect(ruleList.conditions[rule]);
+            /*ruleString = ruleString + "trigger_fish.rbTRules.rule." + ruleList.conditions[rule].operation + 
+                    ruleParams(ruleList.conditions[rule]) + ruleConnect(ruleList.conditions[rule]);*/
+            ruleString = ruleString + "trigger_fish.rbTRules.evalRule" + 
+                         ruleParams(ruleList.conditions[rule]) + 
+                         ruleConnect(ruleList.conditions[rule]);
           }
 
           trigger_fish.rbTRules.ruleTable[ruleList.event] = { "name"         : ruleList.name,
-                                                 "ruleString"   : ruleString,
-                                                 "action"       : ruleList.action,
-                                                 "action_param" : ruleList.action_param
-                                               };
+                                                              "ruleString"   : ruleString,
+                                                              "action"       : ruleList.action,
+                                                              "action_param" : ruleList.action_param
+                                                            };
         });
     } catch (e) {
       trigger_fish.rbTAPP.reportError({"exception" : e.message,
@@ -464,7 +488,13 @@ trigger_fish.rbTRules = {
       $("#rulestring").text(ruleString);
       return 'if (' + ruleString + ') { return true; } else { return false;}';
     }
-
+    
+    // Client will not execute any rules if there is no schema set. 
+    var appData = trigger_fish.rbTAPP.getAppDetail();
+    if (!appData.schema) {
+      trigger_fish.rbTDebug.log({"message":"There is no schema set for app, cannot execute rules"});
+      //return;
+    }
     try {
           var functionCode = prepareFunctionCode(this.ruleTable[event].ruleString);
           var isRuleValid = new Function(functionCode)();
@@ -479,7 +509,7 @@ trigger_fish.rbTRules = {
         var ruleStr = this.ruleTable[event].ruleString || "--";
       else
         var ruleStr = "Rule string cannot be formed!";  
-      trigger_fish.rbTAPP.reportError({"exception"  : e.message,
+        trigger_fish.rbTAPP.reportError({"exception"  : e.message,
                           "message"    : "rule execution on event failed" , 
                           "event_name" : event,
                           "rule_string": ruleStr
@@ -498,6 +528,9 @@ trigger_fish.rbTRules = {
   {
     "use strict";
     // We are expecting only 3 types i.e string or number or date
+    // ******FIXME : WE NEED TO GET THE DATA TYPES FROM APP SCHEMA********
+    if (!value || !property)
+      return "undefined";
     var dt = this.getDataType(property);
     try {
         if (dt === "String") {
@@ -539,25 +572,44 @@ trigger_fish.rbTRules = {
   },
 
   /**
-  * FIXME : enable this
+  * FIXME : enable this with new json format (based on scope property)
   * Evaluate property value to a suitable sys or user property
-  * @param {string} rule property For which we need to evaluate data type
+  * @param {string} ruleProperty For which we need to evaluate data type
+  * @param {string} type Datatype of the property
+  * @param {string} scope Scope of the property, to which we need to look for.
+  * @return {object} or {boolean}
   */
-  evalProperty : function(ruleProperty, type)
+  evalProperty : function(ruleProperty, type, scope)
   {
     if (!ruleProperty)
       return "";
 
-    var startCh = ruleProperty.charAt(0);
-
-    var propType = (startCh == "$") ? "actor"  : (
-                   (startCh == "#") ? "system" : "open");
-
     // FIXME : Currently we do not know the structure of response we will get.
     // Based on that we need to process further.
+ 
+    var p = ruleProperty.replace(/]/g,"").replace(/\[/g,".");
+    var value = null;
 
-    var p = ruleProperty.slice(1,ruleProperty.length);
-    var value = eval("TEST_RBT_RULE_JSON."+p);
+    var validProp = 1;
+    try {
+      if (scope === "a") {
+        value = eval("TEST_RBT_RULE_JSON."+p+".slice(-1)[0]");
+      } else if (scope === "s") {
+        var systemVars = trigger_fish.rbTSystemVar.getProperty();
+        value = eval("systemVars."+p);
+      } else if (scope === "e") {
+        var transVar = trigger_fish.rbTAPP.getTransVar(); 
+        value = eval("transVar."+p); 
+      }
+    } catch (e) {
+      validProp = 0;
+    } 
+
+    if (!validProp) {
+      trigger_fish.rbTAPP.log({"message":"Not a valid property to evaluate rule on"});
+      return false;
+    }
+
     if (!type)
         return value;
     if (type === "String")
@@ -610,18 +662,23 @@ trigger_fish.rbTRules = {
 
   /**
   * Check the validity of the rule based on permitted operations on data type
+  * @param {string} dt DataType of rule applying.
+  * @param {string} s Scope of rule applying.
   * @param {string} t Type of rule applying.
   * @param {string} a Rule property
   * @param {string} b Rule value 1
   * @param {string} [c] Rule value 2
   * @return boolean validity
   */
-  isValidRule : function(dt,t,a,b,c)
+  isValidRule : function(dt,s,t,a,b,c)
   {
-    if (!a || !b)
+    if (!a)
       return false;
-    var propDT = this.getDataType(this.evalProperty(a,dt));
-
+    if (t==="set") return true;
+    var propVal = this.evalProperty(a,dt,s);
+    if (!propVal)
+      return false;
+    var propDT = this.getDataType(propVal);
     if (dt === "Date")
       propDT = dt;
     else if (propDT !== dt)
@@ -652,321 +709,224 @@ trigger_fish.rbTRules = {
     return true; 
   },
  
-  /* 
-     RULE FUNCTIONS 
-     We should be having try-catch in all rule functions.
-     FIXME :: MERGE ALL IN ONE FUNCTION WITH CONDITION TO SAVE SPACE
+  /**
+  * Function to evaluate rule.
+  * @param {object} rule The rule json which needs to be executed.
+  *
+  * @return {boolean} result That outcome of rule evaluation.
   */
+  evalRule : function(rule)
+  {
+    var ruleJson = JSON.parse(rule);
+    try {
+      var v1   = ruleJson.value1,
+          v2   = ruleJson.value2,
+          neg  = ruleJson.negation,
+          op   = ruleJson.operation,
+          type = ruleJson.type,
+          prop = ruleJson.property,
+          scope= ruleJson.scope;
+      if (!trigger_fish.rbTRules.isValidRule(type,scope,op,prop,v1))
+          return false;
+      var res = false;
+      var p = trigger_fish.rbTRules.evalProperty(prop,type,scope);
+          a = trigger_fish.rbTRules.valueDataType(prop, v1),
+          b = trigger_fish.rbTRules.valueDataType(prop, v2);
+      switch(op) {
+      case "ltn":
+          res = this.rule.ltn(p,a);
+          break;
+      case "gtn":
+          res = this.rule.gtn(p,a);
+          break;
+      case "eql":
+          res = this.rule.eql(p,a);
+          break;
+      case "cns":
+          res = this.rule.cns(p,a);
+          break;
+      case "swh":
+          res = this.rule.swh(p,a);
+          break;
+      case "ewh":
+          res = this.rule.ewh(p,a);
+          break;
+      case "btn":
+          res = this.rule.btn(p,a,b);
+          break;
+      case "rgx":
+          res = this.rule.rgx(p,a);
+          break;
+      case "drg":
+          res = this.rule.drg(p,a,b);
+          break;
+      case "dag":
+          res = this.rule.dag(p,a);
+          break;
+      case "set":
+          res = this.rule.set(p,a);
+          break;
+      }
+      return (neg === "true") ? !res : res;
+    } catch (e) {
+      trigger_fish.rbTAPP.reportError({"exception" : e.message,
+                                       "message"   :"rule evaluation on"+ ruleJson.op +" failed" , 
+                                       "rule"      : ruleJson,
+                                      });
+    }
+  },
+
+  /* RULE FUNCTIONS */
   rule : 
   {
     /**
     * Rule to check for less than
-    * @param {string} a Rule property
-    * @param {string} b Rule value
-    * 
+    * @param {object} p Rule property
+    * @param {object} v Rule value
     * @return {boolean} Validity based on rule
     */ 
-    ltn : function(t,x,a,b)
+    ltn : function(p,v)
     {
-      "use strict";
-      try {
-        $("#applyingrules").append("<h3>less than</h3>");
-        if (!trigger_fish.rbTRules.isValidRule(t,"ltn",a,b))
-          return false;
-        var res = false;
-        var prop = trigger_fish.rbTRules.evalProperty(a);
-        res = ((prop < trigger_fish.rbTRules.valueDataType(prop, b)) || trigger_fish.rbTRules.isNegate(x) );
-        return (x === "true") ? !res : res;
-      } catch(e) {
-        trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                            "message":"rule evaluation on lt failed" , 
-                            "property" : a,
-                            "value"    : b
-                           });
-      }
+      $("#applyingrules").append("<h3>less than</h3>");
+      return (p < v);
     },
         
     /**
     * Rule to check for greater than
-    * @param {string} a Rule property
-    * @param {string} b Rule value
-    * 
-    * @return {boolean} Validity based on rule
-    */ 
-    gtn : function(t,x,a,b)
+    * @param {object} p Rule property
+    * @param {object} v Rule value
+    * @return {boolean} Validity based on rule    */ 
+    gtn : function(p,v)
     {
       "use strict";
-      try {
-        $("#applyingrules").append("<h3>greater than</h3>");
-        if (!trigger_fish.rbTRules.isValidRule(t,"gtn",a,b))
-          return false;
-        var res = false;
-        var prop = trigger_fish.rbTRules.evalProperty(a);
-        res = ((prop > trigger_fish.rbTRules.valueDataType(prop, b)) || trigger_fish.rbTRules.isNegate(x) );
-        return (x === "true") ? !res : res;
-      } catch(e) {
-        trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                            "message":"rule evaluation on gt failed" , 
-                            "property" : a,
-                            "value"    : b
-                           });
-      }
+      $("#applyingrules").append("<h3>greater than</h3>");
+      return (p > v);
     },
 
     /**
     * Rule to check for equal to
-    * @param {string} x negation status
-    * @param {string} a Rule property
-    * @param {string} b Rule value
-    * 
+    * @param {object} p Rule property
+    * @param {object} v Rule value
     * @return {boolean} Validity based on rule
     */ 
-    eql : function(t,x,a,b)
+    eql : function(p,v)
     {
       "use strict";
-      try {
-        $("#applyingrules").append("<h3>equal to</h3>");
-        if (!trigger_fish.rbTRules.isValidRule(t,"eql",a,b))
-          return false;
-        var res = false;
-        var prop = trigger_fish.rbTRules.evalProperty(a);
-        res =  ((prop === trigger_fish.rbTRules.valueDataType(prop, b)) || trigger_fish.rbTRules.isNegate(x) );
-        return (x === "true") ? !res : res; 
-      } catch(e) {
-        trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                            "message":"rule evaluation on equal_to failed" , 
-                            "property" : a,
-                            "value"    : b
-                           });
-      }
+      $("#applyingrules").append("<h3>equal to</h3>");
+      return (p === v);
     },
 
     /**
     * Rule to check for contains
-    * @param {string} x negation status
-    * @param {string} a Rule property
-    * @param {string} b Rule value
-    * 
+    * @param {object} p Rule property
+    * @param {object} v Rule value
     * @return {boolean} Validity based on rule
     */ 
-    cns : function(t,x,a,b)
+    cns: function(p,v)
     {
       "use strict";
-      try {
-        $("#applyingrules").append("<h3>contains</h3>");
-        if (!trigger_fish.rbTRules.isValidRule(t,"cns",a,b))
-          return false;
-        var prop = trigger_fish.rbTRules.evalProperty(a);
-        var res;
-        if (prop.indexOf(trigger_fish.rbTRules.valueDataType(prop, b)) >= 0 )
-          res = true;
-        else
-          res = false;
-        return (x === "true") ? !res : res; 
-      } catch(e) {
-        trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                            "message":"rule evaluation on contains failed" , 
-                            "property" : a,
-                            "value"    : b
-                           });
-      }
+      $("#applyingrules").append("<h3>contains</h3>");
+      return ((p.indexOf(v) >= 0)?true:false);
     },
 
     /**
     * Rule to check for starts with condition
-    * @param {string} x negation status
-    * @param {string} a Rule property
-    * @param {string} b Rule value
-    * 
+    * @param {object} p Rule property
+    * @param {object} v Rule value
     * @return {boolean} Validity based on rule
     */ 
-    swh : function(t,x,a,b)
+    swh : function(p,v)
     {
       "use strict";
-      try {
-        $("#applyingrules").append("<h3>starts with</h3>");
-        if (!trigger_fish.rbTRules.isValidRule(t,"swh",a,b))
-          return false;
-        var res = false;
-        var prop = trigger_fish.rbTRules.evalProperty(a);
-        if (prop.match("^"+trigger_fish.rbTRules.valueDataType(prop, b)))
-          res = true;
-        else
-          res = false;
-        return (x === "true") ? !res : res;
-      } catch(e) {
-        trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                            "message":"rule evaluation on starts_with failed" , 
-                            "property" : a,
-                            "value"    : b
-                           });
-      }
+      $("#applyingrules").append("<h3>starts with</h3>");
+      return ((p.match("^"+v))?true:false);  
     },
 
     /**
     * Rule to check for ends with condition
-    * @param {string} x negation status
-    * @param {string} a Rule property
-    * @param {string} b Rule value
-    * 
+    * @param {object} p Rule property
+    * @param {object} v Rule value
     * @return {boolean} Validity based on rule
     */ 
-    ewh : function(t,x,a,b)
+    ewh : function(p,v)
     {
       "use strict";
-      try {
-        $("#applyingrules").append("<h3>ends with</h3>");
-        if (!trigger_fish.rbTRules.isValidRule(t,"ewh",a,b))
-          return false;
-        var prop = trigger_fish.rbTRules.evalProperty(a);
-        var res;
-        if (prop.match(trigger_fish.rbTRules.valueDataType(prop, b)+"$"))
-          res = true;
-        else
-          res = false;
-        return (x === "true") ? !res : res;
-      } catch(e) {
-        trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                            "message"   :"rule evaluation on ends_with failed" , 
-                            "property"  : a,
-                            "value"     : b
-                           });
-      }
+      $("#applyingrules").append("<h3>ends with</h3>");
+      return (p.match(v+"$")?true:false);
     },
 
     /**
     * Rule to check for in between range
-    * @param {string} x negation status
-    * @param {string} a Rule property
-    * @param {string} b Rule value
-    * @param {string} c Rule value2
+    * @param {object} p Rule property
+    * @param {object} v1 Rule value1
+    * @param {object} v2 Rule value2
     * @return {boolean} Validity based on rule
     */ 
-    btn: function(t,x,a,b,c)
+    btn : function(p,v1,v2)
     {
       "use strict";
-      try {
-        $("#applyingrules").append("<h3>between</h3>");
-        if (!trigger_fish.rbTRules.isValidRule(t,"btn",a,b,c))
-          return false;
-        var prop = trigger_fish.rbTRules.evalProperty(a);
-        var res;
-        res = (prop >= trigger_fish.rbTRules.valueDataType(prop, b) && a <= trigger_fish.rbTRules.valueDataType(prop, c)) ;
-        return (x === "true") ? !res : res;
-      } catch(e) {
-        trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                            "message"   :"rule evaluation on between failed" , 
-                            "property"  : a,
-                            "value"     : b,
-                            "value2"    : c
-                           });
-      }
+      $("#applyingrules").append("<h3>between</h3>");
+      return ((p>=v1)&&(p<=v2))?true:false;
     },
 
     /**
     * Rule to check for regex condition
-    * @param {string} x negation status
-    * @param {string} a Rule property
-    * @param {string} b Rule value
+    * @param {object} p Rule property
+    * @param {object} v Rule value
     * @return {boolean} Validity based on rule
     */ 
-    rgx :  function(t,x,a,b)
+    rgx : function(p,v)
     {
       "use strict";
-      try {
-        $("#applyingrules").append("<h3>regex</h3>");
-        if (!trigger_fish.rbTRules.isValidRule(t,"rgx",a,b))
-          return false;
-        var prop = trigger_fish.rbTRules.evalProperty(a);
-        var regexp = new RegExp(b, 'gi');
-        var res = regexp.test(prop);
-        return (x === "true") ? !res : res;
-      } catch (e) {
-        trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                            "message"   :"rule evaluation on regex failed" , 
-                            "property"  : a,
-                            "value"     : b
-                           });
-      }
+      $("#applyingrules").append("<h3>regex</h3>");
+      var regexp = new RegExp(v,'gi'); 
+      var res = regexp.test(p);
+      return res;
     },
 
     /**
     * Rule to check for days ago condition
-    * @param {string} x negation status
-    * @param {string} a Rule property
-    * @param {string} b Rule value
+    * @param {object} p Rule property
+    * @param {object} v Rule value
     * @return {boolean} Validity based on rule
     */
-    dag : function(t,x,a,b)
+    dag : function(p,v)
     {
       "use strict";
-      try {
-        $("#applyingrules").append("<h3>days ago</h3>");
-        if (!trigger_fish.rbTRules.isValidRule(t,"dag",a,b))
-          return false;
-        var prop = trigger_fish.rbTRules.evalProperty(a);
-        var regexp = new RegExp(b, 'gi');
-        var res = regexp.test(prop) ;
-        return (x === "true") ? !res : res;
-      } catch (e) {
-        trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                            "message"   :"rule evaluation on regex failed" , 
-                            "property"  : a,
-                            "value"     : b
-                           });
-      }
+      $("#applyingrules").append("<h3>days ago</h3>");
+      var oneDay = 24*60*60*1000,fD = new Date(p),sD = new Date();
+      var diffDays = Math.round( Math.abs((fD.getTime() - sD.getTime())/(oneDay)) );
+      return (diffDays === trigger_fish.rbTRules.valueDataType(diffDays, v))?true:false;
     },
 
     /**
     * Rule to check for date range condition
-    * @param {string} x negation status
-    * @param {string} a Rule property
-    * @param {string} b Rule value Date range1
-    * @param {string} c Rule value Date range2
+    * @param {object} p Rule property
+    * @param {object} v Rule value
     * @return {boolean} Validity based on rule
     */
-    drg: function(t,x,a,b,c)
+    drg : function(p,v1,v2)
     {
       "use strict";
-      try {
-        $("#applyingrules").append("<h3>days between</h3>");
-        if (!trigger_fish.rbTRules.isValidRule(t,"drg",a,b,c))
-          return false;
-        var prop = trigger_fish.rbTRules.evalProperty(a,t);
-        var res = (prop >= trigger_fish.rbTRules.valueDataType(prop, b) && prop <= trigger_fish.rbTRules.valueDataType(prop, c));
-        return (x === "true") ? !res : res;
-      } catch (e) {
-        trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                            "message"   :"rule evaluation on regex failed" , 
-                            "property"  : a,
-                            "value"     : b
-                           });
-      }
+      $("#applyingrules").append("<h3>days between</h3>");
+      return ( (p>=trigger_fish.rbTRules.valueDataType(p,v1)) && 
+               (p<=trigger_fish.rbTRules.valueDataType(p,v2)) )
+                ? true : false;  
     },
 
     /**
     * Rule to check for set to condition
-    * @param {string} x negation status
-    * @param {string} a Rule property
+    * @param {object} p Rule property
     * @return {boolean} Validity based on rule
     */
-    set : function(t,x,a)
+    set : function(p)
     {
       "use strict";
-      try {
-        $("#applyingrules").append("<h3>set prop</h3>");
-        var prop = trigger_fish.rbTRules.evalProperty(a);
-        var res = (prop ? true:false);
-        return (x === "true") ? !res : res;
-      } catch (e) {
-        trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                            "message"   :"rule evaluation on is set" , 
-                            "property"  : a,
-                           });
-      }
+      $("#applyingrules").append("<h3>set prop</h3>");
+      return (p?true:false);
     }
-  }
 
+  }
 };
 
 
@@ -1138,7 +1098,7 @@ trigger_fish.rbTServerResponse = {
   setAppDetail : function(respData)
   {
     trigger_fish.rbTAPP.log({"message": "Setting app details with server resp","data":respData});
-    trigger_fish.rbTAPP.configs.appData = respData;
+    trigger_fish.rbTAPP.setAppDetail(respData);
     var sample_rule_json = [
         {
           id: '1010101010',
@@ -1167,89 +1127,147 @@ trigger_fish.rbTServerResponse = {
           conditions : [
                 // event based condition
                 { 
-                  property: "#customer.email",
+                  property: "customer[email]",
                   type : "String",
                   negation: 'false',
                   operation: 'eql',
                   value1: 'gmail.com',
+                  scope: "a",
                   connect: 'and' 
                 },
+                
                 // negate condition
                 { 
-                  property: "#customer.name",
+                  property: "customer[name]",
                   type : "String",
                   negation: 'true',
                   operation: 'swh',
                   value1: 'a',
+                  scope: "a",
                   connect: 'and' 
                 },
                 // actor_property based condition
                 {
-                  property: "$customer.val1",
+                  property: "customer[val1]",
                   type : "Number",
                   negation: 'false',
                   operation: 'gtn',
                   value1: 2,
+                  scope: "a",
                   connect: 'and' 
                 },
                 // system_property based condition
                 {
-                  property: "#customer.val2",
+                  property: "customer[val2]",
                   type : "Number",
                   negation: 'false',
                   operation: 'ltn',
                   value1: 3000,
+                  scope: "a",
                   connect: 'and' 
                 },
+                // starts with
                 {
-                  property: "#customer.swh",
+                  property: "customer[swh]",
                   type : "String",
                   negation: 'false',
                   operation: 'swh',
                   value1: 'act',
+                  scope: "a",
                   connect: 'and' 
                 },
+                // ends with
                 {
-                  property: "#customer.ewh",
+                  property: "customer[ewh]",
                   type : "String",
                   negation: 'false',
                   operation: 'ewh',
                   value1: 'tty',
+                  scope: "a",
                   connect: 'and' 
                 },
+                // contains
                 {
-                  property: "#customer.cns",
+                  property: "customer[cns]",
                   type : "String",
                   negation: 'false',
                   operation: 'cns',
                   value1: 'wit',
+                  scope: "a",
                   connect: 'and' 
                 },
+                // date range
                 {
-                  property: "#customer.drg",
+                  property: "customer[drg]",
                   type : "Date",
                   negation: 'false',
                   operation: 'drg',
                   value1: "2/2/2011",
                   value2: "4/4/2011",
+                  scope: "a",
+                  connect: 'and'
+                },
+                // days ago
+                {
+                  property: "customer[dag]",
+                  type : "Date",
+                  negation: 'false',
+                  operation: 'dag',
+                  value1: "4",
+                  scope: "a",
                   connect: 'and'
                 },
                 // regex
                 {
-                  property: "#customer.rgx",
+                  property: "customer[rgx]",
                   type : "String",
                   negation: 'false',
                   operation: 'rgx',
                   value1: 'sam',
+                  scope: "a",
                   connect: 'and' 
                 },
                 // set
                 {
-                  property: "#customer.set",
+                  property: "customer[set]",
                   type : "String",
                   negation: 'false',
+                  scope: "a",
                   operation: 'set',
-                }
+                  connect: 'and'
+                },
+
+                // cns in systems
+                {
+                  property: "country",            
+                  type: "String",                         
+                  negation: "false",
+                  operation: "cns",
+                  value1: 'IN',
+                  scope: "s",
+                  connect: 'and'
+                },
+
+                // eql in systems
+                {
+                  property: "device[name]",             
+                  type: "String",                        
+                  negation: "false",
+                  operation: "eql",
+                  value1: 'Chrome',
+                  scope: "s",
+                  connect: 'and'
+                },
+                // eql in event transient var
+                {
+                  property: "name",             
+                  type: "String",                        
+                  negation: "false",
+                  operation: "eql",
+                  value1: 'samarth',
+                  scope: "e",
+                },
+                
               ]
         },
     ];
@@ -1357,7 +1375,7 @@ trigger_fish.rbTServerChannel = {
     if (event) {
       requestData = {};
       requestData["properties"] = reqData ? reqData:{};
-      requestData["event"] = event;  
+      requestData["name"] = event;  
     }
     requestData["app_id"] = trigger_fish.rbTAPP.getAppID(); // mandatory
     requestData["account_id"] = trigger_fish.rbTAPP.getAccountID(); // mandatory  
@@ -1654,7 +1672,7 @@ trigger_fish.rbTSystemVar = {
 
   setEJProp : function(json)
   {
-     this.setProperty("country",json.CountryName); 
+     this.setProperty("country",json.Country); 
      this.setProperty("timezone",json.LocalTimeZone); 
   },
 
@@ -2662,10 +2680,12 @@ trigger_fish.rbJSON = {
 function testGanga()
 {
   //rb.sendEvent("sample_event",{"a":101});
-  rb.identify("83.samarth@gmail.com");
+  //rb.identify("83.samarth@gmail.com");
   //rb.identify({"uid":"83.samarth@gmail.com"});
-  rb.setActor({"name":"samarth","age":"29"});
-  
+  //rb.setActor({"name":"samarth","age":"29"});
+
+  rb.sendEvent("sample_event",{"name":"samarth"});
+
 
   console.log("ENDING TESTING SEQUENCE");
 }

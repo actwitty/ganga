@@ -91,7 +91,7 @@ trigger_fish.rbTSystemVar = {
 
   setEJProp : function(json)
   {
-     this.setProperty("country",json.CountryName); 
+     this.setProperty("country",json.Country); 
      this.setProperty("timezone",json.LocalTimeZone); 
   },
 
