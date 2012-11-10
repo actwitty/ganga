@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'spork'
+require 'capybara/rails'
 #uncomment the following line to use spork with the debugger
 #require 'spork/ext/ruby-debug'
 
@@ -56,6 +57,8 @@ Spork.prefork do
     #     --seed 1234
     config.order = "random"
 
+    Capybara.javascript_driver = :webkit
+
     # Clean up the database
     require 'database_cleaner'
     config.before(:suite) do
@@ -86,7 +89,6 @@ end
 Spork.each_run do
   # This code will be run each time you run your specs.
   FactoryGirl.reload
-
   I18n.backend.reload!
 end
 

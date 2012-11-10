@@ -110,5 +110,6 @@ group :test  do
   gem 'spork-rails'
   gem 'database_cleaner'
   gem 'ruby-prof'
-
+  gem 'capybara'
+  gem 'capybara-webkit'
 end

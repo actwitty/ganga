@@ -71,16 +71,22 @@ class App
 
     # create the super actor of app. it will be meta actor
     actor = Actor.create!(account_id: params[:account_id], app_id: obj._id, meta: true)
+    raise et("app.actor_create_failed") if actor.blank?
     params[:description][AppConstants.super_actor] = actor._id 
+
+    access = AccessInfo.add!(app_id: obj._id, account_id: params[:account_id], origin: params[:description][:domain], scope: "app" )
+    raise et("access.access_create_failed") if access.blank?
+    params[:description]["token"] = access.token
+
     obj.description = params[:description]
 
     obj.save!
     raise et("app.create_failed") if obj.blank?
-    
+
     {:return => obj, :error => nil}  
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    {:return => false, :error => e} 
+    {:return => nil, :error => e} 
   end
   
   # NOTE

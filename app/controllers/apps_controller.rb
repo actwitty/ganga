@@ -3,7 +3,9 @@ require 'utility'
 class AppsController < ApplicationController
 	
   protect_from_forgery
+  before_filter :apply_access_control
   before_filter :authenticate_account!
+  after_filter :tear_access_control
 
   respond_to  :json
   # NOTE
