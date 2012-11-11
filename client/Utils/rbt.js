@@ -437,23 +437,13 @@ trigger_fish.rbTRules = {
     }
     function ruleParams(rule)
     {
-      /*if (rule.value2)
-        var params = "('"+rule.type+"','"+rule.negation+"','"+rule.property+"','"+rule.value1+"','"+ rule.value2+"')";
-      else
-        var params = "('"+rule.type+"','"+rule.negation+"' ,'"+rule.property+"','"+rule.value1+"')";  
-      */
-
-      var params = "('"+JSON.stringify(rule)+"')";
-
-      return params;
+      return "('"+JSON.stringify(rule)+"')";
     }
 
     try {
         jQuery.each(rules, function(index, ruleList) {
           ruleString = " ";
           for (var rule in ruleList.conditions) {
-            /*ruleString = ruleString + "trigger_fish.rbTRules.rule." + ruleList.conditions[rule].operation + 
-                    ruleParams(ruleList.conditions[rule]) + ruleConnect(ruleList.conditions[rule]);*/
             ruleString = ruleString + "trigger_fish.rbTRules.evalRule" + 
                          ruleParams(ruleList.conditions[rule]) + 
                          ruleConnect(ruleList.conditions[rule]);
@@ -493,6 +483,7 @@ trigger_fish.rbTRules = {
     var appData = trigger_fish.rbTAPP.getAppDetail();
     if (!appData.schema) {
       trigger_fish.rbTDebug.log({"message":"There is no schema set for app, cannot execute rules"});
+      // FIXME :: ADDED THIS ONLY FOR TESTING
       //return;
     }
     try {

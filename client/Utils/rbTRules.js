@@ -96,8 +96,6 @@ trigger_fish.rbTRules = {
   */
   executeRulesOnEvent : function(event)
   {
-    //"use strict";
-
     function prepareFunctionCode(ruleString) 
     {
       $("#rulestring").text(ruleString);

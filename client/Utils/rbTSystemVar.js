@@ -354,7 +354,11 @@ var session_fetch = (function(win, doc, nav)
         if (name)
           name = name[0];
       }
-      device.type = { type: device.is_mobile ? "mobile" : "pc", name: name || browser.detect().browser};
+      device.type = {};
+      if (device.is_tablet) device.type.type = "tab";
+      else if(device.is_mobile) device.type.type = "mob";
+      else device.type.type = "pc";
+      device.type.name = name || browser.detect().os
       return device;
     },
     plugins: function(){
