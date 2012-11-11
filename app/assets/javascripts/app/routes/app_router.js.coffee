@@ -84,8 +84,7 @@ App.Router = Ember.Router.extend
         
       # event -------------------------------------------
       listProject: (router, event) ->          
-        router.transitionTo('loggedInState.listProjectState')    
-        
+        router.transitionTo('loggedInState.listProjectState')            
 
       # event -------------------------------------------
       showProjectRules: (router, event) ->   
@@ -101,16 +100,25 @@ App.Router = Ember.Router.extend
         router.get('projectsController').set('selected', project)  
         App.get('router').transitionTo('loggedInState.projectConfigState.showRulesState.indexState')
       
-
-
       # event -------------------------------------------
       openProjectRules: (router, event) ->   
         project = router.get('projectsController').get('selected')  
         if project isnt null
           router.get('projectsController').loadProjectRules(project)
         event.preventDefault()      
+
+      #event --------------------------------------------
+      openEventList: (router, event) ->
+        router.transitionTo('loggedInState.projectConfigState.listEventState')    
+        event.preventDefault()
+
+      #event --------------------------------------------
+      openSettings: (router, event) ->
+
       # event -------------------------------------------
       openReports: (router, event) ->
+
+
 
             
       
@@ -125,14 +133,13 @@ App.Router = Ember.Router.extend
           router.get('projectsController').load()
       #state -------------------------------------
       bareBoneAccountState: Ember.Route.extend
+        #SETUP
         route: '/getstarted'
         connectOutlets: (router) ->
           homeController = router.get('homeController')        
           homeController.connectOutlet({name: 'bareBone',outletName: 'homeContentOutlet'} )
-
-      #state -------------------------------------
-        
-        #EVENTS
+        #EVENTS       
+     
 
       #state -------------------------------------
       editProjectState: Ember.Route.extend
@@ -314,7 +321,17 @@ App.Router = Ember.Router.extend
               router.transitionTo('loggedInState.projectConfigState.showRulesState.indexState')        
 
             #STATES
-              
+        #state in project -----------------------
+        listEventState: Ember.Route.extend
+          #SETUP
+          route: '/'
+          connectOutlets: (router, event) ->
+            homeController = router.get('homeController')
+            homeController.connectOutlet({name: 'eventsList', outletName: 'homeContentOutlet'})          
+          #EVENTS
+          #STATES
+
+
 
           
           

@@ -1,10 +1,10 @@
 #!/usr/bin/ruby
 
-templLibStr = "rbT.templateLib = {\n"
+templLibStr = "trigger_fish.rbT.templateLib = {\n"
 
-templNameStr = "rbT.templateName = {\n"
+templNameStr = "trigger_fish.rbT.templateName = {\n"
 
-tempArgsStr = "rbT.templateArgs = {\n"
+tempArgsStr = "trigger_fish.rbT.templateArgs = {\n"
 
 templFinalStr = ""
 
@@ -21,7 +21,7 @@ Dir.glob('*.html').each  do|fileName|
   defaultTemplName = ""
   defaultTemplTimer = ""
 
-  tempStrLibClientJs = "rbT.".concat(origin).concat("HTML").concat("='")
+  tempStrLibClientJs = "trigger_fish.rbT.".concat(origin).concat("HTML").concat("='")
 
   str = ""
    
@@ -33,7 +33,17 @@ Dir.glob('*.html').each  do|fileName|
 
   strfinalforJsWoNewLine = str.delete("\n")
 
-  regTest = /\=\%\%[\w.\:\/\s\#\@\-\']*\%\%/ 
+  regTest = /\{\{[\w.\=\%\:\/\s\#\@\-\']*\}\}/ 
+
+  regforTemplTitle = /\{\{Title[\w.\=\%\:\/\s\#\@\-\'\{\}]*\}\}/
+
+  regforTemplTimer = /\{\{Timer[\w.\=\%\:\/\s\#\@\-\'\{\}]*\}\}/
+
+  regForRuntimeValwithArgs = /\{\{[\w.\=\%\:\/\s\#\@\-\']*\{\{[\w.\=\%\:\/\s\#\@\-\']*\}\}\}\}/
+  
+  strfinalforJsWoNewLineforArgs = strfinalforJsWoNewLine
+  strfinalforJsWoNewLine = strfinalforJsWoNewLine.gsub(regforTemplTitle, "") 
+  strfinalforJsWoNewLine = strfinalforJsWoNewLine.gsub(regforTemplTimer, "") 
 
 
   regForSingleQuote = /'/
@@ -54,68 +64,54 @@ Dir.glob('*.html').each  do|fileName|
   end  
 
    reg = /\{\{[\w.\=\%\:\/\s\#\@\-\']*\}\}/
+
+   regforMainKey = /\{\{[\w.\=\%\:\/\s\#\@\-\'\{\}]*\}\}/
+   regForRuntimeval = /\{\{\%\%[\w.\=\%\:\/\s\#\@\-\']*\%\%\}\}/
    
-   regforTemplTitle = /\{\{\#\#[\w.\=\%\:\/\s\@\-\']*\#\#\}\}/
+  
 
-   templNameMatch = strfinalforJsWoNewLine.scan(regforTemplTitle)
+    
+   templNameMatchTitle = ""
 
+   templNameMatchTimer = ""
 
-   
-   if templNameMatch
-
-      templNameMatch.length.times  do|index|  
-      
-         tempTitleMatch =""
-         tempTimerMatch = ""
-         tempTitleReg = /\#\#Title/
-         tempTimerReg = /\#\#Timer/
+   templNameMatchTitle = strfinalforJsWoNewLineforArgs.scan(regforTemplTitle)
+   templNameMatchTimer = strfinalforJsWoNewLineforArgs.scan(regforTemplTimer)
 
 
-         tempTitleMatch = templNameMatch[index].scan(tempTitleReg)
 
-         tempTimerMatch = templNameMatch[index].scan(tempTimerReg)
+   if templNameMatchTitle[0]
 
+     tempTitleVal = ""
+     tempTitleVal = templNameMatchTitle[0].scan(regTest)
+     if tempTitleVal[0]
+     tempTitleVal[0] = tempTitleVal[0].delete("{{")
+      tempTitleVal[0] = tempTitleVal[0].delete("}}")
+      tempTitleVal[0] = tempTitleVal[0].delete("=")
 
-         if tempTitleMatch[0]
-            
-            templTitleValue=templNameMatch[index].scan(regTest)
+      defaultTemplName = tempTitleVal[0]
 
-
-            if defaultTemplName and templTitleValue[0] 
-
-               defaultTemplName = templTitleValue[0].delete("%")
-            end
-
-            if defaultTemplName  
-              defaultTemplName = defaultTemplName.delete("=")
-            end 
+     end 
+  end 
 
 
-         elsif tempTimerMatch[0] 
+  if templNameMatchTimer[0]
+     tempTimerVal = ""
+     tempTimerVal = templNameMatchTimer[0].scan(regTest)
+     if tempTimerVal[0]
+      tempTimerVal[0] = tempTimerVal[0].delete("{{")
+      tempTimerVal[0] = tempTimerVal[0].delete("}}")
+      tempTimerVal[0] = tempTimerVal[0].delete("=")
 
-             
-             templTimerValue=templNameMatch[index].scan(regTest)
-
-          if defaultTemplTimer and templTimerValue[0]   
-
-            defaultTemplTimer = templTimerValue[0].delete("%")
-          
-          end  
-
-          if defaultTemplName
-
-            defaultTemplTimer= defaultTemplTimer.delete("=")
-          end
-          
-         end 
-
-     end
-   end
-
- strfinalforJsWoNewLine= strfinalforJsWoNewLine.gsub(regforTemplTitle, "") 
+      defaultTemplTimer = tempTimerVal[0]
+     end 
+  end 
 
 
-   m = strfinalforJsWoNewLine.scan(reg)
+strfinalforJsWoNewLineforArgs = strfinalforJsWoNewLineforArgs.gsub(regforTemplTitle, "") 
+strfinalforJsWoNewLineforArgs = strfinalforJsWoNewLineforArgs.gsub(regforTemplTimer, "") 
+
+m = strfinalforJsWoNewLineforArgs.scan(regforMainKey)
 
   
    reg2 = /[A-Z][a-z]*/
@@ -151,37 +147,58 @@ Dir.glob('*.html').each  do|fileName|
 
 
 
-    m.length.times do |index|  
-    m[index] = m[index].delete("{{")
-    m[index]=  m[index].delete("}}")
+    m.length.times do |index| 
     
-    regVar = /[a-z A-Z]*/
-    
-
-    templNameDefault =  
-
     defaults = ""
+ 
+    tempDefaultMatch = ""
+    tempCheckForRunTimeVal = ""
     
-    rtest = m[index].scan(regTest)
+    tempCheckForRunTimeVal = m[index].scan(regForRuntimeval)
     
 
-    m[index]= m[index].gsub(regTest, "") 
-    
-    if rtest[0] 
+    if tempCheckForRunTimeVal[0]
       
-      defaults =  rtest[0].delete("%")
-      defaults =  defaults.delete("=")
+      tempVal = ""
+      tempVal = m[index].scan(regForRuntimeValwithArgs)
+      
+      if tempVal[0]
+         defaults = tempVal[0]
+         
+         defaults = defaults[2..-3]
+       
+         defaults = defaults.gsub(regForSingleQuote, "\\\\\'") 
+
+         m[index]= m[index].gsub(regForRuntimeValwithArgs, "") 
+
+
+      end   
+
+
+    else  
+
+
+    tempDefaultMatch = m[index].scan(regTest)
+
+    if tempDefaultMatch[0]
+      defaults = tempDefaultMatch[0]
+      defaults = defaults[3..-3]
       defaults = defaults.gsub(regForSingleQuote, "\\\\\'") 
 
+    end 
 
-    end
+   
+   m[index]= m[index].gsub(regTest, "") 
+
+  end
 
 
-    varString = m[index].scan(regVar)
+
+   m[index] = m[index].delete("{{")
+   m[index]=  m[index].delete("}}")
+
     
-
-
-   if index!= (m.length-1)
+  if index!= (m.length-1)
        m[index] = "\t \t \t \t \t \t " +"'" + m[index] + "'" + ":"+ "'#{defaults}'"+","+"\n" 
     
     elsif  index == (m.length-1)
@@ -207,9 +224,8 @@ Dir.glob('*.html').each  do|fileName|
 
    
     
-
     templNameStr = templNameStr+ "\t \t\t\t" + templPropName + ":" + "'#{defaultTemplName}'" + ",\n"
-
+    
 
     tempArgsStr = tempArgsStr + m
 
