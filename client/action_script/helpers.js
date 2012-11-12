@@ -179,6 +179,9 @@ trigger_fish.rbT.sendErrorToRBServer = function(string){
 */
 
   //TODO: Implement post to server // for console log=true
+
+  /* trigger_fish.rbTAPP.log({"message": "Handling event with server resp","data":respData});
+ */
   console.log(string);
 };
 
