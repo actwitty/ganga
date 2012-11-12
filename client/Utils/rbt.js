@@ -4,7 +4,9 @@
 /****************************[[rbTAPP.js]]*************************************/ 
 
 
-var rbTAPP = {
+var trigger_fish = {};
+
+trigger_fish.rbTAPP = {
     /* Main configs will be holded here */
     configs : {
       "status" : false
@@ -34,10 +36,10 @@ var rbTAPP = {
       //rbTRules.init();
       this.getAppData();
 
-      rbTActor.retFromCookie();
+      trigger_fish.rbTActor.retFromCookie();
 
       // 4). Initialize system variables  
-      rbTSystemVar.init();
+      //rbTSystemVar.init();
 
       // 5). FIXME : Check status of last event, if pending, execute it.
       //rbTRules.executeLastPendingEvent();
@@ -63,8 +65,8 @@ var rbTAPP = {
     */
     wake_RBT_APP : function()
     {
-      rbTDebug.log("Initializing RBT APP");
-      rbTAPP.initialize();
+      trigger_fish.rbTDebug.log("Initializing RBT APP");
+      trigger_fish.rbTAPP.initialize();
     },
 
     /** 
@@ -101,7 +103,7 @@ var rbTAPP = {
     *
     *
     */   
-    setTransientVar : function(data)
+    setTransVar : function(data)
     {
       this.configs.transVar = data;
     },
@@ -137,7 +139,7 @@ var rbTAPP = {
     /**
     *
     */
-    getTransientVar : function()
+    getTransVar : function()
     {
       return this.configs.transVar;
     },
@@ -154,7 +156,7 @@ var rbTAPP = {
                  "account_id" : this.configs.accountID  
                 }; 
       
-       var actor_id = rbTCookie.getCookie(rbTCookie.defaultCookies.actorID);
+       var actor_id = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID);
        if (actor_id)  {
         cnf["actor_id"] = actor_id;
        }
@@ -170,7 +172,7 @@ var rbTAPP = {
     */ 
     createSession : function()
     {
-      rbTServerChannel.createSession({success:this.setSessionID});
+      trigger_fish.rbTServerChannel.createSession({success:this.setSessionID});
     },
 
     /** 
@@ -180,11 +182,11 @@ var rbTAPP = {
     */
     getAppData : function()
     {
-      rbTServerChannel.makeGetRequest({ "url"   : rbTServerChannel.url.appDetails,
-                                        "cb"    : { success: rbTServerResponse.setAppDetail,
-                                                    error  : rbTServerResponse.defaultError
-                                                  }
-                                      });
+      trigger_fish.rbTServerChannel.makeServerRequest({"url"   : trigger_fish.rbTServerChannel.url.appDetails,
+                                          "cb"    : { success: trigger_fish.rbTServerResponse.setAppDetail,
+                                                      error  : trigger_fish.rbTServerResponse.defaultError
+                                                    }
+                                         });
     },  
 
     /** 
@@ -197,14 +199,14 @@ var rbTAPP = {
     {
       "use strict";
       if (params) {
-          rbTServerChannel.makeGetRequest( rbTServerChannel.url.setSystemProperty,
-                                           params,
-                                           { success: rbTServerResponse.setSystemProperty,
-                                             error  : rbTServerResponse.defaultError
-                                           }
-                                          );
+          trigger_fish.rbTServerChannel.makeRequest({"url"   : trigger_fish.rbTServerChannel.url.setSystemProperty,
+                                        "params": params,
+                                        "cb"    : { success: trigger_fish.rbTServerResponse.setSystemProperty,
+                                                    error  : trigger_fish.rbTServerResponse.defaultError
+                                                  }
+                                      });
       } else {
-          rbTAPP.reportError({"message"   : "System params could not be found, report error",
+          trigger_fish.rbTAPP.reportError({"message"   : "System params could not be found, report error",
                               "data"      : params
                              });
       }
@@ -218,7 +220,7 @@ var rbTAPP = {
     */
     getSystemProperty : function()
     {
-      return JSON.parse(rbTCookie.getCookie(rbTCookie.defaultCookie.system));
+      return JSON.parse(trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookie.system));
     },
 
 
@@ -230,9 +232,9 @@ var rbTAPP = {
     reportError : function(params)
     {
       try {
-          rbTDebug.error(params);
+          trigger_fish.rbTDebug.error(params);
           if (params.server) 
-            rbTServerChannel.reportError(params);
+            trigger_fish.rbTServerChannel.reportError(params);
       } catch(e) {
         // FIXME what to do?
       }
@@ -246,20 +248,10 @@ var rbTAPP = {
     log : function(params)
     {
       if(params && params.message)
-        rbTDebug.log(params.message);
-      rbTDebug.log(params)
+        trigger_fish.rbTDebug.log(params.message);
+      trigger_fish.rbTDebug.log(params)
     },
 
-    /** 
-    *  Preprocess params with datatype.
-    *  @param {object} params Error log message. 
-    *  @return {object} params with added data types.
-    */
-    preprocessParams : function(params)
-    {
-      
-     
-    }
 };
 
 
@@ -267,7 +259,7 @@ var rbTAPP = {
 /****************************[[rbTActor.js]]*************************************/ 
 
 
-var rbTActor = function() {
+trigger_fish.rbTActor = function() {
 
   var __id = "";
   var __prop = {};
@@ -275,16 +267,16 @@ var rbTActor = function() {
   return {
 
       /**
-      *
-      *
+      * Fetch data from cookie for an actor.
+      * @return void
       */
       retFromCookie : function()
       {
-      	rbTDebug.log("retrieveing data for actor from cookie");
-        if (rbTCookie.getCookie(rbTCookie.defaultCookies.actorProp))
-          this.setProperties(rbTCookie.getCookie(rbTCookie.defaultCookies.actorProp)); 
-        if (rbTCookie.getCookie(rbTCookie.defaultCookies.actorID))
-          this.setID(rbTCookie.getCookie(rbTCookie.defaultCookies.actorID));
+      	trigger_fish.rbTDebug.log("retrieveing data for actor from cookie");
+        if (trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorProp))
+          this.setProperties(trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorProp)); 
+        if (trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID))
+          this.setID(trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID));
       },
 
       /** 
@@ -294,12 +286,11 @@ var rbTActor = function() {
       getID : function()
       {
         return __id;
-        //return rbTCookie.getCookie(rbTCookie.defaultCookies.actorID); 
       },
       
       /**
-      *
-      *
+      * Get actor properties.
+      * @return {object} Actor properties object. => see actor_controller/read
       */
       getProperties : function()
       {
@@ -313,29 +304,29 @@ var rbTActor = function() {
       */
       setID : function(id)
       {
-        rbTCookie.setCookie(rbTCookie.defaultCookies.actorID, id);
+        trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.actorID, id);
         __id = id;
       },
 
       /**
-      *
-      *
+      * Set actor properties as well as set it in cookie.
+      * @param {object} prop Actor properties.
       */
       setProperties : function(prop)
       {
         __prop = prop;
-        rbTCookie.setCookie(rbTCookie.defaultCookies.actorProp, JSON.stringify(prop));
+        trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.actorProp, JSON.stringify(prop));
       },
 
       /**
-      *
-      *
+      * Check if property, desired to be set for an actor, already exist.
+      * @return {boolean}
       */
       propExist : function(prop)
       {
         var a = JSON.stringify(__prop).replace(/(^{)|(}$)/g, "");
         var b = JSON.stringify(prop).replace(/(^{)|(}$)/g, "");
-        rbTDebug.log({"stored" : a , "passed" : b, "message":"actor prop existence"});
+        trigger_fish.rbTDebug.log({"stored" : a , "passed" : b, "message":"actor prop existence"});
         return (a.indexOf(b) >= 0) ? true : false;
       }
 
@@ -359,7 +350,7 @@ var rbTActor = function() {
  * With lots of help from Paul Irish!
  * http://paulirish.com/
  */
-window.rbTDebug=(function(){var i=this,b=Array.prototype.slice,d=i.console,h={},f,g,m=9,c=["error","warn","info","debug","log"],l="assert clear count dir dirxml exception group groupCollapsed groupEnd profile profileEnd table time timeEnd trace".split(" "),j=l.length,a=[];while(--j>=0){(function(n){h[n]=function(){m!==0&&d&&d[n]&&d[n].apply(d,arguments)}})(l[j])}j=c.length;while(--j>=0){(function(n,o){h[o]=function(){var q=b.call(arguments),p=[o].concat(q);a.push(p);e(p);if(!d||!k(n)){return}d.firebug?d[o].apply(i,q):d[o]?d[o](q):d.log(q)}})(j,c[j])}function e(n){if(f&&(g||!d||!d.log)){f.apply(i,n)}}h.setLevel=function(n){m=typeof n==="number"?n:9};function k(n){return m>0?m>n:c.length+m<=n}h.setCallback=function(){var o=b.call(arguments),n=a.length,p=n;f=o.shift()||null;g=typeof o[0]==="boolean"?o.shift():false;p-=typeof o[0]==="number"?o.shift():n;while(p<n){e(a[p++])}};return h})();
+trigger_fish.rbTDebug=(function(){var i=this,b=Array.prototype.slice,d=i.console,h={},f,g,m=9,c=["error","warn","info","debug","log"],l="assert clear count dir dirxml exception group groupCollapsed groupEnd profile profileEnd table time timeEnd trace".split(" "),j=l.length,a=[];while(--j>=0){(function(n){h[n]=function(){m!==0&&d&&d[n]&&d[n].apply(d,arguments)}})(l[j])}j=c.length;while(--j>=0){(function(n,o){h[o]=function(){var q=b.call(arguments),p=[o].concat(q);a.push(p);e(p);if(!d||!k(n)){return}d.firebug?d[o].apply(i,q):d[o]?d[o](q):d.log(q)}})(j,c[j])}function e(n){if(f&&(g||!d||!d.log)){f.apply(i,n)}}h.setLevel=function(n){m=typeof n==="number"?n:9};function k(n){return m>0?m>n:c.length+m<=n}h.setCallback=function(){var o=b.call(arguments),n=a.length,p=n;f=o.shift()||null;g=typeof o[0]==="boolean"?o.shift():false;p-=typeof o[0]==="number"?o.shift():n;while(p<n){e(a[p++])}};return h})();
 
 
 /****************************[[rbTRules.js]]*************************************/ 
@@ -380,7 +371,7 @@ var TEST_RBT_RULE_JSON = {
                                        }
                          };
 
-var rbTRules = {
+trigger_fish.rbTRules = {
 
   ruleTable : {},
 
@@ -402,34 +393,6 @@ var rbTRules = {
           'Date': [ 'gtn','ltn','eql','dag','drg','set' ],  
           'Number': [ 'gtn','ltn','eql','btn','set'] 
   },
-
-  
-  
-  /**
-  * Initialize Rules for business
-  * @param {object} params Parameters passing
-  * @return void
-  */
-  init : function(params)
-  {
-    "use strict";
-    var params = params || "";
-    // COMMENTING FOR TIME BEING TILL WE HAVE RULES API UP
-    /*try {
-          rbTServerChannel.makeGetRequest( rbTServerChannel.url.getRules,
-                                           params,
-                                           { success: rbTServerResponse.setRulesTable,
-                                             error  : rbTServerResponse.defaultError
-                                           },
-                                           "noasync"
-                                         );
-    } catch(e) {
-      // FIXME what to do?
-      rbTAPP.reportError({"exception" : e.message, "message":"rule initialization failed"});
-    }*/
-    rbTRules.setRulesTable("");
-  },
-  
 
   /**
   * Set rules table for business
@@ -472,14 +435,14 @@ var rbTRules = {
                     ruleParams(ruleList.conditions[rule]) + ruleConnect(ruleList.conditions[rule]);
           }
 
-          rbTRules.ruleTable[ruleList.event] = { "name"         : ruleList.name,
+          trigger_fish.rbTRules.ruleTable[ruleList.event] = { "name"         : ruleList.name,
                                                  "ruleString"   : ruleString,
                                                  "action"       : ruleList.action,
                                                  "action_param" : ruleList.action_param
                                                };
         });
     } catch (e) {
-      rbTAPP.reportError({"exception" : e.message,
+      trigger_fish.rbTAPP.reportError({"exception" : e.message,
                           "message"   : "rule table setting failed",
                           "rules"     : rules
                         });
@@ -516,7 +479,7 @@ var rbTRules = {
         var ruleStr = this.ruleTable[event].ruleString || "--";
       else
         var ruleStr = "Rule string cannot be formed!";  
-      rbTAPP.reportError({"exception"  : e.message,
+      trigger_fish.rbTAPP.reportError({"exception"  : e.message,
                           "message"    : "rule execution on event failed" , 
                           "event_name" : event,
                           "rule_string": ruleStr
@@ -546,7 +509,7 @@ var rbTRules = {
         }
     } catch (e) {
         // FIXME :: something wrong with type conversion
-        rbTAPP.reportError({"exception" : e.message,
+        trigger_fish.rbTAPP.reportError({"exception" : e.message,
                             "message":"data type conversion on rule value failed" , 
                             "property" : property,
                             "value" : value
@@ -564,14 +527,14 @@ var rbTRules = {
   {
     "use strict";
     try {
-      var lastEvent = rbTCookie.getCookie("lastevent");
+      var lastEvent = trigger_fish.rbTCookie.getCookie("lastevent");
       if (lastEvent) {
         this.executeRulesOnEvent(lastEvent);
       } else {
         throw "no last event found"
       }
     } catch(e) {
-      rbTDebug.log("no last event found");
+      trigger_fish.rbTDebug.log("no last event found");
     }
   },
 
@@ -618,7 +581,7 @@ var rbTRules = {
       //rbTTemplates.invoke(this.ruleTable[event].action, this.ruleTable[event].action_param);
       rbT.invokeActionScript(this.ruleTable[event].action, this.ruleTable[event].action_param);
     } catch(e) {
-      rbTAPP.reportError({"exception" : e.message,
+      trigger_fish.rbTAPP.reportError({"exception" : e.message,
                           "message": "action could not be invoked" , 
                           "event" : event
                          });
@@ -708,14 +671,14 @@ var rbTRules = {
       "use strict";
       try {
         $("#applyingrules").append("<h3>less than</h3>");
-        if (!rbTRules.isValidRule(t,"ltn",a,b))
+        if (!trigger_fish.rbTRules.isValidRule(t,"ltn",a,b))
           return false;
         var res = false;
-        var prop = rbTRules.evalProperty(a);
-        res = ((prop < rbTRules.valueDataType(prop, b)) || rbTRules.isNegate(x) );
+        var prop = trigger_fish.rbTRules.evalProperty(a);
+        res = ((prop < trigger_fish.rbTRules.valueDataType(prop, b)) || trigger_fish.rbTRules.isNegate(x) );
         return (x === "true") ? !res : res;
       } catch(e) {
-        rbTAPP.reportError({"exception" : e.message,
+        trigger_fish.rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on lt failed" , 
                             "property" : a,
                             "value"    : b
@@ -735,14 +698,14 @@ var rbTRules = {
       "use strict";
       try {
         $("#applyingrules").append("<h3>greater than</h3>");
-        if (!rbTRules.isValidRule(t,"gtn",a,b))
+        if (!trigger_fish.rbTRules.isValidRule(t,"gtn",a,b))
           return false;
         var res = false;
-        var prop = rbTRules.evalProperty(a);
-        res = ((prop > rbTRules.valueDataType(prop, b)) || rbTRules.isNegate(x) );
+        var prop = trigger_fish.rbTRules.evalProperty(a);
+        res = ((prop > trigger_fish.rbTRules.valueDataType(prop, b)) || trigger_fish.rbTRules.isNegate(x) );
         return (x === "true") ? !res : res;
       } catch(e) {
-        rbTAPP.reportError({"exception" : e.message,
+        trigger_fish.rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on gt failed" , 
                             "property" : a,
                             "value"    : b
@@ -763,14 +726,14 @@ var rbTRules = {
       "use strict";
       try {
         $("#applyingrules").append("<h3>equal to</h3>");
-        if (!rbTRules.isValidRule(t,"eql",a,b))
+        if (!trigger_fish.rbTRules.isValidRule(t,"eql",a,b))
           return false;
         var res = false;
-        var prop = rbTRules.evalProperty(a);
-        res =  ((prop === rbTRules.valueDataType(prop, b)) || rbTRules.isNegate(x) );
+        var prop = trigger_fish.rbTRules.evalProperty(a);
+        res =  ((prop === trigger_fish.rbTRules.valueDataType(prop, b)) || trigger_fish.rbTRules.isNegate(x) );
         return (x === "true") ? !res : res; 
       } catch(e) {
-        rbTAPP.reportError({"exception" : e.message,
+        trigger_fish.rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on equal_to failed" , 
                             "property" : a,
                             "value"    : b
@@ -791,17 +754,17 @@ var rbTRules = {
       "use strict";
       try {
         $("#applyingrules").append("<h3>contains</h3>");
-        if (!rbTRules.isValidRule(t,"cns",a,b))
+        if (!trigger_fish.rbTRules.isValidRule(t,"cns",a,b))
           return false;
-        var prop = rbTRules.evalProperty(a);
+        var prop = trigger_fish.rbTRules.evalProperty(a);
         var res;
-        if (prop.indexOf(rbTRules.valueDataType(prop, b)) >= 0 )
+        if (prop.indexOf(trigger_fish.rbTRules.valueDataType(prop, b)) >= 0 )
           res = true;
         else
           res = false;
         return (x === "true") ? !res : res; 
       } catch(e) {
-        rbTAPP.reportError({"exception" : e.message,
+        trigger_fish.rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on contains failed" , 
                             "property" : a,
                             "value"    : b
@@ -822,17 +785,17 @@ var rbTRules = {
       "use strict";
       try {
         $("#applyingrules").append("<h3>starts with</h3>");
-        if (!rbTRules.isValidRule(t,"swh",a,b))
+        if (!trigger_fish.rbTRules.isValidRule(t,"swh",a,b))
           return false;
         var res = false;
-        var prop = rbTRules.evalProperty(a);
-        if (prop.match("^"+rbTRules.valueDataType(prop, b)))
+        var prop = trigger_fish.rbTRules.evalProperty(a);
+        if (prop.match("^"+trigger_fish.rbTRules.valueDataType(prop, b)))
           res = true;
         else
           res = false;
         return (x === "true") ? !res : res;
       } catch(e) {
-        rbTAPP.reportError({"exception" : e.message,
+        trigger_fish.rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on starts_with failed" , 
                             "property" : a,
                             "value"    : b
@@ -853,17 +816,17 @@ var rbTRules = {
       "use strict";
       try {
         $("#applyingrules").append("<h3>ends with</h3>");
-        if (!rbTRules.isValidRule(t,"ewh",a,b))
+        if (!trigger_fish.rbTRules.isValidRule(t,"ewh",a,b))
           return false;
-        var prop = rbTRules.evalProperty(a);
+        var prop = trigger_fish.rbTRules.evalProperty(a);
         var res;
-        if (prop.match(rbTRules.valueDataType(prop, b)+"$"))
+        if (prop.match(trigger_fish.rbTRules.valueDataType(prop, b)+"$"))
           res = true;
         else
           res = false;
         return (x === "true") ? !res : res;
       } catch(e) {
-        rbTAPP.reportError({"exception" : e.message,
+        trigger_fish.rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on ends_with failed" , 
                             "property"  : a,
                             "value"     : b
@@ -884,14 +847,14 @@ var rbTRules = {
       "use strict";
       try {
         $("#applyingrules").append("<h3>between</h3>");
-        if (!rbTRules.isValidRule(t,"btn",a,b,c))
+        if (!trigger_fish.rbTRules.isValidRule(t,"btn",a,b,c))
           return false;
-        var prop = rbTRules.evalProperty(a);
+        var prop = trigger_fish.rbTRules.evalProperty(a);
         var res;
-        res = (prop >= rbTRules.valueDataType(prop, b) && a <= rbTRules.valueDataType(prop, c)) ;
+        res = (prop >= trigger_fish.rbTRules.valueDataType(prop, b) && a <= trigger_fish.rbTRules.valueDataType(prop, c)) ;
         return (x === "true") ? !res : res;
       } catch(e) {
-        rbTAPP.reportError({"exception" : e.message,
+        trigger_fish.rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on between failed" , 
                             "property"  : a,
                             "value"     : b,
@@ -912,14 +875,14 @@ var rbTRules = {
       "use strict";
       try {
         $("#applyingrules").append("<h3>regex</h3>");
-        if (!rbTRules.isValidRule(t,"rgx",a,b))
+        if (!trigger_fish.rbTRules.isValidRule(t,"rgx",a,b))
           return false;
-        var prop = rbTRules.evalProperty(a);
+        var prop = trigger_fish.rbTRules.evalProperty(a);
         var regexp = new RegExp(b, 'gi');
         var res = regexp.test(prop);
         return (x === "true") ? !res : res;
       } catch (e) {
-        rbTAPP.reportError({"exception" : e.message,
+        trigger_fish.rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on regex failed" , 
                             "property"  : a,
                             "value"     : b
@@ -939,14 +902,14 @@ var rbTRules = {
       "use strict";
       try {
         $("#applyingrules").append("<h3>days ago</h3>");
-        if (!rbTRules.isValidRule(t,"dag",a,b))
+        if (!trigger_fish.rbTRules.isValidRule(t,"dag",a,b))
           return false;
-        var prop = rbTRules.evalProperty(a);
+        var prop = trigger_fish.rbTRules.evalProperty(a);
         var regexp = new RegExp(b, 'gi');
         var res = regexp.test(prop) ;
         return (x === "true") ? !res : res;
       } catch (e) {
-        rbTAPP.reportError({"exception" : e.message,
+        trigger_fish.rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on regex failed" , 
                             "property"  : a,
                             "value"     : b
@@ -967,13 +930,13 @@ var rbTRules = {
       "use strict";
       try {
         $("#applyingrules").append("<h3>days between</h3>");
-        if (!rbTRules.isValidRule(t,"drg",a,b,c))
+        if (!trigger_fish.rbTRules.isValidRule(t,"drg",a,b,c))
           return false;
-        var prop = rbTRules.evalProperty(a,t);
-        var res = (prop >= rbTRules.valueDataType(prop, b) && prop <= rbTRules.valueDataType(prop, c));
+        var prop = trigger_fish.rbTRules.evalProperty(a,t);
+        var res = (prop >= trigger_fish.rbTRules.valueDataType(prop, b) && prop <= trigger_fish.rbTRules.valueDataType(prop, c));
         return (x === "true") ? !res : res;
       } catch (e) {
-        rbTAPP.reportError({"exception" : e.message,
+        trigger_fish.rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on regex failed" , 
                             "property"  : a,
                             "value"     : b
@@ -992,11 +955,11 @@ var rbTRules = {
       "use strict";
       try {
         $("#applyingrules").append("<h3>set prop</h3>");
-        var prop = rbTRules.evalProperty(a);
+        var prop = trigger_fish.rbTRules.evalProperty(a);
         var res = (prop ? true:false);
         return (x === "true") ? !res : res;
       } catch (e) {
-        rbTAPP.reportError({"exception" : e.message,
+        trigger_fish.rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on is set" , 
                             "property"  : a,
                            });
@@ -1010,7 +973,7 @@ var rbTRules = {
 /****************************[[rbTServerResponse.js]]*************************************/ 
 
 
-var rbTServerResponse = {
+trigger_fish.rbTServerResponse = {
 
   /** 
   *  Handle default success callback if not mentioned explicitly
@@ -1020,7 +983,7 @@ var rbTServerResponse = {
   defaultSuccessCallback : function(respData)
   {
     // FIXME : what to do?
-    rbTAPP.log({"message": "Success callback : default server response","data":respData});
+    trigger_fish.rbTAPP.log({"message": "Success callback : default server response","data":respData});
   },
   /** 
   *  Handle default error callback if not mentioned explicitly
@@ -1030,7 +993,7 @@ var rbTServerResponse = {
   defaultErrorCallback : function(respData)
   {
     // FIXME : what to do?
-    rbTAPP.log({"message": "Error callback : default server response","data":respData});
+    trigger_fish.rbTAPP.log({"message": "Error callback : default server response","data":respData});
   },
 
 
@@ -1042,27 +1005,27 @@ var rbTServerResponse = {
   setActorID : function(respData)
   { 
     "use strict";
-    rbTAPP.log({"message": "Setting actor details with server resp","data":respData});
+    trigger_fish.rbTAPP.log({"message": "Setting actor ID with server resp","data":respData});
     try {
-      if (respData && respData.id) {
+      if (respData && respData.actor_id) {
         // FIXME :: Flush and reset all cookies if there is a change in actor.
         // WAITING AS THERE ARE SOME CHANGES IN BACKEND.
-        var oldActorId = rbTCookie.getCookie(rbTCookie.defaultCookies.actorID);
-        if (!oldActorId || oldActorId !== respData.id) {
-          rbTCookie.setCookie(rbTCookie.defaultCookies.actorID, JSON.stringify(respData.actor_id));
-          rbTServerChannel.makeRequest({"url"       : rbTServerChannel.url.readActor, 
-                                        "set_actor_prop" : true,
-                                        "cb"        : { success: rbTServerResponse.setActorProperty,
-                                                        error  : rbTServerResponse.defaultError
-                                                      }
-                                       });
+        var oldActorId = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID);
+        if (!oldActorId || oldActorId !== respData.actor_id) {
+          trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.actorID, JSON.stringify(respData.actor_id));
+          trigger_fish.rbTActor.setID(respData.actor_id);
+          trigger_fish.rbTServerChannel.makeRequest({"url"           : trigger_fish.rbTServerChannel.url.readActor, 
+                                                     "set_actor_prop": true,
+                                                     "cb"            : { success: trigger_fish.rbTServerResponse.setActorProperty,
+                                                                         error  : trigger_fish.rbTServerResponse.defaultError
+                                                                       }
+                                                    });
         }
-        rbTAPP.setActorID(respData.actor_id);
       } else {
         throw new Error("there is no server resp data");
       }
     } catch(e) {
-      rbTAPP.reportError({"exception" : e.message,
+      trigger_fish.rbTAPP.reportError({"exception" : e.message,
                           "message"   : "setting actor failed",
                           "data"      : respData
                         });
@@ -1078,17 +1041,17 @@ var rbTServerResponse = {
   setActorProperty : function(respData)
   {
     "use strict";
-    rbTAPP.log({"message": "Setting actor details with server resp","data":respData});
+    trigger_fish.rbTAPP.log({"message": "Setting actor detail property with server resp","data":respData});
 
     // FIXME : check for which property to set
     try {
-      if (respData) {
-        rbTCookie.setCookie(rbTCookie.defaultCookies.actorprop, JSON.stringify(respData));
+      if (respData && respData.description) {
+        trigger_fish.rbTActor.setProperties(respData.description);
       } else {
-        throw "there is no data for setting actor property";
+        throw new Error("there is no data for setting actor property");
       }
     } catch(e) {
-      rbTAPP.reportError({"exception" : e.message,
+      trigger_fish.rbTAPP.reportError({"exception" : e.message,
                           "message"   : "setting user property failed",
                           "data"      : respData
                         });
@@ -1103,17 +1066,17 @@ var rbTServerResponse = {
   setSystemProperty : function(respData)
   {
     "use strict";
-    rbTAPP.log({"message": "Setting system property with server resp","data":respData});
+    trigger_fish.rbTAPP.log({"message": "Setting system property with server resp","data":respData});
 
     // FIXME : check for which property to set
     try {
       if (respData) {
-        rbTCookie.setCookie(rbTCookie.defaultCookies.system, JSON.stringify(respData));
+        trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.system, JSON.stringify(respData));
       } else {
         throw "there is no data";
       }
     } catch(e) {
-      rbTAPP.reportError({"exception" : e.message,
+      trigger_fish.rbTAPP.reportError({"exception" : e.message,
                           "message"   : "setting system property failed",
                           "data"      : respData
                         });
@@ -1128,22 +1091,21 @@ var rbTServerResponse = {
   handleEvent : function(respData)
   {
     "use strict";
-    rbTAPP.log({"message": "Handling event with server resp","data":respData});
+    trigger_fish.rbTAPP.log({"message": "Handling event with server resp","data":respData});
     try {
       if(respData && respData.actor) {
-        rbTCookie.setCookie(rbTCookie.defaultCookies.actor, respData.actor);
+        trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.actor, respData.actor);
       } else {
         throw "there is no data";
       }
     } catch(e) {
-      rbTAPP.reportError({"exception" : e.message,
+      trigger_fish.rbTAPP.reportError({"exception" : e.message,
                           "message"   : "handling event failed",
                           "data"      : respData
                         });
     }
   },
 
-  
   /**
   * Set Rules response from server
   * @param {object} respData in the form of rules
@@ -1152,16 +1114,16 @@ var rbTServerResponse = {
   setRules : function(respData)
   {
     "use strict";
-    rbTAPP.log({"message": "Setting rules with server resp","data":respData});
+    trigger_fish.rbTAPP.log({"message": "Setting rules with server resp","data":respData});
 
     try {
       if(respData) {
-        rbTRules.setRulesTable(respData);
+        trigger_fish.rbTRules.setRulesTable(respData);
       } else {
         throw "there is no data";
       }
     } catch(e) {
-      rbTAPP.reportError({"exception" : e.message,
+      trigger_fish.rbTAPP.reportError({"exception" : e.message,
                           "message"   : "setting rules failed",
                           "data"      : respData
                         });
@@ -1175,7 +1137,8 @@ var rbTServerResponse = {
   */
   setAppDetail : function(respData)
   {
-    rbTAPP.log({"message": "Setting app details with server resp","data":respData});
+    trigger_fish.rbTAPP.log({"message": "Setting app details with server resp","data":respData});
+    trigger_fish.rbTAPP.configs.appData = respData;
     var sample_rule_json = [
         {
           id: '1010101010',
@@ -1291,9 +1254,10 @@ var rbTServerResponse = {
         },
     ];
     
-    rbTRules.setRulesTable(sample_rule_json);
+    trigger_fish.rbTRules.setRulesTable(sample_rule_json);
+    trigger_fish.rbTSystemVar.init(respData);
 
-    rbTAPP.configs.status = true;
+    trigger_fish.rbTAPP.configs.status = true;
   }
 
 };
@@ -1302,15 +1266,11 @@ var rbTServerResponse = {
 /****************************[[rbTServerReq.js]]*************************************/ 
 
 
-var rbTServerChannel = {
+trigger_fish.rbTServerChannel = {
   
   rbt_url : "http://localhost:3000/",
 
-  serverUrl : function(url)
-  {
-    return this.rbt_url + url + ".jsonp";
-  }, 
-
+  
   /* All server url routes to be mapped here */
   url : {
     "createSession"     : "",
@@ -1320,8 +1280,8 @@ var rbTServerChannel = {
     "readActor"         : "actor/read",
     "createActor"       : "actor/create",
     "setActor"          : "actor/set",
-    "roi"               : "",
-    "reportError"       : "",
+    "conversion"        : "conversion/create",
+    "reportError"       : "err/create",
   },
 
   // Server request queue
@@ -1329,11 +1289,18 @@ var rbTServerChannel = {
 
   /* Default options for server request */
   defaultOptions : {
-    "success_callback" : rbTServerResponse.defaultSuccessCallback,
-    "error_callback"   : rbTServerResponse.defaultErrorCallback
+    "success_callback" : trigger_fish.rbTServerResponse.defaultSuccessCallback,
+    "error_callback"   : trigger_fish.rbTServerResponse.defaultErrorCallback
   },
 
-  
+  /**
+  *
+  */
+  serverUrl : function(url)
+  {
+    return this.rbt_url + url + ".jsonp";
+  }, 
+
   /**
   * Queue server requests.
   * @param {object} obj Object to be queued.
@@ -1351,15 +1318,12 @@ var rbTServerChannel = {
   */
   flushReqQueue : function()
   {
+    if (!this.queue.length)
+      return;
     for (var req in this.queue) {
-      if (this.queue[req].event) {
-        //this.makeEventRequest(this.queue[req].event, this.queue[req].params, this.queue[req].callback);
-        this.makeEventRequest(this.queue[req]);
-      } else {
-        //this.makeGetRequest(this.queue[req].url, this.queue[req].params, this.queue[req].callback, this.queue[req].async);
-        this.makeGetRequest(this.queue[req]);
-      }
+      this.makeServerRequest(this.queue[req]);
     }
+    this.queue = [];
   },
 
 
@@ -1369,12 +1333,14 @@ var rbTServerChannel = {
   */
   reqQFlushInterval : function()
   {
-      var interval = setInterval(function() {
-        if (rbTAPP.isrbTAlive()) {
-          clearInterval(interval);
-          rbTServerChannel.flushReqQueue();
-        }
-      }, 2000);
+    if (this.queue.length > 1)
+      return;
+    var interval = setInterval(function() {
+      if (trigger_fish.rbTAPP.isrbTAlive()) {
+        clearInterval(interval);
+        trigger_fish.rbTServerChannel.flushReqQueue();
+      }
+    }, 2000);
   },
 
 
@@ -1390,11 +1356,11 @@ var rbTServerChannel = {
     var requestData = {};
     if (event) {
       requestData = {};
-      requestData["properties"] = reqData ? rbJSON.typify(reqData) : {};
+      requestData["properties"] = reqData ? reqData:{};
       requestData["event"] = event;  
     }
-    requestData["app_id"] = rbTAPP.getAppID(); // mandatory
-    requestData["account_id"] = rbTAPP.getAccountID(); // mandatory  
+    requestData["app_id"] = trigger_fish.rbTAPP.getAppID(); // mandatory
+    requestData["account_id"] = trigger_fish.rbTAPP.getAccountID(); // mandatory  
 
     return requestData;
   },
@@ -1410,151 +1376,108 @@ var rbTServerChannel = {
       return {};
     var requestData = reqData;
 
-    if (obj.set_actor) {
+    if (obj.set_actor || obj.conversion) {
       obj.params = obj.params || {};
-      requestData["properties"] = {"profile":reqData ? rbJSON.typify(obj.params) : {}};
-      requestData["actor_id"] = rbTAPP.getActorID() || "";
+      requestData["properties"] = {"profile":reqData ? obj.params : {}};
+      requestData["actor_id"] = trigger_fish.rbTActor.getID() || "";
     } else if(obj.set_actor_prop) {
-      requestData["actor_id"] = rbTAPP.getActorID() || "";
+      requestData["actor_id"] = trigger_fish.rbTActor.getID() || "";
+    } else if(obj.identify) {
+      requestData["uid"] = obj.params;
     }
-
-
     return requestData;
   },
 
-  /** 
-  *  Make a request to server.
-  *  @param {string} event
-  *  @param {object} params
-  *  @param {object} callback
-  *  @return {object}
+  /**
+  * Make XMLHttpRequest to Server
+  * @param {object} obj Data format which needs to be send.
+  * @return void
   */
-  //makeEventRequest :  function(event, params, callback)
-  makeEventRequest :  function(obj)
+  makeServerRequest : function(obj)
   {
     "use strict";
     var that = obj;
     try {
-      var reqServerData = this.makeRequestData(obj.event, obj.params );
-      var callback = this.extendCallbacks(obj.callback);
+
+      var reqServerData = this.extendReqData(obj,this.makeRequestData(obj.event?obj.event:undefined,obj.params));
+      var callback = this.extendCallbacks(obj.cb);
+      if (obj.async && obj.async === "noasync")
+        var asyncSt = false;
+      else 
+        var asyncSt = true;
       var that = obj;
+      var url = (obj.event) ? trigger_fish.rbTServerChannel.url.fireEvent : obj.url;
       jQuery.ajax({
-            url: this.serverUrl(rbTServerChannel.url.fireEvent),
+            url: this.serverUrl(url),
             type: 'GET',
+            async: asyncSt,
             dataType: 'jsonp',
             contentType : 'application/javascript',
             data: reqServerData,
             crossDomain:true,
             timeout : 10000,
             beforeSend: function() {
-                rbTCookie.setCookie("lastevent", that.event);
+                if (that.event) {
+                  trigger_fish.rbTCookie.setCookie("lastevent", that.event);
+                  trigger_fish.rbTAPP.setTransVar(that.params);
+                }
             },
             success: function ( respData ) {
-                rbTCookie.deleteCookie("lastevent");
-                // FIXME :: ADDED ONLY TO TEST CLIENT SIDE
-                rbTRules.executeRulesOnEvent(that.event);
-
-                // FIXME : Currently we do not know the format of response we will get from server.
-                if (respData && respData.actor) { 
-                  rbTServerResponse.setActor(respData.actor);
+                trigger_fish.rbTAPP.log({"message":"server response success","data":respData});
+                if (that.event) {
+                  trigger_fish.rbTCookie.deleteCookie("lastevent");
+                  trigger_fish.rbTRules.executeRulesOnEvent(that.event);
+                  if (respData && respData.actor) { 
+                    trigger_fish.rbTServerResponse.setActor(respData.actor);
+                    callback.success(respData);
+                  }
+                  trigger_fish.rbTAPP.setTransVar({});
+                } else {
+                  respData.url = that.url;
                   callback.success(respData);
                 }
             },
             error:function(XMLHttpRequest,textStatus, errorThrown){ 
+                trigger_fish.rbTAPP.log({"message":"server response error","data_closure":that,"textStatus":textStatus});
                 // FIXME :: ADDED ONLY TO TEST CLIENT SIDE
-                rbTRules.executeRulesOnEvent(that.event);
-
-                callback.error(); 
-                
+                if (that.event)
+                  trigger_fish.rbTRules.executeRulesOnEvent(that.event);
+                callback.error();
+                trigger_fish.rbTAPP.setTransVar({}); 
             }
       });
     } catch(e) {
-      rbTAPP.reportError({"exception" : e.message,
-                          "message"   :"server event request failed" , 
-                          "event"     : that.event,
+      trigger_fish.rbTAPP.reportError({"exception" : e.message,
+                          "message"   :"SERVER REQUEST FAILED" , 
                           "obj"       : JSON.stringify(that),
                           "log"       : "error" 
                          }); 
     }
   },
 
- 
-
-  /** 
-  *  Request server to for getting data
-  *   
-  *  @return void
-  */  
-  //makeGetRequest : function(url, params, callback, async)
-  makeGetRequest : function(obj)
-  {
-    "use strict";
-    var that = obj;
-    try {
-      var reqServerData = this.extendReqData(obj,this.makeRequestData(undefined, obj.params));
-      var callback = this.extendCallbacks(obj.cb);
-      if (obj.async && obj.async === "noasync")
-        var asyncSt = false;
-      else 
-        var asyncSt = true;
-      //reqServerData["format"]="javascript";
-      jQuery.ajax({
-            url: this.serverUrl(obj.url),
-            async: asyncSt,
-            type: 'GET',
-            dataType: 'jsonp',
-            contentType : 'application/javascript',
-            data: reqServerData,
-            crossDomain:true,
-            timeout : 10000,
-            success: function ( respData ) {
-                respData.url = that.url;
-                callback.success(respData);
-            },error:function(XMLHttpRequest,textStatus, errorThrown){ 
-                // todo : what to do??            
-                callback.error(); 
-            }
-      });
-    } catch(e) {
-      rbTAPP.reportError({"exception" : e.message,
-                          "message"   : "server request failed" , 
-                          "object"    : obj,
-                          "log"       : true,
-                          "server"    : true
-                         });
-    }
-  },
 
   /**
-  *
-  *
+  * Prepare Server request, queue req's if needed be.
+  * @param {object} obj Data format which needs to be send.
   */  
   makeRequest : function(obj)
   {
     var that = obj;
     if (!obj)
       return;
-    if (!rbTAPP.isrbTAlive()) {
-      if (obj.url) {
+    if (!trigger_fish.rbTAPP.isrbTAlive()) {
+      if (obj.url)
         obj.async = obj.async || "async";
-        this.queueReq({url:obj.url, params:obj.params, callback:obj.cb, async:obj.async});
-      }
-      else {
-        this.queueReq({event:obj.event, params:obj.params, callback:obj.cb});
-      }
+      this.queueReq(obj);  
       this.reqQFlushInterval();
       return;
     } else {
       this.flushReqQueue();
     }
     try {
-      if (obj.event) {
-        rbTServerChannel.makeEventRequest(obj.event, obj.params, obj.cb);
-      } else if (obj.url) {
-        rbTServerChannel.makeGetRequest(obj);
-      } else throw new Error("Wrong server req data");
+      trigger_fish.rbTServerChannel.makeServerRequest(obj);
     } catch (e) {
-      rbTAPP.reportError({"exception" : e.message,
+      trigger_fish.rbTAPP.reportError({"exception" : e.message,
                           "message"   : "server request params are not valid" , 
                           "url"       : that.url,
                           "log"       : true,
@@ -1584,21 +1507,27 @@ var rbTServerChannel = {
   appDetails : function(params, callback)
   {
     "use strict";
-    callback = this.extendCallbacks(callback);
-    this.makeGetRequest(this.url.details, null, callback);
+    var cb = this.extendCallbacks(callback);
+    this.makeServerRequest({"url": this.url.details,
+                      "params"     : params,
+                      "cb"         : cb
+                     });  
   }, 
 
-
   /** 
-  *  Send ROI to server
+  *  Send conversion to server
   *  @param {object} params 
   *  @return void
   */      
-  roi : function(params, callback)
+  conversion : function(params, callback)
   {
     "use strict";
     var cb = this.extendCallbacks(callback);
-    this.makeGetRequest(this.url.roi, params, callback);
+    this.makeRequest({"url"        : rbTServerChannel.url.conversion, 
+                      "params"     : params,
+                      "conversion" : true,
+                      "cb"         : cb
+                     });
   }, 
 
   /** 
@@ -1610,8 +1539,7 @@ var rbTServerChannel = {
   {
     "use strict";
     var callback = this.extendCallbacks(callback);
-    this.makeGetRequest(this.url.reportError, params, callback);
-    callback = this.extendCallbacks(callback);
+    this.makeRequest({"url":this.url.reportError,"params":params,"cb":callback});
   },
 
   /** 
@@ -1634,7 +1562,7 @@ var rbTServerChannel = {
 
 
 /* Rule Bot scope to handle systems variables */
-var rbTSystemVar = {
+trigger_fish.rbTSystemVar = {
 
   // All properties will be set here
   properties : {},
@@ -1642,12 +1570,12 @@ var rbTSystemVar = {
   /** Initialize system variable script
    *  @return void
    */
-  init : function()
+  init : function(respData)
   {
     "use strict";
     function isSystemVarDirty()
     {
-      var sysVarInCookie = rbTCookie.getCookie(rbTCookie.defaultCookies.systemProp);
+      var sysVarInCookie = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.systemProp);
       
       if (!sysVarInCookie) {
         return true; 
@@ -1669,10 +1597,20 @@ var rbTSystemVar = {
       // for update only if we have cookie miss 
       var systemVars = this.getProperty();
       this.setPropertyInCookie(systemVars);
+      var schema = respData.app.schema;
+      this.notifyServerOfChange(schema?schema.system:undefined);
       //rbTAPP.setSystemProperty(systemVars);
     }
   },
 
+  /**
+  *
+  *
+  */
+  notifyServerOfChange : function(systemVarsDesired)
+  {
+    trigger_fish.rbTAPP.log({"message":"System variables desired from dashboard","variables":systemVarsDesired});
+  },
 
   /** Set system variable property
    *  @param {string} type
@@ -1706,24 +1644,23 @@ var rbTSystemVar = {
   */
   getProperty : function(propertyTypes)
   {
-    "use strict";
     return this.properties;
   },
 
   setPropertyInCookie : function(property)
   {
-    rbTCookie.setCookie(rbTCookie.defaultCookies.systemProp, JSON.stringify(property));
+    trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.systemProp, JSON.stringify(property));
   },
 
   setEJProp : function(json)
   {
-     rbTSystemVar.setProperty("country",json.CountryName); 
-     rbTSystemVar.setProperty("timezone",json.LocalTimeZone); 
+     this.setProperty("country",json.CountryName); 
+     this.setProperty("timezone",json.LocalTimeZone); 
   },
 
   setSessionJSProp : function(json)
   {
-    rbTAPP.log({"message":"System Properties got through Session JS","data":json});
+    trigger_fish.rbTAPP.log({"message":"System Properties got through Session JS","data":json});
     this.setProperty("browser",json.browser.browser);
     this.setProperty("browser_version",json.browser.version);
     this.setProperty("operatingsystem",json.browser.os);
@@ -1740,7 +1677,7 @@ var rbTSystemVar = {
 
 var backcode="1102012";
 function EasyjQuery_Cache_IP(fname,json) {
-  rbTAPP.log({"message":"easy jquery response","data":json});
+  trigger_fish.rbTAPP.log({"message":"easy jquery response","data":json});
   eval(fname + "(json);");
 }
 function EasyjQuery_Get_IP(fname,is_full) {
@@ -1870,9 +1807,9 @@ var session_fetch = (function(win, doc, nav)
         //rbTSystemVar.setProperty(property, unloaded_modules[property] );
         sessionJSProp[property] = unloaded_modules[property];
       }
-      rbTSystemVar.setSessionJSProp(sessionJSProp);
+      trigger_fish.rbTSystemVar.setSessionJSProp(sessionJSProp);
     })();
-    EasyjQuery_Get_IP("rbTSystemVar.setEJProp");
+    EasyjQuery_Get_IP("trigger_fish.rbTSystemVar.setEJProp");
   };
 
 
@@ -2203,7 +2140,7 @@ var session_fetch = (function(win, doc, nav)
 /****************************[[rbTUtils.js]]*************************************/ 
 
 
-var rbTUtils = {
+trigger_fish.rbTUtils = {
   /** Initialize jquery if needed be
     *  @return void
     *
@@ -2212,7 +2149,7 @@ var rbTUtils = {
   {
     function includeJQ()
     { 
-      this.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",rbTAPP.wake_RBT_APP);
+      this.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",trigger_fish.rbTAPP.wake_RBT_APP);
     }
 
     if (typeof jQuery != 'undefined') {
@@ -2270,7 +2207,7 @@ var rbTUtils = {
         if(!this.readyState ||
             this.readyState == "loaded" || 
             this.readyState == "complete") {
-            rbTDebug.log("Script "+ url +"loaded successfully");
+            trigger_fish.rbTDebug.log("Script "+ url +"loaded successfully");
             if (callback) {
               if (params)
                 callback(params);
@@ -2319,7 +2256,7 @@ var rbTUtils = {
 /****************************[[rbTCookieHandler.js]]*************************************/ 
 
 
-var rbTCookie = {
+trigger_fish.rbTCookie = {
 
   namePrefix : "RBT__",
 
@@ -2375,7 +2312,7 @@ var rbTCookie = {
         return false;
       }
     } catch(e) {
-      rbTAPP.reportError({"exception" : e.message,
+      trigger_fish.rbTAPP.reportError({"exception" : e.message,
                           "message"   : "cookie existence failed",
                           "name"      : cookieName,
                           "log"       : true 
@@ -2442,7 +2379,7 @@ var rbTCookie = {
 
     } catch(e) {
       // FIXME  what to do?
-      rbTAPP.reportError({"exception" : e.message,
+      trigger_fish.rbTAPP.reportError({"exception" : e.message,
                           "message"   : "cookie set failed",
                           "name"      : cookieName,
                           "value"     : cookieValue,
@@ -2468,7 +2405,7 @@ var rbTCookie = {
                           "; expires=Thu, 01-Jan-70 00:00:01 GMT";
     } catch (e) {
       // FIXME what to do?
-      rbTAPP.reportError({"exception" : e.message,
+      trigger_fish.rbTAPP.reportError({"exception" : e.message,
                           "message"   : "cookie delete failed",
                           "name"      : cookieName,
                           "log"       : true 
@@ -2495,7 +2432,7 @@ var rbTCookie = {
       }
     } catch(e) {
       // FIXME what to do?
-      rbTAPP.reportError({"exception" : e.message,
+      trigger_fish.rbTAPP.reportError({"exception" : e.message,
                           "message"   : "cookie flush all failed",
                           "log"       : true 
                          });
@@ -2510,9 +2447,9 @@ var rbTCookie = {
 
 /* MAIN BUSINESS SPECIFIC CALLS */
 var RBT = function() {
-	this._appID = rbTAPP.getAppID();
-	this._accountID = rbTAPP.getAccountID();
-	this._status = rbTAPP.isrbTAlive();
+	this._appID = trigger_fish.rbTAPP.getAppID();
+	this._accountID = trigger_fish.rbTAPP.getAccountID();
+	this._status = trigger_fish.rbTAPP.isrbTAlive();
 };
 
 
@@ -2523,7 +2460,7 @@ var RBT = function() {
 */
 RBT.prototype.isAlive = function()
 {
-	this._status = rbTAPP.isrbTAlive();
+	this._status = trigger_fish.rbTAPP.isrbTAlive();
 	return this._status;
 };
 
@@ -2541,10 +2478,10 @@ RBT.prototype.sendEvent = function(event, params)
   if (!event || typeof(event) != "string" || event === "" ) {
     return;
   }
-  rbTServerChannel.makeRequest({"event" : event, 
+  trigger_fish.rbTServerChannel.makeRequest({"event" : event, 
                                 "params": params,
-                                "cb"    : { success: rbTServerResponse.handleEvent,
-                                            error  : rbTServerResponse.defaultError
+                                "cb"    : { success: trigger_fish.rbTServerResponse.handleEvent,
+                                            error  : trigger_fish.rbTServerResponse.defaultError
                                           }
                               });
 };
@@ -2558,10 +2495,11 @@ RBT.prototype.sendEvent = function(event, params)
 RBT.prototype.identify = function(params)
 {
   "use strict";
-  rbTServerChannel.makeRequest({"url"    : rbTServerChannel.url.identify, 
-                                "params" : params,
-                                "cb"     : { success: rbTServerResponse.setActorID,
-                                             error  : rbTServerResponse.defaultError
+  trigger_fish.rbTServerChannel.makeRequest({"url"     : trigger_fish.rbTServerChannel.url.identify, 
+                                "params"  : params,
+                                "identify": true,
+                                "cb"      : { success: trigger_fish.rbTServerResponse.setActorID,
+                                             error  : trigger_fish.rbTServerResponse.defaultError
                                            }
                               });
 };
@@ -2577,13 +2515,13 @@ RBT.prototype.identify = function(params)
 RBT.prototype.setActor = function(params)
 {
   "use strict";
-  if (rbTActor.propExist(params))
+  if (trigger_fish.rbTActor.propExist(params))
     return;
-  rbTServerChannel.makeRequest({"url"        : rbTServerChannel.url.setActor, 
+  trigger_fish.rbTServerChannel.makeRequest({"url"        : trigger_fish.rbTServerChannel.url.setActor, 
                                 "params"     : params,
                                 "set_actor"  : true,
-                                "cb"         : { success: rbTServerResponse.setActorProperty,
-                                                 error  : rbTServerResponse.defaultError
+                                "cb"         : { success: trigger_fish.rbTServerResponse.setActorProperty,
+                                                 error  : trigger_fish.rbTServerResponse.defaultError
                                                }
                               });
 };
@@ -2605,7 +2543,7 @@ RBT.prototype.alias = function(params)
 /****************************[[rbJSON.js]]*************************************/ 
 
 
-var rbJSON = {
+trigger_fish.rbJSON = {
 
   "rb" : {},
   "header" : "rbJSON.rb",
@@ -2680,10 +2618,11 @@ var rbJSON = {
 
   typify : function(obj)
   {
-    this.rb = {};
+    /*this.rb = {};
     this.state = [];
     this.extend(obj);
-    return this.rb;
+    return this.rb;*/
+    return obj;
   }
 
 };
@@ -2706,13 +2645,13 @@ var rbJSON = {
       throw new Error("App-id, Account-ID are not mentioned")
     } else {
       // if everything seems fine, then set app/acc id and initialize rbTAPP.
-      rbTAPP.setAppID(appid);
-      rbTAPP.setAccountID(accid);
-      rbTUtils.includeJQIfNeeded();
+      trigger_fish.rbTAPP.setAppID(appid);
+      trigger_fish.rbTAPP.setAccountID(accid);
+      trigger_fish.rbTUtils.includeJQIfNeeded();
       window.rb = new RBT();
     }
   } catch (e) {
-    rbTAPP.reportError({"exception" : e.message, 
+    trigger_fish.rbTAPP.reportError({"exception" : e.message, 
                         "message"   : "App initalization failed"
                        });
   }
@@ -2723,8 +2662,10 @@ var rbJSON = {
 function testGanga()
 {
   //rb.sendEvent("sample_event",{"a":101});
+  rb.identify("83.samarth@gmail.com");
   //rb.identify({"uid":"83.samarth@gmail.com"});
   rb.setActor({"name":"samarth","age":"29"});
+  
 
   console.log("ENDING TESTING SEQUENCE");
 }

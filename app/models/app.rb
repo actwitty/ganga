@@ -33,7 +33,7 @@ class App
   ##                 "location" => String, "page_view_time" => "String"
   ##              }  
   ## }
-  field       :schema,      type:    Hash,      :default => { properties: {}, events: {}, profile: {}, system: {}}
+  field       :schema,      type:    Hash,    :default => { properties: {}, events: {}, profile: {}, system: {}}
 
   ## {
   ##     "name" => "my app",
@@ -67,18 +67,16 @@ class App
       raise et("app.invalid_argument_in_create") 
     end
     
-    obj = App.new(account_id: params[:account_id], description: params[:description])
+    obj = App.create!(account_id: params[:account_id], description: params[:description])
 
     # create the super actor of app. it will be meta actor
     actor = Actor.create!(account_id: params[:account_id], app_id: obj._id, meta: true)
     raise et("app.actor_create_failed") if actor.blank?
-    params[:description][AppConstants.super_actor] = actor._id 
+    obj.description[AppConstants.super_actor] = actor._id 
 
-    access = AccessInfo.add!(app_id: obj._id, account_id: params[:account_id], origin: params[:description][:domain], scope: "app" )
-    raise et("access.access_create_failed") if access.blank?
-    params[:description]["token"] = access.token
-
-    obj.description = params[:description]
+    ret = AccessInfo.add!(app_id: obj._id, account_id: params[:account_id], origin: params[:description][:domain], scope: "app" )
+    raise et("access.access_create_failed") if !ret[:error].blank?
+    obj.description[AppConstants.token] = ret[:return].token
 
     obj.save!
     raise et("app.create_failed") if obj.blank?
@@ -95,7 +93,7 @@ class App
   # INPUT
   ## {
   ##  :account_id => "23232312"[MANDATORY] 
-  ##  :app_id => "1234444',    [MANDATORY]
+  ##  :id => "1234444',    [MANDATORY]
   ##  :description => {        [MANDATORY]
   ##      "email" => "john.doe@example.com",
   ##      "address" => {:city => "Bangalore"}}
@@ -105,21 +103,23 @@ class App
   def self.update(params)
     Rails.logger.info("Enter Update App Description")
 
-    if params[:app_id].blank? or params[:account_id].blank? or params[:description].blank?
+    if params[:id].blank? or params[:account_id].blank? or params[:description].blank?
       raise et("app.invalid_argument_in_update") 
     end
     
-    app = App.where(account_id: params[:account_id], _id: params[:app_id] ).first
+    app = App.where(account_id: params[:account_id], _id: params[:id] ).first
 
-    raise et("app.invalid_app_id", id: params[:app_id]) if app.blank?
+    raise et("app.invalid_app_id", id: params[:id]) if app.blank?
 
     desc = Utility.serialize_to(hash: params[:description], serialize_to: "value")
     
+    puts app.inspect
     desc.each do |k,v|
-      app.description[k.to_sym] = v if k != "super_actor_id"
+      app.description[k.to_sym] = v if k != AppConstants.super_actor and k != AppConstants.token
     end
 
     app.save!
+    puts app.inspect
     {:return => app, :error => nil}  
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
@@ -132,7 +132,7 @@ class App
   # INPUT
   ## {  
   ##    account_id:  "1212121212"      [MANDATORY]
-  ##    app_id: 123                   [MANDATORY]
+  ##    id: 123                   [MANDATORY]
   ##    events: true or false         [OPTIONAL] # events 
   ##    conversions: true or false    [OPTIONAL] # conversion
   ##    errors: true or false         [OPTIONAL] # errors
@@ -215,19 +215,19 @@ class App
     Rails.logger.info("Enter App Read")
     hash = {events: [], actors: [], conversions: [], errors: []}
 
-    if params[:account_id].blank? or params[:app_id].blank?
+    if params[:account_id].blank? or params[:id].blank?
       raise et("app.invalid_argument_in_read")
     end
-    app = App.where(account_id: params[:account_id], _id: params[:app_id] ).first
+    app = App.where(account_id: params[:account_id], _id: params[:id] ).first
 
-    raise et("app.invalid_app_id", id: params[:app_id]) if app.blank?
+    raise et("app.invalid_app_id", id: params[:id]) if app.blank?
 
     hash[:account] = {id: app.account_id}
     hash[:app] = {id: app._id, description: app.description, rules: app.format_rules}
     
     
     if params[:events] == true
-      events = Event.where( app_id: params[:app_id], meta: false ).limit(AppConstants.limit_events).desc(:_id)
+      events = Event.where( app_id: params[:id], meta: false ).limit(AppConstants.limit_events).desc(:_id)
       events.each do |attr|
         hash[:events] << { 
                             id: attr._id, name: attr.name, properties: attr.properties, actor_id: attr.actor_id, time: attr.created_at
@@ -323,5 +323,13 @@ class App
   rescue => e
     Rails.logger.error("**** ERROR **** #{e.message}")
     []
+  end
+
+  def format_app
+    self.description["super_actor_id"] = self.description["super_actor_id"].to_s
+    {id: self._id.to_s, account_id: self.account_id.to_s, description: self.description, schema: self.schema, updated_at: self.updated_at}
+  rescue => e
+    Rails.logger.error("**** ERROR **** #{e.message}")
+    {}
   end
 end

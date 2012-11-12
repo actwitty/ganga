@@ -6,6 +6,27 @@ App.ConditionsView = Ember.View.extend
   showHelpInfo: true
   minimizedState: true
 
+  #------------------------------------------------------
+  init: ->
+    @_super()
+    conditions =  App.get 'router.rulesController.selected.hasManyConditions'
+    msgContext = {}    
+    if conditions isnt null and conditions.length isnt 0
+      #HELP DOC LINK
+      msgContext = 
+                    header: "Create a new rule"
+                    message: "You can define the trigger rule for this application."
+                    href: "/help#firstRuleForApp"
+                    buttonText: "Learn"                    
+    else
+      #HELP DOC LINK      
+      msgContext = 
+                    header: "Modify the rule trigger"
+                    message: "You can modify the existing rule trigger for action."
+                    href: "/help#modifyRuleForApp"
+                    buttonText: "Know More"
+    app = App.get("router.applicationController")
+    app.set('msgContext', msgContext)                    
   # -----------------------------------------------------
   didInsertElement: ->
     @_super()        

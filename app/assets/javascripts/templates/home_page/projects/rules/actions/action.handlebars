@@ -5,9 +5,9 @@
 
         {{#each template in view.rules.templateLib}}    
           {{#ifequal view.rules.selected.action template.id}}
-            <option  value="{{getvalue template.id}}" selected >{{template.displayName}}</option>
+            <option  value="{{getvalue template.id}}" selected >{{getTemplateName template.id}}</option>
           {{else}}
-            <option value="{{getvalue template.id}}" >{{template.displayName}}</option>
+            <option value="{{getvalue template.id}}" >{{getTemplateName template.id}}</option>
           {{/ifequal}}
         {{/each}}
       </select>

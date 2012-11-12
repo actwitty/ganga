@@ -65,7 +65,7 @@ class AccessInfo
                             origin: params[:origin], scope: params[:scope], role: params[:role])
 
     raise et("access_info.create_failed") if obj.blank?
-    {:return => obj, :error => e} 
+    {:return => obj, :error => nil} 
   rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
     {:return => nil, :error => e} 
@@ -80,13 +80,13 @@ class AccessInfo
     if self.scope == "app" and !self.app_id.blank?
       app = App.find(self.app_id)
       raise et("access_info.invalid_app_id") if app.blank?
-      app.description["token"] = self.token
+      app.description[AppConstants.token] = self.token
       app.save!
    
     elsif self.scope == "account" and self.app_id.blank?
       app = Account.find(self.account_id)
       raise et("access_info.invalid_account_id") if account.blank?
-      account.description["token"] = self.token
+      account.description[AppConstants.token] = self.token
       account.save!
     else
       # something went wrong

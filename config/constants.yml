@@ -26,8 +26,9 @@ development: &default
   event_set_actor_profile: "__set_actor_profile__"
   event_set_actor_system:  "__set_actor_system__"
 
-  # Super Actor Key 
+  # String Keys stored in database - Dont changes
   super_actor:             "super_actor_id"
+  token:                   "token"
 
   # Limits
   limit_events:           100

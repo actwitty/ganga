@@ -1,20 +1,7 @@
-{{#if view.showInfo}}
-	<div class="message">
-		<a alt="close" class="close_button" {{action "hideInfo" target="App.projectEditView"}}></a>
-
-		<div class="message_text_container">
-			<h3> Configure an Application </h3>
-            	You can configure your application to get an App ID
-            	The app is tied to a domain name.            
-    	</div>
-
-    	<a href="/" class="info_btn_pos btn btn-info">
-    		Learn more    	
-    	</a>
-	</div>
-{{/if}}
-
+{{view App.BusyView}}
+{{view App.BannerView }}
 {{view App.AlertView alertParamsBinding="view.alert"}}
+{{view App.InlineAlertView }}
 
 {{#if controller.isNew}}
 	<div/>
@@ -32,7 +19,7 @@
 			App Name:
 		</div>
 		<div class="input_div">
-			{{view App.RequiredAFTextField valueBinding="description.name" placeholder="App Name" name="App Name"}}
+			{{view App.RequiredNameField valueBinding="description.name" placeholder="App Name" name="App Name"}}
 		</div>
 	</div>
 
@@ -41,7 +28,7 @@
 			App Domain:
 		</div>
 		<div class="input_div">		
-			{{view App.RequiredTextField valueBinding="description.domain" placeholder="App Domain" name="App Domain"}}
+			{{view App.RequiredUrlField valueBinding="description.domain" placeholder="App Domain" name="App Domain"}}
 		</div>
 	</div>
 
@@ -75,6 +62,4 @@
 		<a class='btn btn-large  edit_btns'  {{action "cancelProjectEdit" }} > Cancel </a>  		
 	</div>
 </div>
-{{#if controller.stateIsBusy}}
-  <div class="busy_div" > </div>
-{{/if}}
+

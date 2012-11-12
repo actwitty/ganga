@@ -12,13 +12,13 @@
       throw new Error("App-id, Account-ID are not mentioned")
     } else {
       // if everything seems fine, then set app/acc id and initialize rbTAPP.
-      rbTAPP.setAppID(appid);
-      rbTAPP.setAccountID(accid);
-      rbTUtils.includeJQIfNeeded();
+      trigger_fish.rbTAPP.setAppID(appid);
+      trigger_fish.rbTAPP.setAccountID(accid);
+      trigger_fish.rbTUtils.includeJQIfNeeded();
       window.rb = new RBT();
     }
   } catch (e) {
-    rbTAPP.reportError({"exception" : e.message, 
+    trigger_fish.rbTAPP.reportError({"exception" : e.message, 
                         "message"   : "App initalization failed"
                        });
   }
@@ -29,8 +29,10 @@
 function testGanga()
 {
   //rb.sendEvent("sample_event",{"a":101});
+  rb.identify("83.samarth@gmail.com");
   //rb.identify({"uid":"83.samarth@gmail.com"});
   rb.setActor({"name":"samarth","age":"29"});
+
 
   console.log("ENDING TESTING SEQUENCE");
 }

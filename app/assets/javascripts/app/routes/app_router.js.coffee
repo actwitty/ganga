@@ -74,9 +74,13 @@ App.Router = Ember.Router.extend
         
       # event -------------------------------------------
       deleteProject: (router, event) ->
+        event.view.confirmDeletion()
+        event.preventDefault()
+      # event -------------------------------------------
+      deleteProjectConfirmed: (router, event) ->
         editController = router.get('projectEditController')
         editController.deleteProject()
-        event.preventDefault()
+        
         
       # event -------------------------------------------
       listProject: (router, event) ->          
@@ -88,12 +92,23 @@ App.Router = Ember.Router.extend
         project = event.context      
         router.get('projectsController').loadProjectRules(project)
         event.preventDefault()
+      forceProjectRules: (router, project) ->
+        router.get('projectsController').loadProjectRules(project)
+        event.preventDefault()
 
+      # event -------------------------------------------
       projectRulesLoaded: (router, project) ->
         router.get('projectsController').set('selected', project)  
         App.get('router').transitionTo('loggedInState.projectConfigState.showRulesState.indexState')
       
 
+
+      # event -------------------------------------------
+      openProjectRules: (router, event) ->   
+        project = router.get('projectsController').get('selected')  
+        if project isnt null
+          router.get('projectsController').loadProjectRules(project)
+        event.preventDefault()      
       # event -------------------------------------------
       openReports: (router, event) ->
 
@@ -124,8 +139,7 @@ App.Router = Ember.Router.extend
         #SETUP
         route: '/edit'
         connectOutlets: (router) ->
-          editController = router.get('projectEditController')           
-          editController.resetStates()   
+          editController = router.get('projectEditController')                      
           homeController = router.get('homeController')
           homeController.connectOutlet({name: 'projectEdit', outletName: 'homeContentOutlet'} ) 
         #EVENTS
@@ -184,6 +198,15 @@ App.Router = Ember.Router.extend
               homeController.connectOutlet({name: 'rules', outletName: 'homeContentOutlet'})        
          
             #EVENTS
+            #event -------------------------------------------
+            createRule: (router, event) ->
+              # Context comes as argument    
+              rule = App.Rule.create()
+              rulesController = router.get('rulesController')           
+              rulesController.markStateOfRuleEdit('new')
+              rulesController.storeSerializedBeforeEdit(rule)
+              router.transitionTo('editRuleConditionsState')
+              event.preventDefault()            
             # event -------------------------------------------
             editRules: (router, event) ->
               # Context comes as argument
@@ -194,20 +217,18 @@ App.Router = Ember.Router.extend
               router.transitionTo('editRuleConditionsState')
               event.preventDefault()
 
-            # event -------------------------------------------
-            createRule: (router, event) ->
-              # Context comes as argument
-              rule = App.Rule.create()
-              rulesController = router.get('rulesController')           
-              rulesController.markStateOfRuleEdit('new')
-              rulesController.storeSerializedBeforeEdit(rule)
-              router.transitionTo('editRuleConditionsState')
-              event.preventDefault()
 
             # event -------------------------------------------
             deleteRule: (router, event) ->
+              rule = event.context
+              event.view.confirmDeletion(rule)
               event.preventDefault()
           
+            # event -------------------------------------------
+            deletionConfirmed: (router, rule) ->            
+              rulesController = router.get('rulesController')
+              rulesController.deleteRule(rule)
+              
 
           editRuleConditionsState: Ember.Route.extend
             #SETUP

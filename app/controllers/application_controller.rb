@@ -1,7 +1,7 @@
 require 'pp'
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  respond_to :json
+  #respond_to :json, :html
 
   #before_filter :set_access_control_headers
 
@@ -17,40 +17,61 @@ class ApplicationController < ActionController::Base
   		# sign in into app or redirect to login page
   	end
   end
-   
+  
+  def verify_cross_site
+    allowed = false
+    access  = nil
+
+    if !request.env['HTTP_ORIGIN'].blank?   # JSONP/CORS request from a website 
+      access = AccessInfo.where(origin: request.env['HTTP_ORIGIN']).first
+      if !access.blank?
+        headers['Access-Control-Allow-Origin'] = request.env['HTTP_ORIGIN']
+        headers['Access-Control-Request-Method'] = "*"
+        headers['Access-Control-Allow-Headers'] = "*"
+        headers['Access-Control-Allow-Credentials'] = "true"
+        allowed = true
+      end
+    end
+
+    allowed
+  end
+
+  def verify_api
+    allowed = false
+    access  = nil
+    
+    if !params["api_key"].blank?
+      access = AccessInfo.where(token: params["token"]).first
+
+      if !access.blank?
+        # refresh access token if needed
+        if access.expires_at <= Time.now.utc 
+          if access.refresh_token == false
+            raise et("application.refresh_token_failed")
+          end
+        end
+        allowed = true 
+      end
+    end
+    allowed
+  end   
+
   def  apply_access_control
     Rails.logger.info("Enter apply access control")
-    
-    puts "******************* #{request.env['HTTP_ORIGIN']} *******************"
+
     #only for un-autheticated request
     if current_account.blank? 
 
       allowed = false 
       access = nil
 
-      if !request.env['HTTP_ORIGIN'].blank?   # JSONP/CORS request from a website 
-        access = AccessInfo.where(origin: request.env['HTTP_ORIGIN']).first
-        if !access.blank?
-          headers['Access-Control-Allow-Origin'] = request.env['HTTP_ORIGIN']
-          headers['Access-Control-Request-Method'] = "*"
-          headers['Access-Control-Allow-Headers'] = "*"
-          headers['Access-Control-Allow-Credentials'] = "true"
-          allowed = true
-        end
+       
+        allowed = verify_cross_request(request, headers) 
       elsif !params["api_key"].blank?        # API Access
-        access = AccessInfo.where(token: params["token"]).first
-
-        if !access.blank?
-          # refresh access token if needed
-          if access.expires_at <= Time.now.utc 
-            if access.refresh_token == false
-              raise et("application.refresh_token_failed")
-            end
-          end
-          allowed = true 
-        end
+        allowed = verify_api(request, headers)
       end
-      raise et("application.unauthorised") if allowed.blank? or access.blank?
+      
+      raise et("application.unauthorized") if allowed.blank? or access.blank?
       
       account = Account.find(access._id)
       raise et("application.account_invalid") if account.blank? # This error should not happen

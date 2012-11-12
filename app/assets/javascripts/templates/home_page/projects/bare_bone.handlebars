@@ -1,21 +1,4 @@
-{{#if view.showInfo}}
-    <div class="message">
-        <a alt="close" class="close_button" {{action "hideInfo" target="App.projectEditView"}}></a>
-
-        <div class="message_text_container">
-            <h3> Get started with RuleBot </h3>
-            There has been no applicaiton configured to be used with
-            RuleBot. 
-
-        </div>
-
-        <a href="/" class="info_btn_pos btn btn-info">
-            Learn more      
-        </a>
-    </div>
-{{/if}}
-
-
+{{view App.BannerView }}
 <div class="bare_bone_box">
     <div class="btn_box">
         <a class="btn btn-large btn-success" {{action newProject}}> Create First Project </a>

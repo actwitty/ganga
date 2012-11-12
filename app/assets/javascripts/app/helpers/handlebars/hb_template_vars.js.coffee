@@ -30,6 +30,13 @@ Handlebars.registerHelper "isString", (key, options) ->
 Handlebars.registerHelper "isUrl", (key, options) ->
   App.testTemplateDataType( this, key, options, 'url')
 
+#----------------------------------------------------------
+Handlebars.registerHelper "getTemplateName", (key, options) ->
+  return false  if not key?  
+  context = (options.contexts and options.contexts[0]) or this  
+  template_id = Ember.Handlebars.getPath(context, key, options)      
+  rbT.templateName[template_id]
+
 # ---------------------------------------------------------
 Handlebars.registerHelper "getTemplatePlaceHolder", (key, options) ->
   context = (options.contexts and options.contexts[0]) or this

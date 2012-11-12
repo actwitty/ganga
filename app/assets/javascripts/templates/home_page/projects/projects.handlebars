@@ -1,17 +1,4 @@
-{{#if view.showInfo}}
-  <div class="message">
-    <a alt="close" class="close_button" {{action "hideInfo" target="App.projectEditView"}}></a>
-
-    <div class="message_text_container">
-      <h3> All Applications </h3>
-              You can manage your applications at this dashboard.            
-      </div>
-
-      <a href="/" class="info_btn_pos btn btn-info">
-        Learn more      
-      </a>
-  </div>
-{{/if}}
+{{view App.BannerView }}
 <div class="proj_list"> 
 
   <table id="appsTable" style="margin-top:20px;margin-bottom:40px"  cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered dataTable"> 
@@ -21,22 +8,21 @@
         <th style="padding-bottom:10px;">Name</th> 
         <th style="padding-bottom:10px;">Domain</th> 
         <th style="padding-bottom:10px;">Email</th> 
-        <th style="padding-bottom:10px;" >Created On</th> 
+        <th style="padding-bottom:10px;" >Address</th> 
         <th style="padding-bottom:10px;"></th>         
       </tr> 
     </thead>
-    <tbody> 
 
+    <tbody> 
       {{#each project in controller.content}}        
         <tr style='cursor:pointer;height:40px;padding-top:8px;'>  
           <td  {{action showProjectRules project }}>{{project.app_id}}</td> 
           <td  {{action showProjectRules project }}>{{project.description.name}}</td> 
           <td  {{action showProjectRules project }}>{{project.description.domain}}</td> 
           <td  {{action showProjectRules project }}>{{project.description.email}}</td> 
-          <td  {{action showProjectRules project }}>{{project.created_time}}</td> 
+          <td  {{action showProjectRules project }}>{{project.description.address}}</td> 
           <td ><a class="edit_link" {{action editProject project  }}> Edit </a></td>           
         </tr> 
-      
       {{/each}}
     </tbody>
   </table>

@@ -1,4 +1,6 @@
-var rbTAPP = {
+var trigger_fish = {};
+
+trigger_fish.rbTAPP = {
     /* Main configs will be holded here */
     configs : {
       "status" : false
@@ -28,10 +30,10 @@ var rbTAPP = {
       //rbTRules.init();
       this.getAppData();
 
-      rbTActor.retFromCookie();
+      trigger_fish.rbTActor.retFromCookie();
 
       // 4). Initialize system variables  
-      rbTSystemVar.init();
+      //rbTSystemVar.init();
 
       // 5). FIXME : Check status of last event, if pending, execute it.
       //rbTRules.executeLastPendingEvent();
@@ -57,8 +59,8 @@ var rbTAPP = {
     */
     wake_RBT_APP : function()
     {
-      rbTDebug.log("Initializing RBT APP");
-      rbTAPP.initialize();
+      trigger_fish.rbTDebug.log("Initializing RBT APP");
+      trigger_fish.rbTAPP.initialize();
     },
 
     /** 
@@ -95,11 +97,18 @@ var rbTAPP = {
     *
     *
     */   
-    setTransientVar : function(data)
+    setTransVar : function(data)
     {
       this.configs.transVar = data;
     },
 
+    /**
+    *
+    */
+    setAppDetail : function(data)
+    {
+      this.configs.appData = data;
+    },
 
     /** 
     *  Get App ID
@@ -131,11 +140,18 @@ var rbTAPP = {
     /**
     *
     */
-    getTransientVar : function()
+    getTransVar : function()
     {
       return this.configs.transVar;
     },
 
+    /**
+    *
+    */
+    getAppDetail : function()
+    {
+      return this.configs.appData;
+    },
 
     /** 
     *  Get Application configs
@@ -148,7 +164,7 @@ var rbTAPP = {
                  "account_id" : this.configs.accountID  
                 }; 
       
-       var actor_id = rbTCookie.getCookie(rbTCookie.defaultCookies.actorID);
+       var actor_id = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID);
        if (actor_id)  {
         cnf["actor_id"] = actor_id;
        }
@@ -164,7 +180,7 @@ var rbTAPP = {
     */ 
     createSession : function()
     {
-      rbTServerChannel.createSession({success:this.setSessionID});
+      trigger_fish.rbTServerChannel.createSession({success:this.setSessionID});
     },
 
     /** 
@@ -174,11 +190,11 @@ var rbTAPP = {
     */
     getAppData : function()
     {
-      rbTServerChannel.makeGetRequest({ "url"   : rbTServerChannel.url.appDetails,
-                                        "cb"    : { success: rbTServerResponse.setAppDetail,
-                                                    error  : rbTServerResponse.defaultError
-                                                  }
-                                      });
+      trigger_fish.rbTServerChannel.makeServerRequest({"url"   : trigger_fish.rbTServerChannel.url.appDetails,
+                                          "cb"    : { success: trigger_fish.rbTServerResponse.setAppDetail,
+                                                      error  : trigger_fish.rbTServerResponse.defaultError
+                                                    }
+                                         });
     },  
 
     /** 
@@ -191,14 +207,14 @@ var rbTAPP = {
     {
       "use strict";
       if (params) {
-          rbTServerChannel.makeGetRequest( rbTServerChannel.url.setSystemProperty,
-                                           params,
-                                           { success: rbTServerResponse.setSystemProperty,
-                                             error  : rbTServerResponse.defaultError
-                                           }
-                                          );
+          trigger_fish.rbTServerChannel.makeRequest({"url"   : trigger_fish.rbTServerChannel.url.setSystemProperty,
+                                        "params": params,
+                                        "cb"    : { success: trigger_fish.rbTServerResponse.setSystemProperty,
+                                                    error  : trigger_fish.rbTServerResponse.defaultError
+                                                  }
+                                      });
       } else {
-          rbTAPP.reportError({"message"   : "System params could not be found, report error",
+          trigger_fish.rbTAPP.reportError({"message"   : "System params could not be found, report error",
                               "data"      : params
                              });
       }
@@ -212,7 +228,7 @@ var rbTAPP = {
     */
     getSystemProperty : function()
     {
-      return JSON.parse(rbTCookie.getCookie(rbTCookie.defaultCookie.system));
+      return JSON.parse(trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookie.system));
     },
 
 
@@ -224,9 +240,9 @@ var rbTAPP = {
     reportError : function(params)
     {
       try {
-          rbTDebug.error(params);
+          trigger_fish.rbTDebug.error(params);
           if (params.server) 
-            rbTServerChannel.reportError(params);
+            trigger_fish.rbTServerChannel.reportError(params);
       } catch(e) {
         // FIXME what to do?
       }
@@ -240,18 +256,8 @@ var rbTAPP = {
     log : function(params)
     {
       if(params && params.message)
-        rbTDebug.log(params.message);
-      rbTDebug.log(params)
+        trigger_fish.rbTDebug.log(params.message);
+      trigger_fish.rbTDebug.log(params)
     },
 
-    /** 
-    *  Preprocess params with datatype.
-    *  @param {object} params Error log message. 
-    *  @return {object} params with added data types.
-    */
-    preprocessParams : function(params)
-    {
-      
-     
-    }
 };

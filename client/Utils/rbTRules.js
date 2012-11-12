@@ -13,7 +13,7 @@ var TEST_RBT_RULE_JSON = {
                                        }
                          };
 
-var rbTRules = {
+trigger_fish.rbTRules = {
 
   ruleTable : {},
 
@@ -35,34 +35,6 @@ var rbTRules = {
           'Date': [ 'gtn','ltn','eql','dag','drg','set' ],  
           'Number': [ 'gtn','ltn','eql','btn','set'] 
   },
-
-  
-  
-  /**
-  * Initialize Rules for business
-  * @param {object} params Parameters passing
-  * @return void
-  */
-  init : function(params)
-  {
-    "use strict";
-    var params = params || "";
-    // COMMENTING FOR TIME BEING TILL WE HAVE RULES API UP
-    /*try {
-          rbTServerChannel.makeGetRequest( rbTServerChannel.url.getRules,
-                                           params,
-                                           { success: rbTServerResponse.setRulesTable,
-                                             error  : rbTServerResponse.defaultError
-                                           },
-                                           "noasync"
-                                         );
-    } catch(e) {
-      // FIXME what to do?
-      rbTAPP.reportError({"exception" : e.message, "message":"rule initialization failed"});
-    }*/
-    rbTRules.setRulesTable("");
-  },
-  
 
   /**
   * Set rules table for business
@@ -105,14 +77,14 @@ var rbTRules = {
                     ruleParams(ruleList.conditions[rule]) + ruleConnect(ruleList.conditions[rule]);
           }
 
-          rbTRules.ruleTable[ruleList.event] = { "name"         : ruleList.name,
+          trigger_fish.rbTRules.ruleTable[ruleList.event] = { "name"         : ruleList.name,
                                                  "ruleString"   : ruleString,
                                                  "action"       : ruleList.action,
                                                  "action_param" : ruleList.action_param
                                                };
         });
     } catch (e) {
-      rbTAPP.reportError({"exception" : e.message,
+      trigger_fish.rbTAPP.reportError({"exception" : e.message,
                           "message"   : "rule table setting failed",
                           "rules"     : rules
                         });
@@ -134,7 +106,13 @@ var rbTRules = {
       $("#rulestring").text(ruleString);
       return 'if (' + ruleString + ') { return true; } else { return false;}';
     }
-
+    
+    // Client will not execute any rules if there is no schema set. 
+    var appData = trigger_fish.rbTAPP.getAppDetail();
+    if (!appData.schema) {
+      rbTDebug.log({"message":"There is no schema set for app, cannot execute rules"});
+      return;
+    }
     try {
           var functionCode = prepareFunctionCode(this.ruleTable[event].ruleString);
           var isRuleValid = new Function(functionCode)();
@@ -149,7 +127,7 @@ var rbTRules = {
         var ruleStr = this.ruleTable[event].ruleString || "--";
       else
         var ruleStr = "Rule string cannot be formed!";  
-      rbTAPP.reportError({"exception"  : e.message,
+        trigger_fish.rbTAPP.reportError({"exception"  : e.message,
                           "message"    : "rule execution on event failed" , 
                           "event_name" : event,
                           "rule_string": ruleStr
@@ -179,7 +157,7 @@ var rbTRules = {
         }
     } catch (e) {
         // FIXME :: something wrong with type conversion
-        rbTAPP.reportError({"exception" : e.message,
+        trigger_fish.rbTAPP.reportError({"exception" : e.message,
                             "message":"data type conversion on rule value failed" , 
                             "property" : property,
                             "value" : value
@@ -197,14 +175,14 @@ var rbTRules = {
   {
     "use strict";
     try {
-      var lastEvent = rbTCookie.getCookie("lastevent");
+      var lastEvent = trigger_fish.rbTCookie.getCookie("lastevent");
       if (lastEvent) {
         this.executeRulesOnEvent(lastEvent);
       } else {
         throw "no last event found"
       }
     } catch(e) {
-      rbTDebug.log("no last event found");
+      trigger_fish.rbTDebug.log("no last event found");
     }
   },
 
@@ -251,7 +229,7 @@ var rbTRules = {
       //rbTTemplates.invoke(this.ruleTable[event].action, this.ruleTable[event].action_param);
       rbT.invokeActionScript(this.ruleTable[event].action, this.ruleTable[event].action_param);
     } catch(e) {
-      rbTAPP.reportError({"exception" : e.message,
+      trigger_fish.rbTAPP.reportError({"exception" : e.message,
                           "message": "action could not be invoked" , 
                           "event" : event
                          });
@@ -341,14 +319,14 @@ var rbTRules = {
       "use strict";
       try {
         $("#applyingrules").append("<h3>less than</h3>");
-        if (!rbTRules.isValidRule(t,"ltn",a,b))
+        if (!trigger_fish.rbTRules.isValidRule(t,"ltn",a,b))
           return false;
         var res = false;
-        var prop = rbTRules.evalProperty(a);
-        res = ((prop < rbTRules.valueDataType(prop, b)) || rbTRules.isNegate(x) );
+        var prop = trigger_fish.rbTRules.evalProperty(a);
+        res = ((prop < trigger_fish.rbTRules.valueDataType(prop, b)) || trigger_fish.rbTRules.isNegate(x) );
         return (x === "true") ? !res : res;
       } catch(e) {
-        rbTAPP.reportError({"exception" : e.message,
+        trigger_fish.rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on lt failed" , 
                             "property" : a,
                             "value"    : b
@@ -368,14 +346,14 @@ var rbTRules = {
       "use strict";
       try {
         $("#applyingrules").append("<h3>greater than</h3>");
-        if (!rbTRules.isValidRule(t,"gtn",a,b))
+        if (!trigger_fish.rbTRules.isValidRule(t,"gtn",a,b))
           return false;
         var res = false;
-        var prop = rbTRules.evalProperty(a);
-        res = ((prop > rbTRules.valueDataType(prop, b)) || rbTRules.isNegate(x) );
+        var prop = trigger_fish.rbTRules.evalProperty(a);
+        res = ((prop > trigger_fish.rbTRules.valueDataType(prop, b)) || trigger_fish.rbTRules.isNegate(x) );
         return (x === "true") ? !res : res;
       } catch(e) {
-        rbTAPP.reportError({"exception" : e.message,
+        trigger_fish.rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on gt failed" , 
                             "property" : a,
                             "value"    : b
@@ -396,14 +374,14 @@ var rbTRules = {
       "use strict";
       try {
         $("#applyingrules").append("<h3>equal to</h3>");
-        if (!rbTRules.isValidRule(t,"eql",a,b))
+        if (!trigger_fish.rbTRules.isValidRule(t,"eql",a,b))
           return false;
         var res = false;
-        var prop = rbTRules.evalProperty(a);
-        res =  ((prop === rbTRules.valueDataType(prop, b)) || rbTRules.isNegate(x) );
+        var prop = trigger_fish.rbTRules.evalProperty(a);
+        res =  ((prop === trigger_fish.rbTRules.valueDataType(prop, b)) || trigger_fish.rbTRules.isNegate(x) );
         return (x === "true") ? !res : res; 
       } catch(e) {
-        rbTAPP.reportError({"exception" : e.message,
+        trigger_fish.rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on equal_to failed" , 
                             "property" : a,
                             "value"    : b
@@ -424,17 +402,17 @@ var rbTRules = {
       "use strict";
       try {
         $("#applyingrules").append("<h3>contains</h3>");
-        if (!rbTRules.isValidRule(t,"cns",a,b))
+        if (!trigger_fish.rbTRules.isValidRule(t,"cns",a,b))
           return false;
-        var prop = rbTRules.evalProperty(a);
+        var prop = trigger_fish.rbTRules.evalProperty(a);
         var res;
-        if (prop.indexOf(rbTRules.valueDataType(prop, b)) >= 0 )
+        if (prop.indexOf(trigger_fish.rbTRules.valueDataType(prop, b)) >= 0 )
           res = true;
         else
           res = false;
         return (x === "true") ? !res : res; 
       } catch(e) {
-        rbTAPP.reportError({"exception" : e.message,
+        trigger_fish.rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on contains failed" , 
                             "property" : a,
                             "value"    : b
@@ -455,17 +433,17 @@ var rbTRules = {
       "use strict";
       try {
         $("#applyingrules").append("<h3>starts with</h3>");
-        if (!rbTRules.isValidRule(t,"swh",a,b))
+        if (!trigger_fish.rbTRules.isValidRule(t,"swh",a,b))
           return false;
         var res = false;
-        var prop = rbTRules.evalProperty(a);
-        if (prop.match("^"+rbTRules.valueDataType(prop, b)))
+        var prop = trigger_fish.rbTRules.evalProperty(a);
+        if (prop.match("^"+trigger_fish.rbTRules.valueDataType(prop, b)))
           res = true;
         else
           res = false;
         return (x === "true") ? !res : res;
       } catch(e) {
-        rbTAPP.reportError({"exception" : e.message,
+        trigger_fish.rbTAPP.reportError({"exception" : e.message,
                             "message":"rule evaluation on starts_with failed" , 
                             "property" : a,
                             "value"    : b
@@ -486,17 +464,17 @@ var rbTRules = {
       "use strict";
       try {
         $("#applyingrules").append("<h3>ends with</h3>");
-        if (!rbTRules.isValidRule(t,"ewh",a,b))
+        if (!trigger_fish.rbTRules.isValidRule(t,"ewh",a,b))
           return false;
-        var prop = rbTRules.evalProperty(a);
+        var prop = trigger_fish.rbTRules.evalProperty(a);
         var res;
-        if (prop.match(rbTRules.valueDataType(prop, b)+"$"))
+        if (prop.match(trigger_fish.rbTRules.valueDataType(prop, b)+"$"))
           res = true;
         else
           res = false;
         return (x === "true") ? !res : res;
       } catch(e) {
-        rbTAPP.reportError({"exception" : e.message,
+        trigger_fish.rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on ends_with failed" , 
                             "property"  : a,
                             "value"     : b
@@ -517,14 +495,14 @@ var rbTRules = {
       "use strict";
       try {
         $("#applyingrules").append("<h3>between</h3>");
-        if (!rbTRules.isValidRule(t,"btn",a,b,c))
+        if (!trigger_fish.rbTRules.isValidRule(t,"btn",a,b,c))
           return false;
-        var prop = rbTRules.evalProperty(a);
+        var prop = trigger_fish.rbTRules.evalProperty(a);
         var res;
-        res = (prop >= rbTRules.valueDataType(prop, b) && a <= rbTRules.valueDataType(prop, c)) ;
+        res = (prop >= trigger_fish.rbTRules.valueDataType(prop, b) && a <= trigger_fish.rbTRules.valueDataType(prop, c)) ;
         return (x === "true") ? !res : res;
       } catch(e) {
-        rbTAPP.reportError({"exception" : e.message,
+        trigger_fish.rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on between failed" , 
                             "property"  : a,
                             "value"     : b,
@@ -545,14 +523,14 @@ var rbTRules = {
       "use strict";
       try {
         $("#applyingrules").append("<h3>regex</h3>");
-        if (!rbTRules.isValidRule(t,"rgx",a,b))
+        if (!trigger_fish.rbTRules.isValidRule(t,"rgx",a,b))
           return false;
-        var prop = rbTRules.evalProperty(a);
+        var prop = trigger_fish.rbTRules.evalProperty(a);
         var regexp = new RegExp(b, 'gi');
         var res = regexp.test(prop);
         return (x === "true") ? !res : res;
       } catch (e) {
-        rbTAPP.reportError({"exception" : e.message,
+        trigger_fish.rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on regex failed" , 
                             "property"  : a,
                             "value"     : b
@@ -572,14 +550,14 @@ var rbTRules = {
       "use strict";
       try {
         $("#applyingrules").append("<h3>days ago</h3>");
-        if (!rbTRules.isValidRule(t,"dag",a,b))
+        if (!trigger_fish.rbTRules.isValidRule(t,"dag",a,b))
           return false;
-        var prop = rbTRules.evalProperty(a);
+        var prop = trigger_fish.rbTRules.evalProperty(a);
         var regexp = new RegExp(b, 'gi');
         var res = regexp.test(prop) ;
         return (x === "true") ? !res : res;
       } catch (e) {
-        rbTAPP.reportError({"exception" : e.message,
+        trigger_fish.rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on regex failed" , 
                             "property"  : a,
                             "value"     : b
@@ -600,13 +578,13 @@ var rbTRules = {
       "use strict";
       try {
         $("#applyingrules").append("<h3>days between</h3>");
-        if (!rbTRules.isValidRule(t,"drg",a,b,c))
+        if (!trigger_fish.rbTRules.isValidRule(t,"drg",a,b,c))
           return false;
-        var prop = rbTRules.evalProperty(a,t);
-        var res = (prop >= rbTRules.valueDataType(prop, b) && prop <= rbTRules.valueDataType(prop, c));
+        var prop = trigger_fish.rbTRules.evalProperty(a,t);
+        var res = (prop >= trigger_fish.rbTRules.valueDataType(prop, b) && prop <= trigger_fish.rbTRules.valueDataType(prop, c));
         return (x === "true") ? !res : res;
       } catch (e) {
-        rbTAPP.reportError({"exception" : e.message,
+        trigger_fish.rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on regex failed" , 
                             "property"  : a,
                             "value"     : b
@@ -625,11 +603,11 @@ var rbTRules = {
       "use strict";
       try {
         $("#applyingrules").append("<h3>set prop</h3>");
-        var prop = rbTRules.evalProperty(a);
+        var prop = trigger_fish.rbTRules.evalProperty(a);
         var res = (prop ? true:false);
         return (x === "true") ? !res : res;
       } catch (e) {
-        rbTAPP.reportError({"exception" : e.message,
+        trigger_fish.rbTAPP.reportError({"exception" : e.message,
                             "message"   :"rule evaluation on is set" , 
                             "property"  : a,
                            });

@@ -112,7 +112,7 @@ class AccountsController < ApplicationController
   # OUTPUT =>{ 
   ##            events: [
   ##                      {
-  ##                        apps: {app_id: "343433433", account_id: "324324", description: {"name": "my app", "domain": "http://myapp.com"}, }
+  ##                        apps: [{id: "343433433", account_id: "324324", description: {"name": "my app", "domain": "http://myapp.com"}, }]
   ##                      },
   ##                      {..}
   ##                    ]
@@ -127,7 +127,7 @@ class AccountsController < ApplicationController
     array = hash[:apps]
 
     App.where(account_id: params[:account_id]).all.each do |attr|
-      array << {app_id: attr._id, account_id: current_account._id, description: attr.description, schema: attr.schema}  
+      array << {id: attr._id, account_id: current_account._id, description: attr.description, schema: attr.schema}  
     end
   
     Rails.logger.info("#{array.inspect}") 
