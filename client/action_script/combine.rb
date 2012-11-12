@@ -28,7 +28,7 @@ files = [ "include.js",
 
 OUTPUT_FILE = "templSingle.js"
 
-#OUTPUT_FILE = "rbt.js"
+#OUTPUT_FILE = "trigger_fish.rbT.js"
 
 rbt_file = File.new(OUTPUT_FILE,"w")
 

@@ -1,1 +1,3 @@
-var rbT = { inited: false};
+var trigger_fish = {};
+
+trigger_fish.rbT = { inited: false};

@@ -1,7 +1,7 @@
 App.Rule = Ember.Object.extend
   id: null
   name: null
-  event: null 
+  event: 'beacon' 
   owner: 'client'
   action: null
   action_param: null
@@ -11,9 +11,23 @@ App.Rule = Ember.Object.extend
   hasManyConditions: []
   actionParamArr: []
 
+  setDefaultAction: ->
+    action = @get 'action'
+    if action is null
+      defaultAction = ''
+      for key of rbT.templateLib
+        defaultAction = key
+        break
+
+      action_param = {}
+      @set 'action', defaultAction      
+      for property of  rbT.templateArgs[defaultAction]  
+        action_param[property] = rbT.templateArgs[defaultAction][property]
+
+      @set 'action_param', action_param
+      
   init: ->
     @_super  
-    console.log @get 'id'
     hasManyConditions = []
     conditions = @get 'conditions'
     if conditions isnt null
@@ -23,7 +37,7 @@ App.Rule = Ember.Object.extend
     else
       @set 'hasManyConditions', [App.Condition.create()]
 
-    
+    @setDefaultAction() 
     @loadParam(@get 'action_param')  
 
 

@@ -13,6 +13,7 @@ App.RulesController = Em.ArrayController.extend
       create : "rule/create"
       update : "rule/update"
       delete : "rule/delete"
+      set_sys: "/actor/set"
   
 
   #########################################################  
@@ -90,9 +91,9 @@ App.RulesController = Em.ArrayController.extend
     rule = @get 'selected'
        
     if editState is 'new'        
-      @createRule(project.get('app_id'), rule.serialize())
+      @createRule(project.get('id'), rule)
     else  
-      @updateRule(project.get('app_id'), rule.serialize())                    
+      @updateRule(project.get('id'), rule)                    
       
   #########################################################
   translatePropertyName: (property) ->    
@@ -165,12 +166,14 @@ App.RulesController = Em.ArrayController.extend
         if "events" of project.schema
           event_p = project.schema.events
 
-          for k,v of event_p 
-            events.push k
+          for k,v of event_p
+            if not /^__/.test k
+              events.push k
 
-      if events.length is 0
+          if not event_p.hasOwnProperty 'beacon'
+            events.push 'beacon'
+      if events.length is 0    
         events.push 'beacon'
-          
       @set 'events', events 
 
 
@@ -204,22 +207,63 @@ App.RulesController = Em.ArrayController.extend
   ).observes('App.router.projectsController.selected')
   #########################################################
   # Create a Rule
-  createRule: (proj_app_id, rule_data)->
-    
+  createRule: (proj_id, ruleNew)->
+    controllerObj = this
     success= (data) ->
+      if data.hasOwnProperty('rule_id')
+        ruleNew.set 'id', data.rule_id
+        controllerObj.get('content').pushObject(ruleNew)
       App.get("router").send("reenterProjectRules")
     error= () ->
       # TODO: Pop out error
     url = @get 'url.create'
     json = 
-            app_id : proj_app_id
-            rule : rule_data
-    console.log json
+            app_id : proj_id
+            rule : ruleNew.serialize()
+    
     App.getRequest  url, json, success, error
+    @updateSystemVariables ruleNew
+  #########################################################
+  updateSystemVariables: (rule)->    
+    
+    system_param = {}
+    json = {}
+    sys = false
+
+    conditions = rule.get 'hasManyConditions'
+    
+    for condition in conditions    
+      scope = condition.get 'scope'    
+      if scope is 's'   
+        sys = true
+        property =  condition.get 'property'
+        defaultVal = null
+        type = App.systemSchema[property]
+        
+        if  type is 'String'
+          defaultVal = 'default'
+        else if type is 'Number'
+          defaultVal = 1
+        else if type is 'Boolean'
+          defaultVal = true
+        
+        
+        system_param[property] = defaultVal
+
+    if sys is true      
+      json['type'] = 'system'
+      json['app_id'] = App.get('router.projectsController.selected.id')
+      json['actor_id'] = App.get('router.projectsController.selected.description.super_actor_id')
+      json['properties'] = {system : system_param}
+      
+      url = @get 'url.set_sys'
+      success= (data) ->
+      error= (data) ->    
+      App.getRequest url, json, success, error
 
   #########################################################
   # Update a Rule  
-  updateRule: (proj_app_id, rule_data)->
+  updateRule: (proj_id, ruleNew)->
 
     success= (data) ->
       App.get("router").send("reenterProjectRules")
@@ -227,19 +271,21 @@ App.RulesController = Em.ArrayController.extend
       # TODO: Pop out error
     url = @get 'url.update'
     json = 
-            app_id : proj_app_id
-            rule : rule_data
+            app_id : proj_id
+            rule : ruleNew.serialize()
             rule_id : rule_data.id
     rule_data.id = null
 
     App.getRequest  url, json, success, error
+    @updateSystemVariables ruleNew
+
   #########################################################
   # Delete a Rule
   deleteRule: (rule)->
     url = @get 'url.delete'
     controllerObj = this
-    del_app_id = App.get('router.projectsController.selected.app_id')
-    console.log del_app_id
+    del_app_id = App.get('router.projectsController.selected.id')
+    
     del_rule_id = rule.get('id')
     # Success callback -------------------------
     success= (data) ->

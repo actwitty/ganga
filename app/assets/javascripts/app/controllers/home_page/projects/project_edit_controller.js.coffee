@@ -15,7 +15,7 @@ App.ProjectEditController = Em.ObjectController.extend
     url = @deleteUrl
     controllerObj = this
     if @get("isNew") is false      
-      del_app_id = @get('content').get('app_id')
+      del_id = @get('content').get('id')
 
       # Success callback -------------------------
       success= (data) ->
@@ -29,7 +29,7 @@ App.ProjectEditController = Em.ObjectController.extend
       # Error callback -------------------------
       error= ()->
 
-      App.postRequest url, {app_id : del_app_id}, success, error
+      App.postRequest url, {id : del_id}, success, error
 
     else
       return false
@@ -42,7 +42,7 @@ App.ProjectEditController = Em.ObjectController.extend
     domain = project.get 'description.domain'
     
     nameReg = /^[-a-zA-Z0-9_ ]+$/
-    urlReg = /http(s?):\/\/www\.[A-Za-z0-9\.-]{3,}\.[A-Za-z]{3}/
+    urlReg = /http(s?):\/\/[A-Za-z0-9\.-]{3,}\.[A-Za-z]{2,4}/
     emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/    
     if email is null or name is null and domain is null or
        email.length is 0 or name.length is 0 or domain.length is 0 or
