@@ -112,7 +112,7 @@ class AccountsController < ApplicationController
   # OUTPUT =>{ 
   ##            events: [
   ##                      {
-  ##                        apps: {app_id: "343433433", account_id: "324324", description: {"name": "my app", "domain": "http://myapp.com"}, }
+  ##                        apps: [{id: "343433433", account_id: "324324", description: {"name": "my app", "domain": "http://myapp.com"}, }]
   ##                      },
   ##                      {..}
   ##                    ]

@@ -44,12 +44,12 @@ class Actor
 
   # INPUT => 
   ## {
-  ##   account_id:  '1222343'       [MANDATORY]
-  ##   app_id:  "1234444',          [MANDATORY]
-  ##   actor_id:  "23232323",       [OPTIONAL]  ## if not give anonymous actor is created and
+  ##   id:  "23232323",             [OPTIONAL]  ## if not give anonymous actor is created and
   ##                                            ## if uid is not already existing in app_id then
   ##                                            ## the uid is assigned to anonymous actor otherwise  
   ##                                            ## actor_id of assigned actor is return
+  ##   account_id:  '1222343'       [MANDATORY]
+  ##   app_id:  "1234444',          [MANDATORY]
   ##   uid:  "john.doe@example.com" [MANDATORY]
   ##   type:  "mobile"              [OPTIONAL]
   ## }
@@ -73,7 +73,7 @@ class Actor
     # its a case when identity is called more than once in a session
     # we should treat it as different person because in this case identify should be called with actor_id nil as  
     # actor_id is identified with other uid earlier.. This will be tracked by cookie on client
-    if params[:actor_id].blank?
+    if params[:id].blank?
       # if this is new actor
       if identifier.blank?
         actor = Actor.create!(account_id: params[:account_id], app_id: params[:app_id])
@@ -88,16 +88,16 @@ class Actor
       end
       actor_id = actor._id
     else
-      actor = Actor.where(app_id: params[:app_id], _id: params[:actor_id]).first 
-      raise et("actor.invalid_actor_id", id: params[:actor_id]) if actor.blank?
+      actor = Actor.where(app_id: params[:app_id], _id: params[:id]).first 
+      raise et("actor.invalid_actor_id", id: params[:id]) if actor.blank?
 
       # create Identifier for the actor
       if identifier.blank?
-        identifier = Identifier.create!(account_id: params[:account_id], app_id: params[:app_id], actor_id: params[:actor_id], uid: params[:uid], type: params[:type])
-        Rails.logger.info("Creating Identifier #{params[:uid]} for actor #{params[:actor_id]}")
+        identifier = Identifier.create!(account_id: params[:account_id], app_id: params[:app_id], actor_id: params[:id], uid: params[:uid], type: params[:type])
+        Rails.logger.info("Creating Identifier #{params[:uid]} for actor #{params[:id]}")
       else    
         
-        if identifier.actor_id != params[:actor_id]
+        if identifier.actor_id != params[:id]
           if actor.identifiers.blank?
             Rails.logger.info("Identifier already exists..Re-mapping anonymous actor to Identifier #{params[:uid]}")
                 
@@ -124,9 +124,9 @@ class Actor
 
   # INPUT
   ## {
+  ##  :id => "1223343",       [MANDATORY]  
   ##  :account_id =>'2121121' [MANDATORY]
   ##  :app_id => "1234444',   [MANDATORY]
-  ##  :actor_id => "1223343", [MANDATORY]  
   ##  :properties =>          [MANDATORY] ## either system or profile property must be there
   ##     {        
   ##        profile: {
@@ -145,7 +145,7 @@ class Actor
   def self.set(params)
     Rails.logger.info("Enter Actor Set")
 
-    if params[:account_id].blank? or params[:app_id].blank? or  params[:actor_id].blank? or
+    if params[:account_id].blank? or params[:app_id].blank? or  params[:id].blank? or
      ( params[:properties][:profile].blank? and params[:properties][:system].blank? )
       raise et("actor.invalid_argument_in_set") 
     end
@@ -156,8 +156,8 @@ class Actor
     params[:meta] =  true
 
     # First get the actor
-    actor = Actor.where(app_id: params[:app_id], _id: params[:actor_id]).first 
-    raise et("actor.invalid_actor_id", id: params[:actor_id]) if actor.blank?
+    actor = Actor.where(app_id: params[:app_id], _id: params[:id]).first 
+    raise et("actor.invalid_actor_id", id: params[:id]) if actor.blank?
 
     properties = params[:properties]
     params.delete(:properties)
@@ -241,12 +241,13 @@ class Actor
 
   # INPUT
   ## {
+  ##   id: "3433434",                [OPTIONAL] 
+  ##           OR
+  ##   uid: "john.doe@example.com",  [OPTIONAL] 
+  ##
   ##   account_id: "23232332"        [MANDATORY]
   ##   app_id: "1234444',            [MANDATORY]
   ##
-  ##   actor_id: "3433434",          [OPTIONAL] 
-  ##           OR
-  ##   uid: "john.doe@example.com",  [OPTIONAL] 
   ##   identifiers: true or false    [OPTIONAL] # associated identifiers 
   ##   events: true or false         [OPTIONAL] # events 
   ##   conversions: true or false    [OPTIONAL] # conversion
@@ -294,19 +295,19 @@ class Actor
     actor = nil
 
     if params[:account_id].blank? or params[:app_id].blank? or 
-      (params[:actor_id].blank? and params[:uid].blank?)
+      (params[:id].blank? and params[:uid].blank?)
       raise et("actor.invalid_argument_in_read")
     end
 
     app = App.where(account_id: params[:account_id], _id: params[:app_id] ).first
     raise et("actor.invalid_app_id", id: params[:app_id]) if app.blank?
     
-    if params[:actor_id].blank? 
+    if params[:id].blank? 
       identifier = Identifier.where(app_id: params[:app_id], uid: params[:uid]).first
       actor_id = identifier.actor_id if !identifier.blank?
     else
       # get the actor
-      actor = Actor.where(app_id: params[:app_id], id: params[:actor_id]).first   
+      actor = Actor.where(app_id: params[:app_id], id: params[:id]).first   
       actor_id = actor._id if !actor.blank?
     end
     
@@ -373,5 +374,12 @@ class Actor
   rescue => e
     Rails.logger.error("**** ERROR **** #{e.message}")
     {:return => nil, :error => e}
+  end
+
+  def format_actor
+    {id: self._id.to_s, account_id: self.account_id.to_s, app_id: self.app_id.to_s, description: self.description, updated_at: self.updated_at}
+  rescue => e
+    Rails.logger.error("**** ERROR **** #{e.message}")
+    {}
   end
 end

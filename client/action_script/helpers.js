@@ -2,7 +2,7 @@
 
 //templ related timers
 
-rbT.templTimers= {
+trigger_fish.rbT.templTimers= {
  'templ.displaytimer':'false',
  'templ.templduration':'100'
 
@@ -10,45 +10,45 @@ rbT.templTimers= {
 
 // display lock for templ positions
 
-rbT.templatesDisplayLockFlags = {
+trigger_fish.rbT.templatesDisplayLockFlags = {
 
-    'rbT.topbar.displayLock':'false',
-    'rbT.bottombar.displayLock':'false',
-    'rbT.modal.displayLock' :'false',
-    'rbT.chat.displayLock' :'false',
-    'rbT.uservoice.displayLock' :'false',
+    'trigger_fish.rbT.topbar.displayLock':'false',
+    'trigger_fish.rbT.bottombar.displayLock':'false',
+    'trigger_fish.rbT.modal.displayLock' :'false',
+    'trigger_fish.rbT.chat.displayLock' :'false',
+    'trigger_fish.rbT.uservoice.displayLock' :'false',
 
 
 };
 
 //function fir set the display lock for templ postions
 
-rbT.setTemplatesDisplayLockFlags=function(pos,value)
+trigger_fish.rbT.setTemplatesDisplayLockFlags=function(pos,value)
 {
 
    if(pos == 'topbar') 
    {
-     rbT.templatesDisplayLockFlags['rbT.topbar.displayLock'] = value; 
+     trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.topbar.displayLock'] = value; 
    }
 
    else if(pos == 'bottombar') 
    {
-     rbT.templatesDisplayLockFlags['rbT.bottombar.displayLock'] = value; 
+     trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.bottombar.displayLock'] = value; 
    }
 
    else if(pos == 'modal') 
    {
-     rbT.templatesDisplayLockFlags['rbT.modal.displayLock'] = value; 
+     trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.modal.displayLock'] = value; 
    }
 
    else if(pos == 'chat') 
    {
-     rbT.templatesDisplayLockFlags['rbT.chat.displayLock'] = value; 
+     trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.chat.displayLock'] = value; 
    }
 
   else if(pos == 'feedback') 
    {
-     rbT.templatesDisplayLockFlags['rbT.feedback.displayLock'] = value; 
+     trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.feedback.displayLock'] = value; 
    }
 
 }
@@ -58,7 +58,7 @@ rbT.setTemplatesDisplayLockFlags=function(pos,value)
 //************************************************
 //function returns the string making capital letter the first letter
 
-rbT.makeFirstLetterCapital=function(string)
+trigger_fish.rbT.makeFirstLetterCapital=function(string)
 {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
@@ -67,7 +67,7 @@ rbT.makeFirstLetterCapital=function(string)
 ////************************************************
 //function returns the string making capital letter the first letter
 
-rbT.makeFirstLetterSmall=function(string)
+trigger_fish.rbT.makeFirstLetterSmall=function(string)
 {
     return string.charAt(0).toLowerCase() + string.slice(1);
 };
@@ -80,7 +80,7 @@ rbT.makeFirstLetterSmall=function(string)
 
 //from template name extract the disply position for the template
 
-rbT.extractDisplayPositionFromTemplName = function(templName){
+trigger_fish.rbT.extractDisplayPositionFromTemplName = function(templName){
 
     var tempReg = /[a-z]*/g;
     var tempMatch = tempReg.exec(templName);
@@ -90,29 +90,29 @@ rbT.extractDisplayPositionFromTemplName = function(templName){
 
 //******************************************************************
 //check for the if templ position is occupied
-rbT.isTemplPosOccupied = function(pos){
+trigger_fish.rbT.isTemplPosOccupied = function(pos){
    
    var ret = false;
  
 
-   if(pos == 'topbar' && rbT.templatesDisplayLockFlags['rbT.topbar.displayLock'] 
+   if(pos == 'topbar' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.topbar.displayLock'] 
     == true ) 
    {
      ret= true;
       
    }
-   else if(pos == 'bottombar' && rbT.templatesDisplayLockFlags['rbT.bottombar.displayLock'] 
+   else if(pos == 'bottombar' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.bottombar.displayLock'] 
     == true ) 
    {
      ret= true;
     }
-  else if(pos == 'modal' && rbT.templatesDisplayLockFlags['rbT.modal.displayLock'] 
+  else if(pos == 'modal' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.modal.displayLock'] 
     == true )
   {
      //TODO
   }
 
- else if(pos == 'chat' && rbT.templatesDisplayLockFlags['rbT.chat.displayLock'] 
+ else if(pos == 'chat' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.chat.displayLock'] 
     == true )
   {
      ret= true;
@@ -132,7 +132,7 @@ rbT.isTemplPosOccupied = function(pos){
 //**************************************************************
 
 //function for find hightest Z index
-rbT.findZIndex = function(){
+trigger_fish.rbT.findZIndex = function(){
 
   var elements = document.getElementsByTagName("*");
   var highest_index = 0;
@@ -152,33 +152,36 @@ rbT.findZIndex = function(){
 
 };
 
-rbT.getBrowserVersion = function(){
+trigger_fish.rbT.getBrowserVersion = function(){
   //TODO: Modernzer
 };
 
 
-rbT.getPlatform = function(){
+trigger_fish.rbT.getPlatform = function(){
  //TODO: Modernzer
 
 };
 
 
-rbT.sendEventToRBServer = function(){
+trigger_fish.rbT.sendEventToRBServer = function(){
 
 
 };
 
-rbT.sendErrorToRBServer = function(string){
+trigger_fish.rbT.sendErrorToRBServer = function(string){
 
   
 /*
 
- rbTAPP.reportError({"message":string,"server":true});
+ trigger_fish.rbTAPP.reportError({"message":string,"server":true});
 
 
 */
 
   //TODO: Implement post to server // for console log=true
+
+  /* trigger_fish.rbTAPP.log({"message": "Handling event with server resp","data":respData});
+ */
   console.log(string);
 };
 

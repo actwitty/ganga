@@ -6,33 +6,41 @@
 
 //************************************************************************************
 
-rbT.init = function(){
-	rbT.keyPrefix = "{{";
-	rbT.keySuffix = "}}";
-	rbT.inited = true;
+trigger_fish.rbT.init = function(){
+	trigger_fish.rbT.keyPrefix = "{{";
+	trigger_fish.rbT.keySuffix = "}}";
+	trigger_fish.rbT.inited = true;
 
 };
 
+
+trigger_fish.rbT.currentSystemVar = {};
+trigger_fish.rbT.currentActorVar = {};
+trigger_fish.rbT.currentEventVar = {};
+
+
+
+
 //******************************************************************************************
 
-rbT.getTemplateHTMLByNameInternal = function(name){
+trigger_fish.rbT.getTemplateHTMLByNameInternal = function(name){
 	
     
-        if (rbT.templateLib.hasOwnProperty(name) ){
+        if (trigger_fish.rbT.templateLib.hasOwnProperty(name) ){
   
-			var html = rbT[rbT.templateLib[name]];
+			var html =  trigger_fish.rbT[trigger_fish.rbT.templateLib[name]];
 
 
             return html;
 		}else{
-		rbT.sendErrorToRBServer("unsupported template " + name);
+		trigger_fish.rbT.sendErrorToRBServer("unsupported template " + name);
 		return "";
 		}
 	
 };
 //*******************************************************************************************
 
-rbT.getTemplateApplyVarsInternal = function(html,vars){
+trigger_fish.rbT.getTemplateApplyVarsInternal = function(html,vars){
 	//TODO: check instanceOf
 	if(html.length){
 		for (var key in vars) {
@@ -44,28 +52,28 @@ rbT.getTemplateApplyVarsInternal = function(html,vars){
 			if( key != 'rb.t.nr.templDuration')
             {
 			  var tempVarToBeReplaced = key;
-              var replaceKey = rbT.keyPrefix + tempVarToBeReplaced + rbT.keySuffix;
+              var replaceKey = trigger_fish.rbT.keyPrefix + tempVarToBeReplaced + trigger_fish.rbT.keySuffix;
 			  html = html.replace(replaceKey, value);
 			} 
 		}	
 	  }
 		return html;	
 	}else{
-	 rbT.sendErrorToRBServer("Bad variable array error for template");
+	 trigger_fish.rbT.sendErrorToRBServer("Bad variable array error for template");
 	 return "";
 	}
 
 };
 //***************************************************************************************
 
-rbT.isTemplateGoodToApplyInternal = function(html){
+trigger_fish.rbT.isTemplateGoodToApplyInternal = function(html){
 
 	nMatched = ""
 	var nMatched = html.match(/(\{\{[\w.]*\}\})/g)
 	
 
 	if (nMatched != null){
-		rbT.sendErrorToRBServer("Not all variables in templates were replaced");
+		trigger_fish.rbT.sendErrorToRBServer("Not all variables in templates were replaced");
 		return false;
 	}
 
@@ -74,58 +82,99 @@ rbT.isTemplateGoodToApplyInternal = function(html){
 
 //**************************************************************************************
 
-rbT.applyHtmltoPageInternal = function(html){
+trigger_fish.rbT.applyHtmltoPageInternal = function(html){
 
 	if(html.length){
 
 
 	 jQuery('body').append(html);
+	 console.log(html);
 
 	// document.body.innerHTML = document.body.innerHTML+html;
 
 	}else{
 
-         rbT.sendErrorToRBServer("Bad variable array error for template");
+         trigger_fish.rbT.sendErrorToRBServer("Bad variable array error for template");
 	 			 return "";
 	 }
 };
 
 //***********************************************************************************
-rbT.enableClickHandlingInternal = function(){
-	rbT.eventHandler.init();
+trigger_fish.rbT.enableClickHandlingInternal = function(){
+	trigger_fish.rbT.eventHandler.init();
 };
 
 //***************************************************************************************
-rbT.enableTimeOutHadnlingInternal= function(templateName,timerValue){
+trigger_fish.rbT.enableTimeOutHadnlingInternal= function(templateName,timerValue){
    
-    rbT.eventHandler.timeOutHandler(templateName,timerValue);
+    trigger_fish.rbT.eventHandler.timeOutHandler(templateName,timerValue);
 };
 
 //*************************************************************************************
-rbT.invokeActionScriptInternal=function(action,actionParams){
+trigger_fish.rbT.invokeActionScriptInternal=function(action,actionParams){
 
 /*
 
       //TODO get the OS version here based on that action display
-*/      
-
-      rbT.init();
+*/    
+      params= {};  
       
+      trigger_fish.rbT.init();
+      
+
       var templateName = action;
        
-      var pos= rbT.extractDisplayPositionFromTemplName(templateName);
+      var pos= trigger_fish.rbT.extractDisplayPositionFromTemplName(templateName);
 
-      var isPosOccupied = rbT.isTemplPosOccupied(pos);
+      var isPosOccupied = trigger_fish.rbT.isTemplPosOccupied(pos);
 
       if(isPosOccupied)
       {
 
-          rbT.sendErrorToRBServer("Postion Occupied by Another Template");
+          trigger_fish.rbT.sendErrorToRBServer("Postion Occupied by Another Template");
       }
       else
       {
-          var html = rbT.getTemplateHTMLByName(templateName);
+          var html = trigger_fish.rbT.getTemplateHTMLByName(templateName);
           
+          
+          
+          /*
+                for (var key in actionParams)
+                {
+	               if(actionParams.hasOwnProperty(key))
+	               {
+	                   var keyVal = key;
+                       var value = actionParams[key];
+                       var tempMatch = ""
+                       var tempMatch = value.match(/\{\{[\w.\=\%\:\/\s\#\@\-\']*\}\}/g);
+                      
+                       if(tempMatch[0])
+                       {
+                           // fetch system variable
+                           // fetch actor variable
+                           // fetch event variable
+                             
+                       	   for(var i=0 ; i<tempMatch.length ; i++)
+                       	   {
+                       	       var textRuntimeValue = //get the value from lower layer code 
+	                      
+	                           actionParams[key].replace(tempMatch[i],textRuntimeValue);
+	                       }         
+                       }
+
+
+
+
+	               } 
+
+                }  
+                         
+
+          */
+
+
+
           
           if(pos =='modal')
           {
@@ -135,17 +184,17 @@ rbT.invokeActionScriptInternal=function(action,actionParams){
                	{
 			         if( 'rb.f.nr.transBlockZindex' == key)
 			       {
-				       actionParams[key] =  rbT.findZIndex();
+				       actionParams[key] =  trigger_fish.rbT.findZIndex();
 			       }
 
 			       else if( 'rb.f.nr.baseZindex' == key)
 			       {
-				      actionParams[key]  =  rbT.findZIndex()+5;
+				      actionParams[key]  =  trigger_fish.rbT.findZIndex()+5;
 			       }
 
 			       else if( 'rb.t.nr.durationOfDisplay'== key)
 			       {
-                      rbT.templTimers['templ.templduration']= actionParams[key] ;
+                      trigger_fish.rbT.templTimers['templ.templduration']= actionParams[key] ;
 			       }
              
 		       }
@@ -158,11 +207,11 @@ rbT.invokeActionScriptInternal=function(action,actionParams){
 			  {	
 			  if( 'rb.f.nr.baseZindex' == key)
 			  {
-				actionParams[key] =  rbT.findZIndex()+5;
+				actionParams[key] =  trigger_fish.rbT.findZIndex()+5;
 			  }
 			  else if( 'rb.t.nr.durationOfDisplay'== key)
               {
-                   rbT.templTimers['templ.templduration']= actionParams[key] ;
+                   trigger_fish.rbT.templTimers['templ.templduration']= actionParams[key] ;
 			  }
 
 			 } 
@@ -170,22 +219,26 @@ rbT.invokeActionScriptInternal=function(action,actionParams){
 		    } 
 		  }        
 
-		  console.log(html);
-
-		   console.log("\n\n\n\n\n");
+		
 
 
 
-          html = rbT.getTemplateApplyVars(html, actionParams);
+          html = trigger_fish.rbT.getTemplateApplyVars(html, actionParams);
           
-          console.log(html);
 
-         if (rbT.isTemplateGoodToApply(html)){
-           rbT.applyHtmltoPage(html);
-           rbT.enableClickHandling();
-           rbT.enableTimeOutHadnling(templateName,rbT.templTimers['templ.templduration']*1000);
-		   rbT.setTemplatesDisplayLockFlags(pos,true);
+         if (trigger_fish.rbT.isTemplateGoodToApply(html)){
+            trigger_fish.rbT.applyHtmltoPage(html);
+            trigger_fish.rbT.enableClickHandling();
+            trigger_fish.rbT.enableTimeOutHadnling(templateName,trigger_fish.rbT.templTimers['templ.templduration']*1000);
+		    trigger_fish.rbT.setTemplatesDisplayLockFlags(pos,true);
 
+             params.display = action + " " +"Display " + "Success";
+    
+// Report Server Display of Templ Successfull
+/*
+         //trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
+
+*/
 
          }
       }	

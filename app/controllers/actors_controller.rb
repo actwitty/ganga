@@ -41,20 +41,15 @@ class ActorsController < ApplicationController
 
     raise et("actor.create_failed") if obj.blank?
 
-    params[:actor_id] = obj._id
+    params[:id] = obj._id
 
     if !params[:properties].blank?
       ret = Actor.set(params)
       raise et("actor.create_failed_in_set_property") if !ret[:error].blank?
       obj = ret[:return]
     end
-
-    hash = obj.reload.attributes
-    hash["id"] = hash["_id"]
-    hash.delete("_id")
-    
-    puts hash.inspect
-    respond_with(hash, status: 200)
+   
+    respond_with(obj.reload.format_actor, status: 200)
   rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
     respond_with({ errors: e.message} , status: 422)
@@ -70,11 +65,11 @@ class ActorsController < ApplicationController
 
   # INPUT => 
   ## {
-  ##   app_id:    "1234444',          [MANDATORY]
-  ##   actor_id:  "23232323",         [OPTIONAL]  ## if not give anonymous actor is created and
+  ##   id:  "23232323",               [OPTIONAL]  ## if not give anonymous actor is created and
   ##                                            ## if uid is not already existing in app_id then
   ##                                            ## the uid is assigned to anonymous actor otherwise  
   ##                                            ## actor_id of assigned actor is return
+  ##   app_id:    "1234444',          [MANDATORY]
   ##   uid:  "john.doe@example.com"   [MANDATORY]
   ##   type:  "mobile"                [OPTIONAL]
   ## }
@@ -103,10 +98,9 @@ class ActorsController < ApplicationController
 
   # INPUT
   ## {
-  ##  :type => "system" or "profile"
+  ##  :id => "1223343",       [MANDATORY] 
   ##  :app_id => "1234444',   [MANDATORY]
-  ##  :actor_id => "1223343", [MANDATORY]  
-  ##  :properties => {        [MANDATORY] ## either system or profile property must be there
+  ##  :properties =>          [MANDATORY] ## either system or profile property must be there
   ##     {        
   ##        profile: {
   ##          :email => "john.doe@example.com",
@@ -177,14 +171,14 @@ class ActorsController < ApplicationController
 
   # INPUT
   ## {
-  ##   app_id: "1234444',            [MANDATORY]
-  ##
-  ##   actor_id: "3433434",          [OPTIONAL] 
+  ##   id: "3433434",                [OPTIONAL] 
   ##           OR
   ##   uid: "john.doe@example.com",  [OPTIONAL] 
   ##
+  ##   app_id: "1234444',            [MANDATORY]
+  ##
   ##   identifiers: true or false    [OPTIONAL] # associated identifiers 
-  ##   events: true or false         [OPTIONAL] # events  
+  ##   events: true or false         [OPTIONAL] # events 
   ##   conversions: true or false    [OPTIONAL] # conversion
   ##   errors: true or false         [OPTIONAL] # errors
   ## }

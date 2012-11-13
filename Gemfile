@@ -98,6 +98,7 @@ gem "mongoid", "~> 3.0.0"
 
 gem 'colorize'
 
+gem 'yajl-ruby'
 #JSONP middleware
 gem 'rack-jsonp-middleware',  :require => 'rack/jsonp'
 
@@ -111,5 +112,7 @@ group :test  do
   gem 'spork-rails'
   gem 'database_cleaner'
   gem 'ruby-prof'
-
+  gem 'capybara'
+  gem 'capybara-webkit'
+  gem 'capybara-json'
 end

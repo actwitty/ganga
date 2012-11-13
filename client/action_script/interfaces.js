@@ -1,91 +1,91 @@
 "use strict";
-rbT.isInitialized = function(){
-	return rbT.inited;
+trigger_fish.rbT.isInitialized = function(){
+	return trigger_fish.rbT.inited;
 };
 //------------------------------------------
-rbT.getTemplateHTMLByName = function(name){
+trigger_fish.rbT.getTemplateHTMLByName = function(name){
 
-	if (!rbT.isInitialized()){
+	if (!trigger_fish.rbT.isInitialized()){
 		return "";
 	}
 	
 	if ( typeof name === 'undefined' ){
-		rbT.sendErrorToRBServer("improper access of interface getTemplateHTMLByName");
+		trigger_fish.rbT.sendErrorToRBServer("improper access of interface getTemplateHTMLByName");
 		return "";
 	}
-	return rbT.getTemplateHTMLByNameInternal(name);
+	return trigger_fish.rbT.getTemplateHTMLByNameInternal(name);
 };
 //------------------------------------------
-rbT.getTemplateApplyVars = function(html,vars){
-	if (!rbT.isInitialized()){
+trigger_fish.rbT.getTemplateApplyVars = function(html,vars){
+	if (!trigger_fish.rbT.isInitialized()){
 		return "";
 	}
 
 	if ( typeof html === 'undefined' || typeof vars === 'undefined' ){
-		rbT.sendErrorToRBServer("improper access of interface getTemplateApplyVars");
+		trigger_fish.rbT.sendErrorToRBServer("improper access of interface getTemplateApplyVars");
 		return "";
 	}
 
-	return rbT.getTemplateApplyVarsInternal(html,vars);
+	return trigger_fish.rbT.getTemplateApplyVarsInternal(html,vars);
 };
 //------------------------------------------
-rbT.isTemplateGoodToApply = function(html){
-	if (!rbT.isInitialized()){
+trigger_fish.rbT.isTemplateGoodToApply = function(html){
+	if (!trigger_fish.rbT.isInitialized()){
 		return false;
 	}
 	if ( typeof html === 'undefined' ){
-		rbT.sendErrorToRBServer("improper access of interface isTemplateGoodToApply");
+		trigger_fish.rbT.sendErrorToRBServer("improper access of interface isTemplateGoodToApply");
 		return "";
 	}
-	return rbT.isTemplateGoodToApplyInternal(html);
+	return trigger_fish.rbT.isTemplateGoodToApplyInternal(html);
 };
 
 //------------------------------------------
-rbT.applyHtmltoPage = function(html){
-	if (!rbT.isInitialized()){
+trigger_fish.rbT.applyHtmltoPage = function(html){
+	if (!trigger_fish.rbT.isInitialized()){
 		return "";
 	}
 	if ( typeof html === 'undefined' ){
-		rbT.sendErrorToRBServer("improper access of interface applyHtmltoPage");
+		trigger_fish.rbT.sendErrorToRBServer("improper access of interface applyHtmltoPage");
 		return "";
 	}
-	return rbT.applyHtmltoPageInternal(html);
+	return trigger_fish.rbT.applyHtmltoPageInternal(html);
 };
 
 
 //-----------------------------------------
-rbT.enableClickHandling = function(){
-	rbT.enableClickHandlingInternal ();
+trigger_fish.rbT.enableClickHandling = function(){
+	trigger_fish.rbT.enableClickHandlingInternal ();
 }
 
 
 //----------------------------------------------------------------
 
-rbT.enableTimeOutHadnling =function(templateName,timerValue){
+trigger_fish.rbT.enableTimeOutHadnling =function(templateName,timerValue){
 
-   if (!rbT.isInitialized()){
+   if (!trigger_fish.rbT.isInitialized()){
 		return "";
 	}
 	if ( typeof templateName === 'undefined' ){
-		rbT.sendErrorToRBServer("improper access of interface enableTimeOutHadnling");
+		trigger_fish.rbT.sendErrorToRBServer("improper access of interface enableTimeOutHadnling");
 		return "";
 	}
 
-	rbT.enableTimeOutHadnlingInternal(templateName,timerValue);
+	trigger_fish.rbT.enableTimeOutHadnlingInternal(templateName,timerValue);
 }
 
 //---------------------------------------------------------------
 
-rbT.invokeActionScript = function(action,actionParams)
+trigger_fish.rbT.invokeActionScript = function(action,actionParams)
 {
 
 	if ( typeof actionParams === 'undefined' ){
-		rbT.sendErrorToRBServer("Invalid params in rule Json");
+		trigger_fish.rbT.sendErrorToRBServer("Invalid params in rule Json");
 		return "";
 	}
 
 	else{
-          rbT.invokeActionScriptInternal(action,actionParams); 
+          trigger_fish.rbT.invokeActionScriptInternal(action,actionParams); 
 	}
 
 	

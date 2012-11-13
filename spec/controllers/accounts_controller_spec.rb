@@ -9,7 +9,7 @@ describe AccountsController do
     @app = FactoryGirl.create(:app, account_id: @account._id)
     @actor = FactoryGirl.create(:actor, app_id: @app._id,  account_id: @account._id)
 
-    Actor.set(account_id: @actor.account_id, app_id: @actor.app_id, actor_id: @actor._id, 
+    Actor.set(account_id: @actor.account_id, app_id: @actor.app_id, id: @actor._id, 
         properties: { profile: { 
                                   :email => "john.doe@example.com",
                                   :customer => {:address => {:city => "Bangalore"}}
@@ -46,7 +46,7 @@ describe AccountsController do
       Conversion.add!( account_id: @account._id, app_id: @app._id, actor_id: @actor._id,
       properties: { :button => "hovered",:times => {:time => ["20/12/2011", "19/11/2012"], :count => 30}})
 
-      get 'read', {account_id: @account._id, events: true, actors: true, conversions: true, errors: true}
+      get 'read', {id: @account._id, events: true, actors: true, conversions: true, errors: true}
 
       h = JSON.parse(response.body)
       puts h.inspect

@@ -1,15 +1,14 @@
-<!-- {{##Title=%%Normal Topbar%%##}}-->
-<!-- {{##Timer=%%100%%##}}-->
-
+<!-- {{Title{{=Normal Topbar}}}}-->
+<!-- {{Timer{{=300}}}}-->
 
 <style>
 
   .rbTextValue
    {
-     color:{{rb.t.cr.textColor =%%#333%%}};
-     font-size: {{rb.t.nr.textFontsize=%%15%%}}px;
-     font-family: {{rb.t.ft.textFontfamily=%%Arial%%}};
-     font-weight:{{rb.t.sg.textFontWeight=%%bold%%}};
+     color:{{rb.t.cr.textColor {{=#333}}}};
+     font-size: {{rb.t.nr.textFontsize{{=15}}}}px;
+     font-family: {{rb.t.ft.textFontfamily{{=Arial}}}};
+     font-weight:{{rb.t.sg.textFontWeight{{=bold}}}};
    }
 
 
@@ -17,24 +16,23 @@
 
 </style>
 
-
-<div id="rbTopbarGenericNormalBaseContainer" style="zIndex:{{rb.f.nr.baseZindex=%%100%%}};width:{{rb.t.nr.baseWidth=%%100%%}}%;height:{{rb.t.nr.baseHeight=%%40%%}}px;display:block; background-color:{{rb.t.cr.baseBgColor=%%#DCDCDC%%}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 2px 2px 2px #888888;text-align:{{rb.t.an.baseTextalign=%%center%%}};">
+<div id="rbTopbarGenericNormalBaseContainer" style="zIndex:{{rb.f.nr.baseZindex{{=100}}}};width:{{rb.t.nr.baseWidth{{=100}}}}%;height:{{rb.t.nr.baseHeight{{=40}}}}px;display:block; background-color:{{rb.t.cr.baseBgColor{{=#DCDCDC}}}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 2px 2px 2px #888888;text-align:{{rb.t.an.baseTextalign{{=center}}}};">
 
   <div id="rbTopbarGenericNormalLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">
-         {{rb.t.sg.textLeft=%%Hello Hello Hello Hello%%}}  
+         {{rb.t.vsg.textLeft{{=Hello}}}}  
 </div> 
 
 
   
- <a id="rbTopbarGenericNormalRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;width:80px;left:42%;margin-right:20px;height:25px; border-radius:5px;text-decoration:none; font-size:{{rb.t.nr.btnFontSize=%%14%%}}px;
- background-color:{{rb.t.cr.btnBgColor=%%#548AC7%%}};text-shadow: 0px -1px 0px #29588D;  
- color :{{rb.t.cr.btnColor=%%white%%}};text-align:center;border:1px solid #305580; padding-top:3px;cursor:pointer;" href="{{rb.t.ul.btnLink=%%http://www.google.com%%}}"> {{rb.t.sg.btnLable=%%Click%%}} </a>
+ <a id="rbTopbarGenericNormalRoiMiddlebutton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;width:80px;left:42%;margin-right:20px;height:25px; border-radius:5px;text-decoration:none; font-size:{{rb.t.nr.btnFontSize{{=14}}}}px;
+ background-color:{{rb.t.cr.btnBgColor{{=#548AC7}}}};text-shadow: 0px -1px 0px #29588D;  
+ color :{{rb.t.cr.btnColor{{=white}}}};text-align:center;border:1px solid #305580; padding-top:3px;cursor:pointer;" href="{{rb.t.ul.btnLink{{=http://www.google.com}}}}"> {{rb.t.sg.btnLable{{=Click}}}} </a>
 
 
    
  <div id="rbTopbarGenericNormalRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">
          
-         {{rb.t.sg.textRight=%%Hello Hello%%}}  
+         {{rb.t.vsg.textRight{{=Hello}}}}  
   </div>
        
    

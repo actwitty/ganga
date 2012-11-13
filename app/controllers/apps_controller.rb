@@ -46,12 +46,9 @@ class AppsController < ApplicationController
 		ret = App.add!(params)
     
     raise ret[:error] if !ret[:error].blank?
+    
+	  respond_with(ret[:return].format_app , status: 200, :location => "nil")			
 
- 		hash = ret[:return].attributes
-		hash["app_id"] = hash["_id"]
-		hash.delete("_id")
-
-	  respond_with(hash, status: 200, :location => "nil")			
 	rescue => e
 		Rails.logger.error("**** ERROR **** #{er(e)}")
 		respond_with({ errors: e.message} , status: 422, :location => "nil")
@@ -63,21 +60,21 @@ class AppsController < ApplicationController
 
   # INPUT
   ## {  
-  ##  	:app_id => 123                [MANDATORY]
+  ##  	:id => 123                [MANDATORY]
   ## }
 
   # OUTPUT => {status; true or false}
 	def delete
 		Rails.logger.info("Enter App Delete")
 		
-		if params[:app_id].blank?
+		if params[:id].blank?
 			raise et("app.invalid_argument_in_delete") 
 		end
 
     # Create Anonymous actor
     params[:account_id] = current_account._id if Rails.env != "test"
 
-		App.where(account_id: params[:account_id] , _id: params[:app_id]).destroy
+		App.where(account_id: params[:account_id] , _id: params[:id]).destroy
 
 		respond_with({status: true}, status: 200, :location => "nil")			
 	rescue => e
@@ -93,14 +90,14 @@ class AppsController < ApplicationController
 
   # INPUT
   ## {
-  ##  :app_id => "1234444',    [MANDATORY]
+  ##  :id => "1234444',    [MANDATORY]
   ##  :description => {        [MANDATORY]
   ##      "email" => "john.doe@example.com",
   ##      "address" => {:city => "Bangalore"}}
   ## }
 
   # OUTPUT => {
-  ##					  "_id"=>"5074143063fe853420000005", 
+  ##					  "id"=>"5074143063fe853420000005", 
   ##
   ##						"account_id"=>"5074143063fe853420000001", 
   ##
@@ -128,11 +125,7 @@ class AppsController < ApplicationController
 
 		raise ret[:error] if !ret[:error].blank?
 
-		hash = ret[:return].attributes
-		hash["id"] = hash["_id"]
-		hash.delete("_id")
-
-		respond_with(hash, status: 200, :location => "nil")		
+		respond_with(ret[:return].format_app, status: 200, :location => "nil")		
 	rescue => e
 		Rails.logger.error("**** ERROR **** #{er(e)}")
 		respond_with({ errors: e.message}, status: 422, :location => "nil")
@@ -144,7 +137,7 @@ class AppsController < ApplicationController
 
   # INPUT
   ## {  
-  ##  	app_id: 123                   [MANDATORY]
+  ##  	id: 123                   [MANDATORY]
   ##    events: true or false         [OPTIONAL] # events 
   ##    conversions: true or false    [OPTIONAL] # conversion
   ##    errors: true or false         [OPTIONAL] # errors

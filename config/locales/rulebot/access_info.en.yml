@@ -1,0 +1,7 @@
+en:
+  access_info:
+    invalid_argument_in_add: "Invalid Argument in Access Info Add"
+    create_failed: "Access Info creation failed"
+    invalid_scope: "Invalid scope.. something went wrong"
+    invalid_account_id: "Account not found.. Invalid Account ID"
+    invalid_app_id: "App not found.. Invalid App ID" 

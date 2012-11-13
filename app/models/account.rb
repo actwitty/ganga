@@ -67,14 +67,13 @@ class Account
   attr_accessible :name, :email, :password, :password_confirmation, :remember_me, :confirmed_at, :password_unset
    
   after_create :add_user_to_mailchimp, :unless => Proc.new {|obj| Rails.env == "test"}
-  before_create :foo
   before_destroy :remove_user_from_mailchimp 
 
   # Functions
 
   # INPUT
   ## {  
-  ##    account_id: "1212121212"      [MANDATORY]
+  ##    id: "1212121212"              [MANDATORY]
   ##    events: true or false         [OPTIONAL] # events 
   ##    conversions: true or false    [OPTIONAL] # conversion
   ##    errors: true or false         [OPTIONAL] # errors
@@ -128,18 +127,18 @@ class Account
 
     hash = {events: [], actors: [], conversions: [], errors: []}
 
-    if params[:account_id].blank? 
+    if params[:id].blank? 
       raise et("account.invalid_argument_in_read")
     end
 
-    account = Account.find(params[:account_id])
+    account = Account.find(params[:id])
 
-    raise et("account.invalid_account_id", id: params[:account_id]) if account.blank?
+    raise et("account.invalid_account_id", id: params[:id]) if account.blank?
 
     hash[:account] = {id: account._id, description: account.description}
 
     if params[:events] == true
-      events = Event.where( account_id: params[:account_id], meta: false ).limit(AppConstants.limit_events).desc(:_id)
+      events = Event.where( account_id: params[:id], meta: false ).limit(AppConstants.limit_events).desc(:_id)
       events.each do |attr|
         hash[:events] << {
                           name: attr.name, properties: attr.properties, app_id: attr.app_id, actor_id: attr.actor_id, time: attr.created_at
@@ -188,9 +187,7 @@ class Account
   def only_if_unconfirmed
     pending_any_confirmation {yield}
   end
-  def foo
-    Rails.logger.info("Foo is hit #{self.inspect}")
-  end
+
   # Mailchimp integration, add to subscribed list ASA email id is added
   def add_user_to_mailchimp    
     Rails.logger.info("Mailchimp subscribe request being made")
