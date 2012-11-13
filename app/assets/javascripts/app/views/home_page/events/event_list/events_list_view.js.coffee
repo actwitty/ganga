@@ -1,6 +1,7 @@
 App.EventsListView = Ember.View.extend
   templateName: 'home_page/events/events_list'
-
+  accountBinding: 'App.router.accountController.content'
+  projectIdBinding: 'App.router.projectsController.selected.id'
   #---------------------------------------------
   init: ->
     @_super()
@@ -11,15 +12,20 @@ App.EventsListView = Ember.View.extend
 
     #HELP DOC LINK
     msgContext = 
-                  header: "Events Javascripts"
-                  message: "You can add these sample javascripts to  " + domain
+                  header: "Events - Pluggable Javascripts"
+                  message: "You can add these sample javascripts to  " + domain + " to activate events"
                   href: "/help#eventsAddition"
                   buttonText: "Learn"                    
     
 
     app = App.get("router.applicationController")
     app.set('msgContext', msgContext)
+    Ember.run.next(this, 'applyHighlighting')
+
 
   #---------------------------------------------
+  applyHighlighting: ->
+    hljs.tabReplace = '  '
+    hljs.initHighlighting()
 
 

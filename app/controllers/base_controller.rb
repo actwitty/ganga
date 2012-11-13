@@ -2,6 +2,7 @@ class BaseController < ApplicationController
   ####################################################################
   # In your controllers
   protect_from_forgery
+  respond_to  :html
   before_filter :authenticate_account!, :except => [:index]
 
   ####################################################################

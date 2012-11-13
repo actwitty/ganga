@@ -1,1 +1,86 @@
 {{view App.BannerView }}
+<div class="ev_list">
+  <h2> Enabling Javascript </h2>
+  <!--  Initializer script -->
+    <p class="description">
+      The following script needs to be added to the main layout of the site, which can be accessed from
+      all pages of the site
+    </p>
+    {{logger view.account}}
+    <div class="code_section">
+      <pre >
+        <code class="html">
+          //Add this code to the main script
+          &ltscript&gt
+            var account_id = '{{getvalue view.account.id}}';
+            var app_id = '{{getvalue view.projectId}}';
+            rbT.initializeCode();
+          &lt/script&gt
+        </code>
+      </pre>
+    </div>
+  
+  <!--  Page Load Event -->
+  <h2> Page Load Javascript </h2>
+  <div class="code_section">
+    <pre >
+      <code class="javascript">
+        //Add this code to the main script        
+      </code>
+    </pre>
+  </div>  
+  <!--  Identify -->
+  <h2> Identify Javascript </h2>
+  <div class="code_section">
+    <pre >
+      <code class="javascript">
+        //Add this code to the main script        
+      </code>
+    </pre>
+  </div>    
+  <!--  Identify -->
+  <h2> Identify Javascript </h2>
+  <div class="code_section">
+    <pre >
+      <code class="javascript">
+        //Add this code to the main script        
+      </code>
+    </pre>
+  </div>    
+  <!--  Sign In Event -->
+  <h2> SignIn Javascript </h2>
+  <div class="code_section">
+    <pre >
+      <code class="javascript">
+        //Add this code to the main script        
+      </code>
+    </pre>
+  </div>    
+  <!--  Sign Up Event -->
+  <h2> SignUp Javascript </h2>
+  <div class="code_section">
+    <pre >
+      <code class="javascript">
+        //Add this code to the main script        
+      </code>
+    </pre>
+  </div>  
+  <!--  Purchase Event -->
+  <h2> Purchase Javascript </h2>
+  <div class="code_section">
+    <pre >
+      <code class="javascript">
+        //Add this code to the main script        
+      </code>
+    </pre>
+  </div>  
+  <!--  Signout Event -->
+  <h2> Signout Javascript </h2>
+  <div class="code_section">
+    <pre >
+      <code class="javascript">
+        //Add this code to the main script        
+      </code>
+    </pre>
+  </div>  
+</div>
