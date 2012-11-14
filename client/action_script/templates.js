@@ -191,7 +191,7 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 	 'rb.t.vsg.leftText':'Hello Hello',
 	 	 	 	 	 	 'rb.t.sg.twitterSharetext':'Twteet please',
 	 	 	 	 	 	 'rb.t.vsg.rightText':'Hello Hello',
-	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'10'
+	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'300'
 	 	 	 	 	 }
  	 	 	 	 }; 
  

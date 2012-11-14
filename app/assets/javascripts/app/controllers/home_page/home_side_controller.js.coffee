@@ -1,1 +1,7 @@
-App.HomeSideController = Ember.Controller.extend()
+App.HomeSideController = Ember.Controller.extend
+  selectedMenu: null
+
+  
+
+
+

@@ -14,9 +14,6 @@ trigger_fish.rbT.init = function(){
 };
 
 
-trigger_fish.rbT.currentSystemVar = {};
-trigger_fish.rbT.currentActorVar = {};
-trigger_fish.rbT.currentEventVar = {};
 
 
 
@@ -88,7 +85,6 @@ trigger_fish.rbT.applyHtmltoPageInternal = function(html){
 
 
 	 jQuery('body').append(html);
-	 console.log(html);
 
 	// document.body.innerHTML = document.body.innerHTML+html;
 
@@ -137,43 +133,29 @@ trigger_fish.rbT.invokeActionScriptInternal=function(action,actionParams){
       {
           var html = trigger_fish.rbT.getTemplateHTMLByName(templateName);
           
-          
-          
-          /*
-                for (var key in actionParams)
-                {
-	               if(actionParams.hasOwnProperty(key))
-	               {
-	                   var keyVal = key;
+              for (var key in actionParams)
+                 {
+                  if(actionParams.hasOwnProperty(key))
+                  {
+                     var keyVal = key;
                        var value = actionParams[key];
                        var tempMatch = ""
                        var tempMatch = value.match(/\{\{[\w.\=\%\:\/\s\#\@\-\']*\}\}/g);
                       
-                       if(tempMatch[0])
+                       if(tempMatch)
                        {
-                           // fetch system variable
-                           // fetch actor variable
-                           // fetch event variable
-                             
-                       	   for(var i=0 ; i<tempMatch.length ; i++)
-                       	   {
-                       	       var textRuntimeValue = //get the value from lower layer code 
-	                      
-	                           actionParams[key].replace(tempMatch[i],textRuntimeValue);
-	                       }         
+                       	  var tempActionKeyRetVal =""
+                       	  tempActionKeyRetVal=trigger_fish.rbT.fillTheRuntimeValueForTemplArgs(tempMatch,actionParams[key]);
+                          
+
+                          if(tempActionKeyRetVal != undefined)
+                          {	
+                             actionParams[key] = tempActionKeyRetVal;
+                          }   
                        }
+                   }
 
-
-
-
-	               } 
-
-                }  
-                         
-
-          */
-
-
+                 }      
 
           
           if(pos =='modal')
