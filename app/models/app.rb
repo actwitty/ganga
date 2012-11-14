@@ -223,7 +223,7 @@ class App
     raise et("app.invalid_app_id", id: params[:id]) if app.blank?
 
     hash[:account] = {id: app.account_id}
-    hash[:app] = {id: app._id, description: app.description, rules: app.format_rules}
+    hash[:app] = {id: app._id, description: app.description, rules: app.format_rules, schema: app.schema}
     
     
     if params[:events] == true

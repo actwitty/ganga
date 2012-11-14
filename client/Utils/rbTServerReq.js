@@ -127,34 +127,34 @@ trigger_fish.rbTServerChannel = {
   {
     if (!obj)
       return {};
-    var extRequestData = {};
+    var k = {};
     // FIXME :: **THERE SEEMS TO BE A BIT OF REPEATATION. HANDLE THIS**
     if (obj.event) {
-      extRequestData = {};
-      extRequestData["properties"] = obj.params ? obj.params:{};
-      extRequestData["name"] = obj.event;  
-      extRequestData["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
-      extRequestData["actor_id"] = trigger_fish.rbTActor.getID() || "";
+      k = {};
+      k["properties"] = obj.params ? obj.params:{};
+      k["name"] = obj.event;  
+      k["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
+      k["actor_id"] = trigger_fish.rbTActor.getID() || "";
     } else if (obj.app_read) {
-      extRequestData["id"] = trigger_fish.rbTAPP.getAppID() || "";
+      k["id"] = trigger_fish.rbTAPP.getAppID() || "";
     } else if (obj.set_actor) {
-      extRequestData["properties"] = {"profile":obj.params ? obj.params:{}};
-      extRequestData["id"] = trigger_fish.rbTActor.getID() || "";
-      extRequestData["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
+      k["properties"] = {"profile":obj.params ? obj.params:{}};
+      k["id"] = trigger_fish.rbTActor.getID() || "";
+      k["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
     } else if(obj.set_actor_prop) {
-      extRequestData["id"] = trigger_fish.rbTActor.getID() || "";
-      extRequestData["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
+      k["id"] = trigger_fish.rbTActor.getID() || "";
+      k["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
     } else if(obj.identify) {
-      extRequestData["uid"] = obj.params;
-      extRequestData["id"] = trigger_fish.rbTActor.getID() || "";
-      extRequestData["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
+      k["uid"] = obj.params;
+      k["id"] = trigger_fish.rbTActor.getID() || "";
+      k["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
     } else if(obj.err || obj.conversion) {
-      extRequestData["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
-      extRequestData["actor_id"] = trigger_fish.rbTActor.getID() || "";
-      extRequestData["properties"] = obj.params ? obj.params:{};
+      k["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
+      k["actor_id"] = trigger_fish.rbTActor.getID() || "";
+      k["properties"] = obj.params ? obj.params:{};
     }
 
-    return extRequestData;
+    return k;
   },
   /**
   * Make XMLHttpRequest to Server
@@ -253,18 +253,6 @@ trigger_fish.rbTServerChannel = {
     }
 
   },
-   
-  /** 
-  *  Request server to create session
-  *  FIXME : NEED TO KNOW HOW SESSION WILL BE CREATED, BASED ON THAT WE WILL REMOVE MULTIPLE AJAX 
-  *  @return void
-  */  
-  createSession : function(url, callback)
-  {
-    "use strict";
-    callback = this.extendCallbacks(callback);
-    this.makeGetRequest(url, null, callback);
-  }, 
 
   /** 
   *  Request server to app details
