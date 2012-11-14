@@ -4,8 +4,8 @@
 /****************************[[include.js]]*************************************/ 
 
 
-if (!trigger_fish)
-	var trigger_fish = {};
+if(!trigger_fish)
+var trigger_fish = {};
 
 trigger_fish.rbT = { inited: false};
 
@@ -206,7 +206,7 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 	 'rb.t.vsg.leftText':'Hello Hello',
 	 	 	 	 	 	 'rb.t.sg.twitterSharetext':'Twteet please',
 	 	 	 	 	 	 'rb.t.vsg.rightText':'Hello Hello',
-	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'10'
+	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'300'
 	 	 	 	 	 }
  	 	 	 	 }; 
  
@@ -295,6 +295,13 @@ trigger_fish.rbT.rbTemplUservoiceGenericNormalHTML='<!-- --><!-- --><div id="rbU
 
 "use strict";
 
+// Templ Sys , Actor and Event Varibales
+
+trigger_fish.rbT.currentSystemVar = {};
+trigger_fish.rbT.currentActorVar = {};
+trigger_fish.rbT.currentEventVar = {};
+
+
 //templ related timers
 
 trigger_fish.rbT.templTimers= {
@@ -382,6 +389,109 @@ trigger_fish.rbT.extractDisplayPositionFromTemplName = function(templName){
     return tempMatch;
 
 };
+
+
+//**********************************************************************************
+
+// fill the run time variable in in templ args from sys,actor and event varibale
+
+trigger_fish.rbT.fillTheRuntimeValueForTemplArgs = function(tempMatch,actionparmaskey)
+{
+
+      try{
+             
+
+// if e. event hash
+// if s. system hash
+// if a. actor variable
+
+                           // fetch system variable here 
+                           // fetch actor variable here
+                           // fetch event variable here
+                             
+                           for(var i=0 ; i<tempMatch.length ; i++)
+                           {
+
+                              var objNested = {};
+                               
+                               
+                               var tempMatchForscope = ""
+
+                               tempMatch[i]=tempMatch[i].replace("{{","");
+                               tempMatch[i]=tempMatch[i].replace("}}","");
+
+
+                               tempMatchForscope = tempMatch[i].match(/[\w]*/g);
+
+                               if(tempMatchForscope[0])
+                               
+                               {
+                                   var k =0;
+
+                                
+
+                                    if(tempMatchForscope[0] == "s")
+                                    {
+                                       objNested = trigger_fish.rbT.currentSystemVar; 
+   
+                                       for(k=2;k<=tempMatchForscope.length-2;k++)
+                                       {
+                                         if(k%2 === 0)
+                                          {
+                                             var objNested = objNested[tempMatchForscope[k]] 
+
+                                          } 
+                                       }
+                                   }
+
+                                  else if(tempMatchForscope[0] == "e")
+                                    {
+                                       objNested =trigger_fish.rbT.currentEventVar; 
+   
+                                       for(k=2;k<=tempMatchForscope.length-2;k++)
+                                       {
+                                         if(k%2 === 0)
+                                          {
+                                             var objNested = objNested[tempMatchForscope[k]] 
+
+                                          } 
+                                       }
+                                   }
+
+                                  else if(tempMatchForscope[0] == "a")
+                                    {
+                                       objNested =trigger_fish.rbT.currentActorVar ; 
+   
+                                       for(k=2;k<=tempMatchForscope.length-2;k++)
+                                       {
+                                         if(k%2 === 0)
+                                          {
+                                             var objNested = objNested[tempMatchForscope[k]] 
+
+                                          } 
+                                       }
+                                   }
+
+                                 
+                          }  
+
+                               tempMatch[i] = '{{'+ tempMatch[i] + '}}';
+
+                               actionparmaskey = actionparmaskey.replace(tempMatch[i],objNested);
+
+                               return actionparmaskey;
+
+
+                         }         
+              
+         }catch(e){
+
+                trigger_fish.rbT.sendErrorToRBServer(e.message);
+
+         }
+
+};
+
 
 //******************************************************************
 //check for the if templ position is occupied
@@ -744,9 +854,6 @@ trigger_fish.rbT.init = function(){
 };
 
 
-trigger_fish.rbT.currentSystemVar = {};
-trigger_fish.rbT.currentActorVar = {};
-trigger_fish.rbT.currentEventVar = {};
 
 
 
@@ -818,7 +925,6 @@ trigger_fish.rbT.applyHtmltoPageInternal = function(html){
 
 
 	 jQuery('body').append(html);
-	 console.log(html);
 
 	// document.body.innerHTML = document.body.innerHTML+html;
 
@@ -867,43 +973,29 @@ trigger_fish.rbT.invokeActionScriptInternal=function(action,actionParams){
       {
           var html = trigger_fish.rbT.getTemplateHTMLByName(templateName);
           
-          
-          
-          /*
-                for (var key in actionParams)
-                {
-	               if(actionParams.hasOwnProperty(key))
-	               {
-	                   var keyVal = key;
+              for (var key in actionParams)
+                 {
+                  if(actionParams.hasOwnProperty(key))
+                  {
+                     var keyVal = key;
                        var value = actionParams[key];
                        var tempMatch = ""
                        var tempMatch = value.match(/\{\{[\w.\=\%\:\/\s\#\@\-\']*\}\}/g);
                       
-                       if(tempMatch[0])
+                       if(tempMatch)
                        {
-                           // fetch system variable
-                           // fetch actor variable
-                           // fetch event variable
-                             
-                       	   for(var i=0 ; i<tempMatch.length ; i++)
-                       	   {
-                       	       var textRuntimeValue = //get the value from lower layer code 
-	                      
-	                           actionParams[key].replace(tempMatch[i],textRuntimeValue);
-	                       }         
+                       	  var tempActionKeyRetVal =""
+                       	  tempActionKeyRetVal=trigger_fish.rbT.fillTheRuntimeValueForTemplArgs(tempMatch,actionParams[key]);
+                          
+
+                          if(tempActionKeyRetVal != undefined)
+                          {	
+                             actionParams[key] = tempActionKeyRetVal;
+                          }   
                        }
+                   }
 
-
-
-
-	               } 
-
-                }  
-                         
-
-          */
-
-
+                 }      
 
           
           if(pos =='modal')
