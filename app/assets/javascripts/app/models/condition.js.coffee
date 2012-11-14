@@ -7,7 +7,7 @@ App.Condition = Ember.Object.extend
   operation: 'eql'
   value1: ''
   value2: ''
-  connect: 'and'
+  connect: null
   valueOptions: null
       
   opList: null

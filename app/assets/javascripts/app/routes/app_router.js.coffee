@@ -270,13 +270,28 @@ App.Router = Ember.Router.extend
               homeController.connectOutlet( {name: 'conditions', outletName: 'homeContentOutlet'} )
 
             #EVENTS
+            # event ------------------------------------------------------
+            addNewCondition: (router, event) ->    
+              condition = App.Condition.create()                      
+              content = App.get('router.conditionsController').get('content')
+              length = content.length
+              last = content[length - 1]
+              last.set 'connect', 'and'
+              content.pushObject(condition)  
+              event.preventDefault()
+              
             # event ------------------------------------------------------  
             deleteCondition: (router, event) ->
               condition = event.context              
               content = App.get('router.conditionsController').get('content')
               content.removeObject(condition)
-              if content.length is 0         
-                content.pushObject App.Condition.create()                       
+              length = content.length
+              if length is 0         
+                content.pushObject App.Condition.create()
+              else
+                last = content[length - 1]
+                last.set 'connect', null
+
               event.preventDefault()
 
             # event ------------------------------------------------------  
