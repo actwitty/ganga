@@ -199,11 +199,12 @@ trigger_fish.rbTAPP = {
     */
     getAppData : function()
     {
-      trigger_fish.rbTServerChannel.makeServerRequest({"url"   : trigger_fish.rbTServerChannel.url.appDetails,
-                                          "cb"    : { success: trigger_fish.rbTServerResponse.setAppDetail,
-                                                      error  : trigger_fish.rbTServerResponse.defaultError
-                                                    }
-                                         });
+      trigger_fish.rbTServerChannel.makeServerRequest({"url"      : trigger_fish.rbTServerChannel.url.appDetails,
+                                                       "app_read" : true, 
+                                                       "cb"       : { success: trigger_fish.rbTServerResponse.setAppDetail,
+                                                                      error  : trigger_fish.rbTServerResponse.defaultError
+                                                                    }
+                                                      });
     },  
 
     /** 
@@ -1280,7 +1281,6 @@ trigger_fish.rbTServerChannel = {
   
   /* All server url routes to be mapped here */
   url : {
-    "createSession"     : "",
     "appDetails"        : "app/read",
     "fireEvent"         : "event/create",
     "identify"          : "actor/identify",
@@ -1396,9 +1396,8 @@ trigger_fish.rbTServerChannel = {
   },
   /** 
   *  Set Request data for all server interactions
-  *  @param {string} event
-  *  @param {object} reqData
-  *  @return {object}
+  *  @param {object} obj . The data which needs to be padded with request parameters
+  *  @return {object} extReqData . Object padded with request params.
   */ 
   extendRequestData : function(obj) 
   {
@@ -1412,6 +1411,8 @@ trigger_fish.rbTServerChannel = {
       extRequestData["name"] = obj.event;  
       extRequestData["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
       extRequestData["actor_id"] = trigger_fish.rbTActor.getID() || "";
+    } else if (obj.app_read) {
+      extRequestData["id"] = trigger_fish.rbTAPP.getAppID() || "";
     } else if (obj.set_actor) {
       extRequestData["properties"] = {"profile":obj.params ? obj.params:{}};
       extRequestData["id"] = trigger_fish.rbTActor.getID() || "";
@@ -2708,7 +2709,7 @@ trigger_fish.rbJSON = {
 function testGanga()
 {
   //rb.sendEvent("sample_event",{"a":101});
-  //rb.identify("83.samarth@gmail.com");
+  rb.identify("83.samarth@gmail.com");
   //rb.identify({"uid":"83.samarth@gmail.com"});
   //rb.setActor({"name":"samarth","age":"29"});
 

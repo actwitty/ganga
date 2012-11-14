@@ -193,11 +193,12 @@ trigger_fish.rbTAPP = {
     */
     getAppData : function()
     {
-      trigger_fish.rbTServerChannel.makeServerRequest({"url"   : trigger_fish.rbTServerChannel.url.appDetails,
-                                          "cb"    : { success: trigger_fish.rbTServerResponse.setAppDetail,
-                                                      error  : trigger_fish.rbTServerResponse.defaultError
-                                                    }
-                                         });
+      trigger_fish.rbTServerChannel.makeServerRequest({"url"      : trigger_fish.rbTServerChannel.url.appDetails,
+                                                       "app_read" : true, 
+                                                       "cb"       : { success: trigger_fish.rbTServerResponse.setAppDetail,
+                                                                      error  : trigger_fish.rbTServerResponse.defaultError
+                                                                    }
+                                                      });
     },  
 
     /** 
