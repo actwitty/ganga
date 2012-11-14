@@ -471,8 +471,6 @@ trigger_fish.rbTRules = {
   */
   executeRulesOnEvent : function(event)
   {
-    //"use strict";
-
     function prepareFunctionCode(ruleString) 
     {
       $("#rulestring").text(ruleString);
@@ -1368,7 +1366,7 @@ trigger_fish.rbTServerChannel = {
       requestData["properties"] = reqData ? reqData:{};
       requestData["name"] = event;  
     }
-    requestData["app_id"] = trigger_fish.rbTAPP.getAppID(); // mandatory
+    requestData["id"] = trigger_fish.rbTAPP.getAppID(); // mandatory
     requestData["account_id"] = trigger_fish.rbTAPP.getAccountID(); // mandatory  
 
     return requestData;
@@ -1396,7 +1394,43 @@ trigger_fish.rbTServerChannel = {
     }
     return requestData;
   },
+  /** 
+  *  Set Request data for all server interactions
+  *  @param {string} event
+  *  @param {object} reqData
+  *  @return {object}
+  */ 
+  extendRequestData : function(obj) 
+  {
+    if (!obj)
+      return {};
+    var extRequestData = {};
+    // FIXME :: **THERE SEEMS TO BE A BIT OF REPEATATION. HANDLE THIS**
+    if (obj.event) {
+      extRequestData = {};
+      extRequestData["properties"] = obj.params ? obj.params:{};
+      extRequestData["name"] = obj.event;  
+      extRequestData["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
+      extRequestData["actor_id"] = trigger_fish.rbTActor.getID() || "";
+    } else if (obj.set_actor) {
+      extRequestData["properties"] = {"profile":obj.params ? obj.params:{}};
+      extRequestData["id"] = trigger_fish.rbTActor.getID() || "";
+      extRequestData["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
+    } else if(obj.set_actor_prop) {
+      extRequestData["id"] = trigger_fish.rbTActor.getID() || "";
+      extRequestData["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
+    } else if(obj.identify) {
+      extRequestData["uid"] = obj.params;
+      extRequestData["id"] = trigger_fish.rbTActor.getID() || "";
+      extRequestData["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
+    } else if(obj.err || obj.conversion) {
+      extRequestData["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
+      extRequestData["actor_id"] = trigger_fish.rbTActor.getID() || "";
+      extRequestData["properties"] = obj.params ? obj.params:{};
+    }
 
+    return extRequestData;
+  },
   /**
   * Make XMLHttpRequest to Server
   * @param {object} obj Data format which needs to be send.
@@ -1407,8 +1441,7 @@ trigger_fish.rbTServerChannel = {
     "use strict";
     var that = obj;
     try {
-
-      var reqServerData = this.extendReqData(obj,this.makeRequestData(obj.event?obj.event:undefined,obj.params));
+      var reqServerData = this.extendRequestData(obj);
       var callback = this.extendCallbacks(obj.cb);
       if (obj.async && obj.async === "noasync")
         var asyncSt = false;
@@ -1548,7 +1581,7 @@ trigger_fish.rbTServerChannel = {
   {
     "use strict";
     var callback = this.extendCallbacks(callback);
-    this.makeRequest({"url":this.url.reportError,"params":params,"cb":callback});
+    this.makeRequest({"url":this.url.reportError,"params":params,"err":true, "cb":callback});
   },
 
   /** 
@@ -1926,7 +1959,11 @@ var session_fetch = (function(win, doc, nav)
         if (name)
           name = name[0];
       }
-      device.type = { type: device.is_mobile ? "mobile" : "pc", name: name || browser.detect().browser};
+      device.type = {};
+      if (device.is_tablet) device.type.type = "tab";
+      else if(device.is_mobile) device.type.type = "mob";
+      else device.type.type = "pc";
+      device.type.name = name || browser.detect().os
       return device;
     },
     plugins: function(){
