@@ -274,8 +274,8 @@ App.RulesController = Em.ArrayController.extend
     json = 
             app_id : proj_id
             rule : ruleNew.serialize()
-            rule_id : rule_data.id
-    rule_data.id = null
+            rule_id : ruleNew.get('id')
+    
 
     App.getRequest  url, json, success, error
     @updateSystemVariables ruleNew
