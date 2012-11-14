@@ -55,8 +55,7 @@ App.Condition = Ember.Object.extend
 
 
   observesPropertyChange: (->
-    property = @get 'property'
-    console.log property 
+    property = @get 'property'    
     if App.LimitedValueList.hasOwnProperty(property)       
       @set 'valueOptions', App.LimitedValueList[property]
       for key of App.LimitedValueList[property]

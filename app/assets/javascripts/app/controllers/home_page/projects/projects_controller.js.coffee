@@ -2,7 +2,7 @@ App.ProjectsController = Em.ArrayController.extend
   content: []
   selected: null    
   url: "/account/list_apps"
-  rules_load: "/app/read"
+  rulesLoadUrl: "/app/read"
   #########################################################
   serializeProj: ->
     project = @get 'selected'
@@ -50,9 +50,9 @@ App.ProjectsController = Em.ArrayController.extend
       error= () ->
         #Todo error handling
       json = 
-            app_id : project.get 'id'
+            id : project.get 'id'
             events : false
-      App.getRequest @get('rules_load'), json, success, error
+      App.getRequest @get('rulesLoadUrl'), json, success, error
     else
       App.get("router").send("projectRulesLoaded", project)
 

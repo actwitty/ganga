@@ -33,6 +33,7 @@ gem 'ember-rails', :git => 'git://github.com/emberjs/ember-rails.git'
 gem 'ember-rest-rails'
 gem 'twitter-bootstrap-rails'
 gem 'less-rails-bootstrap'
+gem 'highlight_js-rails'
 
 #algorithms
 gem 'algorithms'
