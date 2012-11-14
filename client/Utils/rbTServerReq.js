@@ -120,9 +120,8 @@ trigger_fish.rbTServerChannel = {
   },
   /** 
   *  Set Request data for all server interactions
-  *  @param {string} event
-  *  @param {object} reqData
-  *  @return {object}
+  *  @param {object} obj . The data which needs to be padded with request parameters
+  *  @return {object} extReqData . Object padded with request params.
   */ 
   extendRequestData : function(obj) 
   {
@@ -136,6 +135,8 @@ trigger_fish.rbTServerChannel = {
       extRequestData["name"] = obj.event;  
       extRequestData["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
       extRequestData["actor_id"] = trigger_fish.rbTActor.getID() || "";
+    } else if (obj.app_read) {
+      extRequestData["id"] = trigger_fish.rbTAPP.getAppID() || "";
     } else if (obj.set_actor) {
       extRequestData["properties"] = {"profile":obj.params ? obj.params:{}};
       extRequestData["id"] = trigger_fish.rbTActor.getID() || "";

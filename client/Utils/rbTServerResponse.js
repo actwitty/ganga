@@ -36,7 +36,7 @@ trigger_fish.rbTServerResponse = {
         // FIXME :: Flush and reset all cookies if there is a change in actor.
         // WAITING AS THERE ARE SOME CHANGES IN BACKEND.
         var oldActorId = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID);
-        if (!oldActorId || oldActorId !== respData.actor_id) {
+        if (!oldActorId || (oldActorId !== respData.actor_id)) {
           trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.actorID, JSON.stringify(respData.actor_id));
           trigger_fish.rbTActor.setID(respData.actor_id);
           trigger_fish.rbTServerChannel.makeRequest({"url"           : trigger_fish.rbTServerChannel.url.readActor, 
