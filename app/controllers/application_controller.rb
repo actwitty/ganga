@@ -56,33 +56,6 @@ class ApplicationController < ActionController::Base
     allowed
   end   
 
-  def  apply_access_control
-  #   Rails.logger.info("Enter apply access control")
-
-  #   #only for un-autheticated request
-  #   if current_account.blank? 
-
-  #     allowed = false 
-  #     access = nil
-
-       
-  #       allowed = verify_cross_request(request, headers) 
-  #     elsif !params["api_key"].blank?        # API Access
-  #       allowed = verify_api(request, headers)
-  #     end
-      
-  #     raise et("application.unauthorized") if allowed.blank? or access.blank?
-      
-  #     account = Account.find(access._id)
-  #     raise et("application.account_invalid") if account.blank? # This error should not happen
-
-  #     sign_in(account)
-  #     self.instance_variable_set(:@tear_down, current_account )
-  #   end  
-  # rescue => e 
-  #   Rails.logger.error("**** ERROR **** #{er(e)}")
-  #   head :unauthorized
-  end
 
   def tear_access_control
     if !self.instance_variable_get(:@tear_down).blank?
