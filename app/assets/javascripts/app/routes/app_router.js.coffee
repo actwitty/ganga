@@ -89,8 +89,10 @@ App.Router = Ember.Router.extend
       # event -------------------------------------------
       showProjectRules: (router, event) ->   
         project = event.context      
-        router.get('projectsController').loadProjectRules(project)
+        router.get('projectsController').loadProjectRules(project)        
+        
         event.preventDefault()
+
       forceProjectRules: (router, project) ->
         router.get('projectsController').loadProjectRules(project)
         event.preventDefault()

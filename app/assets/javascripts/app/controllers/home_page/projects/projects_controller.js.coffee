@@ -43,7 +43,7 @@ App.ProjectsController = Em.ArrayController.extend
   #########################################################
   loadProjectRules: (project)->
     if project.checkRulesIsNull() is true
-      success= (data) -> 
+      success= (data) ->         
         project.setRules(data.app.rules)      
         App.get("router").send("projectRulesLoaded", project)
 
@@ -51,7 +51,7 @@ App.ProjectsController = Em.ArrayController.extend
         #Todo error handling
       json = 
             id : project.get 'id'
-            events : false
+            events : false      
       App.getRequest @get('rulesLoadUrl'), json, success, error
     else
       App.get("router").send("projectRulesLoaded", project)

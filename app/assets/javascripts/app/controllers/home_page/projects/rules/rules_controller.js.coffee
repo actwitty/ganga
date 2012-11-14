@@ -203,7 +203,9 @@ App.RulesController = Em.ArrayController.extend
       @loadActorSchema()
       @loadEvents()
       @loadRules()
-  ).observes('App.router.projectsController.selected')
+  ).observes('App.router.projectsController.selected.hasManyRules')
+
+
   #########################################################
   # Create a Rule
   createRule: (proj_id, ruleNew)->
