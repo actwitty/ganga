@@ -151,6 +151,10 @@ trigger_fish.rbT.invokeActionScriptInternal=function(action,actionParams){
                       
                        if(tempMatch[0])
                        {
+                           // fetch system variable
+                           // fetch actor variable
+                           // fetch event variable
+                             
                        	   for(var i=0 ; i<tempMatch.length ; i++)
                        	   {
                        	       var textRuntimeValue = //get the value from lower layer code 
