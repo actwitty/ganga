@@ -35,7 +35,7 @@ Handlebars.registerHelper "getTemplateName", (key, options) ->
   return false  if not key?  
   context = (options.contexts and options.contexts[0]) or this  
   template_id = Ember.Handlebars.getPath(context, key, options)      
-  rbT.templateName[template_id]
+  trigger_fish.rbT.templateName[template_id]
 
 # ---------------------------------------------------------
 Handlebars.registerHelper "getTemplatePlaceHolder", (key, options) ->

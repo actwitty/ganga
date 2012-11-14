@@ -15,14 +15,14 @@ App.Rule = Ember.Object.extend
     action = @get 'action'
     if action is null
       defaultAction = ''
-      for key of rbT.templateLib
+      for key of trigger_fish.rbT.templateLib
         defaultAction = key
         break
 
       action_param = {}
       @set 'action', defaultAction      
-      for property of  rbT.templateArgs[defaultAction]  
-        action_param[property] = rbT.templateArgs[defaultAction][property]
+      for property of  trigger_fish.rbT.templateArgs[defaultAction]  
+        action_param[property] = trigger_fish.rbT.templateArgs[defaultAction][property]
 
       @set 'action_param', action_param
       
@@ -75,7 +75,7 @@ App.Rule = Ember.Object.extend
 
   displayAction: (->
     action = @get 'action'
-    rbT.templateName[action]
+    trigger_fish.rbT.templateName[action]
   ).property('action')
 
   

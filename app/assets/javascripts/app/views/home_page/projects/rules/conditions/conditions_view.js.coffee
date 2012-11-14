@@ -196,7 +196,7 @@ App.ConditionsView = Ember.View.extend
   # -----------------------------------------------------
   showTemplatePreview: (event) ->   
     rule = event.context    
-    rbT.invokeActionScript(rule.get('action'), rule.serializeParams())
+    trigger_fish.rbT.invokeActionScript(rule.get('action'), rule.serializeParams())
     event.preventDefault()
   # -----------------------------------------------------
   manageDeckerMinimize: (event) ->    
