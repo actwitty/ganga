@@ -68,10 +68,24 @@ App.Router = Ember.Router.extend
       newProject: (router, event) ->        
         editController = router.get('projectEditController')
         editController.set('content', App.Project.create())
-        editController.set('isNew', true)
-        router.transitionTo('loggedInState.editProjectState')
+        editController.set('isNew', true)        
+        router.transitionTo('loggedInState.editProjectState')    
+        router.get('homeSideController').set 'selectedMenu', 'appNew'
         event.preventDefault()
         
+      #event ----------------------------------------
+      editProjectFromMenu: (router) ->                
+        
+        project = router.get('projectsController.selected')
+        if project isnt null
+          editController = router.get('projectEditController')
+          editController.set('isNew', false)
+          router.get('projectsController').set('selected', project)  
+          router.get('homeSideController').set 'selectedMenu', 'appEdit'
+          router.transitionTo('loggedInState.editProjectState')
+
+        event.preventDefault()
+
       # event -------------------------------------------
       deleteProject: (router, event) ->
         event.view.confirmDeletion()
@@ -111,7 +125,9 @@ App.Router = Ember.Router.extend
 
       #event --------------------------------------------
       openEventList: (router, event) ->
-        router.transitionTo('loggedInState.projectConfigState.listEventState')    
+        router.transitionTo('loggedInState.projectConfigState.listEventState')
+        console.log router
+
         event.preventDefault()
 
       #event --------------------------------------------
@@ -149,8 +165,9 @@ App.Router = Ember.Router.extend
         route: '/edit'
         connectOutlets: (router) ->
           editController = router.get('projectEditController')                      
-          homeController = router.get('homeController')
-          homeController.connectOutlet({name: 'projectEdit', outletName: 'homeContentOutlet'} ) 
+          homeController = router.get('homeController')            
+          router.get('homeSideController').set 'selectedMenu', 'appEdit'
+          homeController.connectOutlet({name: 'projectEdit', outletName: 'homeContentOutlet'} )           
         #EVENTS
         updateProject: (router, event) ->
           projController = App.router.get('projectEditController')
@@ -171,6 +188,11 @@ App.Router = Ember.Router.extend
         route: '/list'
         connectOutlets: (router) ->          
           homeController = router.get('homeController')
+          router.get('homeSideController').set 'selectedMenu', 'appList'   
+          projectController = router.get('projectsController')       
+          if projectController.selected is null
+            if projectController.get 'content' isnt null and projectController.get('content').length isnt 0
+              projectController.set 'selected', projectController.get('content')[0]
           homeController.connectOutlet({name: 'projects', outletName: 'homeContentOutlet'} )
 
 
@@ -196,7 +218,7 @@ App.Router = Ember.Router.extend
         #state in project -----------------------
         showRulesState: Ember.Route.extend
           #SETUP
-          route: '/rules'
+          route: '/rules'          
 
           #STATES
           indexState: Ember.Route.extend
@@ -205,6 +227,7 @@ App.Router = Ember.Router.extend
             connectOutlets: (router, event) ->
               homeController = router.get('homeController')
               homeController.connectOutlet({name: 'rules', outletName: 'homeContentOutlet'})        
+              router.get('homeSideController').set 'selectedMenu', 'ruleList'
          
             #EVENTS
             #event -------------------------------------------
@@ -306,7 +329,7 @@ App.Router = Ember.Router.extend
             changeConditionValue: (router, event) ->
               condition = event.context                                          
               selectedVal = event.view.getConditionValue(event)
-              condition.set 'value1', selectedVal              
+              condition.set 'value1', selectedVal
               event.preventDefault()
             # event ------------------------------------------------------  
             saveRuleEdit: (router, event) ->
@@ -329,7 +352,8 @@ App.Router = Ember.Router.extend
           route: '/'
           connectOutlets: (router, event) ->
             homeController = router.get('homeController')
-            homeController.connectOutlet({name: 'eventsList', outletName: 'homeContentOutlet'})          
+            homeController.connectOutlet({name: 'eventsList', outletName: 'homeContentOutlet'})    
+            router.get('homeSideController').set 'selectedMenu', 'eventList'      
           #EVENTS
           #STATES
 

@@ -11,6 +11,8 @@ App.Condition = Ember.Object.extend
   valueOptions: null
       
   opList: null
+
+
   init: ->
     @_super()    
     operation = @get 'operation'     
@@ -25,10 +27,16 @@ App.Condition = Ember.Object.extend
           break
 
     property = @get 'property'
-    if App.LimitedValueList.hasOwnProperty(property)
-      @set 'valueOptions', App.LimitedValueList[property]
+    
+    if App.LimitedValueList.hasOwnProperty(property)          
+      @set 'valueOptions', App.LimitedValueList[property]      
+      value1 = @get 'value1'      
+      if value1 is null or value1.length is 0                
+        for key of App.LimitedValueList[property]         
+          @set 'value1', key        
+          break  
     else
-       @set 'valueOptions', null
+      @set 'valueOptions', null
 
   observeOperationChange: (->
     property = @get 'property'    

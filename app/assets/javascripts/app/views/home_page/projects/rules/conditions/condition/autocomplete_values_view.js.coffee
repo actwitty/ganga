@@ -19,8 +19,7 @@ App.AutocompelteValueView = Ember.View.extend
     @rerender()
     Ember.run.next(this, 'applyJqueryConstructs')
 
-  observesValueOptions: (->
-    
+  observesValueOptions: (->    
     condition = @get 'condition'
     @set 'values', condition.get('valueOptions')
     @viewHandleBarCompile()
