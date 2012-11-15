@@ -25,21 +25,44 @@ class AppsController < ApplicationController
   ##
   ##						"account_id"=>"5074143063fe853420000001", 
   ##
-  ##            "created_at"=>"2012-10-09T12:10:24Z", "updated_at"=>"2012-10-09T12:10:24Z",
+  ##             "time"=>"2012-10-09T12:10:24Z",
   ##
   ##            "description"=>{"email"=>"john.doe@example.com", "customer"=>{"address"=>{"city"=>"Bangalore"}}, "domain"=>"http://example.com"}, 
   ##
-  ##            "schema"=>{ ## EXAMPLE
-  ##                        properties: {
-  ##        															'customer[email]' => { 
-  ##                                															"String" => ["set_actor", "sign_up"] ,
-  ##                                															"Fixnum" => ["purchased", "sign_in"] 
-  ##                             															 }
-  ##      															}
-  ##      									events: {
-  ##        															'sign_up' => {"name" => String, "address[city]" => "String"}
-  ##      													} 
-  ##          						}
+  ##            "schema" => {
+  ##                             properties: {
+  ##                                           'customer[email]' => {  
+  ##                                                                   "total"=>5, 
+  ##                                                                   "types" => { 
+  ##                                                                                "String" => {"total" => 3, "events" => {"set_actor" => 2, "sign_up" => 1}},
+  ##                                                                                "Number" => {"total" => 2, "events" => {"purchased" => 1, "sign_up" => 1}}
+  ##                                                                              }
+  ##                                                                }
+  ##                                         }
+  ##                           
+  ##                             events:     {
+  ##                                           'sign_up' => {"name" => String, "address[city]" => "String"}
+  ##                                         }
+  ##                             
+  ##                             profile:    {
+  ##                                           "customer[address][city]"=>  {"total"=>1, "types"=>{"String"=>1}}, 
+  ##                                           "email"=>                    {"total"=>1, "types"=>{"String"=>1}}
+  ##                                         }  
+  ##                             system:     {
+  ##                                           "os"=>        {"total"=>2, "types"=>{"String"=>1, "Number"=>1}}, 
+  ##                                           "browser"=>   {"total"=>2, "types"=>{"String"=>2}}}
+  ##                                         }  
+  ##                        }  
+  ##            "rules" => [
+  ##                              {
+  ##                                "name"=>"A fancy rule", "event"=>"singup", "owner"=>"client", "action"=>"topbar",
+  ##                                "action_param"=>{"text"=>"A quickbrown fox jumps over a lazy dog", "href"=>"http://www.google.com", "color"=>"#333333", "width"=>"50"}, 
+  ##                                "conditions"=>[{"property"=>"person[email]", "negation"=>"true", "operation"=>"ew", "value1"=>"@gmail.com", "connect"=>"and"}], 
+  ##                                "updated_at"=>2012-10-24 07:43:38 UTC, 
+  ##                                "created_at"=>2012-10-24 07:43:38 UTC, "id"=>"50879c2a63fe855d14000005"
+  ##                              },
+  ##                              {..}
+  ##                      ],   
   ##         }
 	def create
 		Rails.logger.info("Enter App Create")
@@ -94,7 +117,7 @@ class AppsController < ApplicationController
 
   # INPUT
   ## {
-  ##  :id => "1234444',    [MANDATORY]
+  ##  :id => "1234444',        [MANDATORY]
   ##  :description => {        [MANDATORY]
   ##      "email" => "john.doe@example.com",
   ##      "address" => {:city => "Bangalore"}}
@@ -105,21 +128,43 @@ class AppsController < ApplicationController
   ##
   ##						"account_id"=>"5074143063fe853420000001", 
   ##
-  ##            "created_at"=>"2012-10-09T12:10:24Z", "updated_at"=>"2012-10-09T12:10:24Z",
-  ##
   ##            "description"=>{"email"=>"john.doe@example.com", "customer"=>{"address"=>{"city"=>"Bangalore"}}, "domain"=>"http://example.com"}, 
   ##
-  ##            "schema"=>{ ## EXAMPLE
-  ##                        properties: {
-  ##        															'customer[email]' => { 
-  ##                                															"String" => ["set_actor", "sign_up"], 
-  ##                                															"Fixnum" => ["purchased", "sign_in"] 
-  ##                             															 }
-  ##      															}
-  ##      									events: {
-  ##        															'sign_up' => {"name" => String, "address[city]" => "String"}
-  ##      													} 
-  ##          						}
+  ##            "schema" => {
+  ##                             properties: {
+  ##                                           'customer[email]' => {  
+  ##                                                                   "total"=>5, 
+  ##                                                                   "types" => { 
+  ##                                                                                "String" => {"total" => 3, "events" => {"set_actor" => 2, "sign_up" => 1}},
+  ##                                                                                "Number" => {"total" => 2, "events" => {"purchased" => 1, "sign_up" => 1}}
+  ##                                                                              }
+  ##                                                                }
+  ##                                         }
+  ##                           
+  ##                             events:     {
+  ##                                           'sign_up' => {"name" => String, "address[city]" => "String"}
+  ##                                         }
+  ##                             
+  ##                             profile:    {
+  ##                                           "customer[address][city]"=>  {"total"=>1, "types"=>{"String"=>1}}, 
+  ##                                           "email"=>                    {"total"=>1, "types"=>{"String"=>1}}
+  ##                                         }  
+  ##                             system:     {
+  ##                                           "os"=>        {"total"=>2, "types"=>{"String"=>1, "Number"=>1}}, 
+  ##                                           "browser"=>   {"total"=>2, "types"=>{"String"=>2}}}
+  ##                                         }  
+  ##                        }  
+  ##            "rules" => [
+  ##                              {
+  ##                                "name"=>"A fancy rule", "event"=>"singup", "owner"=>"client", "action"=>"topbar",
+  ##                                "action_param"=>{"text"=>"A quickbrown fox jumps over a lazy dog", "href"=>"http://www.google.com", "color"=>"#333333", "width"=>"50"}, 
+  ##                                "conditions"=>[{"property"=>"person[email]", "negation"=>"true", "operation"=>"ew", "value1"=>"@gmail.com", "connect"=>"and"}], 
+  ##                                "updated_at"=>2012-10-24 07:43:38 UTC, 
+  ##                                "created_at"=>2012-10-24 07:43:38 UTC, "id"=>"50879c2a63fe855d14000005"
+  ##                              },
+  ##                              {..}
+  ##                      ],   
+  ##            "time"=>"2012-10-09T12:10:24Z",
   ##         }
 	def update
 		Rails.logger.info("Enter App Update #{params.inspect}")
@@ -154,16 +199,6 @@ class AppsController < ApplicationController
   ##            app: {
   ##                   id: "4545554654645", 
   ##                   description: {"super_app_id": "23131313", "name": "my app", "domain": "http://myapp.com"}, 
-  ##                   rules: [
-  ##                             {
-  ##                               "name"=>"A fancy rule", "event"=>"singup", "owner"=>"client", "action"=>"topbar",
-  ##                               "action_param"=>{"text"=>"A quickbrown fox jumps over a lazy dog", "href"=>"http://www.google.com", "color"=>"#333333", "width"=>"50"}, 
-  ##                               "conditions"=>[{"property"=>"person[email]", "negation"=>"true", "operation"=>"ew", "value1"=>"@gmail.com", "connect"=>"and"}], 
-  ##                               "updated_at"=>2012-10-24 07:43:38 UTC, 
-  ##                               "created_at"=>2012-10-24 07:43:38 UTC, "id"=>"50879c2a63fe855d14000005"
-  ##                             },
-  ##                             {..}
-  ##                           ],
   ##                   schema: {
   ##                             properties: {
   ##                                           'customer[email]' => {  
@@ -187,8 +222,20 @@ class AppsController < ApplicationController
   ##                                           "os"=>        {"total"=>2, "types"=>{"String"=>1, "Number"=>1}}, 
   ##                                           "browser"=>   {"total"=>2, "types"=>{"String"=>2}}}
   ##                                         }  
-  ##                           }  
-  ##
+  ##                           },
+  ##                   rules: [
+  ##                             {
+  ##                               "name"=>"A fancy rule", "event"=>"singup", "owner"=>"client", "action"=>"topbar",
+  ##                               "action_param"=>{"text"=>"A quickbrown fox jumps over a lazy dog", "href"=>"http://www.google.com", "color"=>"#333333", "width"=>"50"}, 
+  ##                               "conditions"=>[{"property"=>"person[email]", "negation"=>"true", "operation"=>"ew", "value1"=>"@gmail.com", "connect"=>"and"}], 
+  ##                               "updated_at"=>2012-10-24 07:43:38 UTC, 
+  ##                               "created_at"=>2012-10-24 07:43:38 UTC, "id"=>"50879c2a63fe855d14000005"
+  ##                             },
+  ##                             {..}
+  ##                           ],
+  ##                   time: 2009-02-19 21:00:00 UTC   
+  ##                 }           
+  ##            
   ##           events: [
   ##                      {
   ##                        id: "3232342434", name: "sign_in", 
@@ -198,7 +245,7 @@ class AppsController < ApplicationController
   ##                      },
   ##                      {..}
   ##                    ],
-  ##            conversions: [
+  ##          conversions: [
   ##                            {
   ##                              id: "32323424355",
   ##                              properties: [{"k" => "button", "v" => "clicked"}, {"k" => "times", "v" => "40"}]
@@ -206,8 +253,8 @@ class AppsController < ApplicationController
   ##                              time: 2009-02-19 23:00:00 UTC
   ##                            },
   ##                            {...}
-  ##                         ],
-  ##            errors: [
+  ##                       ],
+  ##          errors: [
   ##                       {
   ##                          id: "3232342434",
   ##                          properties: [{"k" => "name", "v" => "Javascript Error"}, {"k" => "reason", "v" => "dont know"}]
@@ -215,15 +262,15 @@ class AppsController < ApplicationController
   ##                          time: 2009-02-19 21:00:00 UTC
   ##                       },
   ##                       {...}
-  ##                    ],
-  ##            actors: [
+  ##                 ],
+  ##          actors: [
   ##                      {
   ##                        id: "3433434", 
   ##                        description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}},
   ##                        time: 2009-02-19 21:00:00 UTC
   ##                      }
   ##                      {..}
-  ##                    ]
+  ##                  ]
   ##        }
 	def read
 		Rails.logger.info("Enter App read")

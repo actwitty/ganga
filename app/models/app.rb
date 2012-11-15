@@ -1,3 +1,4 @@
+
 require 'utility'
 
 class App
@@ -98,7 +99,7 @@ class App
   # INPUT
   ## {
   ##  :account_id => "23232312"[MANDATORY] 
-  ##  :id => "1234444',    [MANDATORY]
+  ##  :id => "1234444',        [MANDATORY]
   ##  :description => {        [MANDATORY]
   ##      "email" => "john.doe@example.com",
   ##      "address" => {:city => "Bangalore"}}
@@ -136,8 +137,8 @@ class App
 
   # INPUT
   ## {  
-  ##    account_id:  "1212121212"      [MANDATORY]
-  ##    id: 123                   [MANDATORY]
+  ##    id: 123                       [MANDATORY]
+  ##    account_id: 23232323          [MANDATORY]
   ##    events: true or false         [OPTIONAL] # events 
   ##    conversions: true or false    [OPTIONAL] # conversion
   ##    errors: true or false         [OPTIONAL] # errors
@@ -149,17 +150,7 @@ class App
   ##
   ##            app: {
   ##                   id: "4545554654645", 
-  ##                   description: {"name": "my app", "domain": "http://myapp.com"}, 
-  ##                   rules: [
-  ##                             {
-  ##                               "name"=>"A fancy rule", "event"=>"singup", "owner"=>"client", "action"=>"topbar",
-  ##                               "action_param"=>{"text"=>"A quickbrown fox jumps over a lazy dog", "href"=>"http://www.google.com", "color"=>"#333333", "width"=>"50"}, 
-  ##                               "conditions"=>[{"property"=>"person[email]", "negation"=>"true", "operation"=>"ew", "value1"=>"@gmail.com", "connect"=>"and"}], 
-  ##                               "updated_at"=>2012-10-24 07:43:38 UTC, 
-  ##                               "created_at"=>2012-10-24 07:43:38 UTC, "id"=>"50879c2a63fe855d14000005"
-  ##                             },
-  ##                             {..}
-  ##                           ],
+  ##                   description: {"super_app_id": "23131313", "name": "my app", "domain": "http://myapp.com"}, 
   ##                   schema: {
   ##                             properties: {
   ##                                           'customer[email]' => {  
@@ -183,9 +174,21 @@ class App
   ##                                           "os"=>        {"total"=>2, "types"=>{"String"=>1, "Number"=>1}}, 
   ##                                           "browser"=>   {"total"=>2, "types"=>{"String"=>2}}}
   ##                                         }  
-  ##                           } 
-  ##
-  ##            events: [
+  ##                           },
+  ##                   rules: [
+  ##                             {
+  ##                               "name"=>"A fancy rule", "event"=>"singup", "owner"=>"client", "action"=>"topbar",
+  ##                               "action_param"=>{"text"=>"A quickbrown fox jumps over a lazy dog", "href"=>"http://www.google.com", "color"=>"#333333", "width"=>"50"}, 
+  ##                               "conditions"=>[{"property"=>"person[email]", "negation"=>"true", "operation"=>"ew", "value1"=>"@gmail.com", "connect"=>"and"}], 
+  ##                               "updated_at"=>2012-10-24 07:43:38 UTC, 
+  ##                               "created_at"=>2012-10-24 07:43:38 UTC, "id"=>"50879c2a63fe855d14000005"
+  ##                             },
+  ##                             {..}
+  ##                           ],
+  ##                   time: 2009-02-19 21:00:00 UTC   
+  ##                 }           
+  ##            
+  ##           events: [
   ##                      {
   ##                        id: "3232342434", name: "sign_in", 
   ##                        properties: [{"k" => "name", "v" => "alok"}, {"k" => "address[city]", "v" => "Bangalore"}]
@@ -194,7 +197,7 @@ class App
   ##                      },
   ##                      {..}
   ##                    ],
-  ##            conversions: [
+  ##          conversions: [
   ##                            {
   ##                              id: "32323424355",
   ##                              properties: [{"k" => "button", "v" => "clicked"}, {"k" => "times", "v" => "40"}]
@@ -202,8 +205,8 @@ class App
   ##                              time: 2009-02-19 23:00:00 UTC
   ##                            },
   ##                            {...}
-  ##                         ],
-  ##            errors: [
+  ##                       ],
+  ##          errors: [
   ##                       {
   ##                          id: "3232342434",
   ##                          properties: [{"k" => "name", "v" => "Javascript Error"}, {"k" => "reason", "v" => "dont know"}]
@@ -211,15 +214,15 @@ class App
   ##                          time: 2009-02-19 21:00:00 UTC
   ##                       },
   ##                       {...}
-  ##                    ],
-  ##            actors: [
+  ##                 ],
+  ##          actors: [
   ##                      {
   ##                        id: "3433434", 
   ##                        description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}},
   ##                        time: 2009-02-19 21:00:00 UTC
   ##                      }
   ##                      {..}
-  ##                    ]
+  ##                  ]
   ##        }
   def self.read(params)
     Rails.logger.info("Enter App Read")
