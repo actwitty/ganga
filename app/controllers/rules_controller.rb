@@ -51,7 +51,7 @@ class RulesController < ApplicationController
   def create
     Rails.logger.info("Enter Rule Update")
 
-    params[:account_id] = current_account._id if Rails.env != "test"
+    params[:account_id] = current_account._id 
     ret = Rule.add!(params)
 
     raise ret[:error] if !ret[:error].blank?
@@ -67,8 +67,8 @@ class RulesController < ApplicationController
 
   # INPUT
   ## {
+  ##  :id => "234234234" [MANDATORY]
   ##  :app_id => "1234444',   [MANDATORY]
-  ##  :rule_id => "234234234" [MANDATORY]
   ##  :rule => {              [MANDATORY]
   ##              name: 'A fancy rule',
   ##              event: 'singup',
@@ -110,7 +110,7 @@ class RulesController < ApplicationController
   def update
     Rails.logger.info("Enter Rule Update")
 
-    params[:account_id] = current_account._id if Rails.env != "test"
+    params[:account_id] = current_account._id 
     ret = Rule.update(params)
 
     raise ret[:error] if !ret[:error].blank?
@@ -128,9 +128,9 @@ class RulesController < ApplicationController
   ## {
   ##  :app_id => "1234444',   [MANDATORY]
   ##
-  ##  :rule_id => "234234234" [OPTIONAL] #read one rule
+  ##  :id => "234234234"      [OPTIONAL] #read one rule
   ##                  OR
-  ##  :event => "sign_up"    [OPTIONAL] #read all rules for this event
+  ##  :event => "sign_up"     [OPTIONAL] #read all rules for this event
   ##                 
   ## }
 
@@ -143,7 +143,7 @@ class RulesController < ApplicationController
   def read
     Rails.logger.info("Enter Rule read")
 
-    params[:account_id] = current_account._id if Rails.env != "test"
+    params[:account_id] = current_account._id 
     ret = Rule.read(params)
 
     raise ret[:error] if !ret[:error].blank?
@@ -160,7 +160,7 @@ class RulesController < ApplicationController
   ## {
   ##  :app_id => "1234444',   [MANDATORY]
   ##
-  ##  :rule_id => "234234234" [OPTIONAL] #read one rule
+  ##  :id => "234234234" [OPTIONAL] #read one rule
   ##                  OR
   ##  :event => "sign_up"     [OPTIONAL] #read all rules for this event
   ##                 
@@ -172,7 +172,7 @@ class RulesController < ApplicationController
   def delete
     Rails.logger.info("Enter Rule Delete")
 
-    params[:account_id] = current_account._id if Rails.env != "test"
+    params[:account_id] = current_account._id 
     ret = Rule.delete(params)
 
     raise ret[:error] if !ret[:error].blank?

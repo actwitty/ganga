@@ -3,7 +3,11 @@ require 'utility'
 class AppsController < ApplicationController
 	
   protect_from_forgery
+  before_filter :authenticate_cross_site!, only: [:read]
+  before_filter :authenticate_api!
   before_filter :authenticate_account!
+  
+  after_filter :delete_session
 
   respond_to  :json
   # NOTE
@@ -41,7 +45,7 @@ class AppsController < ApplicationController
 		Rails.logger.info("Enter App Create")
 		
     # Create Anonymous actor
-    params[:account_id] = current_account._id if Rails.env != "test"
+    params[:account_id] = current_account._id 
 
 		ret = App.add!(params)
     
@@ -72,7 +76,7 @@ class AppsController < ApplicationController
 		end
 
     # Create Anonymous actor
-    params[:account_id] = current_account._id if Rails.env != "test"
+    params[:account_id] = current_account._id 
 
 		App.where(account_id: params[:account_id] , _id: params[:id]).destroy
 
@@ -120,7 +124,7 @@ class AppsController < ApplicationController
 	def update
 		Rails.logger.info("Enter App Update #{params.inspect}")
 		
-		params[:account_id] = current_account._id if Rails.env != "test"
+		params[:account_id] = current_account._id 
 		ret = App.update(params)
 
 		raise ret[:error] if !ret[:error].blank?
@@ -162,23 +166,28 @@ class AppsController < ApplicationController
   ##                           ],
   ##                   schema: {
   ##                             properties: {
-  ##                                           'customer[email]' => { 
-  ##                                                                   "String" => ["set_actor", "sign_up"],
-  ##                                                                   "Fixnum" => ["purchased", "sign_in"]
+  ##                                           'customer[email]' => {  
+  ##                                                                   "total"=>5, 
+  ##                                                                   "types" => { 
+  ##                                                                                "String" => {"total" => 3, "events" => {"set_actor" => 2, "sign_up" => 1}},
+  ##                                                                                "Number" => {"total" => 2, "events" => {"purchased" => 1, "sign_up" => 1}}
+  ##                                                                              }
+  ##                                                                }
   ##                                         }
   ##                           
-  ##                             events: {
+  ##                             events:     {
   ##                                           'sign_up' => {"name" => String, "address[city]" => "String"}
-  ##                                     }
+  ##                                         }
   ##                             
-  ##                             profile:{
-  ##                                         "gender" => String, "name" => "String"
-  ##                                     }  
-  ##                             system: {
-  ##                                         "location" => String, "page_view_time" => "String"
-  ##                                     }  
-  ##                           } 
-  ##                 }  
+  ##                             profile:    {
+  ##                                           "customer[address][city]"=>  {"total"=>1, "types"=>{"String"=>1}}, 
+  ##                                           "email"=>                    {"total"=>1, "types"=>{"String"=>1}}
+  ##                                         }  
+  ##                             system:     {
+  ##                                           "os"=>        {"total"=>2, "types"=>{"String"=>1, "Number"=>1}}, 
+  ##                                           "browser"=>   {"total"=>2, "types"=>{"String"=>2}}}
+  ##                                         }  
+  ##                           }  
   ##
   ##           events: [
   ##                      {
@@ -219,7 +228,9 @@ class AppsController < ApplicationController
 	def read
 		Rails.logger.info("Enter App read")
 
-		params[:account_id] = current_account._id if Rails.env != "test"
+		params[:account_id] = current_account._id
+    puts params.inspect
+
 		ret = App.read(params)
 		
 		raise ret[:error] if !ret[:error].blank?

@@ -81,4 +81,11 @@ class Err
     Rails.logger.error("**** ERROR **** #{er(e)}")
     {:return => nil, :error => e}
   end
+
+  def format_err
+    {id: self._id.to_s, account_id: self.account_id.to_s, app_id: self.app_id.to_s, actor_id: self.actor_id.to_s, properties: self.properties, time: self.updated_at}
+  rescue => e
+    Rails.logger.error("**** ERROR **** #{e.message}")
+    {}
+  end
 end
