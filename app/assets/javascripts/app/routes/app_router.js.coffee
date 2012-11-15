@@ -279,7 +279,7 @@ App.Router = Ember.Router.extend
               last.set 'connect', 'and'
               content.pushObject(condition)  
               event.preventDefault()
-              
+
             # event ------------------------------------------------------  
             deleteCondition: (router, event) ->
               condition = event.context              

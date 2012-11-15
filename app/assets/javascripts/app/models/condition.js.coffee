@@ -2,7 +2,7 @@
 App.Condition = Ember.Object.extend
   property: 'browser'
   type: 'String'
-  scope: 'e'
+  scope: 's'
   negation: 'false'
   operation: 'eql'
   value1: ''
