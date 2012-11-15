@@ -18,9 +18,11 @@
       window.rb = new RBT();
     }
   } catch (e) {
-    trigger_fish.rbTAPP.reportError({"exception" : e.message, 
-                        "message"   : "App initalization failed"
-                       });
+    trigger_fish.rbTAPP.reportError({"exception": e.message, 
+                                     "message"  : "App init/exec failed",
+                                     "appid"    : appid || "",
+                                     "accid"    : accid || ""
+                                    });
   }
 })(_rbTK[0][1], _rbTK[1][1]);
 
