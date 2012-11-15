@@ -316,34 +316,32 @@ class Actor
     actor = Actor.where(app_id: params[:app_id], _id: actor_id).first if actor.blank?
     raise et("actor.invalid_actor_id", id: actor_id) if actor.blank?
 
-    hash[:account] = {id: actor.account_id}
-    hash[:app] = {id: actor.app_id} 
-    hash[:actor] = {id: actor_id}
-    hash[:actor][:description] = actor.description 
-    
+    hash[:account] = {id: actor.account_id.to_s}
+    hash[:app] = {id: actor.app_id.to_s} 
+    hash[:actor] = actor.format_actor  
 
     #BLOCKED FOR TIMEBEING
     # if params[:identifiers] == true
     #   ids = Identifier.where(actor_id: actor_id, app_id: params[:app_id]).all
-    #   ids.each {|attr| hash[:identifiers] << {attr.uid => attr.type}}
+    #   ids.each {|attr| hash[:identifiers] << attr.format_identifier}
     #   Rails.logger.info("Adding Identifiers")
     # end
     
     if params[:events] == true
       events = Event.where(actor_id: actor_id, app_id: params[:app_id], meta: false).limit(AppConstants.limit_events).desc(:_id)
-      events.each {|attr| hash[:events] << {id: attr._id, name: attr.name, properties: attr.properties, time: attr.created_at}}
+      events.each {|attr| hash[:events] << attr.format_event}
       Rails.logger.info("Adding Events")
     end
 
     if params[:conversions] == true
       conversions = Conversion.where(actor_id: actor_id, app_id: params[:app_id]).limit(AppConstants.limit_conversions).desc(:_id)
-      conversions.each {|attr| hash[:conversions] << { id: attr._id, properties: attr.properties, time: attr.created_at}}
+      conversions.each {|attr| hash[:conversions] << attr.format_conversion}
       Rails.logger.info("Adding Conversions")
     end
 
     if params[:errors] == true
       errors = Err.where(actor_id: actor_id, app_id: params[:app_id]).limit(AppConstants.limit_errors).desc(:_id)
-      errors.each {|attr| hash[:errors] << { id: attr._id, properties: attr.properties, time: attr.created_at}}
+      errors.each {|attr| hash[:errors] << attr.format_err}
       Rails.logger.info("Adding Errors")
     end
 
@@ -377,7 +375,7 @@ class Actor
   end
 
   def format_actor
-    {id: self._id.to_s, account_id: self.account_id.to_s, app_id: self.app_id.to_s, description: self.description, updated_at: self.updated_at}
+    {id: self._id.to_s, account_id: self.account_id.to_s, app_id: self.app_id.to_s, description: self.description, time: self.updated_at}
   rescue => e
     Rails.logger.error("**** ERROR **** #{e.message}")
     {}

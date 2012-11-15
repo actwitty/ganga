@@ -36,17 +36,12 @@ class ErrsController < ApplicationController
   def create
     Rails.logger.info("Enter Error Create")
     
-    params[:account_id] = current_account._id if Rails.env != "test"
+    params[:account_id] = current_account._id 
     ret = Err.add!(params)
 
     raise ret[:error] if !ret[:error].blank?
 
-    hash = ret[:return].attributes
-    hash["id"] = hash["_id"]
-    hash.delete("_id")
-
-    respond_with(hash, status: 200)
-
+    respond_with(ret[:return].format_err, status: 200)
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
     respond_with({errors: e.message}, status: 422)

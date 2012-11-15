@@ -1,10 +1,13 @@
 require 'spec_helper'
 
 describe RulesController do
-  login_account
+  #login_account
 
   before(:each) do
     @account = FactoryGirl.create(:account)
+    @account.confirm!
+    sign_in  @account
+
     @app = FactoryGirl.create(:app, account_id: @account._id)
     @actor = FactoryGirl.create(:actor, account_id: @account._id, app_id: @app._id)
     @rule = {
@@ -33,7 +36,6 @@ describe RulesController do
   describe "create event" do
     it "should not create rule with invalid app id" do
       get 'create', {
-        account_id: @account._id,
         app_id: "1234444",
         rule: @rule
       }
@@ -44,7 +46,6 @@ describe RulesController do
 
     it "should not create rule with invalid arguments" do
       get 'create', {
-        account_id: @account._id,
         rule: @rule
       }
       puts JSON.parse(response.body).inspect
@@ -54,7 +55,6 @@ describe RulesController do
 
     it "should create rule" do
       get 'create', {
-        account_id: @account._id,
         app_id: @app._id,
         rule: @rule
       }
@@ -77,10 +77,10 @@ describe RulesController do
       @rule[:event] = "new_one"
       @rule[:conditions] = []
     end
+
     it "should not update rule for invalid arguments" do
       get 'update', {
-        account_id: @account._id,
-        rule_id:  @app.rules[0].id.to_s,
+        id:  @app.rules[0].id.to_s,
         rule: @rule
       }
       response.status.should eq(422)
@@ -88,9 +88,8 @@ describe RulesController do
 
     it "should not update rule for invalid value of arguments" do
       get 'update', {
-        account_id: @account._id,
         app_id: "1312312312",
-        rule_id:  @app.rules[0].id.to_s,
+        id:  @app.rules[0].id.to_s,
         rule: @rule
       }
       response.status.should eq(422)
@@ -98,9 +97,8 @@ describe RulesController do
 
     it "should not update rule for invalid rule id" do
       get 'update', {
-        account_id: @account._id,
         app_id: @app._id,
-        rule_id:  3433434,
+        id:  3433434,
         rule: @rule
       }
       response.status.should eq(422)
@@ -108,9 +106,8 @@ describe RulesController do
 
     it "should update rule" do
       get 'update', {
-        account_id: @account._id,
         app_id: @app._id,
-        rule_id:  @app.rules[0].id.to_s,
+        id:  @app.rules[0].id.to_s,
         rule: @rule
       }
 
@@ -143,32 +140,28 @@ describe RulesController do
 
     it "should not read rule for invalid arguments" do
       get 'read', {
-        account_id: @account._id,
-        rule_id:  @app.rules[0].id.to_s,
+        id:  @app.rules[0].id.to_s,
       }
       response.status.should eq(422)
     end
 
     it "should not read rule for invalid value of arguments" do
       get 'read', {
-        account_id: @account._id,
         app_id: "1312312312",
-        rule_id:  @app.rules[0].id.to_s,
+        id:  @app.rules[0].id.to_s,
       }
       response.status.should eq(422)
     end
 
     it "should not read rule for invalid rule id" do
       get 'read', {
-        account_id: @account._id,
         app_id: @app._id,
-        rule_id:  3433434,
+        id:  3433434,
       }
       response.status.should eq(422)
     end
     it "should not read rule for invalid event name" do
       get 'read', {
-        account_id: @account._id,
         app_id: @app._id,
         event:  "invalid_event",
       }
@@ -182,16 +175,14 @@ describe RulesController do
     end
     it "should read rule with valid id" do
       get 'read', {
-        account_id: @account._id,
         app_id: @app._id,
-        rule_id:  @app.rules[0].id.to_s,
+        id:  @app.rules[0].id.to_s,
       }
       puts JSON.parse(response.body).inspect
       response.status.should eq(200)
     end
     it "should read all rules with valid event name" do
       get 'read', {
-        account_id: @account._id,
         app_id: @app._id,
         event: "sign_up",
       }
@@ -201,7 +192,6 @@ describe RulesController do
 
     it "should read all rules of an app" do
       get 'read', {
-        account_id: @account._id,
         app_id: @app._id,
         
       }
@@ -227,26 +217,23 @@ describe RulesController do
 
     it "should not delete rule for invalid arguments" do
       get 'delete', {
-        account_id: @account._id,
-        rule_id:  @app.rules[0].id.to_s,
+        id:  @app.rules[0].id.to_s,
       }
       response.status.should eq(422)
     end
 
     it "should not delete rule for invalid value of arguments" do
       get 'delete', {
-        account_id: @account._id,
         app_id: "1312312312",
-        rule_id:  @app.rules[0].id.to_s,
+        id:  @app.rules[0].id.to_s,
       }
       response.status.should eq(422)
     end
 
     it "should not delete rule for invalid rule id" do
       get 'delete', {
-        account_id: @account._id,
         app_id: @app._id,
-        rule_id:  3433434,
+        id:  3433434,
       }
       @app.reload
       @app.rules.count.should eq(3)
@@ -254,7 +241,6 @@ describe RulesController do
     end
     it "should not delete rule for invalid event name" do
       get 'delete', {
-        account_id: @account._id,
         app_id: @app._id,
         event:  "invalid_event",
       }
@@ -265,9 +251,8 @@ describe RulesController do
     end
     it "should delete rule with valid id" do
       get 'delete', {
-        account_id: @account._id,
         app_id: @app._id,
-        rule_id:  @app.rules[0].id.to_s,
+        id:  @app.rules[0].id.to_s,
       }
       @app.reload
       @app.rules.count.should eq(2)
@@ -275,7 +260,6 @@ describe RulesController do
     end
     it "should read all rules with valid event name" do
       get 'delete', {
-        account_id: @account._id,
         app_id: @app._id,
         event: "sign_up",
       }
@@ -286,7 +270,6 @@ describe RulesController do
 
     it "should read all rules of an app" do
       get 'delete', {
-        account_id: @account._id,
         app_id: @app._id,
       }
       @app.reload

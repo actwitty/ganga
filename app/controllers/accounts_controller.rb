@@ -89,7 +89,7 @@ class AccountsController < ApplicationController
   def read
     Rails.logger.info("Enter Account read")
 
-    params[:account_id] = current_account._id if Rails.env != "test"
+    params[:id] = current_account._id 
     ret = Account.read(params)
 
     raise ret[:error] if !ret[:error].blank?
@@ -110,28 +110,63 @@ class AccountsController < ApplicationController
   ## }
 
   # OUTPUT =>{ 
-  ##            events: [
-  ##                      {
-  ##                        apps: [{id: "343433433", account_id: "324324", description: {"name": "my app", "domain": "http://myapp.com"}, }]
-  ##                      },
-  ##                      {..}
-  ##                    ]
-  ##        }
+  ##           apps: [
+  ##                   { 
+  ##                     id: "343433433", account_id: "324324", 
+  ##                     description: {"name": "my app", "domain": "http://myapp.com"},
+  ##                     schema: {
+  ##                             properties: {
+  ##                                           'customer[email]' => {  
+  ##                                                                   "total"=>5, 
+  ##                                                                   "types" => { 
+  ##                                                                                "String" => {"total" => 3, "events" => {"set_actor" => 2, "sign_up" => 1}},
+  ##                                                                                "Number" => {"total" => 2, "events" => {"purchased" => 1, "sign_up" => 1}}
+  ##                                                                              }
+  ##                                                                }
+  ##                                         }
+  ##                           
+  ##                             events:     {
+  ##                                           'sign_up' => {"name" => String, "address[city]" => "String"}
+  ##                                         }
+  ##                             
+  ##                             profile:    {
+  ##                                           "customer[address][city]"=>  {"total"=>1, "types"=>{"String"=>1}}, 
+  ##                                           "email"=>                    {"total"=>1, "types"=>{"String"=>1}}
+  ##                                         }  
+  ##                             system:     {
+  ##                                           "os"=>        {"total"=>2, "types"=>{"String"=>1, "Number"=>1}}, 
+  ##                                           "browser"=>   {"total"=>2, "types"=>{"String"=>2}}}
+  ##                                         }  
+  ##                           },
+  ##                     rules: [
+  ##                              {
+  ##                                "name"=>"A fancy rule", "event"=>"singup", "owner"=>"client", "action"=>"topbar",
+  ##                                "action_param"=>{"text"=>"A quickbrown fox jumps over a lazy dog", "href"=>"http://www.google.com", "color"=>"#333333", "width"=>"50"}, 
+  ##                                "conditions"=>[{"property"=>"person[email]", "negation"=>"true", "operation"=>"ew", "value1"=>"@gmail.com", "connect"=>"and"}], 
+  ##                                "updated_at"=>2012-10-24 07:43:38 UTC, 
+  ##                                "created_at"=>2012-10-24 07:43:38 UTC, "id"=>"50879c2a63fe855d14000005"
+  ##                              },
+  ##                              {..}
+  ##                            ],
+  ##                     
+  ##                     time: 2009-02-19 21:00:00 UTC
+  ##                   } , 
+  ##                   {...}, 
+  ##                   {...}
+  ##                 ]
+  ##         }
   def list_apps
     Rails.logger.info("Enter Account => List Apps")
 
     hash = { apps: []}
 
-    params[:account_id] = current_account._id if Rails.env != "test" 
-
-    array = hash[:apps]
-
+    params[:account_id] = current_account._id 
+    
     App.where(account_id: params[:account_id]).all.each do |attr|
-      array << {id: attr._id, account_id: current_account._id, description: attr.description, schema: attr.schema}  
+      hash[:apps] << attr.format_app  
     end
-  
-    Rails.logger.info("#{array.inspect}") 
-    respond_with(array, status: 200)      
+
+    respond_with(hash, status: 200)      
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
     respond_with( { errors: e.message}, status: 422)

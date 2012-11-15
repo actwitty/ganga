@@ -3,64 +3,83 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   #respond_to :json, :html
 
-  #before_filter :set_access_control_headers
-
   def after_sign_in_path_for(resource_or_scope)
     root_path
   end
-
-  # NOTE - If app authentication enabled then do app sign in also 
-  ##       otherwise account sign in is enough
-  def authenticate_app! 	
-    if !current_account[:description][:authenticate_app].blank?
-  		Rails.logger.info("App authentication enabled")
-  		# sign in into app or redirect to login page
-  	end
-  end
   
-  def verify_cross_site
-    allowed = false
-    access  = nil
+  def build_session(access) 
+    account = Account.find(access.account_id)
+    raise et("application.account_invalid") if account.blank? # This error should not happen
 
-    if !request.env['HTTP_ORIGIN'].blank?   # JSONP/CORS request from a website 
-      access = AccessInfo.where(origin: request.env['HTTP_ORIGIN']).first
-      if !access.blank?
-        headers['Access-Control-Allow-Origin'] = request.env['HTTP_ORIGIN']
-        headers['Access-Control-Request-Method'] = "*"
-        headers['Access-Control-Allow-Headers'] = "*"
-        headers['Access-Control-Allow-Credentials'] = "true"
-        allowed = true
-      end
-    end
+    sign_in(account)
+    self.instance_variable_set(:@tear_down, current_account )
 
-    allowed
+    true
+  rescue => e 
+    Rails.logger.error("**** ERROR **** #{er(e)}")
+    false
   end
 
-  def verify_api
-    allowed = false
-    access  = nil
-    
-    if !params["api_key"].blank?
-      access = AccessInfo.where(token: params["token"]).first
-
-      if !access.blank?
-        # refresh access token if needed
-        if access.expires_at <= Time.now.utc 
-          if access.refresh_token == false
-            raise et("application.refresh_token_failed")
-          end
-        end
-        allowed = true 
-      end
-    end
-    allowed
-  end   
-
-
-  def tear_access_control
+  def delete_session
+    Rails.logger.info("Enter Delete Session")
     if !self.instance_variable_get(:@tear_down).blank?
       sign_out(current_account) 
       self.instance_variable_set(:@tear_down, nil )
     end
   end
+
+  def authenticate_cross_site!
+    Rails.logger.info("Enter Authenticate Cross Site")
+    
+    puts request.env.inspect
+    if !current_account.blank?
+      Rails.logger.info("Authenticated Account")
+      return true
+    end
+
+    if !request.env['HTTP_HOST'].blank?
+      access = AccessInfo.where(origin: request.env['HTTP_HOST']).first
+
+      if !access.blank?
+        headers['Access-Control-Allow-Origin'] = request.env['HTTP_ORIGIN']
+        headers['Access-Control-Request-Method'] = "*"
+        headers['Access-Control-Allow-Headers'] = "*"
+        headers['Access-Control-Allow-Credentials'] = "true"
+      else
+        raise et("application.unauthorized")
+      end
+
+      raise et("application.unauthorized") if build_session(access) == false
+    end
+  rescue => e 
+    Rails.logger.error("**** ERROR **** #{er(e)}")
+    head :unauthorized
+  end
+
+  def authenticate_api!
+    Rails.logger.info("Enter Authenticate Api")
+
+    if !current_account.blank?
+      Rails.logger.info("Authenticated Account")
+      return true
+    end
+
+    if !params["token"].blank?        # API Access
+      access = AccessInfo.where(token: params["token"]).first
+
+      if !access.blank?
+        # refresh access token if needed
+        if access.expires_at <= Time.now.utc 
+          raise et("application.refresh_token_failed") if access.refresh_token == false
+        end
+      else
+        raise et("application.unauthorized")
+      end     
+      
+      raise et("application.unauthorized") if build_session(access) == false
+    end
+  rescue => e 
+    Rails.logger.error("**** ERROR **** #{er(e)}")
+    head :unauthorized
+  end     
 end
