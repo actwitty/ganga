@@ -25,9 +25,12 @@ App.Condition = Ember.Object.extend
         if App.operationsList[type].hasOwnProperty(op)
           @set 'operation', op
           break
-
-    property = @get 'property'
     
+    scope = @get 'scope'
+    property = @get 'property'
+    @set 'property', scope + '.' + property   
+
+
     if App.LimitedValueList.hasOwnProperty(property)          
       @set 'valueOptions', App.LimitedValueList[property]      
       value1 = @get 'value1'      
@@ -39,7 +42,7 @@ App.Condition = Ember.Object.extend
       @set 'valueOptions', null
 
   observeOperationChange: (->
-    property = @get 'property'    
+    property = @trueProperty()
     if App.LimitedValueList.hasOwnProperty(property)       
       for key of App.LimitedValueList[property]
         @set 'value1', key        
@@ -63,7 +66,7 @@ App.Condition = Ember.Object.extend
 
 
   observesPropertyChange: (->
-    property = @get 'property'    
+    property = @trueProperty()
     if App.LimitedValueList.hasOwnProperty(property)       
       @set 'valueOptions', App.LimitedValueList[property]
       for key of App.LimitedValueList[property]
@@ -78,10 +81,28 @@ App.Condition = Ember.Object.extend
       
   ).observes('property')  
 
-
+  trueProperty: ->
+    property = @get 'property'
+    length = property.length
+    property.substr(2, length-2)
+    
   serialize: ->
+    console.log {
+      
+      
+      property: @trueProperty()
+      type: @get 'type'
+      scope: @get 'scope'
+      negation: @get 'negation'
+      operation: @get 'operation'
+      value1: @get 'value1'
+      value2: @get 'value2'
+      connect: @get 'connect'
+    } 
     {
-      property: @get 'property'
+      
+      
+      property: @trueProperty()
       type: @get 'type'
       scope: @get 'scope'
       negation: @get 'negation'

@@ -1,7 +1,7 @@
 
 
 
-/***********************[[2012-11-14 18:49:36 +0530]]*********************************/ 
+/***********************[[2012-11-15 16:52:56 +0530]]*********************************/ 
 
 
 
@@ -594,11 +594,11 @@ trigger_fish.rbTRules = {
     var appSchema = trigger_fish.rbTAPP.getAppDetail().app.schema;
 
     if (scope === "e") {
-      return appSchema.events.event.ruleProp;
+      return appSchema.events.event[ruleProp];
     } else if (scope === "s") {
-      return appSchema.system.ruleProp;
+      return appSchema.system[ruleProp];
     } else if (scope === "a") {
-      return appSchema.profile.ruleProp;
+      return appSchema.profile[ruleProp];
     }
 
 
@@ -636,7 +636,7 @@ trigger_fish.rbTRules = {
       validProp = 0;
     } 
 
-    if (!validProp) {
+    if (!validProp || !value) {
       trigger_fish.rbTAPP.log({"message":"Not a valid property to evaluate rule on"});
       return false;
     }
@@ -714,24 +714,25 @@ trigger_fish.rbTRules = {
     else if (propDT !== ruleJson.type)
       return false;
     */
+    //var v1DT = this.getDataType(ruleJson.event,ruleJson.value1, ruleJson.scope);
 
-    var v1DT = this.getDataType(ruleJson.event,ruleJson.v1, ruleJson.scope);
-    if (ruleJson.v2)
-      var v2DT = this.getDataType(ruleJson.event,ruleJson.v2, ruleJson.scope);
+    var v1DT = Object.prototype.toString.call(ruleJson.value1).split("]")[0].split(" ")[1];
+    if (ruleJson.value2)
+      var v2DT = Object.prototype.toString.call(ruleJson.value2).split("]")[0].split(" ")[1];
 
     var v2DT = v2DT || v1DT;
 
-    if (!this.permissions[propDT] || this.permissions[propDT].indexOf(t) < 0)
+    if (!this.permissions[propDT] || this.permissions[propDT].indexOf(ruleJson.operation) < 0)
       return false;
     
     if (propDT === "String" && (v1DT!==propDT || v2DT!==propDT)) {
       return false;
-    } else if (propDT === "Number" && (parseFloat(ruleJson.v1) === "NaN" || (ruleJson.v2 && parseFloat(ruleJson.v2) === "NaN"))) {
+    } else if (propDT === "Number" && (parseFloat(ruleJson.value1) === "NaN" || (ruleJson.value2 && parseFloat(ruleJson.value2) === "NaN"))) {
       return false;
     } else if (propDT === "Date") {
-      var v1Date = new Date(ruleJson.v2);
-      if (ruleJson.v2)
-        var v2Date = new Date(ruleJson.v2);
+      var v1Date = new Date(ruleJson.value2);
+      if (ruleJson.value2)
+        var v2Date = new Date(ruleJson.value2);
       v2Date = v2Date || v1Date;
       if (v1Date.toString() === "Invalid Date" || v2Date.toString() === "Invalid Date")
         return false;
@@ -763,10 +764,10 @@ trigger_fish.rbTRules = {
       if (!trigger_fish.rbTRules.isValidRule(ruleJson))
           return false;
       var res = false;
-      var propDT = this.getDataType(ruleJson.event, ruleJson.prop, ruleJson.scope);
+      var propDT = this.getDataType(ruleJson.event, ruleJson.property, ruleJson.scope);
       var p = trigger_fish.rbTRules.evalProperty(ruleJson),
-          a = trigger_fish.rbTRules.valueDataType(prop, v1, propDT),
-          b = trigger_fish.rbTRules.valueDataType(prop, v2, propDT);
+          a = trigger_fish.rbTRules.valueDataType(ruleJson.property, ruleJson.value1, propDT),
+          b = trigger_fish.rbTRules.valueDataType(ruleJson.property, ruleJson.value2, propDT);
       switch(op) {
       case "ltn":
           res = this.rule.ltn(p,a);
@@ -802,10 +803,10 @@ trigger_fish.rbTRules = {
           res = this.rule.set(p,a);
           break;
       }
-      return (neg === "true") ? !res : res;
+      return (ruleJson.negation === "true") ? !res : res;
     } catch (e) {
       trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                                       "message"   :"rule evaluation on"+ ruleJson.op +" failed" , 
+                                       "message"   :"rule evaluation on"+ ruleJson.operation +" failed" , 
                                        "rule"      : ruleJson,
                                       });
     }
@@ -1210,8 +1211,8 @@ trigger_fish.rbTServerResponse = {
         },
     ];
     
-    trigger_fish.rbTRules.setRulesTable(sample_rule_json);
-    //trigger_fish.rbTRules.setRulesTable(respData.app.rules || {});
+    //trigger_fish.rbTRules.setRulesTable(sample_rule_json);
+    trigger_fish.rbTRules.setRulesTable(respData.app.rules || {});
     trigger_fish.rbTSystemVar.init(respData);
 
     trigger_fish.rbTAPP.configs.status = true;
@@ -2672,8 +2673,8 @@ testGanga();
 /****************************[[include.js]]*************************************/ 
 
 
-if (!trigger_fish)
-	var trigger_fish = {};
+if(!trigger_fish)
+var trigger_fish = {};
 
 trigger_fish.rbT = { inited: false};
 
@@ -2874,7 +2875,7 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 	 'rb.t.vsg.leftText':'Hello Hello',
 	 	 	 	 	 	 'rb.t.sg.twitterSharetext':'Twteet please',
 	 	 	 	 	 	 'rb.t.vsg.rightText':'Hello Hello',
-	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'10'
+	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'300'
 	 	 	 	 	 }
  	 	 	 	 }; 
  
@@ -2963,6 +2964,13 @@ trigger_fish.rbT.rbTemplUservoiceGenericNormalHTML='<!-- --><!-- --><div id="rbU
 
 "use strict";
 
+// Templ Sys , Actor and Event Varibales
+
+trigger_fish.rbT.currentSystemVar = {};
+trigger_fish.rbT.currentActorVar = {};
+trigger_fish.rbT.currentEventVar = {};
+
+
 //templ related timers
 
 trigger_fish.rbT.templTimers= {
@@ -3050,6 +3058,109 @@ trigger_fish.rbT.extractDisplayPositionFromTemplName = function(templName){
     return tempMatch;
 
 };
+
+
+//**********************************************************************************
+
+// fill the run time variable in in templ args from sys,actor and event varibale
+
+trigger_fish.rbT.fillTheRuntimeValueForTemplArgs = function(tempMatch,actionparmaskey)
+{
+
+      try{
+             
+
+// if e. event hash
+// if s. system hash
+// if a. actor variable
+
+                           // fetch system variable here 
+                           // fetch actor variable here
+                           // fetch event variable here
+                             
+                           for(var i=0 ; i<tempMatch.length ; i++)
+                           {
+
+                              var objNested = {};
+                               
+                               
+                               var tempMatchForscope = ""
+
+                               tempMatch[i]=tempMatch[i].replace("{{","");
+                               tempMatch[i]=tempMatch[i].replace("}}","");
+
+
+                               tempMatchForscope = tempMatch[i].match(/[\w]*/g);
+
+                               if(tempMatchForscope[0])
+                               
+                               {
+                                   var k =0;
+
+                                
+
+                                    if(tempMatchForscope[0] == "s")
+                                    {
+                                       objNested = trigger_fish.rbT.currentSystemVar; 
+   
+                                       for(k=2;k<=tempMatchForscope.length-2;k++)
+                                       {
+                                         if(k%2 === 0)
+                                          {
+                                             var objNested = objNested[tempMatchForscope[k]] 
+
+                                          } 
+                                       }
+                                   }
+
+                                  else if(tempMatchForscope[0] == "e")
+                                    {
+                                       objNested =trigger_fish.rbT.currentEventVar; 
+   
+                                       for(k=2;k<=tempMatchForscope.length-2;k++)
+                                       {
+                                         if(k%2 === 0)
+                                          {
+                                             var objNested = objNested[tempMatchForscope[k]] 
+
+                                          } 
+                                       }
+                                   }
+
+                                  else if(tempMatchForscope[0] == "a")
+                                    {
+                                       objNested =trigger_fish.rbT.currentActorVar ; 
+   
+                                       for(k=2;k<=tempMatchForscope.length-2;k++)
+                                       {
+                                         if(k%2 === 0)
+                                          {
+                                             var objNested = objNested[tempMatchForscope[k]] 
+
+                                          } 
+                                       }
+                                   }
+
+                                 
+                          }  
+
+                               tempMatch[i] = '{{'+ tempMatch[i] + '}}';
+
+                               actionparmaskey = actionparmaskey.replace(tempMatch[i],objNested);
+
+                               return actionparmaskey;
+
+
+                         }         
+              
+         }catch(e){
+
+                trigger_fish.rbT.sendErrorToRBServer(e.message);
+
+         }
+
+};
+
 
 //******************************************************************
 //check for the if templ position is occupied
@@ -3412,9 +3523,6 @@ trigger_fish.rbT.init = function(){
 };
 
 
-trigger_fish.rbT.currentSystemVar = {};
-trigger_fish.rbT.currentActorVar = {};
-trigger_fish.rbT.currentEventVar = {};
 
 
 
@@ -3486,7 +3594,6 @@ trigger_fish.rbT.applyHtmltoPageInternal = function(html){
 
 
 	 jQuery('body').append(html);
-	 console.log(html);
 
 	// document.body.innerHTML = document.body.innerHTML+html;
 
@@ -3535,43 +3642,29 @@ trigger_fish.rbT.invokeActionScriptInternal=function(action,actionParams){
       {
           var html = trigger_fish.rbT.getTemplateHTMLByName(templateName);
           
-          
-          
-          /*
-                for (var key in actionParams)
-                {
-	               if(actionParams.hasOwnProperty(key))
-	               {
-	                   var keyVal = key;
+              for (var key in actionParams)
+                 {
+                  if(actionParams.hasOwnProperty(key))
+                  {
+                     var keyVal = key;
                        var value = actionParams[key];
                        var tempMatch = ""
                        var tempMatch = value.match(/\{\{[\w.\=\%\:\/\s\#\@\-\']*\}\}/g);
                       
-                       if(tempMatch[0])
+                       if(tempMatch)
                        {
-                           // fetch system variable
-                           // fetch actor variable
-                           // fetch event variable
-                             
-                       	   for(var i=0 ; i<tempMatch.length ; i++)
-                       	   {
-                       	       var textRuntimeValue = //get the value from lower layer code 
-	                      
-	                           actionParams[key].replace(tempMatch[i],textRuntimeValue);
-	                       }         
+                       	  var tempActionKeyRetVal =""
+                       	  tempActionKeyRetVal=trigger_fish.rbT.fillTheRuntimeValueForTemplArgs(tempMatch,actionParams[key]);
+                          
+
+                          if(tempActionKeyRetVal != undefined)
+                          {	
+                             actionParams[key] = tempActionKeyRetVal;
+                          }   
                        }
+                   }
 
-
-
-
-	               } 
-
-                }  
-                         
-
-          */
-
-
+                 }      
 
           
           if(pos =='modal')

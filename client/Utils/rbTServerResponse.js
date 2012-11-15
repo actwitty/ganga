@@ -240,8 +240,8 @@ trigger_fish.rbTServerResponse = {
         },
     ];
     
-    trigger_fish.rbTRules.setRulesTable(sample_rule_json);
-    //trigger_fish.rbTRules.setRulesTable(respData.app.rules || {});
+    //trigger_fish.rbTRules.setRulesTable(sample_rule_json);
+    trigger_fish.rbTRules.setRulesTable(respData.app.rules || {});
     trigger_fish.rbTSystemVar.init(respData);
 
     trigger_fish.rbTAPP.configs.status = true;

@@ -105,8 +105,10 @@ App.RulesController = Em.ArrayController.extend
       prop = 
             'show': @translatePropertyName(k)
             'actual': k
+            'key' : 's.' + k
             'type': v
             'scope': 's'
+            
       props[k] = prop
     @set 'systemSchema', props
 
@@ -116,14 +118,16 @@ App.RulesController = Em.ArrayController.extend
     if project isnt null
       schema = project.get('schema')     
       props = {}
-      if "actor" of project.schema
-        actor_p = project.schema.actor
-        for k,v of actor_p      
+      if project.schema.hasOwnProperty 'profile'
+        profile_p = project.schema.profile          
+        for k,v of profile_p      
           prop = 
                  'show': k       
                  'actual': k
+                 'key' : 'a.' + k
                  'type': v
                  'scope': 'a'
+                 
           props[k] = prop
       @set 'actorSchema', props
 
@@ -146,8 +150,10 @@ App.RulesController = Em.ArrayController.extend
         prop = 
                'show': @translatePropertyName(k)
                'actual': k
+               'key' : 'e.' + k
                'type': v
                'scope': 'e'
+               'scope_name': 'event'
         props[k] = prop
 
     @set 'eventSchema', props    

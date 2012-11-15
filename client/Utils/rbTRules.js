@@ -206,11 +206,11 @@ trigger_fish.rbTRules = {
     var appSchema = trigger_fish.rbTAPP.getAppDetail().app.schema;
 
     if (scope === "e") {
-      return appSchema.events.event.ruleProp;
+      return appSchema.events.event[ruleProp];
     } else if (scope === "s") {
-      return appSchema.system.ruleProp;
+      return appSchema.system[ruleProp];
     } else if (scope === "a") {
-      return appSchema.profile.ruleProp;
+      return appSchema.profile[ruleProp];
     }
 
 
@@ -248,7 +248,7 @@ trigger_fish.rbTRules = {
       validProp = 0;
     } 
 
-    if (!validProp) {
+    if (!validProp || !value) {
       trigger_fish.rbTAPP.log({"message":"Not a valid property to evaluate rule on"});
       return false;
     }
@@ -326,24 +326,25 @@ trigger_fish.rbTRules = {
     else if (propDT !== ruleJson.type)
       return false;
     */
+    //var v1DT = this.getDataType(ruleJson.event,ruleJson.value1, ruleJson.scope);
 
-    var v1DT = this.getDataType(ruleJson.event,ruleJson.v1, ruleJson.scope);
-    if (ruleJson.v2)
-      var v2DT = this.getDataType(ruleJson.event,ruleJson.v2, ruleJson.scope);
+    var v1DT = Object.prototype.toString.call(ruleJson.value1).split("]")[0].split(" ")[1];
+    if (ruleJson.value2)
+      var v2DT = Object.prototype.toString.call(ruleJson.value2).split("]")[0].split(" ")[1];
 
     var v2DT = v2DT || v1DT;
 
-    if (!this.permissions[propDT] || this.permissions[propDT].indexOf(t) < 0)
+    if (!this.permissions[propDT] || this.permissions[propDT].indexOf(ruleJson.operation) < 0)
       return false;
     
     if (propDT === "String" && (v1DT!==propDT || v2DT!==propDT)) {
       return false;
-    } else if (propDT === "Number" && (parseFloat(ruleJson.v1) === "NaN" || (ruleJson.v2 && parseFloat(ruleJson.v2) === "NaN"))) {
+    } else if (propDT === "Number" && (parseFloat(ruleJson.value1) === "NaN" || (ruleJson.value2 && parseFloat(ruleJson.value2) === "NaN"))) {
       return false;
     } else if (propDT === "Date") {
-      var v1Date = new Date(ruleJson.v2);
-      if (ruleJson.v2)
-        var v2Date = new Date(ruleJson.v2);
+      var v1Date = new Date(ruleJson.value2);
+      if (ruleJson.value2)
+        var v2Date = new Date(ruleJson.value2);
       v2Date = v2Date || v1Date;
       if (v1Date.toString() === "Invalid Date" || v2Date.toString() === "Invalid Date")
         return false;
@@ -375,10 +376,10 @@ trigger_fish.rbTRules = {
       if (!trigger_fish.rbTRules.isValidRule(ruleJson))
           return false;
       var res = false;
-      var propDT = this.getDataType(ruleJson.event, ruleJson.prop, ruleJson.scope);
+      var propDT = this.getDataType(ruleJson.event, ruleJson.property, ruleJson.scope);
       var p = trigger_fish.rbTRules.evalProperty(ruleJson),
-          a = trigger_fish.rbTRules.valueDataType(prop, v1, propDT),
-          b = trigger_fish.rbTRules.valueDataType(prop, v2, propDT);
+          a = trigger_fish.rbTRules.valueDataType(ruleJson.property, ruleJson.value1, propDT),
+          b = trigger_fish.rbTRules.valueDataType(ruleJson.property, ruleJson.value2, propDT);
       switch(op) {
       case "ltn":
           res = this.rule.ltn(p,a);
@@ -414,10 +415,10 @@ trigger_fish.rbTRules = {
           res = this.rule.set(p,a);
           break;
       }
-      return (neg === "true") ? !res : res;
+      return (ruleJson.negation === "true") ? !res : res;
     } catch (e) {
       trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                                       "message"   :"rule evaluation on"+ ruleJson.op +" failed" , 
+                                       "message"   :"rule evaluation on"+ ruleJson.operation +" failed" , 
                                        "rule"      : ruleJson,
                                       });
     }
