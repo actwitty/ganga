@@ -27,6 +27,9 @@
 //= require fancybox
 //= require_self
 //= require ember_app
+//= require highlight_js/highlight
+//= require highlight_js/languages/javascript
+
 
 
 App = Ember.Application.create( {

@@ -1,5 +1,12 @@
 "use strict";
 
+// Templ Sys , Actor and Event Varibales
+
+trigger_fish.rbT.currentSystemVar = {};
+trigger_fish.rbT.currentActorVar = {};
+trigger_fish.rbT.currentEventVar = {};
+
+
 //templ related timers
 
 trigger_fish.rbT.templTimers= {
@@ -87,6 +94,109 @@ trigger_fish.rbT.extractDisplayPositionFromTemplName = function(templName){
     return tempMatch;
 
 };
+
+
+//**********************************************************************************
+
+// fill the run time variable in in templ args from sys,actor and event varibale
+
+trigger_fish.rbT.fillTheRuntimeValueForTemplArgs = function(tempMatch,actionparmaskey)
+{
+
+      try{
+             
+
+// if e. event hash
+// if s. system hash
+// if a. actor variable
+
+                           // fetch system variable here 
+                           // fetch actor variable here
+                           // fetch event variable here
+                             
+                           for(var i=0 ; i<tempMatch.length ; i++)
+                           {
+
+                              var objNested = {};
+                               
+                               
+                               var tempMatchForscope = ""
+
+                               tempMatch[i]=tempMatch[i].replace("{{","");
+                               tempMatch[i]=tempMatch[i].replace("}}","");
+
+
+                               tempMatchForscope = tempMatch[i].match(/[\w]*/g);
+
+                               if(tempMatchForscope[0])
+                               
+                               {
+                                   var k =0;
+
+                                
+
+                                    if(tempMatchForscope[0] == "s")
+                                    {
+                                       objNested = trigger_fish.rbT.currentSystemVar; 
+   
+                                       for(k=2;k<=tempMatchForscope.length-2;k++)
+                                       {
+                                         if(k%2 === 0)
+                                          {
+                                             var objNested = objNested[tempMatchForscope[k]] 
+
+                                          } 
+                                       }
+                                   }
+
+                                  else if(tempMatchForscope[0] == "e")
+                                    {
+                                       objNested =trigger_fish.rbT.currentEventVar; 
+   
+                                       for(k=2;k<=tempMatchForscope.length-2;k++)
+                                       {
+                                         if(k%2 === 0)
+                                          {
+                                             var objNested = objNested[tempMatchForscope[k]] 
+
+                                          } 
+                                       }
+                                   }
+
+                                  else if(tempMatchForscope[0] == "a")
+                                    {
+                                       objNested =trigger_fish.rbT.currentActorVar ; 
+   
+                                       for(k=2;k<=tempMatchForscope.length-2;k++)
+                                       {
+                                         if(k%2 === 0)
+                                          {
+                                             var objNested = objNested[tempMatchForscope[k]] 
+
+                                          } 
+                                       }
+                                   }
+
+                                 
+                          }  
+
+                               tempMatch[i] = '{{'+ tempMatch[i] + '}}';
+
+                               actionparmaskey = actionparmaskey.replace(tempMatch[i],objNested);
+
+                               return actionparmaskey;
+
+
+                         }         
+              
+         }catch(e){
+
+                trigger_fish.rbT.sendErrorToRBServer(e.message);
+
+         }
+
+};
+
 
 //******************************************************************
 //check for the if templ position is occupied
@@ -179,6 +289,9 @@ trigger_fish.rbT.sendErrorToRBServer = function(string){
 */
 
   //TODO: Implement post to server // for console log=true
+
+  /* trigger_fish.rbTAPP.log({"message": "Handling event with server resp","data":respData});
+ */
   console.log(string);
 };
 

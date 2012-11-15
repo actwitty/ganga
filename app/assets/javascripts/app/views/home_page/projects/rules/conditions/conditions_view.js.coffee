@@ -54,7 +54,7 @@ App.ConditionsView = Ember.View.extend
     target = $(event.target)    
     val = target.find('option:selected').val()
     rule.set 'action', val
-    rule.loadParam(rbT.templateArgs[val])
+    rule.loadParam(trigger_fish.rbT.templateArgs[val])
     event.preventDefault()
 
 
@@ -196,7 +196,7 @@ App.ConditionsView = Ember.View.extend
   # -----------------------------------------------------
   showTemplatePreview: (event) ->   
     rule = event.context    
-    rbT.invokeActionScript(rule.get('action'), rule.serializeParams())
+    trigger_fish.rbT.invokeActionScript(rule.get('action'), rule.serializeParams())
     event.preventDefault()
   # -----------------------------------------------------
   manageDeckerMinimize: (event) ->    

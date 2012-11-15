@@ -165,7 +165,10 @@ m = strfinalforJsWoNewLineforArgs.scan(regforMainKey)
       if tempVal[0]
          defaults = tempVal[0]
          
-         defaults = defaults[2..-3]
+         defaults = defaults[3..-3]
+
+         defaults = defaults.delete("%")
+
        
          defaults = defaults.gsub(regForSingleQuote, "\\\\\'") 
 

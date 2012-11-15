@@ -36,7 +36,7 @@ trigger_fish.rbTServerResponse = {
         // FIXME :: Flush and reset all cookies if there is a change in actor.
         // WAITING AS THERE ARE SOME CHANGES IN BACKEND.
         var oldActorId = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID);
-        if (!oldActorId || oldActorId !== respData.actor_id) {
+        if (!oldActorId || (oldActorId !== respData.actor_id)) {
           trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.actorID, JSON.stringify(respData.actor_id));
           trigger_fish.rbTActor.setID(respData.actor_id);
           trigger_fish.rbTServerChannel.makeRequest({"url"           : trigger_fish.rbTServerChannel.url.readActor, 
@@ -171,6 +171,43 @@ trigger_fish.rbTServerResponse = {
           event : "sample_event",
           action: "topbar.generic.normal",
           action_param :
+                  {
+                    'rb.t.cr.textColor ':'#333',
+                    'rb.t.nr.textFontsize':'15',
+                    'rb.t.ft.textFontfamily':'Arial',
+                    'rb.t.sg.textFontWeight':'bold',
+                    'rb.f.nr.baseZindex':'100',
+                    'rb.t.nr.baseWidth':'100',
+                    'rb.t.nr.baseHeight':'40',
+                    'rb.t.cr.baseBgColor':'#DCDCDC',
+                    'rb.t.an.baseTextalign':'center',
+                    'rb.t.sg.textLeft':'Hello Hello Hello Hello',
+                    'rb.t.nr.btnFontSize':'14',
+                    'rb.t.cr.btnBgColor':'#548AC7',
+                    'rb.t.cr.btnColor':'white',
+                    'rb.t.ul.btnLink':'http://www.google.com',
+                    'rb.t.sg.btnLable':'Click',
+                    'rb.t.sg.textRight':'Hello Hello',
+                    'rb.t.nr.durationOfDisplay':'100'
+                  },
+          conditions : [
+                // event based condition
+                { 
+                  property: "customer[email]",
+                  type : "String",
+                  negation: 'false',
+                  operation: 'eql',
+                  value1: 'gmail.com',
+                  scope: "a",
+                },
+              ]
+        },
+        {
+          id: '1010101010',
+          name  : "sample_name", 
+          event : "sample_event",
+          action: "topbar.generic.normal",
+          action_param :
                   [
                      {key:'rb.t.cr.textColor ',value:'#333'},
                      {key:'rb.t.nr.textFontsize',value:'15'},
@@ -192,152 +229,19 @@ trigger_fish.rbTServerResponse = {
           conditions : [
                 // event based condition
                 { 
-                  property: "customer[email]",
+                  property: "customer[name]",
                   type : "String",
                   negation: 'false',
                   operation: 'eql',
-                  value1: 'gmail.com',
-                  scope: "a",
-                  connect: 'and' 
-                },
-                
-                // negate condition
-                { 
-                  property: "customer[name]",
-                  type : "String",
-                  negation: 'true',
-                  operation: 'swh',
-                  value1: 'a',
-                  scope: "a",
-                  connect: 'and' 
-                },
-                // actor_property based condition
-                {
-                  property: "customer[val1]",
-                  type : "Number",
-                  negation: 'false',
-                  operation: 'gtn',
-                  value1: 2,
-                  scope: "a",
-                  connect: 'and' 
-                },
-                // system_property based condition
-                {
-                  property: "customer[val2]",
-                  type : "Number",
-                  negation: 'false',
-                  operation: 'ltn',
-                  value1: 3000,
-                  scope: "a",
-                  connect: 'and' 
-                },
-                // starts with
-                {
-                  property: "customer[swh]",
-                  type : "String",
-                  negation: 'false',
-                  operation: 'swh',
-                  value1: 'act',
-                  scope: "a",
-                  connect: 'and' 
-                },
-                // ends with
-                {
-                  property: "customer[ewh]",
-                  type : "String",
-                  negation: 'false',
-                  operation: 'ewh',
-                  value1: 'tty',
-                  scope: "a",
-                  connect: 'and' 
-                },
-                // contains
-                {
-                  property: "customer[cns]",
-                  type : "String",
-                  negation: 'false',
-                  operation: 'cns',
-                  value1: 'wit',
-                  scope: "a",
-                  connect: 'and' 
-                },
-                // date range
-                {
-                  property: "customer[drg]",
-                  type : "Date",
-                  negation: 'false',
-                  operation: 'drg',
-                  value1: "2/2/2011",
-                  value2: "4/4/2011",
-                  scope: "a",
-                  connect: 'and'
-                },
-                // days ago
-                {
-                  property: "customer[dag]",
-                  type : "Date",
-                  negation: 'false',
-                  operation: 'dag',
-                  value1: "4",
-                  scope: "a",
-                  connect: 'and'
-                },
-                // regex
-                {
-                  property: "customer[rgx]",
-                  type : "String",
-                  negation: 'false',
-                  operation: 'rgx',
-                  value1: 'sam',
-                  scope: "a",
-                  connect: 'and' 
-                },
-                // set
-                {
-                  property: "customer[set]",
-                  type : "String",
-                  negation: 'false',
-                  scope: "a",
-                  operation: 'set',
-                  connect: 'and'
-                },
-
-                // cns in systems
-                {
-                  property: "country",            
-                  type: "String",                         
-                  negation: "false",
-                  operation: "cns",
-                  value1: 'IN',
-                  scope: "s",
-                  connect: 'and'
-                },
-
-                // eql in systems
-                {
-                  property: "device[name]",             
-                  type: "String",                        
-                  negation: "false",
-                  operation: "eql",
-                  value1: 'Chrome',
-                  scope: "s",
-                  connect: 'and'
-                },
-                // eql in event transient var
-                {
-                  property: "name",             
-                  type: "String",                        
-                  negation: "false",
-                  operation: "eql",
                   value1: 'samarth',
-                  scope: "e",
+                  scope: "a",
                 },
-                
               ]
         },
     ];
     
     trigger_fish.rbTRules.setRulesTable(sample_rule_json);
+    //trigger_fish.rbTRules.setRulesTable(respData.app.rules || {});
     trigger_fish.rbTSystemVar.init(respData);
 
     trigger_fish.rbTAPP.configs.status = true;

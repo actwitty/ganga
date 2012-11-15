@@ -3,7 +3,7 @@ App.ProjectsView = Ember.View.extend
 
   init: ->
     @_super()
-    content =  @get 'controller.content'
+    content =  App.get 'router.projectsController.content'
     msgContext = {}    
     if content isnt null and content.get('length') isnt 0
       #HELP DOC LINK

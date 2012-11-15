@@ -42,9 +42,9 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 	 'rb.t.nr.baseHeight':'40',
 	 	 	 	 	 	 'rb.t.cr.baseBgColor':'#3C5891',
 	 	 	 	 	 	 'rb.t.an.baseTextalign':'center',
-	 	 	 	 	 	 'rb.t.sg.textLeft':'Hello Hello',
+	 	 	 	 	 	 'rb.t.vsg.textLeft':'Hello Hello',
 	 	 	 	 	 	 'rb.t.ul.facebookPage':'http://www.google.com',
-	 	 	 	 	 	 'rb.t.sg.textRight':'Hello Hello',
+	 	 	 	 	 	 'rb.t.vsg.textRight':'Hello Hello',
 	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'300'
 	 	 	 	 	 },
 	 	  'topbar.generic.normal':{
@@ -53,17 +53,17 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 	 'rb.t.ft.textFontfamily':'Arial',
 	 	 	 	 	 	 'rb.t.sg.textFontWeight':'bold',
 	 	 	 	 	 	 'rb.f.nr.baseZindex':'100',
-	 	 	 	 	 	 'rb.t.nr.baseWidth':'00',
+	 	 	 	 	 	 'rb.t.nr.baseWidth':'100',
 	 	 	 	 	 	 'rb.t.nr.baseHeight':'40',
 	 	 	 	 	 	 'rb.t.cr.baseBgColor':'#DCDCDC',
 	 	 	 	 	 	 'rb.t.an.baseTextalign':'center',
-	 	 	 	 	 	 'rb.t.sg.textLeft':'Hello',
+	 	 	 	 	 	 'rb.t.vsg.textLeft':'Hello',
 	 	 	 	 	 	 'rb.t.nr.btnFontSize':'14',
 	 	 	 	 	 	 'rb.t.cr.btnBgColor':'#548AC7',
 	 	 	 	 	 	 'rb.t.cr.btnColor':'white',
 	 	 	 	 	 	 'rb.t.ul.btnLink':'http://www.google.com',
 	 	 	 	 	 	 'rb.t.sg.btnLable':'Click',
-	 	 	 	 	 	 'rb.t.sg.textRight':'Hello Hello',
+	 	 	 	 	 	 'rb.t.vsg.textRight':'Hello',
 	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'300'
 	 	 	 	 	 },
 	 	  'chat.generic.normal':{
@@ -81,10 +81,10 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 	 'rb.t.nr.baseHeight':'50',
 	 	 	 	 	 	 'rb.t.cr.baeBgColor':'#0B8AB8',
 	 	 	 	 	 	 'rb.t.an.baseTextalign':'center',
-	 	 	 	 	 	 'rb.t.sg.textLeft':'Hello Hello',
+	 	 	 	 	 	 'rb.t.vsg.textLeft':'Hello Hello',
 	 	 	 	 	 	 'rb.t.sg.twitterAccountLink':'@actwitty',
 	 	 	 	 	 	 'rb.t.sg.twitterAccountLable':'@actwitty',
-	 	 	 	 	 	 'rb.t.sg.textRight':'Hello Hello',
+	 	 	 	 	 	 'rb.t.vsg.textRight':'Hello Hello',
 	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'300'
 	 	 	 	 	 },
 	 	  'bottombar.generic.twitterfollow':{
@@ -98,10 +98,10 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 	 'rb.t.nr.baseHeight':'50',
 	 	 	 	 	 	 'rb.t.cr.baeBgColor':'#0B8AB8',
 	 	 	 	 	 	 'rb.t.an.baseTextalign':'center',
-	 	 	 	 	 	 'rb.t.sg.textLeft':'Hello Hello',
+	 	 	 	 	 	 'rb.t.vsg.textLeft':'Hello Hello',
 	 	 	 	 	 	 'rb.t.sg.twitterAccountLink':'@actwitty',
 	 	 	 	 	 	 'rb.t.sg.twitterAccountLable':'@actwitty',
-	 	 	 	 	 	 'rb.t.sg.textRight':'Hello Hello',
+	 	 	 	 	 	 'rb.t.vsg.textRight':'Hello Hello',
 	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'300'
 	 	 	 	 	 },
 	 	  'topbar.generic.fblike':{
@@ -114,9 +114,9 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 	 'rb.t.nr.baseHeight':'40',
 	 	 	 	 	 	 'rb.t.cr.baseBgColor':'#3C5891',
 	 	 	 	 	 	 'rb.t.an.baseTextalign':'center',
-	 	 	 	 	 	 'rb.t.sg.textLeft':'Hello Hello',
+	 	 	 	 	 	 'rb.t.vsg.textLeft':'Hello Hello',
 	 	 	 	 	 	 'rb.t.ul.facebookPage':'http://www.google.com',
-	 	 	 	 	 	 'rb.t.sg.textRight':'Hello Hello',
+	 	 	 	 	 	 'rb.t.vsg.textRight':'Hello Hello',
 	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'300'
 	 	 	 	 	 },
 	 	  'uservoice.generic.normal':{
@@ -133,9 +133,9 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 	 'rb.t.nr.baseHeight':'50',
 	 	 	 	 	 	 'rb.t.cr.baeBgColor':'#0B8AB8',
 	 	 	 	 	 	 'rb.t.an.baseTextalign':'center',
-	 	 	 	 	 	 'rb.t.sg.leftText':'Hello Hello',
+	 	 	 	 	 	 'rb.t.vsg.leftText':'Hello Hello',
 	 	 	 	 	 	 'rb.t.sg.twitterSharetext':'Twteet please',
-	 	 	 	 	 	 'rb.t.sg.rightText':'Hello Hello',
+	 	 	 	 	 	 'rb.t.vsg.rightText':'Hello Hello',
 	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'300'
 	 	 	 	 	 },
 	 	  'modal.generic.normal':{
@@ -147,11 +147,11 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 	 'rb.t.nr.modalHeadingFontsize':'20',
 	 	 	 	 	 	 'rb.t.ft.headingFontfamily':'Arial',
 	 	 	 	 	 	 'rb.t.cr.modalHeadingTextShadow':'#6e6e6e',
-	 	 	 	 	 	 'rb.t.sg.modalHeadingText':'This is the Heading ',
+	 	 	 	 	 	 'rb.t.vsg.modalHeadingText':'This is the Heading ',
 	 	 	 	 	 	 'rb.t.cr.modalTextColor':'#525252',
 	 	 	 	 	 	 'rb.t.nr.modalTextFontsize':'12',
 	 	 	 	 	 	 'rb.t.ft.textFontfamily':'Arial',
-	 	 	 	 	 	 'rb.t.sg.modalText':'Hello Hello Hello Hello Hello hello heello bjashsdgfsdhvfhsdvcfhsdvhcsd hvhvchjsdvchjsdvchjvsdchvsdhvcjhsdvjvh ',
+	 	 	 	 	 	 'rb.t.vsg.modalText':'Hello Hello Hello Hello Hello hello heello bjashsdgfsdhvfhsdvcfhsdvhcsd hvhvchjsdvchjsdvchjvsdchvsdhvcjhsdvjvh ',
 	 	 	 	 	 	 'rb.t.sg.modalImgPath':'../../../images/rails.png',
 	 	 	 	 	 	 'rb.t.cr.buttonBgColor':'#3B5998',
 	 	 	 	 	 	 'rb.t.ul.modalBtnLink':'http://www.google.com',
@@ -168,13 +168,13 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 	 'rb.t.nr.baseHeight':'40',
 	 	 	 	 	 	 'rb.t.cr.baseBgColor':'#DCDCDC',
 	 	 	 	 	 	 'rb.t.an.baseTextalign':'center',
-	 	 	 	 	 	 'rb.t.sg.textLeft':'Hello Hello',
+	 	 	 	 	 	 'rb.t.vsg.textLeft':'Hello Hello',
 	 	 	 	 	 	 'rb.t.nr.btnFontSize':'14',
 	 	 	 	 	 	 'rb.t.cr.btnBgColor':'#548AC7',
 	 	 	 	 	 	 'rb.t.cr.btnColor':'white',
 	 	 	 	 	 	 'rb.t.ul.btnLink':'http://www.google.com',
 	 	 	 	 	 	 'rb.t.sg.btnLable':'Click',
-	 	 	 	 	 	 'rb.t.sg.textRight':'Hello Hello',
+	 	 	 	 	 	 'rb.t.vsg.textRight':'Hello Hello',
 	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'300'
 	 	 	 	 	 },
 	 	  'topbar.generic.twittershare':{
@@ -188,9 +188,9 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 	 'rb.t.nr.baseHeight':'50',
 	 	 	 	 	 	 'rb.t.cr.baeBgColor':'#0B8AB8',
 	 	 	 	 	 	 'rb.t.an.baseTextalign':'center',
-	 	 	 	 	 	 'rb.t.sg.leftText':'Hello',
-	 	 	 	 	 	 'rb.t.sg.twitterSharetext':'Tweet Please',
-	 	 	 	 	 	 'rb.t.sg.rightText':'Hello Hello',
+	 	 	 	 	 	 'rb.t.vsg.leftText':'Hello Hello',
+	 	 	 	 	 	 'rb.t.sg.twitterSharetext':'Twteet please',
+	 	 	 	 	 	 'rb.t.vsg.rightText':'Hello Hello',
 	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'300'
 	 	 	 	 	 }
  	 	 	 	 }; 

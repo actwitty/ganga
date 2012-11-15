@@ -1,6 +1,5 @@
 App.RulesController = Em.ArrayController.extend
-
-  content: []
+  
   selected: null
   events: []
   systemSchema: null
@@ -13,7 +12,7 @@ App.RulesController = Em.ArrayController.extend
       create : "rule/create"
       update : "rule/update"
       delete : "rule/delete"
-      set_sys: "/actor/set"
+      setSystem: "/actor/set"
   
 
   #########################################################  
@@ -22,7 +21,7 @@ App.RulesController = Em.ArrayController.extend
 
     #Initialize templates library only once
     templateLib = []
-    templates = rbT.templateLib
+    templates = trigger_fish.rbT.templateLib
 
     for k,v of templates
       template = {}
@@ -204,7 +203,9 @@ App.RulesController = Em.ArrayController.extend
       @loadActorSchema()
       @loadEvents()
       @loadRules()
-  ).observes('App.router.projectsController.selected')
+  ).observes('App.router.projectsController.selected.hasManyRules')
+
+
   #########################################################
   # Create a Rule
   createRule: (proj_id, ruleNew)->
@@ -212,6 +213,7 @@ App.RulesController = Em.ArrayController.extend
     success= (data) ->
       if data.hasOwnProperty('rule_id')
         ruleNew.set 'id', data.rule_id
+        console.log controllerObj.get('content')
         controllerObj.get('content').pushObject(ruleNew)
       App.get("router").send("reenterProjectRules")
     error= () ->
@@ -250,13 +252,12 @@ App.RulesController = Em.ArrayController.extend
         
         system_param[property] = defaultVal
 
-    if sys is true      
-      json['type'] = 'system'
+    if sys is true            
       json['app_id'] = App.get('router.projectsController.selected.id')
-      json['actor_id'] = App.get('router.projectsController.selected.description.super_actor_id')
+      json['id'] = App.get('router.projectsController.selected.description.super_actor_id')
       json['properties'] = {system : system_param}
       
-      url = @get 'url.set_sys'
+      url = @get 'url.setSystem'
       success= (data) ->
       error= (data) ->    
       App.getRequest url, json, success, error
@@ -273,8 +274,8 @@ App.RulesController = Em.ArrayController.extend
     json = 
             app_id : proj_id
             rule : ruleNew.serialize()
-            rule_id : rule_data.id
-    rule_data.id = null
+            rule_id : ruleNew.get('id')
+    
 
     App.getRequest  url, json, success, error
     @updateSystemVariables ruleNew

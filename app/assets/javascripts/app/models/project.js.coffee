@@ -16,7 +16,7 @@ App.Project = Ember.Object.extend
   init: ->
     @_super  
     
-  setRules: (rules)->
+  setRules: (rules)->    
     hasManyRules = [] 
     if rules isnt null
       for rule in rules

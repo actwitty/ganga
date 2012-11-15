@@ -4,15 +4,16 @@ App.RulesView = Ember.View.extend
   init: ->
     @_super()
 
-    rules =  @get 'controller.content'
-    msgContext = {}    
-    if rules isnt null and rules.length isnt 0
+    
+    msgContext = {}      
+    rules =  App.get 'router.rulesController.content'
+    if rules is null or rules.length is 0
       #HELP DOC LINK
       msgContext = 
-                    header: "Manage rules set for this application"
-                    message: "You can manage the conditions for trigger of each rule for the application"
-                    href: "/help#manageRules"
-                    buttonText: "Know More"                    
+                    header: "Create rules for your applications"
+                    message: "You can create rules for your applications to trigger actions."
+                    href: "/help#createRules"
+                    buttonText: "Learn"                    
     else
       #HELP DOC LINK      
       msgContext = 

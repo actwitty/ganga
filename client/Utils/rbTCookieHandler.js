@@ -38,7 +38,7 @@ trigger_fish.rbTCookie = {
     if (results)
         return (unescape(results[2]));
     else
-        return null;
+        return undefined;
   },
 
   /** Check cookie existence

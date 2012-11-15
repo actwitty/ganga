@@ -18,9 +18,11 @@
       window.rb = new RBT();
     }
   } catch (e) {
-    trigger_fish.rbTAPP.reportError({"exception" : e.message, 
-                        "message"   : "App initalization failed"
-                       });
+    trigger_fish.rbTAPP.reportError({"exception": e.message, 
+                                     "message"  : "App init/exec failed",
+                                     "appid"    : appid || "",
+                                     "accid"    : accid || ""
+                                    });
   }
 })(_rbTK[0][1], _rbTK[1][1]);
 
@@ -29,7 +31,7 @@
 function testGanga()
 {
   //rb.sendEvent("sample_event",{"a":101});
-  //rb.identify("83.samarth@gmail.com");
+  rb.identify("83.samarth@gmail.com");
   //rb.identify({"uid":"83.samarth@gmail.com"});
   //rb.setActor({"name":"samarth","age":"29"});
 

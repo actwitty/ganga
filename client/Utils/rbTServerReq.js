@@ -5,7 +5,6 @@ trigger_fish.rbTServerChannel = {
   
   /* All server url routes to be mapped here */
   url : {
-    "createSession"     : "",
     "appDetails"        : "app/read",
     "fireEvent"         : "event/create",
     "identify"          : "actor/identify",
@@ -119,7 +118,44 @@ trigger_fish.rbTServerChannel = {
     }
     return requestData;
   },
+  /** 
+  *  Set Request data for all server interactions
+  *  @param {object} obj . The data which needs to be padded with request parameters
+  *  @return {object} extReqData . Object padded with request params.
+  */ 
+  extendRequestData : function(obj) 
+  {
+    if (!obj)
+      return {};
+    var k = {};
+    // FIXME :: **THERE SEEMS TO BE A BIT OF REPEATATION. HANDLE THIS**
+    if (obj.event) {
+      k = {};
+      k["properties"] = obj.params ? obj.params:{};
+      k["name"] = obj.event;  
+      k["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
+      k["actor_id"] = trigger_fish.rbTActor.getID() || "";
+    } else if (obj.app_read) {
+      k["id"] = trigger_fish.rbTAPP.getAppID() || "";
+    } else if (obj.set_actor) {
+      k["properties"] = {"profile":obj.params ? obj.params:{}};
+      k["id"] = trigger_fish.rbTActor.getID() || "";
+      k["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
+    } else if(obj.set_actor_prop) {
+      k["id"] = trigger_fish.rbTActor.getID() || "";
+      k["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
+    } else if(obj.identify) {
+      k["uid"] = obj.params;
+      k["id"] = trigger_fish.rbTActor.getID() || "";
+      k["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
+    } else if(obj.err || obj.conversion) {
+      k["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
+      k["actor_id"] = trigger_fish.rbTActor.getID() || "";
+      k["properties"] = obj.params ? obj.params:{};
+    }
 
+    return k;
+  },
   /**
   * Make XMLHttpRequest to Server
   * @param {object} obj Data format which needs to be send.
@@ -130,8 +166,7 @@ trigger_fish.rbTServerChannel = {
     "use strict";
     var that = obj;
     try {
-
-      var reqServerData = this.extendReqData(obj,this.makeRequestData(obj.event?obj.event:undefined,obj.params));
+      var reqServerData = this.extendRequestData(obj);
       var callback = this.extendCallbacks(obj.cb);
       if (obj.async && obj.async === "noasync")
         var asyncSt = false;
@@ -218,18 +253,6 @@ trigger_fish.rbTServerChannel = {
     }
 
   },
-   
-  /** 
-  *  Request server to create session
-  *  FIXME : NEED TO KNOW HOW SESSION WILL BE CREATED, BASED ON THAT WE WILL REMOVE MULTIPLE AJAX 
-  *  @return void
-  */  
-  createSession : function(url, callback)
-  {
-    "use strict";
-    callback = this.extendCallbacks(callback);
-    this.makeGetRequest(url, null, callback);
-  }, 
 
   /** 
   *  Request server to app details
@@ -271,7 +294,7 @@ trigger_fish.rbTServerChannel = {
   {
     "use strict";
     var callback = this.extendCallbacks(callback);
-    this.makeRequest({"url":this.url.reportError,"params":params,"cb":callback});
+    this.makeRequest({"url":this.url.reportError,"params":params,"err":true, "cb":callback});
   },
 
   /** 

@@ -199,11 +199,12 @@ trigger_fish.rbTAPP = {
     */
     getAppData : function()
     {
-      trigger_fish.rbTServerChannel.makeServerRequest({"url"   : trigger_fish.rbTServerChannel.url.appDetails,
-                                          "cb"    : { success: trigger_fish.rbTServerResponse.setAppDetail,
-                                                      error  : trigger_fish.rbTServerResponse.defaultError
-                                                    }
-                                         });
+      trigger_fish.rbTServerChannel.makeServerRequest({"url"      : trigger_fish.rbTServerChannel.url.appDetails,
+                                                       "app_read" : true, 
+                                                       "cb"       : { success: trigger_fish.rbTServerResponse.setAppDetail,
+                                                                      error  : trigger_fish.rbTServerResponse.defaultError
+                                                                    }
+                                                      });
     },  
 
     /** 
@@ -435,31 +436,35 @@ trigger_fish.rbTRules = {
       } else 
         return " ";
     }
-    function ruleParams(rule)
+    function ruleParams(rule,event)
     {
+      //return "('"+JSON.stringify(rule)+",'"+event+"')";
+      rule.event = event;
       return "('"+JSON.stringify(rule)+"')";
     }
 
     try {
         jQuery.each(rules, function(index, ruleList) {
+          if (!trigger_fish.rbTRules.ruleTable[ruleList.event])
+            trigger_fish.rbTRules.ruleTable[ruleList.event] = [];
           ruleString = " ";
           for (var rule in ruleList.conditions) {
             ruleString = ruleString + "trigger_fish.rbTRules.evalRule" + 
-                         ruleParams(ruleList.conditions[rule]) + 
+                         ruleParams(ruleList.conditions[rule],ruleList.event) + 
                          ruleConnect(ruleList.conditions[rule]);
           }
+          trigger_fish.rbTRules.ruleTable[ruleList.event].push({ "name"         : ruleList.name,
+                                                                 "ruleString"   : ruleString,
+                                                                 "action"       : ruleList.action,
+                                                                 "action_param" : ruleList.action_param
+                                                               });                                                  
 
-          trigger_fish.rbTRules.ruleTable[ruleList.event] = { "name"         : ruleList.name,
-                                                              "ruleString"   : ruleString,
-                                                              "action"       : ruleList.action,
-                                                              "action_param" : ruleList.action_param
-                                                            };
         });
     } catch (e) {
       trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                          "message"   : "rule table setting failed",
-                          "rules"     : rules
-                        });
+                                       "message"   : "rule table setting failed",
+                                       "rules"     : rules
+                                      });
     }
 
   },
@@ -471,11 +476,9 @@ trigger_fish.rbTRules = {
   */
   executeRulesOnEvent : function(event)
   {
-    //"use strict";
-
     function prepareFunctionCode(ruleString) 
     {
-      $("#rulestring").text(ruleString);
+      $("#rulestring").append('<h3>'+ruleString+'</h3>');
       return 'if (' + ruleString + ') { return true; } else { return false;}';
     }
     
@@ -487,14 +490,18 @@ trigger_fish.rbTRules = {
       //return;
     }
     try {
-          var functionCode = prepareFunctionCode(this.ruleTable[event].ruleString);
-          var isRuleValid = new Function(functionCode)();
-          if (isRuleValid) {
-            $("#result").text("RULES PASSED");
-            this.invokeAction(event);
-          } else {
-            $("#result").text("RULES FAILED");
-          }
+          var that=this;
+          jQuery.each(this.ruleTable[event], function(index, rule) {
+            var functionCode = prepareFunctionCode(rule.ruleString);
+            var isRuleValid = new Function(functionCode)();
+            if (isRuleValid) {
+              $("#result").append("RULES PASSED");
+              //that.invokeAction(rule);
+            } else {
+              $("#result").append("RULES FAILED");
+            }  
+          });
+          
     } catch (e) {
       if (this.ruleTable[event])
         var ruleStr = this.ruleTable[event].ruleString || "--";
@@ -509,37 +516,7 @@ trigger_fish.rbTRules = {
   },
   
 
-  /**
-  *   Execute rules table for particular events
-  *   @param {string} property The property for which we need to operate upon
-  *   @param {string} value The value for which we need to operate upon
-  *   @return {object} value Converted value based on property data type
-  */
-  valueDataType : function(property, value)
-  {
-    "use strict";
-    // We are expecting only 3 types i.e string or number or date
-    // ******FIXME : WE NEED TO GET THE DATA TYPES FROM APP SCHEMA********
-    if (!value || !property)
-      return "undefined";
-    var dt = this.getDataType(property);
-    try {
-        if (dt === "String") {
-          return value.toString();
-        } else if(dt === "Number") {
-          return parseFloat(value);
-        } else if(dt === "Date") {
-          return new Date(value);
-        }
-    } catch (e) {
-        // FIXME :: something wrong with type conversion
-        trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                            "message":"data type conversion on rule value failed" , 
-                            "property" : property,
-                            "value" : value
-                           });
-    }
-  },
+  
 
   /**
   * FIXME : check if this needs to be invoked in getRulesTable's server response
@@ -562,6 +539,59 @@ trigger_fish.rbTRules = {
     }
   },
 
+  
+  /**
+  * Invoke the action on rule.
+  * @param {object} rule The rule for which we need to invoke action
+  * @return void
+  */
+  invokeAction : function(rule)
+  {
+    try {
+      // Hand over action to templating engine for processing event action.
+      //rbTTemplates.invoke(this.ruleTable[event].action, this.ruleTable[event].action_param);
+      //rbT.invokeActionScript(this.ruleTable[event].action, this.ruleTable[event].action_param);
+      trigger_fish.rbT.invokeActionScript(rule.action, rule.action_param);
+    } catch(e) {
+      trigger_fish.rbTAPP.reportError({"exception" : e.message,
+                          "message": "action could not be invoked" , 
+                          "event" : event
+                         });
+    }
+  },
+ 
+  /**
+  * Check the negate status
+  * @param {string} negation status
+  * @return boolean !negate status
+  */
+  isNegate :  function(x)
+  {
+    return (x === "true") ? true : false; 
+  },
+
+  /**
+  * Check the data type of object
+  * @param {string} rule propertry
+  * @return {string} datatype of the object.
+  */  
+  getDataType : function(event,ruleProp,scope)
+  {
+    // FIXME :: WE NEED TO CHANGE THIS TO GET IT FROM SCHEMA
+    //return Object.prototype.toString.call(a).split("]")[0].split(" ")[1];
+    var appSchema = trigger_fish.rbTAPP.getAppDetail().app.schema;
+
+    if (scope === "e") {
+      return appSchema.events.event.ruleProp;
+    } else if (scope === "s") {
+      return appSchema.system.ruleProp;
+    } else if (scope === "a") {
+      return appSchema.profile.ruleProp;
+    }
+
+
+  },
+
   /**
   * FIXME : enable this with new json format (based on scope property)
   * Evaluate property value to a suitable sys or user property
@@ -570,25 +600,23 @@ trigger_fish.rbTRules = {
   * @param {string} scope Scope of the property, to which we need to look for.
   * @return {object} or {boolean}
   */
-  evalProperty : function(ruleProperty, type, scope)
+  //evalProperty : function(ruleProperty, type, scope)
+  evalProperty : function(ruleJson)
   {
-    if (!ruleProperty)
+    if (!ruleJson.property)
       return "";
-
-    // FIXME : Currently we do not know the structure of response we will get.
-    // Based on that we need to process further.
  
-    var p = ruleProperty.replace(/]/g,"").replace(/\[/g,".");
+    var p = ruleJson.property.replace(/]/g,"").replace(/\[/g,".");
     var value = null;
 
     var validProp = 1;
     try {
-      if (scope === "a") {
+      if (ruleJson.scope === "a") {
         value = eval("TEST_RBT_RULE_JSON."+p+".slice(-1)[0]");
-      } else if (scope === "s") {
+      } else if (ruleJson.scope === "s") {
         var systemVars = trigger_fish.rbTSystemVar.getProperty();
         value = eval("systemVars."+p);
-      } else if (scope === "e") {
+      } else if (ruleJson.scope === "e") {
         var transVar = trigger_fish.rbTAPP.getTransVar(); 
         value = eval("transVar."+p); 
       }
@@ -600,7 +628,8 @@ trigger_fish.rbTRules = {
       trigger_fish.rbTAPP.log({"message":"Not a valid property to evaluate rule on"});
       return false;
     }
-
+    
+    var type = this.getDataType(ruleJson.event, ruleJson.property, ruleJson.scope);
     if (!type)
         return value;
     if (type === "String")
@@ -609,46 +638,40 @@ trigger_fish.rbTRules = {
         return new Date(value);
     else if (type === "Number")
         return parseFloat(value);
+    
   },
 
-
   /**
-  * Invoke the action on rule.
-  * @param {string} event The event for which we need to invoke action
-  * @return void
+  *   Execute rules table for particular events
+  *   @param {string} property The property for which we need to operate upon
+  *   @param {string} value The value for which we need to operate upon
+  *   @return {object} value Converted value based on property data type
   */
-  invokeAction : function(event)
+  valueDataType : function(property, value, dataType)
   {
+    "use strict";
+    // We are expecting only 3 types i.e string or number or date
+    // ******FIXME : WE NEED TO GET THE DATA TYPES FROM APP SCHEMA********
+    if (!value || !property)
+      return undefined;
+    //var dt = this.getDataType(property);
+    var dt = dataType;
     try {
-      // Hand over action to templating engine for processing event action.
-      //rbTTemplates.invoke(this.ruleTable[event].action, this.ruleTable[event].action_param);
-      rbT.invokeActionScript(this.ruleTable[event].action, this.ruleTable[event].action_param);
-    } catch(e) {
-      trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                          "message": "action could not be invoked" , 
-                          "event" : event
-                         });
+        if (dt === "String") {
+          return value.toString();
+        } else if(dt === "Number") {
+          return parseFloat(value);
+        } else if(dt === "Date") {
+          return new Date(value);
+        }
+    } catch (e) {
+        // FIXME :: something wrong with type conversion
+        trigger_fish.rbTAPP.reportError({"exception" : e.message,
+                            "message":"data type conversion on rule value failed" , 
+                            "property" : property,
+                            "value" : value
+                           });
     }
-  },
-
-  /**
-  * Check the data type of object
-  * @param {string} negation status
-  * @return boolean !negate status
-  */  
-  getDataType : function(a)
-  {
-    return Object.prototype.toString.call(a).split("]")[0].split(" ")[1];
-  },
-
-  /**
-  * Check the negate status
-  * @param {string} negation status
-  * @return boolean !negate status
-  */
-  isNegate :  function(x)
-  {
-    return (x === "true") ? true : false; 
   },
 
   /**
@@ -661,37 +684,42 @@ trigger_fish.rbTRules = {
   * @param {string} [c] Rule value 2
   * @return boolean validity
   */
-  isValidRule : function(dt,s,t,a,b,c)
+  //isValidRule : function(dt,s,t,a,b,c)
+  isValidRule : function(ruleJson )
   {
-    if (!a)
+    if (!ruleJson.property) 
       return false;
-    if (t==="set") return true;
-    var propVal = this.evalProperty(a,dt,s);
+    if (ruleJson.type ==="set") 
+      return true;
+    //var propVal = this.evalProperty(ruleJson.property,ruleJson.type,ruleJson.scope);
+    var propVal = this.evalProperty(ruleJson);
     if (!propVal)
       return false;
-    var propDT = this.getDataType(propVal);
-    if (dt === "Date")
-      propDT = dt;
-    else if (propDT !== dt)
+    var propDT = this.getDataType(ruleJson.event, ruleJson.property, ruleJson.scope);
+    
+    /*if (ruleJson.type === "Date")
+      propDT = ruleJson.type;
+    else if (propDT !== ruleJson.type)
       return false;
+    */
 
-    var v1DT = this.getDataType(b);
-    if (c)
-      var v2DT = this.getDataType(c);
+    var v1DT = this.getDataType(ruleJson.event,ruleJson.v1, ruleJson.scope);
+    if (ruleJson.v2)
+      var v2DT = this.getDataType(ruleJson.event,ruleJson.v2, ruleJson.scope);
 
     var v2DT = v2DT || v1DT;
 
     if (!this.permissions[propDT] || this.permissions[propDT].indexOf(t) < 0)
       return false;
     
-    if (propDT === "String" && (v1DT!=propDT || v2DT!=propDT)) {
+    if (propDT === "String" && (v1DT!==propDT || v2DT!==propDT)) {
       return false;
-    } else if (propDT === "Number" && (parseFloat(b) === "NaN" || (c && parseFloat(c) === "NaN"))) {
+    } else if (propDT === "Number" && (parseFloat(ruleJson.v1) === "NaN" || (ruleJson.v2 && parseFloat(ruleJson.v2) === "NaN"))) {
       return false;
     } else if (propDT === "Date") {
-      var v1Date = new Date(b);
-      if (c)
-        var v2Date = new Date(c);
+      var v1Date = new Date(ruleJson.v2);
+      if (ruleJson.v2)
+        var v2Date = new Date(ruleJson.v2);
       v2Date = v2Date || v1Date;
       if (v1Date.toString() === "Invalid Date" || v2Date.toString() === "Invalid Date")
         return false;
@@ -716,13 +744,17 @@ trigger_fish.rbTRules = {
           op   = ruleJson.operation,
           type = ruleJson.type,
           prop = ruleJson.property,
-          scope= ruleJson.scope;
-      if (!trigger_fish.rbTRules.isValidRule(type,scope,op,prop,v1))
+          scope= ruleJson.scope,
+          event= ruleJson.event;
+      //if (!trigger_fish.rbTRules.isValidRule(type,scope,op,prop,v1,v2))
+      //   return false;
+      if (!trigger_fish.rbTRules.isValidRule(ruleJson))
           return false;
       var res = false;
-      var p = trigger_fish.rbTRules.evalProperty(prop,type,scope);
-          a = trigger_fish.rbTRules.valueDataType(prop, v1),
-          b = trigger_fish.rbTRules.valueDataType(prop, v2);
+      var propDT = this.getDataType(ruleJson.event, ruleJson.prop, ruleJson.scope);
+      var p = trigger_fish.rbTRules.evalProperty(ruleJson),
+          a = trigger_fish.rbTRules.valueDataType(prop, v1, propDT),
+          b = trigger_fish.rbTRules.valueDataType(prop, v2, propDT);
       switch(op) {
       case "ltn":
           res = this.rule.ltn(p,a);
@@ -962,7 +994,7 @@ trigger_fish.rbTServerResponse = {
         // FIXME :: Flush and reset all cookies if there is a change in actor.
         // WAITING AS THERE ARE SOME CHANGES IN BACKEND.
         var oldActorId = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID);
-        if (!oldActorId || oldActorId !== respData.actor_id) {
+        if (!oldActorId || (oldActorId !== respData.actor_id)) {
           trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.actorID, JSON.stringify(respData.actor_id));
           trigger_fish.rbTActor.setID(respData.actor_id);
           trigger_fish.rbTServerChannel.makeRequest({"url"           : trigger_fish.rbTServerChannel.url.readActor, 
@@ -1097,6 +1129,43 @@ trigger_fish.rbTServerResponse = {
           event : "sample_event",
           action: "topbar.generic.normal",
           action_param :
+                  {
+                    'rb.t.cr.textColor ':'#333',
+                    'rb.t.nr.textFontsize':'15',
+                    'rb.t.ft.textFontfamily':'Arial',
+                    'rb.t.sg.textFontWeight':'bold',
+                    'rb.f.nr.baseZindex':'100',
+                    'rb.t.nr.baseWidth':'100',
+                    'rb.t.nr.baseHeight':'40',
+                    'rb.t.cr.baseBgColor':'#DCDCDC',
+                    'rb.t.an.baseTextalign':'center',
+                    'rb.t.sg.textLeft':'Hello Hello Hello Hello',
+                    'rb.t.nr.btnFontSize':'14',
+                    'rb.t.cr.btnBgColor':'#548AC7',
+                    'rb.t.cr.btnColor':'white',
+                    'rb.t.ul.btnLink':'http://www.google.com',
+                    'rb.t.sg.btnLable':'Click',
+                    'rb.t.sg.textRight':'Hello Hello',
+                    'rb.t.nr.durationOfDisplay':'100'
+                  },
+          conditions : [
+                // event based condition
+                { 
+                  property: "customer[email]",
+                  type : "String",
+                  negation: 'false',
+                  operation: 'eql',
+                  value1: 'gmail.com',
+                  scope: "a",
+                },
+              ]
+        },
+        {
+          id: '1010101010',
+          name  : "sample_name", 
+          event : "sample_event",
+          action: "topbar.generic.normal",
+          action_param :
                   [
                      {key:'rb.t.cr.textColor ',value:'#333'},
                      {key:'rb.t.nr.textFontsize',value:'15'},
@@ -1118,152 +1187,19 @@ trigger_fish.rbTServerResponse = {
           conditions : [
                 // event based condition
                 { 
-                  property: "customer[email]",
+                  property: "customer[name]",
                   type : "String",
                   negation: 'false',
                   operation: 'eql',
-                  value1: 'gmail.com',
-                  scope: "a",
-                  connect: 'and' 
-                },
-                
-                // negate condition
-                { 
-                  property: "customer[name]",
-                  type : "String",
-                  negation: 'true',
-                  operation: 'swh',
-                  value1: 'a',
-                  scope: "a",
-                  connect: 'and' 
-                },
-                // actor_property based condition
-                {
-                  property: "customer[val1]",
-                  type : "Number",
-                  negation: 'false',
-                  operation: 'gtn',
-                  value1: 2,
-                  scope: "a",
-                  connect: 'and' 
-                },
-                // system_property based condition
-                {
-                  property: "customer[val2]",
-                  type : "Number",
-                  negation: 'false',
-                  operation: 'ltn',
-                  value1: 3000,
-                  scope: "a",
-                  connect: 'and' 
-                },
-                // starts with
-                {
-                  property: "customer[swh]",
-                  type : "String",
-                  negation: 'false',
-                  operation: 'swh',
-                  value1: 'act',
-                  scope: "a",
-                  connect: 'and' 
-                },
-                // ends with
-                {
-                  property: "customer[ewh]",
-                  type : "String",
-                  negation: 'false',
-                  operation: 'ewh',
-                  value1: 'tty',
-                  scope: "a",
-                  connect: 'and' 
-                },
-                // contains
-                {
-                  property: "customer[cns]",
-                  type : "String",
-                  negation: 'false',
-                  operation: 'cns',
-                  value1: 'wit',
-                  scope: "a",
-                  connect: 'and' 
-                },
-                // date range
-                {
-                  property: "customer[drg]",
-                  type : "Date",
-                  negation: 'false',
-                  operation: 'drg',
-                  value1: "2/2/2011",
-                  value2: "4/4/2011",
-                  scope: "a",
-                  connect: 'and'
-                },
-                // days ago
-                {
-                  property: "customer[dag]",
-                  type : "Date",
-                  negation: 'false',
-                  operation: 'dag',
-                  value1: "4",
-                  scope: "a",
-                  connect: 'and'
-                },
-                // regex
-                {
-                  property: "customer[rgx]",
-                  type : "String",
-                  negation: 'false',
-                  operation: 'rgx',
-                  value1: 'sam',
-                  scope: "a",
-                  connect: 'and' 
-                },
-                // set
-                {
-                  property: "customer[set]",
-                  type : "String",
-                  negation: 'false',
-                  scope: "a",
-                  operation: 'set',
-                  connect: 'and'
-                },
-
-                // cns in systems
-                {
-                  property: "country",            
-                  type: "String",                         
-                  negation: "false",
-                  operation: "cns",
-                  value1: 'IN',
-                  scope: "s",
-                  connect: 'and'
-                },
-
-                // eql in systems
-                {
-                  property: "device[name]",             
-                  type: "String",                        
-                  negation: "false",
-                  operation: "eql",
-                  value1: 'Chrome',
-                  scope: "s",
-                  connect: 'and'
-                },
-                // eql in event transient var
-                {
-                  property: "name",             
-                  type: "String",                        
-                  negation: "false",
-                  operation: "eql",
                   value1: 'samarth',
-                  scope: "e",
+                  scope: "a",
                 },
-                
               ]
         },
     ];
     
     trigger_fish.rbTRules.setRulesTable(sample_rule_json);
+    //trigger_fish.rbTRules.setRulesTable(respData.app.rules || {});
     trigger_fish.rbTSystemVar.init(respData);
 
     trigger_fish.rbTAPP.configs.status = true;
@@ -1282,7 +1218,6 @@ trigger_fish.rbTServerChannel = {
   
   /* All server url routes to be mapped here */
   url : {
-    "createSession"     : "",
     "appDetails"        : "app/read",
     "fireEvent"         : "event/create",
     "identify"          : "actor/identify",
@@ -1368,7 +1303,7 @@ trigger_fish.rbTServerChannel = {
       requestData["properties"] = reqData ? reqData:{};
       requestData["name"] = event;  
     }
-    requestData["app_id"] = trigger_fish.rbTAPP.getAppID(); // mandatory
+    requestData["id"] = trigger_fish.rbTAPP.getAppID(); // mandatory
     requestData["account_id"] = trigger_fish.rbTAPP.getAccountID(); // mandatory  
 
     return requestData;
@@ -1396,7 +1331,44 @@ trigger_fish.rbTServerChannel = {
     }
     return requestData;
   },
+  /** 
+  *  Set Request data for all server interactions
+  *  @param {object} obj . The data which needs to be padded with request parameters
+  *  @return {object} extReqData . Object padded with request params.
+  */ 
+  extendRequestData : function(obj) 
+  {
+    if (!obj)
+      return {};
+    var k = {};
+    // FIXME :: **THERE SEEMS TO BE A BIT OF REPEATATION. HANDLE THIS**
+    if (obj.event) {
+      k = {};
+      k["properties"] = obj.params ? obj.params:{};
+      k["name"] = obj.event;  
+      k["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
+      k["actor_id"] = trigger_fish.rbTActor.getID() || "";
+    } else if (obj.app_read) {
+      k["id"] = trigger_fish.rbTAPP.getAppID() || "";
+    } else if (obj.set_actor) {
+      k["properties"] = {"profile":obj.params ? obj.params:{}};
+      k["id"] = trigger_fish.rbTActor.getID() || "";
+      k["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
+    } else if(obj.set_actor_prop) {
+      k["id"] = trigger_fish.rbTActor.getID() || "";
+      k["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
+    } else if(obj.identify) {
+      k["uid"] = obj.params;
+      k["id"] = trigger_fish.rbTActor.getID() || "";
+      k["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
+    } else if(obj.err || obj.conversion) {
+      k["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
+      k["actor_id"] = trigger_fish.rbTActor.getID() || "";
+      k["properties"] = obj.params ? obj.params:{};
+    }
 
+    return k;
+  },
   /**
   * Make XMLHttpRequest to Server
   * @param {object} obj Data format which needs to be send.
@@ -1407,8 +1379,7 @@ trigger_fish.rbTServerChannel = {
     "use strict";
     var that = obj;
     try {
-
-      var reqServerData = this.extendReqData(obj,this.makeRequestData(obj.event?obj.event:undefined,obj.params));
+      var reqServerData = this.extendRequestData(obj);
       var callback = this.extendCallbacks(obj.cb);
       if (obj.async && obj.async === "noasync")
         var asyncSt = false;
@@ -1495,18 +1466,6 @@ trigger_fish.rbTServerChannel = {
     }
 
   },
-   
-  /** 
-  *  Request server to create session
-  *  FIXME : NEED TO KNOW HOW SESSION WILL BE CREATED, BASED ON THAT WE WILL REMOVE MULTIPLE AJAX 
-  *  @return void
-  */  
-  createSession : function(url, callback)
-  {
-    "use strict";
-    callback = this.extendCallbacks(callback);
-    this.makeGetRequest(url, null, callback);
-  }, 
 
   /** 
   *  Request server to app details
@@ -1548,7 +1507,7 @@ trigger_fish.rbTServerChannel = {
   {
     "use strict";
     var callback = this.extendCallbacks(callback);
-    this.makeRequest({"url":this.url.reportError,"params":params,"cb":callback});
+    this.makeRequest({"url":this.url.reportError,"params":params,"err":true, "cb":callback});
   },
 
   /** 
@@ -1926,7 +1885,11 @@ var session_fetch = (function(win, doc, nav)
         if (name)
           name = name[0];
       }
-      device.type = { type: device.is_mobile ? "mobile" : "pc", name: name || browser.detect().browser};
+      device.type = {};
+      if (device.is_tablet) device.type.type = "tab";
+      else if(device.is_mobile) device.type.type = "mob";
+      else device.type.type = "pc";
+      device.type.name = name || browser.detect().os
       return device;
     },
     plugins: function(){
@@ -2305,7 +2268,7 @@ trigger_fish.rbTCookie = {
     if (results)
         return (unescape(results[2]));
     else
-        return null;
+        return undefined;
   },
 
   /** Check cookie existence
@@ -2488,11 +2451,11 @@ RBT.prototype.sendEvent = function(event, params)
     return;
   }
   trigger_fish.rbTServerChannel.makeRequest({"event" : event, 
-                                "params": params,
-                                "cb"    : { success: trigger_fish.rbTServerResponse.handleEvent,
-                                            error  : trigger_fish.rbTServerResponse.defaultError
-                                          }
-                              });
+                                             "params": params,
+                                             "cb"    : { success: trigger_fish.rbTServerResponse.handleEvent,
+                                                         error  : trigger_fish.rbTServerResponse.defaultError
+                                                       }
+                                            });
 };
 
 /** 
@@ -2505,12 +2468,12 @@ RBT.prototype.identify = function(params)
 {
   "use strict";
   trigger_fish.rbTServerChannel.makeRequest({"url"     : trigger_fish.rbTServerChannel.url.identify, 
-                                "params"  : params,
-                                "identify": true,
-                                "cb"      : { success: trigger_fish.rbTServerResponse.setActorID,
-                                             error  : trigger_fish.rbTServerResponse.defaultError
-                                           }
-                              });
+                                             "params"  : params,
+                                             "identify": true,
+                                             "cb"      : { success: trigger_fish.rbTServerResponse.setActorID,
+                                                           error  : trigger_fish.rbTServerResponse.defaultError
+                                                         }
+                                            });
 };
 
 
@@ -2526,13 +2489,13 @@ RBT.prototype.setActor = function(params)
   "use strict";
   if (trigger_fish.rbTActor.propExist(params))
     return;
-  trigger_fish.rbTServerChannel.makeRequest({"url"        : trigger_fish.rbTServerChannel.url.setActor, 
-                                "params"     : params,
-                                "set_actor"  : true,
-                                "cb"         : { success: trigger_fish.rbTServerResponse.setActorProperty,
-                                                 error  : trigger_fish.rbTServerResponse.defaultError
-                                               }
-                              });
+  trigger_fish.rbTServerChannel.makeRequest({"url"      : trigger_fish.rbTServerChannel.url.setActor, 
+                                             "params"   : params,
+                                             "set_actor": true,
+                                             "cb"       : { success: trigger_fish.rbTServerResponse.setActorProperty,
+                                                            error  : trigger_fish.rbTServerResponse.defaultError
+                                                          }
+                                            });
 };
 
 
@@ -2660,9 +2623,11 @@ trigger_fish.rbJSON = {
       window.rb = new RBT();
     }
   } catch (e) {
-    trigger_fish.rbTAPP.reportError({"exception" : e.message, 
-                        "message"   : "App initalization failed"
-                       });
+    trigger_fish.rbTAPP.reportError({"exception": e.message, 
+                                     "message"  : "App init/exec failed",
+                                     "appid"    : appid || "",
+                                     "accid"    : accid || ""
+                                    });
   }
 })(_rbTK[0][1], _rbTK[1][1]);
 
@@ -2671,7 +2636,7 @@ trigger_fish.rbJSON = {
 function testGanga()
 {
   //rb.sendEvent("sample_event",{"a":101});
-  //rb.identify("83.samarth@gmail.com");
+  rb.identify("83.samarth@gmail.com");
   //rb.identify({"uid":"83.samarth@gmail.com"});
   //rb.setActor({"name":"samarth","age":"29"});
 
