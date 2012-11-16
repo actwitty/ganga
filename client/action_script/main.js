@@ -167,43 +167,20 @@ if(1) // Check for Service Type Enhancement
 
                  }      
 
-          
-          if(type =='modal')
-          {
-               for (var key in actionParams) {
-
-               	if(actionParams.hasOwnProperty(key))
-               	{
-			         if( 'rb.f.nr.transBlockZindex' == key)
-			       {
-				       actionParams[key] =  trigger_fish.rbT.findZIndex();
-			       }
-
-			       else if( 'rb.f.nr.baseZindex' == key)
-			       {
-				      actionParams[key]  =  trigger_fish.rbT.findZIndex()+5;
-			       }
-
-			    
+          for (var key in actionParams) {
              
-		       }
-		     }  
-         }
-          else{
-                
-           for (var key in actionParams) {
              if(actionParams.hasOwnProperty(key))
 			  {	
-			  if( 'rb.f.nr.baseZindex' == key)
-			  {
-				actionParams[key] =  trigger_fish.rbT.findZIndex()+5;
-			  }
+			     if( 'Zindex' == actionParams[key] )
+			       {
+				       actionParams[key] =  trigger_fish.rbT.findZIndex()+5;
+				       console.log(actionParams[key]);
+			       }
 			  
 
 			 } 
              
 		    } 
-		  }        
 
 		
 

@@ -74,12 +74,12 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.sg.textFontWeight',
+	 	 	 	 	 				key :'rb.t.fw.textFontWeight',
 	 	 	 	 	 				value :'bold'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
 	 	 	 	 	 				key :'rb.f.nr.baseZindex',
-	 	 	 	 	 				value :'1000'
+	 	 	 	 	 				value :'Zindex'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
 	 	 	 	 	 				key :'rb.t.nr.baseWidth',
@@ -125,12 +125,12 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.sg.textFontWeight',
+	 	 	 	 	 				key :'rb.t.fw.textFontWeight',
 	 	 	 	 	 				value :'bold'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
 	 	 	 	 	 				key :'rb.f.nr.baseZindex',
-	 	 	 	 	 				value :'100'
+	 	 	 	 	 				value :'Zindex'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
 	 	 	 	 	 				key :'rb.t.nr.baseWidth',
@@ -196,12 +196,12 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.sg.textFontWeight',
+	 	 	 	 	 				key :'rb.t.fw.textFontWeight',
 	 	 	 	 	 				value :'bold'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
 	 	 	 	 	 				key :'rb.f.nr.baseZindex',
-	 	 	 	 	 				value :'1000'
+	 	 	 	 	 				value :'Zindex'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
 	 	 	 	 	 				key :'rb.t.nr.baeWidth',
@@ -255,12 +255,12 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.sg.textFontWeight',
+	 	 	 	 	 				key :'rb.t.fw.textFontWeight',
 	 	 	 	 	 				value :'bold'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
 	 	 	 	 	 				key :'rb.f.nr.baseZindex',
-	 	 	 	 	 				value :'1000'
+	 	 	 	 	 				value :'Zindex'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
 	 	 	 	 	 				key :'rb.t.nr.baeWidth',
@@ -310,12 +310,12 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.sg.textFontWeight',
+	 	 	 	 	 				key :'rb.t.fw.textFontWeight',
 	 	 	 	 	 				value :'bold'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
 	 	 	 	 	 				key :'rb.f.nr.baseZindex',
-	 	 	 	 	 				value :'1000'
+	 	 	 	 	 				value :'Zindex'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
 	 	 	 	 	 				key :'rb.t.nr.baseWidth',
@@ -365,12 +365,12 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.sg.textFontWeight',
+	 	 	 	 	 				key :'rb.t.fw.textFontWeight',
 	 	 	 	 	 				value :'bold'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
 	 	 	 	 	 				key :'rb.f.nr.baseZindex',
-	 	 	 	 	 				value :'1000'
+	 	 	 	 	 				value :'Zindex'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
 	 	 	 	 	 				key :'rb.t.nr.baeWidth',
@@ -412,11 +412,11 @@ trigger_fish.rbT.templateLib = {
 
  	 	 	 	 	 	 '1' : {
 	 	 	 	 	 				key :'rb.f.nr.transBlockZindex',
-	 	 	 	 	 				value :'1000'
+	 	 	 	 	 				value :'Zindex'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
 	 	 	 	 	 				key :'rb.f.nr.baseZindex',
-	 	 	 	 	 				value :'1005'
+	 	 	 	 	 				value :'Zindex'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
 	 	 	 	 	 				key :'rb.t.cr.baseBgColor',
@@ -497,12 +497,12 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.sg.textFontWeight',
+	 	 	 	 	 				key :'rb.t.fw.textFontWeight',
 	 	 	 	 	 				value :'bold'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
 	 	 	 	 	 				key :'rb.f.nr.baseZindex',
-	 	 	 	 	 				value :'100'
+	 	 	 	 	 				value :'Zindex'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
 	 	 	 	 	 				key :'rb.t.nr.baseWidth',
@@ -568,12 +568,12 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.sg.textFontWeight',
+	 	 	 	 	 				key :'rb.t.fw.textFontWeight',
 	 	 	 	 	 				value :'bold'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
 	 	 	 	 	 				key :'rb.f.nr.baseZindex',
-	 	 	 	 	 				value :'1000'
+	 	 	 	 	 				value :'Zindex'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
 	 	 	 	 	 				key :'rb.t.nr.baeWidth',
