@@ -2,7 +2,7 @@
 
 // Templ Sys , Actor and Event Varibales
 
-trigger_fish.rbT.currentSystemVar = {};
+trigger_fish.rbT.currentSystemVar = {'browser':{'name':'Chrome','version':'1.2','name2':{'myname':'Amartya'}}};
 trigger_fish.rbT.currentActorVar = {};
 trigger_fish.rbT.currentEventVar = {};
 

@@ -1271,19 +1271,22 @@ trigger_fish.rbT.init = function(){
 
 //******************************************************************************************
 
-trigger_fish.rbT.getTemplateHTMLByNameInternal = function(name){
+trigger_fish.rbT.getTemplateHTMLByNameInternal = function(type,api){
 	
     
-        if (trigger_fish.rbT.templateLib.hasOwnProperty(name) ){
-  
-			var html =  trigger_fish.rbT[trigger_fish.rbT.templateLib[name]];
 
-
-            return html;
-		}else{
-		trigger_fish.rbT.sendErrorToRBServer("unsupported template " + name);
-		return "";
-		}
+            	var html = trigger_fish.rbT[trigger_fish.rbT.templateLib[type][api]];
+                
+                if(html != undefined)  
+                {     
+                     return html;
+                }     
+                else
+                {
+                	 trigger_fish.rbT.sendErrorToRBServer("Unsupported Templ");
+                	 return "";
+                } 
+	
 	
 };
 //*******************************************************************************************
@@ -1299,9 +1302,11 @@ trigger_fish.rbT.getTemplateApplyVarsInternal = function(html,vars){
 			
 			if( key != 'rb.t.nr.templDuration')
             {
-			  var tempVarToBeReplaced = key;
+			  var tempVarToBeReplaced = key;			  
               var replaceKey = trigger_fish.rbT.keyPrefix + tempVarToBeReplaced + trigger_fish.rbT.keySuffix;
+
 			  html = html.replace(replaceKey, value);
+
 			} 
 		}	
 	  }
@@ -1363,17 +1368,21 @@ trigger_fish.rbT.invokeActionScriptInternal=function(action,actionParams){
 /*
 
       //TODO get the OS version here based on that action display
-*/    
+
+*/
+if(1) // Check for Service Type Enhancement
+ {   
+ 
       params= {};  
       
       trigger_fish.rbT.init();
       
 
-      var templateName = action;
        
-      var pos= trigger_fish.rbT.extractDisplayPositionFromTemplName(templateName);
-
-      var isPosOccupied = trigger_fish.rbT.isTemplPosOccupied(pos);
+      var type=action.desc.type; 
+      var api = action.desc.api;
+      
+      var isPosOccupied = trigger_fish.rbT.isTemplPosOccupied(type);
 
       if(isPosOccupied)
       {
@@ -1382,7 +1391,8 @@ trigger_fish.rbT.invokeActionScriptInternal=function(action,actionParams){
       }
       else
       {
-          var html = trigger_fish.rbT.getTemplateHTMLByName(templateName);
+          var html = trigger_fish.rbT.getTemplateHTMLByName(type,api);
+
           
               for (var key in actionParams)
                  {
@@ -1409,7 +1419,7 @@ trigger_fish.rbT.invokeActionScriptInternal=function(action,actionParams){
                  }      
 
           
-          if(pos =='modal')
+          if(type =='modal')
           {
                for (var key in actionParams) {
 
@@ -1457,7 +1467,7 @@ trigger_fish.rbT.invokeActionScriptInternal=function(action,actionParams){
             trigger_fish.rbT.applyHtmltoPage(html);
             trigger_fish.rbT.enableClickHandling();
            // trigger_fish.rbT.enableTimeOutHadnling(templateName,trigger_fish.rbT.templTimers['templ.templduration']*1000);
-		    trigger_fish.rbT.setTemplatesDisplayLockFlags(pos,true);
+		    trigger_fish.rbT.setTemplatesDisplayLockFlags(type,true);
 
              params.display = action + " " +"Display " + "Success";
     
@@ -1469,6 +1479,11 @@ trigger_fish.rbT.invokeActionScriptInternal=function(action,actionParams){
 
          }
       }	
+  }else{
+
+  	 // Report to Server for If Service Type Wrong
+
+  }    
 
 };	 
 
@@ -1481,7 +1496,7 @@ trigger_fish.rbT.isInitialized = function(){
 	return trigger_fish.rbT.inited;
 };
 //------------------------------------------
-trigger_fish.rbT.getTemplateHTMLByName = function(name){
+trigger_fish.rbT.getTemplateHTMLByName = function(type,api){
 
 	if (!trigger_fish.rbT.isInitialized()){
 		return "";
@@ -1491,7 +1506,7 @@ trigger_fish.rbT.getTemplateHTMLByName = function(name){
 		trigger_fish.rbT.sendErrorToRBServer("improper access of interface getTemplateHTMLByName");
 		return "";
 	}
-	return trigger_fish.rbT.getTemplateHTMLByNameInternal(name);
+	return trigger_fish.rbT.getTemplateHTMLByNameInternal(type,api);
 };
 //------------------------------------------
 trigger_fish.rbT.getTemplateApplyVars = function(html,vars){
