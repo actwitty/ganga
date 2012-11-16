@@ -130,6 +130,7 @@ if(1) // Check for Service Type Enhancement
        
       var type=action.desc.type; 
       var api = action.desc.api;
+      var servermsg = type + "."+api;
       
       var isPosOccupied = trigger_fish.rbT.isTemplPosOccupied(type);
 
@@ -174,7 +175,6 @@ if(1) // Check for Service Type Enhancement
 			     if( 'Zindex' == actionParams[key] )
 			       {
 				       actionParams[key] =  trigger_fish.rbT.findZIndex()+5;
-				       console.log(actionParams[key]);
 			       }
 			  
 
@@ -195,7 +195,9 @@ if(1) // Check for Service Type Enhancement
            // trigger_fish.rbT.enableTimeOutHadnling(templateName,trigger_fish.rbT.templTimers['templ.templduration']*1000);
 		    trigger_fish.rbT.setTemplatesDisplayLockFlags(type,true);
 
-             params.display = action + " " +"Display " + "Success";
+             params.display = servermsg + " " +"Display " + "Success";
+
+// INTEGRATION_ENABLE     
     
 // Report Server Display of Templ Successfull
 /*

@@ -708,7 +708,7 @@ trigger_fish.rbT.rbTemplFeedbackUservoiceNormalHTML='<!-- --><div id="rbUservoic
 
 // Templ Sys , Actor and Event Varibales
 
-trigger_fish.rbT.currentSystemVar = {'browser':{'name':'Chrome','version':'1.2','name2':{'myname':'Amartya'}}};
+trigger_fish.rbT.currentSystemVar = {} //{'browser':{'name':'Chrome','version':'1.2','name2':{'myname':'Amartya'}}};
 trigger_fish.rbT.currentActorVar = {};
 trigger_fish.rbT.currentEventVar = {};
 
@@ -816,9 +816,18 @@ trigger_fish.rbT.fillTheRuntimeValueForTemplArgs = function(tempMatch,actionparm
 // if s. system hash
 // if a. actor variable
 
+
                            // fetch system variable here 
                            // fetch actor variable here
-                           // fetch event variable here
+                            // fetch event variable here
+
+// INTEGRATION_ENABLE                            
+/*
+                           trigger_fish.rbT.currentSystemVar = trigger_fish.rbTSystemVar.getProperty();
+                           trigger_fish.rbT.currentActorVar = trigger_fish.rbTActor.getProperties();
+                           trigger_fish.rbT.currentEventVar = trigger_fish.rbTAPP.getTransVar();
+*/                           
+
                              
                            for(var i=0 ; i<tempMatch.length ; i++)
                            {
@@ -986,7 +995,7 @@ trigger_fish.rbT.sendEventToRBServer = function(){
 
 trigger_fish.rbT.sendErrorToRBServer = function(string){
 
-  
+// INTEGRATION_ENABLE     
 /*
 
  trigger_fish.rbTAPP.reportError({"message":string,"server":true});
@@ -994,9 +1003,9 @@ trigger_fish.rbT.sendErrorToRBServer = function(string){
 
 */
 
-  //TODO: Implement post to server // for console log=true
+ // INTEGRATION_ENABLE   
 
-  /* trigger_fish.rbTAPP.log({"message": "Handling event with server resp","data":respData});
+  /* trigger_fish.rbTAPP.log({"message": string,"data":respData});
  */
   console.log(string);
 };
@@ -1224,6 +1233,7 @@ trigger_fish.rbT.eventHandler = {
 
     params.button = params.button + " " +"Clicked"
     
+// INTEGRATION_ENABLE     
 
 /*
          //trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
@@ -1381,6 +1391,7 @@ if(1) // Check for Service Type Enhancement
        
       var type=action.desc.type; 
       var api = action.desc.api;
+      var servermsg = type + "."+api;
       
       var isPosOccupied = trigger_fish.rbT.isTemplPosOccupied(type);
 
@@ -1425,7 +1436,6 @@ if(1) // Check for Service Type Enhancement
 			     if( 'Zindex' == actionParams[key] )
 			       {
 				       actionParams[key] =  trigger_fish.rbT.findZIndex()+5;
-				       console.log(actionParams[key]);
 			       }
 			  
 
@@ -1446,7 +1456,9 @@ if(1) // Check for Service Type Enhancement
            // trigger_fish.rbT.enableTimeOutHadnling(templateName,trigger_fish.rbT.templTimers['templ.templduration']*1000);
 		    trigger_fish.rbT.setTemplatesDisplayLockFlags(type,true);
 
-             params.display = action + " " +"Display " + "Success";
+             params.display = servermsg + " " +"Display " + "Success";
+
+// INTEGRATION_ENABLE     
     
 // Report Server Display of Templ Successfull
 /*
