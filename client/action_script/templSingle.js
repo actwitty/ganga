@@ -1425,10 +1425,7 @@ trigger_fish.rbT.invokeActionScriptInternal=function(action,actionParams){
 				      actionParams[key]  =  trigger_fish.rbT.findZIndex()+5;
 			       }
 
-			       else if( 'rb.t.nr.durationOfDisplay'== key)
-			       {
-                      trigger_fish.rbT.templTimers['templ.templduration']= actionParams[key] ;
-			       }
+			    
              
 		       }
 		     }  
@@ -1442,10 +1439,7 @@ trigger_fish.rbT.invokeActionScriptInternal=function(action,actionParams){
 			  {
 				actionParams[key] =  trigger_fish.rbT.findZIndex()+5;
 			  }
-			  else if( 'rb.t.nr.durationOfDisplay'== key)
-              {
-                   trigger_fish.rbT.templTimers['templ.templduration']= actionParams[key] ;
-			  }
+			  
 
 			 } 
              
@@ -1462,7 +1456,7 @@ trigger_fish.rbT.invokeActionScriptInternal=function(action,actionParams){
          if (trigger_fish.rbT.isTemplateGoodToApply(html)){
             trigger_fish.rbT.applyHtmltoPage(html);
             trigger_fish.rbT.enableClickHandling();
-            trigger_fish.rbT.enableTimeOutHadnling(templateName,trigger_fish.rbT.templTimers['templ.templduration']*1000);
+           // trigger_fish.rbT.enableTimeOutHadnling(templateName,trigger_fish.rbT.templTimers['templ.templduration']*1000);
 		    trigger_fish.rbT.setTemplatesDisplayLockFlags(pos,true);
 
              params.display = action + " " +"Display " + "Success";
