@@ -47,11 +47,6 @@ App.Rule = Ember.Object.extend
       newAction['desc']['api'] = api
 
       newAction.params = @setActionParam(type, api)
-      console.log '----------------------'
-      console.log newAction
-      console.log type
-      console.log api
-      console.log '----------------------'
       @set 'action', newAction
 
       

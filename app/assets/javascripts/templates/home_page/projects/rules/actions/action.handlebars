@@ -22,8 +22,7 @@
         
         {{#eachProperty view.apiChoices}}              
           
-          {{#ifequal view.rule.action.desc.api iter_key}}
-            {{logger iter_key}}
+          {{#ifequal view.rule.action.desc.api iter_key}}            
             <option  value="{{getvalue iter_key}}" selected >
               {{getTemplateName view.rule.action.desc.type iter_key}}
             </option>
