@@ -112,7 +112,7 @@ trigger_fish.rbT.enableTimeOutHadnlingInternal= function(templateName,timerValue
 };
 
 //*************************************************************************************
-trigger_fish.rbT.invokeActionScriptInternal=function(action,actionParams){
+trigger_fish.rbT.invokeActionScriptInternal=function(action){
 
 /*
 
@@ -126,7 +126,7 @@ if(1) // Check for Service Type Enhancement
       
       trigger_fish.rbT.init();
       
-
+      var actionParams = action.params;
        
       var type=action.desc.type; 
       var api = action.desc.api;
