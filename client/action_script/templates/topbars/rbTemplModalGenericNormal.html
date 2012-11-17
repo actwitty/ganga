@@ -12,7 +12,7 @@
       width:100%;     
       height:100%; 
       background-color:black;    
-      z-index:{{rb.f.nr.transBlockZindex{{=Zindex}}}};
+      z-index:{{rb.f.nr.transparentblock_zindex{{=Zindex}}}};
       opacity:0.6;
       filter:alpha(opacity=60);
 }
@@ -25,7 +25,7 @@
       top: 0px;     
       width:100%;     
       height:100%;
-      z-index:{{rb.f.nr.baseZindex{{=Zindex}}}}; 
+      z-index:{{rb.f.nr.base_zindex{{=Zindex}}}}; 
 }
 
 
@@ -34,7 +34,7 @@
         {    
              width:500px; 
 	           height: 300px;
-             background-color:{{rb.t.cr.baseBgColor{{=white}}}};  
+             background-color:{{rb.t.cr.base_backgroundcolor{{=white}}}};  
              border:4px solid #a3a3a3;   
              position: fixed;
              border-radius:5px;
@@ -56,11 +56,11 @@
 		<div id="rbModalGenericNormalSubsubContainer"  style="postion:relative;">
            
            
-           <div style="top:0px;width:100%;height:18%;left:0px;background-color:{{rb.t.cr.headingBgColor{{=#e7e7e7}}}};">
+           <div style="top:0px;width:100%;height:18%;left:0px;background-color:{{rb.t.cr.heading_backgroundcolor{{=#e7e7e7}}}};">
 
-           <div style="top:0%;left:0 %;position:absolute;color:{{rb.t.cr.modalHeadingColor{{=#525252}}}};width:70%; height:14%;font-size:{{rb.t.nr.modalHeadingFontsize{{=20}}}}px;font-family:{{rb.t.ft.headingFontfamily{{=Arial}}}}; overflow:hidden;border-top-left-radius:5px;border-top-right-radius:5px;padding:5px;text-shadow:1px 1px {{rb.t.cr.modalHeadingTextShadow{{=#6e6e6e}}}};"> 
+           <div style="top:0%;left:0 %;position:absolute;color:{{rb.t.cr.modal_headingcolor{{=#525252}}}};width:70%; height:14%;font-size:{{rb.t.nr.modal_heading_fontsize{{=20}}}}px;font-family:{{rb.t.ft.heading_fontfamily{{=Arial}}}}; overflow:hidden;border-top-left-radius:5px;border-top-right-radius:5px;padding:5px;text-shadow:1px 1px {{rb.t.cr.modal_heading_textshadow{{=#6e6e6e}}}};"> 
 
-              {{rb.t.vsg.modalHeadingText{{=This is the Heading }}}}
+              {{rb.t.vsg.modal_heading_text{{=This is the Heading }}}}
 
            </div>
 
@@ -70,24 +70,24 @@
 
           </div>
 
-           	<div style="top:22%;left:0%;position:absolute;color:{{rb.t.cr.modalTextColor{{=#525252}}}};width:70%;height:65%;overflow:hidden;font-size:{{rb.t.nr.modalTextFontsize{{=12}}}}px;font-family:{{rb.t.ft.textFontfamily{{=Arial}}}};text-align:left;border-bottom-left-radius:5px;border-bottom-right-radius:5px;padding:5px;">
+           	<div style="top:22%;left:0%;position:absolute;color:{{rb.t.cr.modal_text_color{{=#525252}}}};width:70%;height:65%;overflow:hidden;font-size:{{rb.t.nr.modal_text_fontsize{{=12}}}}px;font-family:{{rb.t.ft.text_fontfamily{{=Arial}}}};text-align:left;border-bottom-left-radius:5px;border-bottom-right-radius:5px;padding:5px;">
 
-           	    {{rb.t.vsg.modalText{{=Hello Hello Hello Hello Hello hello heello bjashsdgfsdhvfhsdvcfhsdvhcsd hvhvchjsdvchjsdvchjvsdchvsdhvcjhsdvjvh }}}}
+           	    {{rb.t.vsg.modal_text{{=Hello Hello Hello Hello Hello hello heello }}}}
               
            	 </div>
 
              <div style="top:30%;right:5%;width:15%;height:20%;position:absolute;overflow:hidden">
-              <img src="{{rb.t.sg.modalImgPath{{=../../../images/rails.png}}}}" alt="image"\>
+              <img src="{{rb.t.sg.modal_image_path{{=../../../images/rails.png}}}}" alt="image"\>
 
              </div> 
 
 			   
 
-            <button   style="bottom:2%;right:2%;position:absolute;color:white;width:75px;height:25px;text-align:center;background-color:{{rb.t.cr.buttonBgColor{{=#3B5998}}}};border-radius:5px;padding-top:2px;border:1px solid #305580 ;font-weight: bold;cursor:pointer;">
+            <button   style="bottom:2%;right:2%;position:absolute;color:white;width:75px;height:25px;text-align:center;background-color:{{rb.t.cr.button_backgroundcolor{{=#3B5998}}}};border-radius:5px;padding-top:2px;border:1px solid #305580 ;font-weight: bold;cursor:pointer;">
 
-               <a  id="rbModalGenericNormalRoiClickbutton" class="rbClickable" style="text-decoration:none;color:white;" href= "{{rb.t.ul.modalBtnLink{{=http://www.google.com}}}}" target="_self" class="rbClickable" >
+               <a  id="rbModalGenericNormalRoiClickbutton" class="rbClickable" style="text-decoration:none;color:white;" href= "{{rb.t.ul.modal_button_link{{=http://www.google.com}}}}" target="_self" class="rbClickable" >
 
-                {{rb.t.sg.modalBtnLable{{=Click}}}}
+                {{rb.t.sg.modal_button_label{{=Click}}}}
 
                </a> 
 

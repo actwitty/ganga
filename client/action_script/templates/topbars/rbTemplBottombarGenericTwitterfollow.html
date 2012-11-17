@@ -4,34 +4,34 @@
 <style>
 .rbTextValue
   {
-     color:{{rb.t.cr.textColor {{=white}}}};
-     font-size: {{rb.t.nr.textFontsize{{=17}}}}px;
-     text-shadow: 1px 1px {{rb.t.cr.textShadow{{=black}}}};
-     font-family: {{rb.t.ft.textFontfamily{{=Arial}}}};
+     color:{{rb.t.cr.text_color{{=white}}}};
+     font-size: {{rb.t.nr.text_fontsize{{=17}}}}px;
+     text-shadow: 1px 1px {{rb.t.cr.text_shadow{{=black}}}};
+     font-family: {{rb.t.ft.text_fontfamily{{=Arial}}}};
      text-shadow: 0 -1px 0 #007AA6;
-     font-weight:{{rb.t.fw.textFontWeight{{=bold}}}};
+     font-weight:{{rb.t.fw.text_fontweight{{=bold}}}};
    }
 
 </style> 
 
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
-<div id="rbBottombarGenericTwitterfollowBaseContainer" style="zIndex:{{rb.f.nr.baseZindex{{=Zindex}}}};width:{{rb.t.nr.baeWidth{{=100}}}}%;height:{{rb.t.nr.baseHeight{{=50}}}}px;display:block; background-color:{{rb.t.cr.baeBgColor{{=#0B8AB8}}}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 2px -2px 2px #888888;text-align:{{rb.t.an.baseTextalign{{=center}}}};">
+<div id="rbBottombarGenericTwitterfollowBaseContainer" style="zIndex:{{rb.f.nr.base_zindex{{=Zindex}}}};width:{{rb.t.nr.base_width{{=100}}}}%;height:{{rb.t.nr.base_height{{=50}}}}px;display:block; background-color:{{rb.t.cr.bae_backgroundcolor{{=#0B8AB8}}}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 2px -2px 2px #888888;text-align:{{rb.t.an.base_textalign{{=center}}}};">
    
     <div id="rbBottombarGenericTwitterfollowLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">
-         {{rb.t.vsg.textLeft{{=Hello Hello}}}}  
+         {{rb.t.vsg.text_left{{=Hello Hello}}}}  
    </div> 
 
    <div id="rbBottombarGenericTwitterfollowRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;left:42%;margin-right:20px;cursor:pointer;">
      
     
-               <a  data-show-count="false" data-button = "blue" class="twitter-follow-button" href="https://twitter.com/{{rb.t.sg.twitterAccountLink{{=@actwitty}}}}" data-size="large">Follow {{rb.t.sg.twitterAccountLable{{=@actwitty}}}} </a>
+               <a  data-show-count="false" data-button = "blue" class="twitter-follow-button" href="https://twitter.com/{{rb.t.sg.twitter_account_link{{=@actwitty}}}}" data-size="large">Follow {{rb.t.sg.twitter_account_Label{{=@actwitty}}}} </a>
    
     </div>
    
     <div id="rbBottombarGenericTwitterfollowRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:52%; width:40%;overflow:hidden;">
          
-         {{rb.t.vsg.textRight{{=Hello Hello}}}}  
+         {{rb.t.vsg.text_right{{=Hello Hello}}}}  
    </div> 
 
     <div  style="display:inline; position:absolute;bottom:5px;right:30px;margin-left:20px;font-weight:bold;"> 
