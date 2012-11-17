@@ -10,7 +10,7 @@ App.templatesLibraryVars =
 
 App.templatesConstants = 
                           'show'  : 1
-                          'type'  : 2
+                          'varType'  : 2
                           'label' : 3
 
 App.templatesFixedData = {

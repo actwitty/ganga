@@ -83,30 +83,7 @@ trigger_fish.rbTServerResponse = {
     }
   }, 
 
-  /**
-  * Set actor identification based on server response
-  * @param {object} respData Actor identification details
-  * @return void
-  */
-  setSystemProperty : function(respData)
-  {
-    "use strict";
-    trigger_fish.rbTAPP.log({"message": "Setting system property with server resp","data":respData});
-
-    // FIXME : check for which property to set
-    try {
-      if (respData) {
-        trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.system, JSON.stringify(respData));
-      } else {
-        throw "there is no data";
-      }
-    } catch(e) {
-      trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                          "message"   : "setting system property failed",
-                          "data"      : respData
-                        });
-    }
-  }, 
+  
 
   /**
   * Handle event response from server

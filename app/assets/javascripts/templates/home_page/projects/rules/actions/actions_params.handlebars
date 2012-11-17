@@ -1,13 +1,13 @@
 {{view App.InlineAlertView }}
 {{#eachProperty view.params}}
   
-  {{#shouldShow view.action.desc.name view.action.desc.api iter_key}}
+  {{#shouldShow view.action.desc.type view.action.desc.api iter_key}}
 
     <!--TODO: This is inefficient to not have if else but its ok, will fix later -->
-    {{#isNumeric view.action.desc.name view.action.desc.api iter_key}}
+    {{#isNumeric view.action.desc.type view.action.desc.api iter_key}}
       <div class="entry">
         <div class="key">
-          {{getTemplatePlaceHolder view.action.desc.name view.action.desc.api iter_key}}
+          {{getTemplatePlaceHolder view.action.desc.type view.action.desc.api iter_key}}
         </div>
         <div class="value">          
           {{#paramBind iter_key}}
@@ -17,10 +17,10 @@
       </div>
     {{/isNumeric}}
 
-    {{#isFont view.action.desc.name view.action.desc.api iter_key}}
+    {{#isFont view.action.desc.type view.action.desc.api iter_key}}
       <div class="entry">
         <div class="key">
-          {{getTemplatePlaceHolder view.action.desc.name view.action.desc.api iter_key}}
+          {{getTemplatePlaceHolder view.action.desc.type view.action.desc.api iter_key}}
         </div>
         <div class="value">      
           {{#paramBind iter_key}}    
@@ -34,10 +34,10 @@
     {{/isFont}}   
 
     
-    {{#isAlign view.action.desc.name view.action.desc.api iter_key}}
+    {{#isAlign view.action.desc.type view.action.desc.api iter_key}}
       <div class="entry">
         <div class="key">
-          {{getTemplatePlaceHolder view.action.desc.name view.action.desc.api iter_key}}
+          {{getTemplatePlaceHolder view.action.desc.type view.action.desc.api iter_key}}
         </div>
         <div class="value"> 
           {{#paramBind iter_key}}              
@@ -50,10 +50,10 @@
       </div>        
     {{/isAlign}}
 
-    {{#isString  view.action.desc.name view.action.desc.api iter_key}}
+    {{#isString  view.action.desc.type view.action.desc.api iter_key}}
       <div class="entry">
         <div class="key">
-          {{getTemplatePlaceHolder view.action.desc.name view.action.desc.api iter_key}}
+          {{getTemplatePlaceHolder view.action.desc.type view.action.desc.api iter_key}}
         </div>
         <div class="value">
           {{#paramBind iter_key}}    
@@ -63,10 +63,10 @@
       </div>        
     {{/isString}}    
 
-    {{#isUrl view.action.desc.name view.action.desc.api iter_key}}
+    {{#isUrl view.action.desc.type view.action.desc.api iter_key}}
       <div class="entry">
         <div class="key">
-          {{getTemplatePlaceHolder view.action.desc.name view.action.desc.api iter_key}}
+          {{getTemplatePlaceHolder view.action.desc.type view.action.desc.api iter_key}}
         </div>
         <div class="value">
           {{#paramBind iter_key}}  
@@ -76,10 +76,10 @@
       </div>        
     {{/isUrl}} 
 
-    {{#isColor view.action.desc.name view.action.desc.api iter_key}}
+    {{#isColor view.action.desc.type view.action.desc.api iter_key}}
       <div class="entry">
         <div class="key">
-          {{getTemplatePlaceHolder view.action.desc.name view.action.desc.api iter_key}}
+          {{getTemplatePlaceHolder view.action.desc.type view.action.desc.api iter_key}}
         </div>
         <div class="value">          
           {{#paramBind iter_key}}
@@ -89,10 +89,10 @@
       </div>
     {{/isColor}}
 
-    {{#isWeight view.action.desc.name view.action.desc.api iter_key}}
+    {{#isWeight view.action.desc.type view.action.desc.api iter_key}}
       <div class="entry">
         <div class="key">
-          {{getTemplatePlaceHolder view.action.desc.name view.action.desc.api iter_key}}
+          {{getTemplatePlaceHolder view.action.desc.type view.action.desc.api iter_key}}
         </div>
         <div class="value"> 
           {{#paramBind iter_key}}              

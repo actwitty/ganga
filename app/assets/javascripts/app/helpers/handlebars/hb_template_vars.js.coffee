@@ -1,69 +1,69 @@
 
 
 # ---------------------------------------------------------
-App.testTemplateDataType= (obj, name, api, key, options, type) ->  
+App.testTemplateDataType= (obj, type, api, key, options, check) ->  
   context = (options.contexts and options.contexts[0]) or obj
-  name_in = Ember.Handlebars.getPath(context, name, options)
+  type_in = Ember.Handlebars.getPath(context, type, options)
   api_in  = Ember.Handlebars.getPath(context, api, options)
   key_in  = Ember.Handlebars.getPath(context, key, options)
-  test_key = trigger_fish.rbT.templateArgs[ name_in + '.' + api_in][key_in]['key']
+  test_key = trigger_fish.rbT.templateArgs[ type_in + '.' + api_in][key_in]['key']
 
   namescopeArr = test_key.split('.')
-  datatype = namescopeArr[App.templatesConstants.type]  
-  if datatype is App.templatesLibraryVars[type]    
+  datatype = namescopeArr[App.templatesConstants.varType]  
+  if datatype is App.templatesLibraryVars[check]    
     options.fn(obj)
   else
     options.inverse obj
 # ----------------------------------------------------------------
-Handlebars.registerHelper "isNumeric", (name, api, key, options) ->    
-  App.testTemplateDataType( this, name, api, key, options, 'numeric')
+Handlebars.registerHelper "isNumeric", (type, api, key, options) ->    
+  App.testTemplateDataType( this, type, api, key, options, 'numeric')
 
 # ---------------------------------------------------------------- 
-Handlebars.registerHelper "isFont", (name, api, key, options) ->  
-  App.testTemplateDataType( this, name, api, key, options, 'font')
+Handlebars.registerHelper "isFont", (type, api, key, options) ->  
+  App.testTemplateDataType( this, type, api, key, options, 'font')
 
 # ----------------------------------------------------------------
-Handlebars.registerHelper "isColor", (name, api, key, options) ->    
-  App.testTemplateDataType( this, name, api, key, options, 'color')
+Handlebars.registerHelper "isColor", (type, api, key, options) ->    
+  App.testTemplateDataType( this, type, api, key, options, 'color')
 # ----------------------------------------------------------------
-Handlebars.registerHelper "isAlign", (name, api, key, options)->
-  App.testTemplateDataType( this, name, api, key, options, 'align')  
+Handlebars.registerHelper "isAlign", (type, api, key, options)->
+  App.testTemplateDataType( this, type, api, key, options, 'align')  
 
 # ----------------------------------------------------------------
-Handlebars.registerHelper "isString", (name, api, key, options) ->
-  App.testTemplateDataType( this, name, api, key, options, 'string')      
+Handlebars.registerHelper "isString", (type, api, key, options) ->
+  App.testTemplateDataType( this, type, api, key, options, 'string')      
 
 # ----------------------------------------------------------------
-Handlebars.registerHelper "isUrl", (name, api, key, options) ->
-  App.testTemplateDataType( this, name, api, key, options, 'url')      
+Handlebars.registerHelper "isUrl", (type, api, key, options) ->
+  App.testTemplateDataType( this, type, api, key, options, 'url')      
 # ----------------------------------------------------------------
-Handlebars.registerHelper "isWeight", (name, api, key, options) ->
-  App.testTemplateDataType( this, name, api, key, options, 'weight')  
+Handlebars.registerHelper "isWeight", (type, api, key, options) ->
+  App.testTemplateDataType( this, type, api, key, options, 'weight')  
 #----------------------------------------------------------
-Handlebars.registerHelper "getTemplateName", (name, api, options) ->
+Handlebars.registerHelper "getTemplateName", (type, api, options) ->
   
   context = (options.contexts and options.contexts[0]) or this  
-  name_in = Ember.Handlebars.getPath(context, name, options)      
+  type_in = Ember.Handlebars.getPath(context, type, options)      
   api_in = Ember.Handlebars.getPath(context, api, options)      
-  id = name_in + '.' + api_in  
+  id = type_in + '.' + api_in  
   trigger_fish.rbT.templateName[id]
 
 # ---------------------------------------------------------
-Handlebars.registerHelper "getTemplatePlaceHolder", (name, api, key, options) ->
+Handlebars.registerHelper "getTemplatePlaceHolder", (type, api, key, options) ->
   context = (options.contexts and options.contexts[0]) or this
-  name_in = Ember.Handlebars.getPath(context, name, options)
+  type_in = Ember.Handlebars.getPath(context, type, options)
   api_in = Ember.Handlebars.getPath(context, api, options)
   key_in = Ember.Handlebars.getPath(context, key, options)
-  test_key = trigger_fish.rbT.templateArgs[ name_in + '.' + api_in][key_in]['key']
+  test_key = trigger_fish.rbT.templateArgs[ type_in + '.' + api_in][key_in]['key']
   namescopeArr = test_key.split('.')
   namescopeArr[App.templatesConstants.label]
 # ---------------------------------------------------------
-Handlebars.registerHelper "shouldShow", (name, api, key, options) ->
+Handlebars.registerHelper "shouldShow", (type, api, key, options) ->
   context = (options.contexts and options.contexts[0]) or this
-  name_in = Ember.Handlebars.getPath(context, name, options)
+  type_in = Ember.Handlebars.getPath(context, type, options)
   api_in = Ember.Handlebars.getPath(context, api, options)
   key_in = Ember.Handlebars.getPath(context, key, options)
-  template_id = name_in + '.' + api_in
+  template_id = type_in + '.' + api_in
   targ = trigger_fish.rbT.templateArgs  
   if targ.hasOwnProperty template_id    
     if targ[template_id].hasOwnProperty key_in       

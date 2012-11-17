@@ -43,11 +43,15 @@ App.Rule = Ember.Object.extend
           break
         break
       
-      newAction['desc']['name'] = type
+      newAction['desc']['type'] = type
       newAction['desc']['api'] = api
 
       newAction.params = @setActionParam(type, api)
-
+      console.log '----------------------'
+      console.log newAction
+      console.log type
+      console.log api
+      console.log '----------------------'
       @set 'action', newAction
 
       
@@ -111,9 +115,9 @@ App.Rule = Ember.Object.extend
 
 
   displayAction: (->
-    name = @get 'action.desc.name'
+    type = @get 'action.desc.type'
     api = @get 'action.desc.api'
-    key = name + '.' + api
+    key = type + '.' + api
     trigger_fish.rbT.templateName[key]
   ).property('action')
 

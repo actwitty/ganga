@@ -110,8 +110,7 @@ trigger_fish.rbTRules = {
     var appData = trigger_fish.rbTAPP.getAppDetail();
     if (!appData.schema) {
       trigger_fish.rbTDebug.log({"message":"There is no schema set for app, cannot execute rules"});
-      // FIXME :: ADDED THIS ONLY FOR TESTING
-      //return;
+      return;
     }
     try {
           var that=this;

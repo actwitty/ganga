@@ -1,0 +1,26 @@
+<script>
+function ABCD(cookieName,cookieValue)
+{
+	alert("in iframe test");
+	var cookieOptions : {
+    expire : 24 * 60 * 60 * 1000,  // in hours
+    path : "/",
+    domain : window.location.hostname,
+    secure: false
+  };
+	var cookieString = cookieName + "=" + cookieValue;
+  //var cookieOptions =  this.cookieOptions(options);
+
+  cookieString += "; expires=" + cookieOptions.expire;
+  cookieString += "; path=" + cookieOptions.path;
+  //cookieString += "; domain=" + escape(cookieOptions.domain);
+
+  if (cookieOptions.secure) cookieString += "; secure";
+  
+  document.cookie = cookieString;
+  
+}
+
+ABCD("test1","sammy");
+ABCD("test2","sammy jo");
+</script>

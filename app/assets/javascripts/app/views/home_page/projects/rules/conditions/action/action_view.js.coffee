@@ -21,7 +21,8 @@ App.ActionView = Ember.View.extend
   setApiChoices: ->
     @set 'apiChoices', trigger_fish
     rule = @get 'rule'
-    template = rule.get 'action.desc.name'     
+    template = rule.get 'action.desc.type'     
+    console.log '***************************' + template
     @set 'apiChoices', trigger_fish.rbT.templateLib[template]
     
     api = rule.get 'action.desc.api'
@@ -37,7 +38,7 @@ App.ActionView = Ember.View.extend
     rule = event.context
     target = $(event.target)    
     val = target.select2('val')
-    rule.set 'action.desc.name', val
+    rule.set 'action.desc.type', val
     rule.set 'action.desc.api', null
     @setApiChoices()
     @rerender()
@@ -50,14 +51,15 @@ App.ActionView = Ember.View.extend
     rule = event.context
     target = $(event.target)    
     val = target.select2('val')
-    name =  rule.get 'action.desc.name'
+    type =  rule.get 'action.desc.type'
     rule.set 'action.desc.api', val  
-    rule.set 'action.params',rule.setActionParam(name, val)
+    rule.set 'action.params',rule.setActionParam(type, val)
     event.preventDefault()
   # -----------------------------------------------------
   showTemplatePreview: (event) ->   
-    rule = event.context    
-    trigger_fish.rbT.invokeActionScript(rule.get('action'), rule.serializeParams())
+    rule = event.context        
+    console.log rule.serializeAction()
+    trigger_fish.rbT.invokeActionScript(rule.get('action'), rule.serializeAction())
     event.preventDefault()
   # -----------------------------------------------------
   manageDeckerMinimize: (event) ->    

@@ -182,6 +182,7 @@ trigger_fish.rbT.eventHandler = {
 
     params.button = params.button + " " +"Clicked"
     
+// INTEGRATION_ENABLE     
 
 /*
          //trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
