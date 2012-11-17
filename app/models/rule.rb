@@ -80,9 +80,9 @@ class Rule
 
   # INPUT
   ## {
+  ##  :id =>       "234234234" [MANDATORY]
   ##  :account_id => "121212" [MANDATORY]
   ##  :app_id => "1234444',   [MANDATORY]
-  ##  :rule_id => "234234234" [MANDATORY]
   ##  :rule => {              [MANDATORY]
   ##              name: 'A fancy rule',
   ##              event: 'singup',
@@ -124,14 +124,14 @@ class Rule
   def self.update(params)
     Rails.logger.info("Enter Rule Update")
 
-    if params[:account_id].blank? or params[:app_id].blank? or params[:rule_id].blank? or params[:rule].blank?
+    if params[:account_id].blank? or params[:app_id].blank? or params[:id].blank? or params[:rule].blank?
       raise et("rule.invalid_argument_in_update") 
     end
 
     app = App.where(account_id: params[:account_id], _id: params[:app_id] ).first
     raise et("rule.invalid_app_id", id: params[:app_id]) if app.blank?
     
-    rule = app.rules.where(_id: params[:rule_id]).first
+    rule = app.rules.where(_id: params[:id]).first
     raise et("rule.invalid_rule_id") if rule.blank?
 
     rule.update_attributes(params[:rule])
@@ -149,9 +149,9 @@ class Rule
   ##  :account_id => "121212" [MANDATORY]
   ##  :app_id => "1234444',   [MANDATORY]
   ##
-  ##  :rule_id => "234234234" [OPTIONAL] #read one rule
+  ##  :id => "234234234"      [OPTIONAL] #read one rule
   ##                  OR
-  ##  :event => "sign_up"    [OPTIONAL] #read all rules for this event
+  ##  :event => "sign_up"     [OPTIONAL] #read all rules for this event
   ##                 
   ## }
 
@@ -176,8 +176,8 @@ class Rule
     raise et("rule.invalid_app_id", id: params[:app_id]) if app.blank?
 
     # one rule with _id params[:rule_id]
-    if !params[:rule_id].blank?
-      rule = app.rules.where(_id: params[:rule_id]).first
+    if !params[:id].blank?
+      rule = app.rules.where(_id: params[:id]).first
       raise et("rule.invalid_rule_id") if rule.blank?
 
       array << rule.format_rule
@@ -207,7 +207,7 @@ class Rule
   ##  :account_id => "121212" [MANDATORY]
   ##  :app_id => "1234444',   [MANDATORY]
   ##
-  ##  :rule_id => "234234234" [OPTIONAL] #read one rule
+  ##  :id => "234234234" [OPTIONAL] #read one rule
   ##                  OR
   ##  :event => "sign_up"     [OPTIONAL] #read all rules for this event
   ##                 
@@ -227,8 +227,8 @@ class Rule
     raise et("rule.invalid_app_id", id: params[:app_id]) if app.blank?
 
     # destroy one rule with _id params[:rule_id]
-    if !params[:rule_id].blank?
-      rule = app.rules.where(_id: params[:rule_id]).destroy_all
+    if !params[:id].blank?
+      rule = app.rules.where(_id: params[:id]).destroy_all
     
     # destroy rules for an event
     elsif !params[:event].blank?
@@ -248,8 +248,12 @@ class Rule
 
   def format_rule
     hash = self.attributes
-    hash["id"] = hash["_id"]
-    hash.delete("_id")
+    hash["id"] = hash["_id"].to_s
+    hash["time"] = hash["updated_at"]
+    hash = hash.except("_id", "created_at", "updated_at")
     hash
+  rescue => e
+    Rails.logger.error("**** ERROR **** #{e.message}")
+    {}
   end
 end

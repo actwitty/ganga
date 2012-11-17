@@ -20,4 +20,11 @@ class Identifier
 
   field :type ,     type: String,    default: ""
   index(type: 1)
+
+  def format_identifier
+    {id: self._id.to_s, account_id: self.account_id.to_s, app_id: self.app_id.to_s, uid: self.uid, time: self.updated_at}
+  rescue => e
+    Rails.logger.error("**** ERROR **** #{e.message}")
+    {}
+  end
 end

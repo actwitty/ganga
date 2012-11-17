@@ -2,11 +2,15 @@ require 'spec_helper'
 require 'json'
 
 describe AppsController do
-  login_account
+  #login_account
 
   before(:each) do
     @account = FactoryGirl.create(:account)
+    @account.confirm!
+    sign_in  @account
+
     @wrong_app = FactoryGirl.create(:app)
+    
     request.env['HTTP_ACCEPT'] = "application/json"
   end
 
@@ -102,13 +106,19 @@ describe AppsController do
 
       @actor = FactoryGirl.create(:actor, app_id: @app["id"], account_id: @app["account_id"])
 
-      Actor.set(account_id: @actor.account_id, app_id: @actor.app_id, actor_id: @actor._id,
+      Actor.set(account_id: @actor.account_id, app_id: @actor.app_id, id: @actor._id,
                 properties: { profile: {
                                 :email => "john.doe@example.com",
                                 :customer => {:address => {:city => "Bangalore"}}
                               },
                               system: {browser: "chrome", os: "linux"}
                               }
+                )
+
+      Actor.set(account_id: @actor.account_id, app_id: @actor.app_id, id: @actor._id,
+                properties: { 
+                              system: {browser: "chrome", os: 23}
+                            }
                 )
     end
 
@@ -123,15 +133,15 @@ describe AppsController do
     end
 
     it "should read the app detail" do
-
+      
       Event.add!( account_id: @app["account_id"], app_id: @app["id"], actor_id: @actor._id, name: "sign_in",
                   properties: { :email => "john.doe@example.com", :customer => {:address => {:city => "Bangalore"}}})
 
-      Event.add!( account_id: @app["account_id"], app_id: @app["id"], actor_id: @actor._id, name: "sign_in",
+      Event.add!( account_id: @app["account_id"], app_id: @app["id"], actor_id: @actor._id, name: "sign_up",
                   properties: { :email => "mon.doe@example.com", :customer => {:address => {:city => "Pune"}}})
 
       Event.add!( account_id: @app["account_id"], app_id: @app["id"], actor_id: @actor._id, name: "sign_in",
-                  properties: { :email => "tom.doe@example.com", :customer => {:address => {:city => "Bangalore"}}})
+                  properties: { :email => 23, :customer => {:address => {:city => "Bangalore"}}})
 
       Err.add!( account_id: @app["account_id"], app_id: @app["id"], actor_id: @actor._id,
                 properties: { :name => "Something failed",:reason => { err: "I know", code: 402}})
@@ -145,7 +155,7 @@ describe AppsController do
       Conversion.add!( account_id: @app["account_id"], app_id: @app["id"], actor_id: @actor._id,
                        properties: { :button => "hovered",:times => {:time => ["20/12/2011", "19/11/2012"], :count => 30}})
 
-
+      puts @account._id
       get 'read', {account_id: @account._id, id: @app["id"],events: true, actors: true, conversions: true, errors: true}
 
       puts JSON.parse(response.body).inspect

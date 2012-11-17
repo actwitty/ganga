@@ -1,5 +1,21 @@
 #!/usr/bin/ruby
 
+#All TemplType // Will be removed in next version to make it scalable 
+templLibStrTopbar = "'topbar' :{ \n "
+templLibStrBottombar = "'bottombar' :{ \n "
+templLibStrSupport = "'support' :{ \n "
+templLibStrModal = "'modal' :{ \n "
+templLibStrFeedback = "'feedback' :{ \n "
+
+typetopbar = 'topbar'
+typebottombar = 'bottombar' 
+typemodal = 'modal'
+typesupport = 'support'
+typefeedback = 'feedback' 
+
+
+
+
 templLibStr = "trigger_fish.rbT.templateLib = {\n"
 
 templNameStr = "trigger_fish.rbT.templateName = {\n"
@@ -9,6 +25,8 @@ tempArgsStr = "trigger_fish.rbT.templateArgs = {\n"
 templFinalStr = ""
 
 templPropName = ""
+
+templPosBasedOnFile = ""
 
 
 
@@ -40,6 +58,11 @@ Dir.glob('*.html').each  do|fileName|
   regforTemplTimer = /\{\{Timer[\w.\=\%\:\/\s\#\@\-\'\{\}]*\}\}/
 
   regForRuntimeValwithArgs = /\{\{[\w.\=\%\:\/\s\#\@\-\']*\{\{[\w.\=\%\:\/\s\#\@\-\']*\}\}\}\}/
+
+  regforMainKey = /\{\{[\w.\=\%\:\/\s\#\@\-\'\{\}]*\}\}/
+  regforMainKeySubJs = /\{\{[^\d][\w.\=\%\:\/\s\#\@\-\'\{\}]*\}\}/
+
+
   
   strfinalforJsWoNewLineforArgs = strfinalforJsWoNewLine
   strfinalforJsWoNewLine = strfinalforJsWoNewLine.gsub(regforTemplTitle, "") 
@@ -57,6 +80,19 @@ Dir.glob('*.html').each  do|fileName|
 
   tempStrLibClientJs = tempStrLibClientJs + strfinalforJs
 
+  counterReplace = 1
+
+  tempStrLibClientJs.gsub(regforMainKey) do |digits|
+  
+   replacer = "{{"+ "#{counterReplace}"+"}}"
+
+   tempStrLibClientJs=tempStrLibClientJs.sub(regforMainKeySubJs,"{{"+"#{counterReplace}"+"}}")
+
+   counterReplace = counterReplace + 1
+
+  end  
+
+
   File.open(destFileName, 'w') do |f2|  
 
   f2.puts tempStrLibClientJs
@@ -65,7 +101,6 @@ Dir.glob('*.html').each  do|fileName|
 
    reg = /\{\{[\w.\=\%\:\/\s\#\@\-\']*\}\}/
 
-   regforMainKey = /\{\{[\w.\=\%\:\/\s\#\@\-\'\{\}]*\}\}/
    regForRuntimeval = /\{\{\%\%[\w.\=\%\:\/\s\#\@\-\']*\%\%\}\}/
    
   
@@ -117,17 +152,45 @@ m = strfinalforJsWoNewLineforArgs.scan(regforMainKey)
    reg2 = /[A-Z][a-z]*/
 
    tempStr = ""
+   tempLibStr = ""
+
 
 
    tempMatch = origin.scan(reg2)
 
+   tempOrg = origin.match(reg2)
 
    length = tempMatch.length
 
    templength = length-1
+   
+   templPosBasedOnFile = tempMatch[1]
 
+   templPosBasedOnFile=templPosBasedOnFile.downcase
+
+  
    tempMatch.length.times  do|index|  
      
+   #for templ LIb Hash
+
+
+    if index>0 and index==2 and index!=templength
+        tempLibStr = "'"+ tempLibStr + tempMatch[index]+"." 
+
+    elsif index == 2 and index==templength  
+      tempLibStr = "'" + tempMatch[index] + "'"
+    
+    elsif index>2 and index!=templength
+      tempLibStr = tempLibStr + tempMatch[index] + "."
+
+    elsif index>2 and index==templength
+      tempLibStr = tempLibStr + tempMatch[index] + "'" 
+    end
+
+  
+  # for templ Args and TemplName Prop
+
+
     if index>0 and index==1 and index!=templength
         tempStr = "'"+ tempStr + tempMatch[index]+"." 
 
@@ -143,13 +206,22 @@ m = strfinalforJsWoNewLineforArgs.scan(regforMainKey)
 
   end  
 
+
+
+
+
   templPropName = tempStr.downcase 
 
+  templLibPropName = tempLibStr.downcase 
+
+
+  propCounter = 1
 
 
     m.length.times do |index| 
     
     defaults = ""
+
  
     tempDefaultMatch = ""
     tempCheckForRunTimeVal = ""
@@ -202,26 +274,29 @@ m = strfinalforJsWoNewLineforArgs.scan(regforMainKey)
 
     
   if index!= (m.length-1)
-       m[index] = "\t \t \t \t \t \t " +"'" + m[index] + "'" + ":"+ "'#{defaults}'"+","+"\n" 
-    
+       m[index] = "\n \t \t \t \t \t \t " + "'" + "#{propCounter}" + "'"+ " : " + "{" +"\n\t \t \t \t \t \t\t\t\t" + 'key :' + "'" + m[index] + "'" + "," + "\n\t \t \t \t \t \t\t\t\t" + 'value :' +"'#{defaults}'" + "\n\t \t \t \t \t \t " + " }," 
+    propCounter = propCounter + 1
     elsif  index == (m.length-1)
-      m[index] = "\t \t \t \t \t \t "+ "'" + m[index] + "'" + ":"+"'#{defaults}'"+",\n" 
-      m[index+1] = "\t \t \t \t \t \t " + "'" + "rb.t.nr.durationOfDisplay" + "'" + ":"+"'#{defaultTemplTimer}'"+"\n" 
+      
+      m[index] = "\n \t \t \t \t \t \t " + "'" + "#{propCounter}"+ "'"+" :" + "{" +"\n\t \t \t \t \t \t\t\t\t" + 'key :' + "'" + m[index] + "'" + "," + "\n\t \t \t \t \t \t\t\t\t" + 'value :' +"'#{defaults}'" + "\n\t \t \t \t \t \t " + " }"
+      propCounter = propCounter + 1
+
+
 
 
     end  
 
     end 
 
-   if !m[0]  and tempMatch[0]
+  if !m[0]  and tempMatch[0]
 
-    m[0] ="\t \t \t \t \t \t " + "'" + "rb.t.nr.durationOfDisplay" + "'" + ":"+"'#{defaultTemplTimer}'"+"\n"
+   
 
   end 
    
     m= m.to_s
 
-    m = "{\n" + m + "\t \t \t \t \t },\n"
+    m = "{\n" + m + "\n\t \t \t \t \t },\n"
     
     m = "\t \t  "+ templPropName + ":" + m
 
@@ -232,13 +307,59 @@ m = strfinalforJsWoNewLineforArgs.scan(regforMainKey)
 
     tempArgsStr = tempArgsStr + m
 
-    templLibStr = templLibStr+ "\t \t  "+ templPropName + ":" + "'#{origin}HTML'" + ",\n"
 
-end	
+ 
+
+  #making templLib hash ...will be modiled in next version to make it scalable
+    if templPosBasedOnFile == typetopbar
+     templLibStrTopbar = templLibStrTopbar + "\t\t\t\t"+ templLibPropName + ":" + "'#{origin}HTML'" + ",\n"
+ 
+    elsif templPosBasedOnFile == typebottombar
+
+      templLibStrBottombar = templLibStrBottombar + "\t\t\t\t"+ templLibPropName + ":" + "'#{origin}HTML'" + ",\n"
+
+
+    elsif templPosBasedOnFile == typemodal
+
+      templLibStrModal= templLibStrModal + "\t\t\t\t"+ templLibPropName + ":" + "'#{origin}HTML'" + ",\n"
+
+    elsif templPosBasedOnFile == typesupport
+
+      templLibStrSupport= templLibStrSupport + "\t\t\t\t"+ templLibPropName + ":" + "'#{origin}HTML'" + ",\n"
+
+
+    elsif templPosBasedOnFile == typefeedback
+
+       templLibStrFeedback = templLibStrFeedback + "\t\t\t\t"+ templLibPropName + ":" + "'#{origin}HTML'" + ",\n"
+      
+      
+     end  
+
+    
+
+    
+   # templLibStr = templLibStr+ "\t \t  "+ templPropName + ":" + "'#{origin}HTML'" + ",\n"
+ end	
 
 
 
-templLibStr = templLibStr.chop.chop  + "\n \n \t \t \t }; \n\n\n\n "
+#this part will be modified in next version to make it scalable
+ 
+ templLibStrTopbar = templLibStrTopbar.chop.chop  + "\n \n \t \t \t }, \n\n\n\n "
+ 
+ templLibStrBottombar = templLibStrBottombar.chop.chop  + "\n \n \t \t \t }, \n\n\n\n "
+
+ templLibStrModal = templLibStrModal.chop.chop  + "\n \n \t \t \t }, \n\n\n\n "
+
+ templLibStrSupport = templLibStrSupport.chop.chop  + "\n \n \t \t \t }, \n\n\n\n "
+
+ templLibStrFeedback = templLibStrFeedback.chop.chop  + "\n \n \t \t \t },\n"
+
+ templLibStr= templLibStr+templLibStrTopbar+templLibStrBottombar+templLibStrModal+templLibStrSupport+templLibStrFeedback
+
+
+
+templLibStr = templLibStr.chop.chop + "\n \n \t \t \t }; \n\n\n\n "
 
 templNameStr = templNameStr.chop.chop + "\n \t\ \t \t \t }; \n\n\n\n "
 

@@ -4,7 +4,9 @@
 /****************************[[include.js]]*************************************/ 
 
 
-var trigger_fish = {};
+if(!trigger_fish){    
+	var trigger_fish = {};
+}
 
 trigger_fish.rbT = { inited: false};
 
@@ -13,199 +15,613 @@ trigger_fish.rbT = { inited: false};
 
 
 trigger_fish.rbT.templateLib = {
-	 	  'bottombar.generic.fblike':'rbTemplBottombarGenericFblikeHTML',
-	 	  'topbar.generic.normal':'rbTemplTopbarGenericNormalHTML',
-	 	  'chat.generic.normal':'rbTemplChatGenericNormalHTML',
-	 	  'topbar.generic.twitterfollow':'rbTemplTopbarGenericTwitterfollowHTML',
-	 	  'bottombar.generic.twitterfollow':'rbTemplBottombarGenericTwitterfollowHTML',
-	 	  'topbar.generic.fblike':'rbTemplTopbarGenericFblikeHTML',
-	 	  'uservoice.generic.normal':'rbTemplUservoiceGenericNormalHTML',
-	 	  'bottombar.generic.twittershare':'rbTemplBottombarGenericTwittershareHTML',
-	 	  'modal.generic.normal':'rbTemplModalGenericNormalHTML',
-	 	  'bottombar.generic.normal':'rbTemplBottombarGenericNormalHTML',
-	 	  'topbar.generic.twittershare':'rbTemplTopbarGenericTwittershareHTML'
+'topbar' :{ 
+ 				'generic.normal':'rbTemplTopbarGenericNormalHTML',
+				'generic.twitterfollow':'rbTemplTopbarGenericTwitterfollowHTML',
+				'generic.fblike':'rbTemplTopbarGenericFblikeHTML',
+				'generic.twittershare':'rbTemplTopbarGenericTwittershareHTML'
+ 
+ 	 	 	 }, 
+
+
+
+ 'bottombar' :{ 
+ 				'generic.fblike':'rbTemplBottombarGenericFblikeHTML',
+				'generic.twitterfollow':'rbTemplBottombarGenericTwitterfollowHTML',
+				'generic.twittershare':'rbTemplBottombarGenericTwittershareHTML',
+				'generic.normal':'rbTemplBottombarGenericNormalHTML'
+ 
+ 	 	 	 }, 
+
+
+
+ 'modal' :{ 
+ 				'generic.normal':'rbTemplModalGenericNormalHTML'
+ 
+ 	 	 	 }, 
+
+
+
+ 'support' :{ 
+ 				'olark.normal':'rbTemplSupportOlarkNormalHTML'
+ 
+ 	 	 	 }, 
+
+
+
+ 'feedback' :{ 
+ 				'uservoice.normal':'rbTemplFeedbackUservoiceNormalHTML'
+ 
+ 	 	 	 }
  
  	 	 	 }; 
 
 
 
  trigger_fish.rbT.templateName = {
-	 			'bottombar.generic.fblike':'Facebook Like Bottombar',
+	 			
 	 			'topbar.generic.normal':'Normal Topbar',
-	 			'chat.generic.normal':'Chat Window',
 	 			'topbar.generic.twitterfollow':'Twitter Follow Topbar',
-	 			'bottombar.generic.twitterfollow':'Twitter Follow Bottombar',
 	 			'topbar.generic.fblike':'Facebook Like Topbar',
-	 			'uservoice.generic.normal':'User Voice Feedback',
+	 			'topbar.generic.twittershare':'Twitter Share Topbar',
+	 			'bottombar.generic.twitterfollow':'Twitter Follow Bottombar',
+	 			'bottombar.generic.fblike':'Facebook Like Bottombar',
 	 			'bottombar.generic.twittershare':'Twitter Share Bottombar',
-	 			'modal.generic.normal':'Modal Window',
 	 			'bottombar.generic.normal':'Normal Bottombar',
-	 			'topbar.generic.twittershare':'Twitter Share Topbar'
+	 			'support.olark.normal':'Chat Window',
+	 			'modal.generic.normal':'Modal Window',
+	 			'feedback.uservoice.normal':'User Voice Feedback'			
+	 			
  	 	 	 	 }; 
 
 
 
  trigger_fish.rbT.templateArgs = {
 	 	  'bottombar.generic.fblike':{
-	 	 	 	 	 	 'rb.t.cr.textColor':'#F2F0F0',
-	 	 	 	 	 	 'rb.t.nr.textFontsize':'15',
-	 	 	 	 	 	 'rb.t.ft.textFontfamily':'Arial',
-	 	 	 	 	 	 'rb.t.sg.textFontWeight':'bold',
-	 	 	 	 	 	 'rb.f.nr.baseZindex':'1000',
-	 	 	 	 	 	 'rb.t.nr.baseWidth':'100',
-	 	 	 	 	 	 'rb.t.nr.baseHeight':'40',
-	 	 	 	 	 	 'rb.t.cr.baseBgColor':'#3C5891',
-	 	 	 	 	 	 'rb.t.an.baseTextalign':'center',
-	 	 	 	 	 	 'rb.t.vsg.textLeft':'Hello Hello',
-	 	 	 	 	 	 'rb.t.ul.facebookPage':'http://www.google.com',
-	 	 	 	 	 	 'rb.t.vsg.textRight':'Hello Hello',
-	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'300'
+
+ 	 	 	 	 	 	 '2' : {
+	 	 	 	 	 				key :'rb.t.nr.textFontsize',
+	 	 	 	 	 				value :'15'
+	 	 	 	 	 	  },
+	 	 	 	 	 	  '1' : {
+	 	 	 	 	 				key :'rb.t.cr.textColor',
+	 	 	 	 	 				value :'#F2F0F0'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '3' : {
+	 	 	 	 	 				key :'rb.t.ft.textFontfamily',
+	 	 	 	 	 				value :'Arial'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '4' : {
+	 	 	 	 	 				key :'rb.t.sg.textFontWeight',
+	 	 	 	 	 				value :'bold'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '5' : {
+	 	 	 	 	 				key :'rb.f.nr.baseZindex',
+	 	 	 	 	 				value :'1000'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '6' : {
+	 	 	 	 	 				key :'rb.t.nr.baseWidth',
+	 	 	 	 	 				value :'100'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '7' : {
+	 	 	 	 	 				key :'rb.t.nr.baseHeight',
+	 	 	 	 	 				value :'40'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '8' : {
+	 	 	 	 	 				key :'rb.t.cr.baseBgColor',
+	 	 	 	 	 				value :'#3C5891'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '9' : {
+	 	 	 	 	 				key :'rb.t.an.baseTextalign',
+	 	 	 	 	 				value :'center'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '10' : {
+	 	 	 	 	 				key :'rb.t.vsg.textLeft',
+	 	 	 	 	 				value :'Hello Hello'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '11' : {
+	 	 	 	 	 				key :'rb.t.ul.facebookPage',
+	 	 	 	 	 				value :'http://www.google.com'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '12' :{
+	 	 	 	 	 				key :'rb.t.vsg.textRight',
+	 	 	 	 	 				value :'Hello Hello'
+	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'topbar.generic.normal':{
-	 	 	 	 	 	 'rb.t.cr.textColor ':'#333',
-	 	 	 	 	 	 'rb.t.nr.textFontsize':'15',
-	 	 	 	 	 	 'rb.t.ft.textFontfamily':'Arial',
-	 	 	 	 	 	 'rb.t.sg.textFontWeight':'bold',
-	 	 	 	 	 	 'rb.f.nr.baseZindex':'100',
-	 	 	 	 	 	 'rb.t.nr.baseWidth':'100',
-	 	 	 	 	 	 'rb.t.nr.baseHeight':'40',
-	 	 	 	 	 	 'rb.t.cr.baseBgColor':'#DCDCDC',
-	 	 	 	 	 	 'rb.t.an.baseTextalign':'center',
-	 	 	 	 	 	 'rb.t.vsg.textLeft':'Hello',
-	 	 	 	 	 	 'rb.t.nr.btnFontSize':'14',
-	 	 	 	 	 	 'rb.t.cr.btnBgColor':'#548AC7',
-	 	 	 	 	 	 'rb.t.cr.btnColor':'white',
-	 	 	 	 	 	 'rb.t.ul.btnLink':'http://www.google.com',
-	 	 	 	 	 	 'rb.t.sg.btnLable':'Click',
-	 	 	 	 	 	 'rb.t.vsg.textRight':'Hello',
-	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'300'
-	 	 	 	 	 },
-	 	  'chat.generic.normal':{
-	 	 	 	 	 	 'rb.t.sg.olarkIdentity':'\'6679-845-10-6199\'',
-	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'300'
+
+
+ 	 	 	 	 	 	 '1' : {
+	 	 	 	 	 				key :'rb.t.nr.textFontsize',
+	 	 	 	 	 				value :'15'
+	 	 	 	 	 	  },
+	 	 	 	 	 	  '2' : {
+	 	 	 	 	 				key :'rb.t.cr.textColor ',
+	 	 	 	 	 				value :'#333'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '3' : {
+	 	 	 	 	 				key :'rb.t.ft.textFontfamily',
+	 	 	 	 	 				value :'Arial'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '4' : {
+	 	 	 	 	 				key :'rb.t.sg.textFontWeight',
+	 	 	 	 	 				value :'bold'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '5' : {
+	 	 	 	 	 				key :'rb.f.nr.baseZindex',
+	 	 	 	 	 				value :'100'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '6' : {
+	 	 	 	 	 				key :'rb.t.nr.baseWidth',
+	 	 	 	 	 				value :'100'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '7' : {
+	 	 	 	 	 				key :'rb.t.nr.baseHeight',
+	 	 	 	 	 				value :'40'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '8' : {
+	 	 	 	 	 				key :'rb.t.cr.baseBgColor',
+	 	 	 	 	 				value :'#DCDCDC'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '9' : {
+	 	 	 	 	 				key :'rb.t.an.baseTextalign',
+	 	 	 	 	 				value :'center'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '10' : {
+	 	 	 	 	 				key :'rb.t.vsg.textLeft',
+	 	 	 	 	 				value :'Hello'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '11' : {
+	 	 	 	 	 				key :'rb.t.nr.btnFontSize',
+	 	 	 	 	 				value :'14'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '12' : {
+	 	 	 	 	 				key :'rb.t.cr.btnBgColor',
+	 	 	 	 	 				value :'#548AC7'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '13' : {
+	 	 	 	 	 				key :'rb.t.cr.btnColor',
+	 	 	 	 	 				value :'white'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '14' : {
+	 	 	 	 	 				key :'rb.t.ul.btnLink',
+	 	 	 	 	 				value :'http://www.google.com'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '15' : {
+	 	 	 	 	 				key :'rb.t.sg.btnLable',
+	 	 	 	 	 				value :'Click'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '16' :{
+	 	 	 	 	 				key :'rb.t.vsg.textRight',
+	 	 	 	 	 				value :'Hello'
+	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'topbar.generic.twitterfollow':{
-	 	 	 	 	 	 'rb.t.cr.textColor ':'white',
-	 	 	 	 	 	 'rb.t.nr.textFontsize':'17',
-	 	 	 	 	 	 'rb.t.cr.textShadow':'black',
-	 	 	 	 	 	 'rb.t.ft.textFontfamily':'Arial',
-	 	 	 	 	 	 'rb.t.sg.textFontWeight':'bold',
-	 	 	 	 	 	 'rb.f.nr.baseZindex':'1000',
-	 	 	 	 	 	 'rb.t.nr.baeWidth':'100',
-	 	 	 	 	 	 'rb.t.nr.baseHeight':'50',
-	 	 	 	 	 	 'rb.t.cr.baeBgColor':'#0B8AB8',
-	 	 	 	 	 	 'rb.t.an.baseTextalign':'center',
-	 	 	 	 	 	 'rb.t.vsg.textLeft':'Hello Hello',
-	 	 	 	 	 	 'rb.t.sg.twitterAccountLink':'@actwitty',
-	 	 	 	 	 	 'rb.t.sg.twitterAccountLable':'@actwitty',
-	 	 	 	 	 	 'rb.t.vsg.textRight':'Hello Hello',
-	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'300'
+
+ 	 	 	 	 	 	 '1' : {
+	 	 	 	 	 				key :'rb.t.cr.textColor ',
+	 	 	 	 	 				value :'white'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '2' : {
+	 	 	 	 	 				key :'rb.t.nr.textFontsize',
+	 	 	 	 	 				value :'17'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '3' : {
+	 	 	 	 	 				key :'rb.t.cr.textShadow',
+	 	 	 	 	 				value :'black'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '4' : {
+	 	 	 	 	 				key :'rb.t.ft.textFontfamily',
+	 	 	 	 	 				value :'Arial'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '5' : {
+	 	 	 	 	 				key :'rb.t.sg.textFontWeight',
+	 	 	 	 	 				value :'bold'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '6' : {
+	 	 	 	 	 				key :'rb.f.nr.baseZindex',
+	 	 	 	 	 				value :'1000'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '7' : {
+	 	 	 	 	 				key :'rb.t.nr.baeWidth',
+	 	 	 	 	 				value :'100'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '8' : {
+	 	 	 	 	 				key :'rb.t.nr.baseHeight',
+	 	 	 	 	 				value :'50'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '9' : {
+	 	 	 	 	 				key :'rb.t.cr.baeBgColor',
+	 	 	 	 	 				value :'#0B8AB8'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '10' : {
+	 	 	 	 	 				key :'rb.t.an.baseTextalign',
+	 	 	 	 	 				value :'center'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '11' : {
+	 	 	 	 	 				key :'rb.t.vsg.textLeft',
+	 	 	 	 	 				value :'Hello Hello'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '12' : {
+	 	 	 	 	 				key :'rb.t.sg.twitterAccountLink',
+	 	 	 	 	 				value :'@actwitty'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '13' : {
+	 	 	 	 	 				key :'rb.t.sg.twitterAccountLable',
+	 	 	 	 	 				value :'@actwitty'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '14' :{
+	 	 	 	 	 				key :'rb.t.vsg.textRight',
+	 	 	 	 	 				value :'Hello Hello'
+	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'bottombar.generic.twitterfollow':{
-	 	 	 	 	 	 'rb.t.cr.textColor ':'white',
-	 	 	 	 	 	 'rb.t.nr.textFontsize':'17',
-	 	 	 	 	 	 'rb.t.cr.textShadow':'black',
-	 	 	 	 	 	 'rb.t.ft.textFontfamily':'Arial',
-	 	 	 	 	 	 'rb.t.sg.textFontWeight':'bold',
-	 	 	 	 	 	 'rb.f.nr.baseZindex':'1000',
-	 	 	 	 	 	 'rb.t.nr.baeWidth':'100',
-	 	 	 	 	 	 'rb.t.nr.baseHeight':'50',
-	 	 	 	 	 	 'rb.t.cr.baeBgColor':'#0B8AB8',
-	 	 	 	 	 	 'rb.t.an.baseTextalign':'center',
-	 	 	 	 	 	 'rb.t.vsg.textLeft':'Hello Hello',
-	 	 	 	 	 	 'rb.t.sg.twitterAccountLink':'@actwitty',
-	 	 	 	 	 	 'rb.t.sg.twitterAccountLable':'@actwitty',
-	 	 	 	 	 	 'rb.t.vsg.textRight':'Hello Hello',
-	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'300'
+
+ 	 	 	 	 	 	 '1' : {
+	 	 	 	 	 				key :'rb.t.cr.textColor ',
+	 	 	 	 	 				value :'white'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '2' : {
+	 	 	 	 	 				key :'rb.t.nr.textFontsize',
+	 	 	 	 	 				value :'17'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '3' : {
+	 	 	 	 	 				key :'rb.t.cr.textShadow',
+	 	 	 	 	 				value :'black'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '4' : {
+	 	 	 	 	 				key :'rb.t.ft.textFontfamily',
+	 	 	 	 	 				value :'Arial'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '5' : {
+	 	 	 	 	 				key :'rb.t.sg.textFontWeight',
+	 	 	 	 	 				value :'bold'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '6' : {
+	 	 	 	 	 				key :'rb.f.nr.baseZindex',
+	 	 	 	 	 				value :'1000'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '7' : {
+	 	 	 	 	 				key :'rb.t.nr.baeWidth',
+	 	 	 	 	 				value :'100'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '8' : {
+	 	 	 	 	 				key :'rb.t.nr.baseHeight',
+	 	 	 	 	 				value :'50'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '9' : {
+	 	 	 	 	 				key :'rb.t.cr.baeBgColor',
+	 	 	 	 	 				value :'#0B8AB8'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '10' : {
+	 	 	 	 	 				key :'rb.t.an.baseTextalign',
+	 	 	 	 	 				value :'center'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '11' : {
+	 	 	 	 	 				key :'rb.t.vsg.textLeft',
+	 	 	 	 	 				value :'Hello Hello'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '12' : {
+	 	 	 	 	 				key :'rb.t.sg.twitterAccountLink',
+	 	 	 	 	 				value :'@actwitty'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '13' : {
+	 	 	 	 	 				key :'rb.t.sg.twitterAccountLable',
+	 	 	 	 	 				value :'@actwitty'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '14' :{
+	 	 	 	 	 				key :'rb.t.vsg.textRight',
+	 	 	 	 	 				value :'Hello Hello'
+	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'topbar.generic.fblike':{
-	 	 	 	 	 	 'rb.t.cr.textColor ':'#F2F0F0',
-	 	 	 	 	 	 'rb.t.nr.textFontsize':'16',
-	 	 	 	 	 	 'rb.t.ft.textFontfamily':'Arial',
-	 	 	 	 	 	 'rb.t.sg.textFontWeight':'bold',
-	 	 	 	 	 	 'rb.f.nr.baseZindex':'1000',
-	 	 	 	 	 	 'rb.t.nr.baseWidth':'100',
-	 	 	 	 	 	 'rb.t.nr.baseHeight':'40',
-	 	 	 	 	 	 'rb.t.cr.baseBgColor':'#3C5891',
-	 	 	 	 	 	 'rb.t.an.baseTextalign':'center',
-	 	 	 	 	 	 'rb.t.vsg.textLeft':'Hello Hello',
-	 	 	 	 	 	 'rb.t.ul.facebookPage':'http://www.google.com',
-	 	 	 	 	 	 'rb.t.vsg.textRight':'Hello Hello',
-	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'300'
-	 	 	 	 	 },
-	 	  'uservoice.generic.normal':{
-	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'300'
+
+ 	 	 	 	 	 	 '1' : {
+	 	 	 	 	 				key :'rb.t.cr.textColor ',
+	 	 	 	 	 				value :'#F2F0F0'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '2' : {
+	 	 	 	 	 				key :'rb.t.nr.textFontsize',
+	 	 	 	 	 				value :'16'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '3' : {
+	 	 	 	 	 				key :'rb.t.ft.textFontfamily',
+	 	 	 	 	 				value :'Arial'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '4' : {
+	 	 	 	 	 				key :'rb.t.sg.textFontWeight',
+	 	 	 	 	 				value :'bold'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '5' : {
+	 	 	 	 	 				key :'rb.f.nr.baseZindex',
+	 	 	 	 	 				value :'1000'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '6' : {
+	 	 	 	 	 				key :'rb.t.nr.baseWidth',
+	 	 	 	 	 				value :'100'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '7' : {
+	 	 	 	 	 				key :'rb.t.nr.baseHeight',
+	 	 	 	 	 				value :'40'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '8' : {
+	 	 	 	 	 				key :'rb.t.cr.baseBgColor',
+	 	 	 	 	 				value :'#3C5891'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '9' : {
+	 	 	 	 	 				key :'rb.t.an.baseTextalign',
+	 	 	 	 	 				value :'center'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '10' : {
+	 	 	 	 	 				key :'rb.t.vsg.textLeft',
+	 	 	 	 	 				value :'Hello Hello'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '11' : {
+	 	 	 	 	 				key :'rb.t.ul.facebookPage',
+	 	 	 	 	 				value :'http://www.google.com'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '12' :{
+	 	 	 	 	 				key :'rb.t.vsg.textRight',
+	 	 	 	 	 				value :'Hello Hello'
+	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'bottombar.generic.twittershare':{
-	 	 	 	 	 	 'rb.t.cr.textColor ':'white',
-	 	 	 	 	 	 'rb.t.nr.textFontsize':'17',
-	 	 	 	 	 	 'rb.t.cr.textShadow':'black',
-	 	 	 	 	 	 'rb.t.ft.textFontfamily':'Arial',
-	 	 	 	 	 	 'rb.t.sg.textFontWeight':'bold',
-	 	 	 	 	 	 'rb.f.nr.baseZindex':'1000',
-	 	 	 	 	 	 'rb.t.nr.baeWidth':'100',
-	 	 	 	 	 	 'rb.t.nr.baseHeight':'50',
-	 	 	 	 	 	 'rb.t.cr.baeBgColor':'#0B8AB8',
-	 	 	 	 	 	 'rb.t.an.baseTextalign':'center',
-	 	 	 	 	 	 'rb.t.vsg.leftText':'Hello Hello',
-	 	 	 	 	 	 'rb.t.sg.twitterSharetext':'Twteet please',
-	 	 	 	 	 	 'rb.t.vsg.rightText':'Hello Hello',
-	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'300'
+
+ 	 	 	 	 	 	 '1' : {
+	 	 	 	 	 				key :'rb.t.cr.textColor ',
+	 	 	 	 	 				value :'white'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '2' : {
+	 	 	 	 	 				key :'rb.t.nr.textFontsize',
+	 	 	 	 	 				value :'17'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '3' : {
+	 	 	 	 	 				key :'rb.t.cr.textShadow',
+	 	 	 	 	 				value :'black'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '4' : {
+	 	 	 	 	 				key :'rb.t.ft.textFontfamily',
+	 	 	 	 	 				value :'Arial'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '5' : {
+	 	 	 	 	 				key :'rb.t.sg.textFontWeight',
+	 	 	 	 	 				value :'bold'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '6' : {
+	 	 	 	 	 				key :'rb.f.nr.baseZindex',
+	 	 	 	 	 				value :'1000'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '7' : {
+	 	 	 	 	 				key :'rb.t.nr.baeWidth',
+	 	 	 	 	 				value :'100'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '8' : {
+	 	 	 	 	 				key :'rb.t.nr.baseHeight',
+	 	 	 	 	 				value :'50'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '9' : {
+	 	 	 	 	 				key :'rb.t.cr.baeBgColor',
+	 	 	 	 	 				value :'#0B8AB8'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '10' : {
+	 	 	 	 	 				key :'rb.t.an.baseTextalign',
+	 	 	 	 	 				value :'center'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '11' : {
+	 	 	 	 	 				key :'rb.t.vsg.leftText',
+	 	 	 	 	 				value :'Hello Hello'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '12' : {
+	 	 	 	 	 				key :'rb.t.sg.twitterSharetext',
+	 	 	 	 	 				value :'Twteet please'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '13' :{
+	 	 	 	 	 				key :'rb.t.vsg.rightText',
+	 	 	 	 	 				value :'Hello Hello'
+	 	 	 	 	 	  }
+	 	 	 	 	 },
+	 	  'support.olark.normal':{
+
+ 	 	 	 	 	 	 '1' :{
+	 	 	 	 	 				key :'rb.t.sg.olarkIdentity',
+	 	 	 	 	 				value :'\'6679-845-10-6199\''
+	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'modal.generic.normal':{
-	 	 	 	 	 	 'rb.f.nr.transBlockZindex':'1000',
-	 	 	 	 	 	 'rb.f.nr.baseZindex':'1005',
-	 	 	 	 	 	 'rb.t.cr.baseBgColor':'white',
-	 	 	 	 	 	 'rb.t.cr.headingBgColor':'#e7e7e7',
-	 	 	 	 	 	 'rb.t.cr.modalHeadingColor':'#525252',
-	 	 	 	 	 	 'rb.t.nr.modalHeadingFontsize':'20',
-	 	 	 	 	 	 'rb.t.ft.headingFontfamily':'Arial',
-	 	 	 	 	 	 'rb.t.cr.modalHeadingTextShadow':'#6e6e6e',
-	 	 	 	 	 	 'rb.t.vsg.modalHeadingText':'This is the Heading ',
-	 	 	 	 	 	 'rb.t.cr.modalTextColor':'#525252',
-	 	 	 	 	 	 'rb.t.nr.modalTextFontsize':'12',
-	 	 	 	 	 	 'rb.t.ft.textFontfamily':'Arial',
-	 	 	 	 	 	 'rb.t.vsg.modalText':'Hello Hello Hello Hello Hello hello heello bjashsdgfsdhvfhsdvcfhsdvhcsd hvhvchjsdvchjsdvchjvsdchvsdhvcjhsdvjvh ',
-	 	 	 	 	 	 'rb.t.sg.modalImgPath':'../../../images/rails.png',
-	 	 	 	 	 	 'rb.t.cr.buttonBgColor':'#3B5998',
-	 	 	 	 	 	 'rb.t.ul.modalBtnLink':'http://www.google.com',
-	 	 	 	 	 	 'rb.t.sg.modalBtnLable':'Click',
-	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'300'
+
+ 	 	 	 	 	 	 '1' : {
+	 	 	 	 	 				key :'rb.f.nr.transBlockZindex',
+	 	 	 	 	 				value :'1000'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '2' : {
+	 	 	 	 	 				key :'rb.f.nr.baseZindex',
+	 	 	 	 	 				value :'1005'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '3' : {
+	 	 	 	 	 				key :'rb.t.cr.baseBgColor',
+	 	 	 	 	 				value :'white'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '4' : {
+	 	 	 	 	 				key :'rb.t.cr.headingBgColor',
+	 	 	 	 	 				value :'#e7e7e7'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '5' : {
+	 	 	 	 	 				key :'rb.t.cr.modalHeadingColor',
+	 	 	 	 	 				value :'#525252'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '6' : {
+	 	 	 	 	 				key :'rb.t.nr.modalHeadingFontsize',
+	 	 	 	 	 				value :'20'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '7' : {
+	 	 	 	 	 				key :'rb.t.ft.headingFontfamily',
+	 	 	 	 	 				value :'Arial'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '8' : {
+	 	 	 	 	 				key :'rb.t.cr.modalHeadingTextShadow',
+	 	 	 	 	 				value :'#6e6e6e'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '9' : {
+	 	 	 	 	 				key :'rb.t.vsg.modalHeadingText',
+	 	 	 	 	 				value :'This is the Heading '
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '10' : {
+	 	 	 	 	 				key :'rb.t.cr.modalTextColor',
+	 	 	 	 	 				value :'#525252'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '11' : {
+	 	 	 	 	 				key :'rb.t.nr.modalTextFontsize',
+	 	 	 	 	 				value :'12'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '12' : {
+	 	 	 	 	 				key :'rb.t.ft.textFontfamily',
+	 	 	 	 	 				value :'Arial'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '13' : {
+	 	 	 	 	 				key :'rb.t.vsg.modalText',
+	 	 	 	 	 				value :'Hello Hello Hello Hello Hello hello heello bjashsdgfsdhvfhsdvcfhsdvhcsd hvhvchjsdvchjsdvchjvsdchvsdhvcjhsdvjvh '
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '14' : {
+	 	 	 	 	 				key :'rb.t.sg.modalImgPath',
+	 	 	 	 	 				value :'../../../images/rails.png'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '15' : {
+	 	 	 	 	 				key :'rb.t.cr.buttonBgColor',
+	 	 	 	 	 				value :'#3B5998'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '16' : {
+	 	 	 	 	 				key :'rb.t.ul.modalBtnLink',
+	 	 	 	 	 				value :'http://www.google.com'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '17' :{
+	 	 	 	 	 				key :'rb.t.sg.modalBtnLable',
+	 	 	 	 	 				value :'Click'
+	 	 	 	 	 	  }
+	 	 	 	 	 },
+	 	  'feedback.uservoice.normal':{
+
 	 	 	 	 	 },
 	 	  'bottombar.generic.normal':{
-	 	 	 	 	 	 'rb.t.cr.textColor ':'#333',
-	 	 	 	 	 	 'rb.t.nr.textFontsize':'15',
-	 	 	 	 	 	 'rb.t.ft.textFontfamily':'Arial',
-	 	 	 	 	 	 'rb.t.sg.textFontWeight':'bold',
-	 	 	 	 	 	 'rb.f.nr.baseZindex':'100',
-	 	 	 	 	 	 'rb.t.nr.baseWidth':'100',
-	 	 	 	 	 	 'rb.t.nr.baseHeight':'40',
-	 	 	 	 	 	 'rb.t.cr.baseBgColor':'#DCDCDC',
-	 	 	 	 	 	 'rb.t.an.baseTextalign':'center',
-	 	 	 	 	 	 'rb.t.vsg.textLeft':'Hello Hello',
-	 	 	 	 	 	 'rb.t.nr.btnFontSize':'14',
-	 	 	 	 	 	 'rb.t.cr.btnBgColor':'#548AC7',
-	 	 	 	 	 	 'rb.t.cr.btnColor':'white',
-	 	 	 	 	 	 'rb.t.ul.btnLink':'http://www.google.com',
-	 	 	 	 	 	 'rb.t.sg.btnLable':'Click',
-	 	 	 	 	 	 'rb.t.vsg.textRight':'Hello Hello',
-	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'300'
+
+ 	 	 	 	 	 	 '1' : {
+	 	 	 	 	 				key :'rb.t.cr.textColor ',
+	 	 	 	 	 				value :'#333'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '2' : {
+	 	 	 	 	 				key :'rb.t.nr.textFontsize',
+	 	 	 	 	 				value :'15'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '3' : {
+	 	 	 	 	 				key :'rb.t.ft.textFontfamily',
+	 	 	 	 	 				value :'Arial'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '4' : {
+	 	 	 	 	 				key :'rb.t.sg.textFontWeight',
+	 	 	 	 	 				value :'bold'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '5' : {
+	 	 	 	 	 				key :'rb.f.nr.baseZindex',
+	 	 	 	 	 				value :'100'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '6' : {
+	 	 	 	 	 				key :'rb.t.nr.baseWidth',
+	 	 	 	 	 				value :'100'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '7' : {
+	 	 	 	 	 				key :'rb.t.nr.baseHeight',
+	 	 	 	 	 				value :'40'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '8' : {
+	 	 	 	 	 				key :'rb.t.cr.baseBgColor',
+	 	 	 	 	 				value :'#DCDCDC'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '9' : {
+	 	 	 	 	 				key :'rb.t.an.baseTextalign',
+	 	 	 	 	 				value :'center'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '10' : {
+	 	 	 	 	 				key :'rb.t.vsg.textLeft',
+	 	 	 	 	 				value :'Hello Hello'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '11' : {
+	 	 	 	 	 				key :'rb.t.nr.btnFontSize',
+	 	 	 	 	 				value :'14'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '12' : {
+	 	 	 	 	 				key :'rb.t.cr.btnBgColor',
+	 	 	 	 	 				value :'#548AC7'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '13' : {
+	 	 	 	 	 				key :'rb.t.cr.btnColor',
+	 	 	 	 	 				value :'white'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '14' : {
+	 	 	 	 	 				key :'rb.t.ul.btnLink',
+	 	 	 	 	 				value :'http://www.google.com'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '15' : {
+	 	 	 	 	 				key :'rb.t.sg.btnLable',
+	 	 	 	 	 				value :'Click'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '16' :{
+	 	 	 	 	 				key :'rb.t.vsg.textRight',
+	 	 	 	 	 				value :'Hello Hello'
+	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'topbar.generic.twittershare':{
-	 	 	 	 	 	 'rb.t.cr.textColor ':'white',
-	 	 	 	 	 	 'rb.t.nr.textFontsize':'17',
-	 	 	 	 	 	 'rb.t.cr.textShadow':'black',
-	 	 	 	 	 	 'rb.t.ft.textFontfamily':'Arial',
-	 	 	 	 	 	 'rb.t.sg.textFontWeight':'bold',
-	 	 	 	 	 	 'rb.f.nr.baseZindex':'1000',
-	 	 	 	 	 	 'rb.t.nr.baeWidth':'100',
-	 	 	 	 	 	 'rb.t.nr.baseHeight':'50',
-	 	 	 	 	 	 'rb.t.cr.baeBgColor':'#0B8AB8',
-	 	 	 	 	 	 'rb.t.an.baseTextalign':'center',
-	 	 	 	 	 	 'rb.t.vsg.leftText':'Hello Hello',
-	 	 	 	 	 	 'rb.t.sg.twitterSharetext':'Twteet please',
-	 	 	 	 	 	 'rb.t.vsg.rightText':'Hello Hello',
-	 	 	 	 	 	 'rb.t.nr.durationOfDisplay':'10'
+
+ 	 	 	 	 	 	 '1' : {
+	 	 	 	 	 				key :'rb.t.cr.textColor ',
+	 	 	 	 	 				value :'white'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '2' : {
+	 	 	 	 	 				key :'rb.t.nr.textFontsize',
+	 	 	 	 	 				value :'17'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '3' : {
+	 	 	 	 	 				key :'rb.t.cr.textShadow',
+	 	 	 	 	 				value :'black'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '4' : {
+	 	 	 	 	 				key :'rb.t.ft.textFontfamily',
+	 	 	 	 	 				value :'Arial'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '5' : {
+	 	 	 	 	 				key :'rb.t.sg.textFontWeight',
+	 	 	 	 	 				value :'bold'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '6' : {
+	 	 	 	 	 				key :'rb.f.nr.baseZindex',
+	 	 	 	 	 				value :'1000'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '7' : {
+	 	 	 	 	 				key :'rb.t.nr.baeWidth',
+	 	 	 	 	 				value :'100'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '8' : {
+	 	 	 	 	 				key :'rb.t.nr.baseHeight',
+	 	 	 	 	 				value :'50'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '9' : {
+	 	 	 	 	 				key :'rb.t.cr.baeBgColor',
+	 	 	 	 	 				value :'#0B8AB8'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '10' : {
+	 	 	 	 	 				key :'rb.t.an.baseTextalign',
+	 	 	 	 	 				value :'center'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '11' : {
+	 	 	 	 	 				key :'rb.t.vsg.leftText',
+	 	 	 	 	 				value :'Hello Hello'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '12' : {
+	 	 	 	 	 				key :'rb.t.sg.twitterSharetext',
+	 	 	 	 	 				value :'Twteet please'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '13' :{
+	 	 	 	 	 				key :'rb.t.vsg.rightText',
+	 	 	 	 	 				value :'Hello Hello'
+	 	 	 	 	 	  }
 	 	 	 	 	 }
  	 	 	 	 }; 
  
@@ -215,77 +631,77 @@ trigger_fish.rbT.templateLib = {
 /****************************[[./templates/topbars/rbTemplBottombarGenericFblike.js]]*************************************/ 
 
 
-trigger_fish.rbT.rbTemplBottombarGenericFblikeHTML='<!-- --><!-- --><style>.rbTextValue   {     color:{{rb.t.cr.textColor}};     font-size: {{rb.t.nr.textFontsize}}px;     font-family: {{rb.t.ft.textFontfamily}};     text-shadow : #1C2C4C 0px -1px 0px;     font-style: normal;     font-weight:{{rb.t.sg.textFontWeight}};   }</style> <div id="fb-root"></div><script>(function(d, s, id) {  var js, fjs = d.getElementsByTagName(s)[0];  var k = \'hello\';  if (d.getElementById(id)) return;  js = d.createElement(s); js.id = id;  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";  fjs.parentNode.insertBefore(js, fjs);}(document, "script", "facebook-jssdk"));</script><div id="rbBottombarGenericFblikeBaseContainer"  style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baseWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baseBgColor}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 2px -2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">      <div id="rbBottombarGenericFblikeLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.vsg.textLeft}}     </div>    <div id="rbBottombarGenericFblikeRoiFblikeButton" class ="rbClickable" style="display:inline;position:absolute;bottom:10px;width:100px;left:42%;margin-right:20px;height:25px;background-color:#FFFFFF;border-radius:5px;cursor:pointer;">                      <div class="fb-like" data-href="{{rb.t.ul.facebookPage}}" data-send="false" data-layout="button_count" data-width="47px" data-show-faces="false" data-font="arial"></div>          </div>      <div id="rbBottombarGenericFblikeRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">                  {{rb.t.vsg.textRight}}     </div>     <div  style="display:inline; position:absolute;bottom:5px;right:30px;margin-left:20px;color:#FFFFFF;font-weight:bold;">                    <a id="rbBottombarGenericFblikeRoiHelp" class="rbClickable" style= "text-decoration:none;color:#FFFFFF;" href="http://www.rulebot.com" >            ?            </a>       </div>    <div id="rbBottombarGenericFblikeCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; bottom:5px;right:10px;font-weight:bold;cursor:pointer;" >     X    </div> </div>'
+trigger_fish.rbT.rbTemplBottombarGenericFblikeHTML='<!-- --><!-- --><style>.rbTextValue   {     color:{{1}};     font-size: {{2}}px;     font-family: {{3}};     text-shadow : #1C2C4C 0px -1px 0px;     font-style: normal;     font-weight:{{4}};   }</style> <div id="fb-root"></div><script>(function(d, s, id) {  var js, fjs = d.getElementsByTagName(s)[0];  var k = \'hello\';  if (d.getElementById(id)) return;  js = d.createElement(s); js.id = id;  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";  fjs.parentNode.insertBefore(js, fjs);}(document, "script", "facebook-jssdk"));</script><div id="rbBottombarGenericFblikeBaseContainer"  style="zIndex:{{5}};width:{{6}}%;height:{{7}}px;display:block; background-color:{{8}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 2px -2px 2px #888888;text-align:{{9}};">      <div id="rbBottombarGenericFblikeLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{10}}     </div>    <div id="rbBottombarGenericFblikeRoiFblikeButton" class ="rbClickable" style="display:inline;position:absolute;bottom:10px;width:100px;left:42%;margin-right:20px;height:25px;background-color:#FFFFFF;border-radius:5px;cursor:pointer;">                      <div class="fb-like" data-href="{{11}}" data-send="false" data-layout="button_count" data-width="47px" data-show-faces="false" data-font="arial"></div>          </div>      <div id="rbBottombarGenericFblikeRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">                  {{12}}     </div>     <div  style="display:inline; position:absolute;bottom:5px;right:30px;margin-left:20px;color:#FFFFFF;font-weight:bold;">                    <a id="rbBottombarGenericFblikeRoiHelp" class="rbClickable" style= "text-decoration:none;color:#FFFFFF;" href="http://www.rulebot.com" >            ?            </a>       </div>    <div id="rbBottombarGenericFblikeCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; bottom:5px;right:10px;font-weight:bold;cursor:pointer;" >     X    </div> </div>'
 
 
 
 /****************************[[./templates/topbars/rbTemplBottombarGenericTwitterfollow.js]]*************************************/ 
 
 
-trigger_fish.rbT.rbTemplBottombarGenericTwitterfollowHTML='<!-- --><!-- --><style>.rbTextValue  {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     text-shadow: 1px 1px {{rb.t.cr.textShadow}};     font-family: {{rb.t.ft.textFontfamily}};     text-shadow: 0 -1px 0 #007AA6;     font-weight:{{rb.t.sg.textFontWeight}};   }</style> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script><div id="rbBottombarGenericTwitterfollowBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baeWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baeBgColor}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 2px -2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">       <div id="rbBottombarGenericTwitterfollowLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.vsg.textLeft}}     </div>    <div id="rbBottombarGenericTwitterfollowRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;left:42%;margin-right:20px;cursor:pointer;">                        <a  data-show-count="false" data-button = "blue" class="twitter-follow-button" href="https://twitter.com/{{rb.t.sg.twitterAccountLink}}" data-size="large">Follow {{rb.t.sg.twitterAccountLable}} </a>       </div>       <div id="rbBottombarGenericTwitterfollowRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:52%; width:40%;overflow:hidden;">                  {{rb.t.vsg.textRight}}     </div>     <div  style="display:inline; position:absolute;bottom:5px;right:30px;margin-left:20px;font-weight:bold;">                    <a id="rbBottombarGenericTwitterfollowRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none ;color:#FFFFFF " href=http://www.rulebot.com"  >            ?            </a>       </div>    <div id="rbBottombarGenericTwitterfollowCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; bottom:5px;right:10px;font-weight:bold;cursor:pointer;" >     X     </div> </div>'
+trigger_fish.rbT.rbTemplBottombarGenericTwitterfollowHTML='<!-- --><!-- --><style>.rbTextValue  {     color:{{1}};     font-size: {{2}}px;     text-shadow: 1px 1px {{3}};     font-family: {{4}};     text-shadow: 0 -1px 0 #007AA6;     font-weight:{{5}};   }</style> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script><div id="rbBottombarGenericTwitterfollowBaseContainer" style="zIndex:{{6}};width:{{7}}%;height:{{8}}px;display:block; background-color:{{9}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 2px -2px 2px #888888;text-align:{{10}};">       <div id="rbBottombarGenericTwitterfollowLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{11}}     </div>    <div id="rbBottombarGenericTwitterfollowRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;left:42%;margin-right:20px;cursor:pointer;">                        <a  data-show-count="false" data-button = "blue" class="twitter-follow-button" href="https://twitter.com/{{12}}" data-size="large">Follow {{13}} </a>       </div>       <div id="rbBottombarGenericTwitterfollowRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:52%; width:40%;overflow:hidden;">                  {{14}}     </div>     <div  style="display:inline; position:absolute;bottom:5px;right:30px;margin-left:20px;font-weight:bold;">                    <a id="rbBottombarGenericTwitterfollowRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none ;color:#FFFFFF " href=http://www.rulebot.com"  >            ?            </a>       </div>    <div id="rbBottombarGenericTwitterfollowCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; bottom:5px;right:10px;font-weight:bold;cursor:pointer;" >     X     </div> </div>'
 
 
 
 /****************************[[./templates/topbars/rbTemplBottombarGenericNormal.js]]*************************************/ 
 
 
-trigger_fish.rbT.rbTemplBottombarGenericNormalHTML='<!-- --><!-- --><style>  .rbTextValue   {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     font-family: {{rb.t.ft.textFontfamily}};     font-weight:{{rb.t.sg.textFontWeight}};   }</style><div id="rbBottombarGenericNormalBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baseWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baseBgColor}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 2px -2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">   <div id="rbBottombarGenericNormalLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.vsg.textLeft}}     </div>   <a id="rbBottombarGenericNormalRoiMiddlebutton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;width:80px;left:42%;margin-right:20px;height:25px; border-radius:5px;text-decoration:none; font-size:{{rb.t.nr.btnFontSize}}px;     background-color:{{rb.t.cr.btnBgColor}};text-shadow: 0px -1px 0px #29588D;       color :{{rb.t.cr.btnColor}};text-align:center;border:1px solid #305580;padding-top:3px;cursor:pointer;" href="{{rb.t.ul.btnLink}}"> {{rb.t.sg.btnLable}} </a>      <div id="rbBottombarGenericNormalRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">                  {{rb.t.vsg.textRight}}     </div>    <div  style="display:inline; position:absolute;right:30px; bottom:5px;margin-left:20px;font-weight:bold;">                    <a id="rbBottombarGenericNormalRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none;color:#333" href="http://www.rulebot.com" >            ?            </a>     </div>    <div id="rbBottombarGenericNormalCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#333; bottom:5px;right:10px;font-weight:bold;cursor:pointer;" >     X    </div> </div>'
+trigger_fish.rbT.rbTemplBottombarGenericNormalHTML='<!-- --><!-- --><style>  .rbTextValue   {     color:{{1}};     font-size: {{2}}px;     font-family: {{3}};     font-weight:{{4}};   }</style><div id="rbBottombarGenericNormalBaseContainer" style="zIndex:{{5}};width:{{6}}%;height:{{7}}px;display:block; background-color:{{8}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 2px -2px 2px #888888;text-align:{{9}};">   <div id="rbBottombarGenericNormalLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{10}}     </div>   <a id="rbBottombarGenericNormalRoiMiddlebutton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;width:80px;left:42%;margin-right:20px;height:25px; border-radius:5px;text-decoration:none; font-size:{{11}}px;     background-color:{{12}};text-shadow: 0px -1px 0px #29588D;       color :{{13}};text-align:center;border:1px solid #305580;padding-top:3px;cursor:pointer;" href="{{14}}"> {{15}} </a>      <div id="rbBottombarGenericNormalRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">                  {{16}}     </div>    <div  style="display:inline; position:absolute;right:30px; bottom:5px;margin-left:20px;font-weight:bold;">                    <a id="rbBottombarGenericNormalRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none;color:#333" href="http://www.rulebot.com" >            ?            </a>     </div>    <div id="rbBottombarGenericNormalCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#333; bottom:5px;right:10px;font-weight:bold;cursor:pointer;" >     X    </div> </div>'
 
 
 
 /****************************[[./templates/topbars/rbTemplBottombarGenericTwittershare.js]]*************************************/ 
 
 
-trigger_fish.rbT.rbTemplBottombarGenericTwittershareHTML='<!-- --><!-- --><style>.rbTextValue  {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     text-shadow: 1px 1px {{rb.t.cr.textShadow}};     font-family: {{rb.t.ft.textFontfamily}};     text-shadow: 0 -1px 0 #007AA6;     font-weight:{{rb.t.sg.textFontWeight}};   }</style> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script><div id="rbBottombarGenericTwittershareBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baeWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baeBgColor}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 2px -2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">      <div id="rbBottombarGenericTwittershareLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.vsg.leftText}}     </div>       <div id="rbBottombarGenericTwittershareRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;left:42%;margin-right:20px;border-radius:5px;cursor:pointer;">                      <a href="https://twitter.com/share?text={{rb.t.sg.twitterSharetext}}" class="twitter-share-button" data-count="none" data-lang="en" data-size="large">Tweet</a>       </div>       <div id="rbBottombarGenericTwittershareRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:47%; width:40%;overflow:hidden;">                  {{rb.t.vsg.rightText}}     </div>     <div  style="display:inline; position:absolute;bottom:5px;right:30px;margin-left:20px;font-weight:bold;">                    <a id="rbBottombarGenericTwittershareRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none ;color:#FFFFFF; " href="http://www.rulebot.com"  >            ?            </a>       </div>    <div id="rbBottombarGenericTwittershareCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; bottom:5px;right:10px;font-weight:bold;cursor:pointer;" >     X     </div> </div>'
+trigger_fish.rbT.rbTemplBottombarGenericTwittershareHTML='<!-- --><!-- --><style>.rbTextValue  {     color:{{1}};     font-size: {{2}}px;     text-shadow: 1px 1px {{3}};     font-family: {{4}};     text-shadow: 0 -1px 0 #007AA6;     font-weight:{{5}};   }</style> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script><div id="rbBottombarGenericTwittershareBaseContainer" style="zIndex:{{6}};width:{{7}}%;height:{{8}}px;display:block; background-color:{{9}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 2px -2px 2px #888888;text-align:{{10}};">      <div id="rbBottombarGenericTwittershareLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{11}}     </div>       <div id="rbBottombarGenericTwittershareRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;left:42%;margin-right:20px;border-radius:5px;cursor:pointer;">                      <a href="https://twitter.com/share?text={{12}}" class="twitter-share-button" data-count="none" data-lang="en" data-size="large">Tweet</a>       </div>       <div id="rbBottombarGenericTwittershareRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:47%; width:40%;overflow:hidden;">                  {{13}}     </div>     <div  style="display:inline; position:absolute;bottom:5px;right:30px;margin-left:20px;font-weight:bold;">                    <a id="rbBottombarGenericTwittershareRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none ;color:#FFFFFF; " href="http://www.rulebot.com"  >            ?            </a>       </div>    <div id="rbBottombarGenericTwittershareCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; bottom:5px;right:10px;font-weight:bold;cursor:pointer;" >     X     </div> </div>'
 
 
 
 /****************************[[./templates/topbars/rbTemplTopbarGenericFblike.js]]*************************************/ 
 
 
-trigger_fish.rbT.rbTemplTopbarGenericFblikeHTML='<!-- --><!-- --><style>.rbTextValue   {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     font-family: {{rb.t.ft.textFontfamily}};     text-shadow : #1C2C4C 0px -1px 0px;     font-style: normal;     font-weight:{{rb.t.sg.textFontWeight}};   }</style> <div id="fb-root"></div><script>(function(d, s, id) {  var js, fjs = d.getElementsByTagName(s)[0];  if (d.getElementById(id)) return;  js = d.createElement(s); js.id = id;  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";  fjs.parentNode.insertBefore(js, fjs);}(document, "script", "facebook-jssdk"));</script><div id="rbTopbarGenericFblikeBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baseWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baseBgColor}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 2px 2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">    <div id="rbTopbarGenericFblikeLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.vsg.textLeft}}     </div>             <div id="rbTopbarGenericFblikeRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:10px;width:80px;left:42%;margin-right:20px;height:25px;background-color:#FFFFFF;border-radius:5px;cursor:pointer;">                      <div class="fb-like" data-href="{{rb.t.ul.facebookPage}}" data-send="false" data-layout="button_count" data-width="250px" data-show-faces="false" data-font="arial"></div>          </div>         <div id="rbBottombarGenericFblikeRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">                  {{rb.t.vsg.textRight}}     </div>   <div  style="display:inline; position:absolute;top:5px;right:30px;margin-left:20px;color:#FFFFFF;font-weight:bold;">                    <a id="rbTopbarGenericFblikeRoiHelp" class="rbClickable" style= "text-decoration:none;color:#FFFFFF;" href="http://www.rulebot.com"  >            ?            </a>       </div>   <div id="rbTopbarGenericFblikeCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; top:5px;right:10px;font-weight:bold;cursor:pointer;" >     X   </div>     </div>'
+trigger_fish.rbT.rbTemplTopbarGenericFblikeHTML='<!-- --><!-- --><style>.rbTextValue   {     color:{{1}};     font-size: {{2}}px;     font-family: {{3}};     text-shadow : #1C2C4C 0px -1px 0px;     font-style: normal;     font-weight:{{4}};   }</style> <div id="fb-root"></div><script>(function(d, s, id) {  var js, fjs = d.getElementsByTagName(s)[0];  if (d.getElementById(id)) return;  js = d.createElement(s); js.id = id;  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";  fjs.parentNode.insertBefore(js, fjs);}(document, "script", "facebook-jssdk"));</script><div id="rbTopbarGenericFblikeBaseContainer" style="zIndex:{{5}};width:{{6}}%;height:{{7}}px;display:block; background-color:{{8}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 2px 2px 2px #888888;text-align:{{9}};">    <div id="rbTopbarGenericFblikeLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{10}}     </div>             <div id="rbTopbarGenericFblikeRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:10px;width:80px;left:42%;margin-right:20px;height:25px;background-color:#FFFFFF;border-radius:5px;cursor:pointer;">                      <div class="fb-like" data-href="{{11}}" data-send="false" data-layout="button_count" data-width="250px" data-show-faces="false" data-font="arial"></div>          </div>         <div id="rbBottombarGenericFblikeRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">                  {{12}}     </div>   <div  style="display:inline; position:absolute;top:5px;right:30px;margin-left:20px;color:#FFFFFF;font-weight:bold;">                    <a id="rbTopbarGenericFblikeRoiHelp" class="rbClickable" style= "text-decoration:none;color:#FFFFFF;" href="http://www.rulebot.com"  >            ?            </a>       </div>   <div id="rbTopbarGenericFblikeCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; top:5px;right:10px;font-weight:bold;cursor:pointer;" >     X   </div>     </div>'
 
 
 
 /****************************[[./templates/topbars/rbTemplTopbarGenericTwitterfollow.js]]*************************************/ 
 
 
-trigger_fish.rbT.rbTemplTopbarGenericTwitterfollowHTML='<!-- --><!-- --><style>.rbTextValue  {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     text-shadow: 1px 1px {{rb.t.cr.textShadow}};     font-family: {{rb.t.ft.textFontfamily}};     text-shadow: 0 -1px 0 #007AA6;     font-weight:{{rb.t.sg.textFontWeight}};   }</style> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script><div id="rbTopbarGenericTwitterfollowBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baeWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baeBgColor}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 2px 2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">          <div id="rbTopbarGenericTwitterfollowLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.vsg.textLeft}}     </div>           <div id="rbTopbarGenericTwitterfollowRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;left:42%;margin-right:20px;cursor:pointer;">                        <a  data-show-count="false" data-button = "blue" class="twitter-follow-button" href="https://twitter.com/{{rb.t.sg.twitterAccountLink}}" data-size="large">Follow {{rb.t.sg.twitterAccountLable}} </a>       </div>           <div id="rbTopbarGenericTwitterfollowRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:52%; width:40%;overflow:hidden;">                  {{rb.t.vsg.textRight}}     </div>   <div style="display:inline; position:absolute;top:5px;right:30px;margin-left:20px;font-weight:bold;">                    <a id="rbTopbarGenericTwitterfollowRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none ;color:#FFFFFF; " href="http://www.rulebot.com"  >            ?            </a>       </div>  <div id="rbTopbarGenericTwitterfollowCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; top:5px;right:10px;font-weight:bold;cursor:pointer;" >     X  </div> </div>'
+trigger_fish.rbT.rbTemplTopbarGenericTwitterfollowHTML='<!-- --><!-- --><style>.rbTextValue  {     color:{{1}};     font-size: {{2}}px;     text-shadow: 1px 1px {{3}};     font-family: {{4}};     text-shadow: 0 -1px 0 #007AA6;     font-weight:{{5}};   }</style> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script><div id="rbTopbarGenericTwitterfollowBaseContainer" style="zIndex:{{6}};width:{{7}}%;height:{{8}}px;display:block; background-color:{{9}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 2px 2px 2px #888888;text-align:{{10}};">          <div id="rbTopbarGenericTwitterfollowLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{11}}     </div>           <div id="rbTopbarGenericTwitterfollowRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;left:42%;margin-right:20px;cursor:pointer;">                        <a  data-show-count="false" data-button = "blue" class="twitter-follow-button" href="https://twitter.com/{{12}}" data-size="large">Follow {{13}} </a>       </div>           <div id="rbTopbarGenericTwitterfollowRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:52%; width:40%;overflow:hidden;">                  {{14}}     </div>   <div style="display:inline; position:absolute;top:5px;right:30px;margin-left:20px;font-weight:bold;">                    <a id="rbTopbarGenericTwitterfollowRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none ;color:#FFFFFF; " href="http://www.rulebot.com"  >            ?            </a>       </div>  <div id="rbTopbarGenericTwitterfollowCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; top:5px;right:10px;font-weight:bold;cursor:pointer;" >     X  </div> </div>'
 
 
 
 /****************************[[./templates/topbars/rbTemplTopbarGenericNormal.js]]*************************************/ 
 
 
-trigger_fish.rbT.rbTemplTopbarGenericNormalHTML='<!-- --><!-- --><style>  .rbTextValue   {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     font-family: {{rb.t.ft.textFontfamily}};     font-weight:{{rb.t.sg.textFontWeight}};   }</style><div id="rbTopbarGenericNormalBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baseWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baseBgColor}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 2px 2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">  <div id="rbTopbarGenericNormalLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{rb.t.vsg.textLeft}}  </div>    <a id="rbTopbarGenericNormalRoiMiddlebutton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;width:80px;left:42%;margin-right:20px;height:25px; border-radius:5px;text-decoration:none; font-size:{{rb.t.nr.btnFontSize}}px; background-color:{{rb.t.cr.btnBgColor}};text-shadow: 0px -1px 0px #29588D;   color :{{rb.t.cr.btnColor}};text-align:center;border:1px solid #305580; padding-top:3px;cursor:pointer;" href="{{rb.t.ul.btnLink}}"> {{rb.t.sg.btnLable}} </a>    <div id="rbTopbarGenericNormalRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">                  {{rb.t.vsg.textRight}}    </div>           <div  style="display:inline; position:absolute;right:30px; top:5px;margin-left:20px;font-weight:bold;">                    <a id="rbTopbarGenericNormalRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none;color:#333" href="http://www.rulebot.com"  >            ?            </a>     </div><div id="rbTopbarGenericNormalCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#333; top:5px;right:10px;font-weight:bold;cursor:pointer;" >     X</div> </div>'
+trigger_fish.rbT.rbTemplTopbarGenericNormalHTML='<!-- --><!-- --><style>  .rbTextValue   {     color:{{1}};     font-size: {{2}}px;     font-family: {{3}};     font-weight:{{4}};   }</style><div id="rbTopbarGenericNormalBaseContainer" style="zIndex:{{5}};width:{{6}}%;height:{{7}}px;display:block; background-color:{{8}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 2px 2px 2px #888888;text-align:{{9}};">  <div id="rbTopbarGenericNormalLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">         {{10}}  </div>    <a id="rbTopbarGenericNormalRoiMiddlebutton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;width:80px;left:42%;margin-right:20px;height:25px; border-radius:5px;text-decoration:none; font-size:{{11}}px; background-color:{{12}};text-shadow: 0px -1px 0px #29588D;   color :{{13}};text-align:center;border:1px solid #305580; padding-top:3px;cursor:pointer;" href="{{14}}"> {{15}} </a>    <div id="rbTopbarGenericNormalRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">                  {{16}}    </div>           <div  style="display:inline; position:absolute;right:30px; top:5px;margin-left:20px;font-weight:bold;">                    <a id="rbTopbarGenericNormalRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none;color:#333" href="http://www.rulebot.com"  >            ?            </a>     </div><div id="rbTopbarGenericNormalCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#333; top:5px;right:10px;font-weight:bold;cursor:pointer;" >     X</div> </div>'
 
 
 
 /****************************[[./templates/topbars/rbTemplTopbarGenericTwittershare.js]]*************************************/ 
 
 
-trigger_fish.rbT.rbTemplTopbarGenericTwittershareHTML='<!-- --><!-- --><style>.rbTextValue  {     color:{{rb.t.cr.textColor }};     font-size: {{rb.t.nr.textFontsize}}px;     text-shadow: 1px 1px {{rb.t.cr.textShadow}};     font-family: {{rb.t.ft.textFontfamily}};     text-shadow: 0 -1px 0 #007AA6;     font-weight:{{rb.t.sg.textFontWeight}};   }</style> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script><div id="rbTopbarGenericTwittershareBaseContainer" style="zIndex:{{rb.f.nr.baseZindex}};width:{{rb.t.nr.baeWidth}}%;height:{{rb.t.nr.baseHeight}}px;display:block; background-color:{{rb.t.cr.baeBgColor}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 2px 2px 2px #888888;text-align:{{rb.t.an.baseTextalign}};">      <div id="rbTopbarGenericTwittershareLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; top:15px; left:20px; width:40%;overflow:hidden;">         {{rb.t.vsg.leftText}}     </div>       <div id="rbTopbarGenericTwittershareRoiButton" class ="rbClickable" style="display:inline;position:absolute;top:10px;left:42%;margin-right:20px;border-radius:5px;cursor:pointer;">                      <a href="https://twitter.com/share?text={{rb.t.sg.twitterSharetext}}" class="twitter-share-button" data-count="none" data-lang="en" data-size="large">Tweet</a>       </div>       <div id="rbTopbarGenericTwittershareRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; top:15px; margin-left:20px; left:47%; width:40%;overflow:hidden;">                  {{rb.t.vsg.rightText}}     </div>     <div  style="display:inline; position:absolute;top:5px;right:30px;margin-left:20px;font-weight:bold;">                    <a id="rbTopbarGenericTwittershareRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none ;color:#FFFFFF; " href="http://www.rulebot.com"  >            ?            </a>       </div>    <div id="rbTopbarGenericTwittershareCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; top:5px;right:10px;font-weight:bold;cursor:pointer;" >     X     </div> </div>'
+trigger_fish.rbT.rbTemplTopbarGenericTwittershareHTML='<!-- --><!-- --><style>.rbTextValue  {     color:{{1}};     font-size: {{2}}px;     text-shadow: 1px 1px {{3}};     font-family: {{4}};     text-shadow: 0 -1px 0 #007AA6;     font-weight:{{5}};   }</style> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script><div id="rbTopbarGenericTwittershareBaseContainer" style="zIndex:{{6}};width:{{7}}%;height:{{8}}px;display:block; background-color:{{9}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 2px 2px 2px #888888;text-align:{{10}};">      <div id="rbTopbarGenericTwittershareLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; top:15px; left:20px; width:40%;overflow:hidden;">         {{11}}     </div>       <div id="rbTopbarGenericTwittershareRoiButton" class ="rbClickable" style="display:inline;position:absolute;top:10px;left:42%;margin-right:20px;border-radius:5px;cursor:pointer;">                      <a href="https://twitter.com/share?text={{12}}" class="twitter-share-button" data-count="none" data-lang="en" data-size="large">Tweet</a>       </div>       <div id="rbTopbarGenericTwittershareRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; top:15px; margin-left:20px; left:47%; width:40%;overflow:hidden;">                  {{13}}     </div>     <div  style="display:inline; position:absolute;top:5px;right:30px;margin-left:20px;font-weight:bold;">                    <a id="rbTopbarGenericTwittershareRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none ;color:#FFFFFF; " href="http://www.rulebot.com"  >            ?            </a>       </div>    <div id="rbTopbarGenericTwittershareCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; top:5px;right:10px;font-weight:bold;cursor:pointer;" >     X     </div> </div>'
 
 
 
-/****************************[[./templates/topbars/rbTemplChatGenericNormal.js]]*************************************/ 
+/****************************[[./templates/topbars/rbTemplSupportOlarkNormal.js]]*************************************/ 
 
 
-trigger_fish.rbT.rbTemplChatGenericNormalHTML='<!-- --><!-- --><div id="rbChatGenericNormalBaseContainer"><script data-cfasync="false" type=\'text/javascript\'>window.olark||(function(c){var f=window,d=document,l=f.location.protocol=="https:"?"https:":"http:",z=c.name,r="load";var nt=function(){f[z]=function(){(a.s=a.s||[]).push(arguments)};var a=f[z]._={},q=c.methods.length;while(q--){(function(n){f[z][n]=function(){f[z]("call",n,arguments)}})(c.methods[q])}a.l=c.loader;a.i=nt;a.p={0:+new Date};a.P=function(u){a.p[u]=new Date-a.p[0]};function s(){a.P(r);f[z](r)}f.addEventListener?f.addEventListener(r,s,false):f.attachEvent("on"+r,s);var ld=function(){function p(hd){hd="head";return["<",hd,"></",hd,"><",i,\' onl\' + \'oad="var d=\',g,";d.getElementsByTagName(\'head\')[0].",j,"(d.",h,"(\'script\')).",k,"=\'",l,"//",a.l,"\'",\'"\',"></",i,">"].join("")}var i="body",m=d[i];if(!m){return setTimeout(ld,100)}a.P(1);var j="appendChild",h="createElement",k="src",n=d[h]("div"),v=n[j](d[h](z)),b=d[h]("iframe"),g="document",e="domain",o;n.style.display="none";m.insertBefore(n,m.firstChild).id=z;b.frameBorder="0";b.id=z+"-loader";if(/MSIE[ ]+6/.test(navigator.userAgent)){b.src="javascript:false"}b.allowTransparency="true";v[j](b);try{b.contentWindow[g].open()}catch(w){c[e]=d[e];o="javascript:var d="+g+".open();d.domain=\'"+d.domain+"\';";b[k]=o+"void(0);"}try{var t=b.contentWindow[g];t.write(p());t.close()}catch(x){b[k]=o+\'d.write("\'+p().replace(/"/g,String.fromCharCode(92)+\'"\')+\'");d.close();\'}a.P(2)};ld()};nt()})({loader: "static.olark.com/jsclient/loader0.js",name:"olark",methods:["configure","extend","declare","identify"]});olark.identify({{rb.t.sg.olarkIdentity}});olark.configure(\'box.width\', 200);olark.configure(\'box.height\', 100);</script></div>'
+trigger_fish.rbT.rbTemplSupportOlarkNormalHTML='<!-- --><!-- --><div id="rbChatGenericNormalBaseContainer"><script data-cfasync="false" type=\'text/javascript\'>window.olark||(function(c){var f=window,d=document,l=f.location.protocol=="https:"?"https:":"http:",z=c.name,r="load";var nt=function(){f[z]=function(){(a.s=a.s||[]).push(arguments)};var a=f[z]._={},q=c.methods.length;while(q--){(function(n){f[z][n]=function(){f[z]("call",n,arguments)}})(c.methods[q])}a.l=c.loader;a.i=nt;a.p={0:+new Date};a.P=function(u){a.p[u]=new Date-a.p[0]};function s(){a.P(r);f[z](r)}f.addEventListener?f.addEventListener(r,s,false):f.attachEvent("on"+r,s);var ld=function(){function p(hd){hd="head";return["<",hd,"></",hd,"><",i,\' onl\' + \'oad="var d=\',g,";d.getElementsByTagName(\'head\')[0].",j,"(d.",h,"(\'script\')).",k,"=\'",l,"//",a.l,"\'",\'"\',"></",i,">"].join("")}var i="body",m=d[i];if(!m){return setTimeout(ld,100)}a.P(1);var j="appendChild",h="createElement",k="src",n=d[h]("div"),v=n[j](d[h](z)),b=d[h]("iframe"),g="document",e="domain",o;n.style.display="none";m.insertBefore(n,m.firstChild).id=z;b.frameBorder="0";b.id=z+"-loader";if(/MSIE[ ]+6/.test(navigator.userAgent)){b.src="javascript:false"}b.allowTransparency="true";v[j](b);try{b.contentWindow[g].open()}catch(w){c[e]=d[e];o="javascript:var d="+g+".open();d.domain=\'"+d.domain+"\';";b[k]=o+"void(0);"}try{var t=b.contentWindow[g];t.write(p());t.close()}catch(x){b[k]=o+\'d.write("\'+p().replace(/"/g,String.fromCharCode(92)+\'"\')+\'");d.close();\'}a.P(2)};ld()};nt()})({loader: "static.olark.com/jsclient/loader0.js",name:"olark",methods:["configure","extend","declare","identify"]});olark.identify({{1}});olark.configure(\'box.width\', 200);olark.configure(\'box.height\', 100);</script></div>'
 
 
 
 /****************************[[./templates/topbars/rbTemplModalGenericNormal.js]]*************************************/ 
 
 
-trigger_fish.rbT.rbTemplModalGenericNormalHTML='<!-- --><!-- --><style>#rbModalGenericNormalTranblockContainer {          visibility: visible;         position: fixed;          left: 0px;          top: 0px;           width:100%;           height:100%;       background-color:black;          z-index:{{rb.f.nr.transBlockZindex}};      opacity:0.6;      filter:alpha(opacity=60);}#rbModalGenericNormalBaseContainer{          visibility: visible;         position: fixed;          left: 0px;          top: 0px;           width:100%;           height:100%;      z-index:{{rb.f.nr.baseZindex}}; }#rbModalGenericNormalSubsubContainer        {                 width:500px; 	           height: 300px;             background-color:{{rb.t.cr.baseBgColor}};               border:4px solid #a3a3a3;                position: fixed;             border-radius:5px;             top : 30%;             left : 30%;        }  </style><div id="rbModalGenericNormalTranblockContainer"></div> <div id="rbModalGenericNormalBaseContainer">		<div id="rbModalGenericNormalSubContainer">		<div id="rbModalGenericNormalSubsubContainer"  style="postion:relative;">                                 <div style="top:0px;width:100%;height:18%;left:0px;background-color:{{rb.t.cr.headingBgColor}};">           <div style="top:0%;left:0 %;position:absolute;color:{{rb.t.cr.modalHeadingColor}};width:70%; height:14%;font-size:{{rb.t.nr.modalHeadingFontsize}}px;font-family:{{rb.t.ft.headingFontfamily}}; overflow:hidden;border-top-left-radius:5px;border-top-right-radius:5px;padding:5px;text-shadow:1px 1px {{rb.t.cr.modalHeadingTextShadow}};">               {{rb.t.vsg.modalHeadingText}}           </div>          <div id="rbModalGenericNormalCloseClick" class="rbClickable"  style="top:1%;right:1%;position:absolute;color:black;font-weight:bold; padding:2px;cursor:pointer;">            X          </div>            </div>           	<div style="top:22%;left:0%;position:absolute;color:{{rb.t.cr.modalTextColor}};width:70%;height:65%;overflow:hidden;font-size:{{rb.t.nr.modalTextFontsize}}px;font-family:{{rb.t.ft.textFontfamily}};text-align:left;border-bottom-left-radius:5px;border-bottom-right-radius:5px;padding:5px;">           	    {{rb.t.vsg.modalText}}                         	 </div>             <div style="top:30%;right:5%;width:15%;height:20%;position:absolute;overflow:hidden">              <img src="{{rb.t.sg.modalImgPath}}" alt="image"\>             </div> 			               <button   style="bottom:2%;right:2%;position:absolute;color:white;width:75px;height:25px;text-align:center;background-color:{{rb.t.cr.buttonBgColor}};border-radius:5px;padding-top:2px;border:1px solid #305580 ;font-weight: bold;cursor:pointer;">               <a  id="rbModalGenericNormalRoiClickbutton" class="rbClickable" style="text-decoration:none;color:white;" href= "{{rb.t.ul.modalBtnLink}}" target="_self" class="rbClickable" >                {{rb.t.sg.modalBtnLable}}               </a>             </button>	      </div>	</div></div>'
+trigger_fish.rbT.rbTemplModalGenericNormalHTML='<!-- --><!-- --><style>#rbModalGenericNormalTranblockContainer {          visibility: visible;         position: fixed;          left: 0px;          top: 0px;           width:100%;           height:100%;       background-color:black;          z-index:{{1}};      opacity:0.6;      filter:alpha(opacity=60);}#rbModalGenericNormalBaseContainer{          visibility: visible;         position: fixed;          left: 0px;          top: 0px;           width:100%;           height:100%;      z-index:{{2}}; }#rbModalGenericNormalSubsubContainer        {                 width:500px; 	           height: 300px;             background-color:{{3}};               border:4px solid #a3a3a3;                position: fixed;             border-radius:5px;             top : 30%;             left : 30%;        }  </style><div id="rbModalGenericNormalTranblockContainer"></div> <div id="rbModalGenericNormalBaseContainer">		<div id="rbModalGenericNormalSubContainer">		<div id="rbModalGenericNormalSubsubContainer"  style="postion:relative;">                                 <div style="top:0px;width:100%;height:18%;left:0px;background-color:{{4}};">           <div style="top:0%;left:0 %;position:absolute;color:{{5}};width:70%; height:14%;font-size:{{6}}px;font-family:{{7}}; overflow:hidden;border-top-left-radius:5px;border-top-right-radius:5px;padding:5px;text-shadow:1px 1px {{8}};">               {{9}}           </div>          <div id="rbModalGenericNormalCloseClick" class="rbClickable"  style="top:1%;right:1%;position:absolute;color:black;font-weight:bold; padding:2px;cursor:pointer;">            X          </div>            </div>           	<div style="top:22%;left:0%;position:absolute;color:{{10}};width:70%;height:65%;overflow:hidden;font-size:{{11}}px;font-family:{{12}};text-align:left;border-bottom-left-radius:5px;border-bottom-right-radius:5px;padding:5px;">           	    {{13}}                         	 </div>             <div style="top:30%;right:5%;width:15%;height:20%;position:absolute;overflow:hidden">              <img src="{{14}}" alt="image"\>             </div> 			               <button   style="bottom:2%;right:2%;position:absolute;color:white;width:75px;height:25px;text-align:center;background-color:{{15}};border-radius:5px;padding-top:2px;border:1px solid #305580 ;font-weight: bold;cursor:pointer;">               <a  id="rbModalGenericNormalRoiClickbutton" class="rbClickable" style="text-decoration:none;color:white;" href= "{{16}}" target="_self" class="rbClickable" >                {{17}}               </a>             </button>	      </div>	</div></div>'
 
 
 
-/****************************[[./templates/topbars/rbTemplUservoiceGenericNormal.js]]*************************************/ 
+/****************************[[./templates/topbars/rbTemplFeedbackUservoiceNormal.js]]*************************************/ 
 
 
-trigger_fish.rbT.rbTemplUservoiceGenericNormalHTML='<!-- --><!-- --><div id="rbUservoiceGenericNormalBaseContainer">	<script>  var uvOptions = {};  (function() {    var uv = document.createElement(\'script\'); uv.type = \'text/javascript\'; uv.async = true;    uv.src = (\'https:\' == document.location.protocol ? \'https://\' : \'http://\') + \'widget.uservoice.com/QteXP0WAzCiaFH1O2obGg.js\';    var s = document.getElementsByTagName(\'script\')[0]; s.parentNode.insertBefore(uv, s);   })();</script></div>'
+trigger_fish.rbT.rbTemplFeedbackUservoiceNormalHTML='<!-- --><!-- --><div id="rbUservoiceGenericNormalBaseContainer">	<script>  var uvOptions = {};  (function() {    var uv = document.createElement(\'script\'); uv.type = \'text/javascript\'; uv.async = true;    uv.src = (\'https:\' == document.location.protocol ? \'https://\' : \'http://\') + \'widget.uservoice.com/QteXP0WAzCiaFH1O2obGg.js\';    var s = document.getElementsByTagName(\'script\')[0]; s.parentNode.insertBefore(uv, s);   })();</script></div>'
 
 
 
@@ -293,6 +709,13 @@ trigger_fish.rbT.rbTemplUservoiceGenericNormalHTML='<!-- --><!-- --><div id="rbU
 
 
 "use strict";
+
+// Templ Sys , Actor and Event Varibales
+
+trigger_fish.rbT.currentSystemVar = {'browser':{'name':'Chrome','version':'1.2','name2':{'myname':'Amartya'}}};
+trigger_fish.rbT.currentActorVar = {};
+trigger_fish.rbT.currentEventVar = {};
+
 
 //templ related timers
 
@@ -381,6 +804,109 @@ trigger_fish.rbT.extractDisplayPositionFromTemplName = function(templName){
     return tempMatch;
 
 };
+
+
+//**********************************************************************************
+
+// fill the run time variable in in templ args from sys,actor and event varibale
+
+trigger_fish.rbT.fillTheRuntimeValueForTemplArgs = function(tempMatch,actionparmaskey)
+{
+
+      try{
+             
+
+// if e. event hash
+// if s. system hash
+// if a. actor variable
+
+                           // fetch system variable here 
+                           // fetch actor variable here
+                           // fetch event variable here
+                             
+                           for(var i=0 ; i<tempMatch.length ; i++)
+                           {
+
+                              var objNested = {};
+                               
+                               
+                               var tempMatchForscope = ""
+
+                               tempMatch[i]=tempMatch[i].replace("{{","");
+                               tempMatch[i]=tempMatch[i].replace("}}","");
+
+
+                               tempMatchForscope = tempMatch[i].match(/[\w]*/g);
+
+                               if(tempMatchForscope[0])
+                               
+                               {
+                                   var k =0;
+
+                                
+
+                                    if(tempMatchForscope[0] == "s")
+                                    {
+                                       objNested = trigger_fish.rbT.currentSystemVar; 
+   
+                                       for(k=2;k<=tempMatchForscope.length-2;k++)
+                                       {
+                                         if(k%2 === 0)
+                                          {
+                                             var objNested = objNested[tempMatchForscope[k]] 
+
+                                          } 
+                                       }
+                                   }
+
+                                  else if(tempMatchForscope[0] == "e")
+                                    {
+                                       objNested =trigger_fish.rbT.currentEventVar; 
+   
+                                       for(k=2;k<=tempMatchForscope.length-2;k++)
+                                       {
+                                         if(k%2 === 0)
+                                          {
+                                             var objNested = objNested[tempMatchForscope[k]] 
+
+                                          } 
+                                       }
+                                   }
+
+                                  else if(tempMatchForscope[0] == "a")
+                                    {
+                                       objNested =trigger_fish.rbT.currentActorVar ; 
+   
+                                       for(k=2;k<=tempMatchForscope.length-2;k++)
+                                       {
+                                         if(k%2 === 0)
+                                          {
+                                             var objNested = objNested[tempMatchForscope[k]] 
+
+                                          } 
+                                       }
+                                   }
+
+                                 
+                          }  
+
+                               tempMatch[i] = '{{'+ tempMatch[i] + '}}';
+
+                               actionparmaskey = actionparmaskey.replace(tempMatch[i],objNested);
+
+                               return actionparmaskey;
+
+
+                         }         
+              
+         }catch(e){
+
+                trigger_fish.rbT.sendErrorToRBServer(e.message);
+
+         }
+
+};
+
 
 //******************************************************************
 //check for the if templ position is occupied
@@ -743,9 +1269,6 @@ trigger_fish.rbT.init = function(){
 };
 
 
-trigger_fish.rbT.currentSystemVar = {};
-trigger_fish.rbT.currentActorVar = {};
-trigger_fish.rbT.currentEventVar = {};
 
 
 
@@ -817,7 +1340,6 @@ trigger_fish.rbT.applyHtmltoPageInternal = function(html){
 
 
 	 jQuery('body').append(html);
-	 console.log(html);
 
 	// document.body.innerHTML = document.body.innerHTML+html;
 
@@ -866,43 +1388,29 @@ trigger_fish.rbT.invokeActionScriptInternal=function(action,actionParams){
       {
           var html = trigger_fish.rbT.getTemplateHTMLByName(templateName);
           
-          
-          
-          /*
-                for (var key in actionParams)
-                {
-	               if(actionParams.hasOwnProperty(key))
-	               {
-	                   var keyVal = key;
+              for (var key in actionParams)
+                 {
+                  if(actionParams.hasOwnProperty(key))
+                  {
+                     var keyVal = key;
                        var value = actionParams[key];
                        var tempMatch = ""
                        var tempMatch = value.match(/\{\{[\w.\=\%\:\/\s\#\@\-\']*\}\}/g);
                       
-                       if(tempMatch[0])
+                       if(tempMatch)
                        {
-                           // fetch system variable
-                           // fetch actor variable
-                           // fetch event variable
-                             
-                       	   for(var i=0 ; i<tempMatch.length ; i++)
-                       	   {
-                       	       var textRuntimeValue = //get the value from lower layer code 
-	                      
-	                           actionParams[key].replace(tempMatch[i],textRuntimeValue);
-	                       }         
+                       	  var tempActionKeyRetVal =""
+                       	  tempActionKeyRetVal=trigger_fish.rbT.fillTheRuntimeValueForTemplArgs(tempMatch,actionParams[key]);
+                          
+
+                          if(tempActionKeyRetVal != undefined)
+                          {	
+                             actionParams[key] = tempActionKeyRetVal;
+                          }   
                        }
+                   }
 
-
-
-
-	               } 
-
-                }  
-                         
-
-          */
-
-
+                 }      
 
           
           if(pos =='modal')

@@ -135,35 +135,29 @@ class Account
 
     raise et("account.invalid_account_id", id: params[:id]) if account.blank?
 
-    hash[:account] = {id: account._id, description: account.description}
+    hash[:account] = {id: account._id.to_s, description: account.description}
 
     if params[:events] == true
       events = Event.where( account_id: params[:id], meta: false ).limit(AppConstants.limit_events).desc(:_id)
-      events.each do |attr|
-        hash[:events] << {
-                          name: attr.name, properties: attr.properties, app_id: attr.app_id, actor_id: attr.actor_id, time: attr.created_at
-                         }
-      end
+      events.each { |attr| hash[:events] <<  attr.format_event }
       Rails.logger.info("Adding Events")
     end
 
     if params[:conversions] == true
       conversions = Conversion.where(account_id: account._id).limit(AppConstants.limit_conversions).desc(:_id)
-      conversions.each {|attr| hash[:conversions] << {id: attr._id, properties: attr.properties, app_id: attr.app_id, actor_id: attr.actor_id, time: attr.created_at}}
+      conversions.each {|attr| hash[:conversions] << attr.format_conversion}
       Rails.logger.info("Adding Conversions")
     end
 
     if params[:errors] == true
       errors = Err.where(account_id: account._id).limit(AppConstants.limit_errors).desc(:_id)
-      errors.each {|attr| hash[:errors] << {id: attr._id, properties: attr.properties, app_id: attr.app_id,  actor_id: attr.actor_id, time: attr.created_at}}
+      errors.each {|attr| hash[:errors] << attr.format_err}
       Rails.logger.info("Adding Errors")
     end
 
     if params[:actors] == true
       actors = Actor.where(account_id: account._id).limit(AppConstants.limit_actors).desc(:_id)
-      actors.each do |attr|
-        hash[:actors] << {id: attr._id, description: attr.description, time: attr.created_at}  if attr.meta == false                      
-      end
+      actors.each {|attr| hash[:actors] << attr.format_actor  if attr.meta == false }
       Rails.logger.info("Adding Actors")
     end
 

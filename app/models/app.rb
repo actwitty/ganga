@@ -1,3 +1,4 @@
+
 require 'utility'
 
 class App
@@ -14,24 +15,29 @@ class App
 
   # Attributes
  
-  ## { 
-  ##      properties: {
-  ##        'customer[email]' => { 
-  ##                                "String" => ["set_actor", "sign_up"] ,
-  ##                                "Fixnum" => ["purchased", "sign_in"] 
-  ##                             }
-  ##      }
-  ##      events: {
-  ##        'sign_up' => {"name" => String, "address[city]" => "String"}
-  ##      }
-  ##
-  ##      actor:  {
-  ##                 "gender" => String, "name" => "String"
-  ##              }  
-  ##
-  ##      system: {
-  ##                 "location" => String, "page_view_time" => "String"
-  ##              }  
+  ##  {
+  ##     properties: {
+  ##                    'customer[email]' => {  
+  ##                                           "total"=>5, 
+  ##                                           "types" => { 
+  ##                                                         "String" => {"total" => 3, "events" => {"set_actor" => 2, "sign_up" => 1}},
+  ##                                                         "Number" => {"total" => 2, "events" => {"purchased" => 1, "sign_up" => 1}}
+  ##                                                      }
+  ##                                         }
+  ##                 }
+  ##                           
+  ##    events:      {
+  ##                    'sign_up' => {"name" => String, "address[city]" => "String"}
+  ##                 }
+  ##                             
+  ##    profile:     {
+  ##                    "customer[address][city]"=>  {"total"=>2, "types"=>{"String"=>1, "Number" => 1}}, 
+  ##                    "email"=>                    {"total"=>1, "types"=>{"String"=>1}}
+  ##                 }  
+  ##    system:      {
+  ##                    "os"=>        {"total"=>2, "types"=>{"String"=>1, "Number"=>1}}, 
+  ##                    "browser"=>   {"total"=>2, "types"=>{"String"=>2}}}
+  ##                 }  
   ## }
   field       :schema,      type:    Hash,    :default => { properties: {}, events: {}, profile: {}, system: {}}
 
@@ -93,7 +99,7 @@ class App
   # INPUT
   ## {
   ##  :account_id => "23232312"[MANDATORY] 
-  ##  :id => "1234444',    [MANDATORY]
+  ##  :id => "1234444',        [MANDATORY]
   ##  :description => {        [MANDATORY]
   ##      "email" => "john.doe@example.com",
   ##      "address" => {:city => "Bangalore"}}
@@ -131,8 +137,8 @@ class App
 
   # INPUT
   ## {  
-  ##    account_id:  "1212121212"      [MANDATORY]
-  ##    id: 123                   [MANDATORY]
+  ##    id: 123                       [MANDATORY]
+  ##    account_id: 23232323          [MANDATORY]
   ##    events: true or false         [OPTIONAL] # events 
   ##    conversions: true or false    [OPTIONAL] # conversion
   ##    errors: true or false         [OPTIONAL] # errors
@@ -144,7 +150,31 @@ class App
   ##
   ##            app: {
   ##                   id: "4545554654645", 
-  ##                   description: {"name": "my app", "domain": "http://myapp.com"}, 
+  ##                   description: {"super_app_id": "23131313", "name": "my app", "domain": "http://myapp.com"}, 
+  ##                   schema: {
+  ##                             properties: {
+  ##                                           'customer[email]' => {  
+  ##                                                                   "total"=>5, 
+  ##                                                                   "types" => { 
+  ##                                                                                "String" => {"total" => 3, "events" => {"set_actor" => 2, "sign_up" => 1}},
+  ##                                                                                "Number" => {"total" => 2, "events" => {"purchased" => 1, "sign_up" => 1}}
+  ##                                                                              }
+  ##                                                                }
+  ##                                         }
+  ##                           
+  ##                             events:     {
+  ##                                           'sign_up' => {"name" => String, "address[city]" => "String"}
+  ##                                         }
+  ##                             
+  ##                             profile:    {
+  ##                                           "customer[address][city]"=>  {"total"=>1, "types"=>{"String"=>1}}, 
+  ##                                           "email"=>                    {"total"=>1, "types"=>{"String"=>1}}
+  ##                                         }  
+  ##                             system:     {
+  ##                                           "os"=>        {"total"=>2, "types"=>{"String"=>1, "Number"=>1}}, 
+  ##                                           "browser"=>   {"total"=>2, "types"=>{"String"=>2}}}
+  ##                                         }  
+  ##                           },
   ##                   rules: [
   ##                             {
   ##                               "name"=>"A fancy rule", "event"=>"singup", "owner"=>"client", "action"=>"topbar",
@@ -155,27 +185,10 @@ class App
   ##                             },
   ##                             {..}
   ##                           ],
-  ##                   schema: {
-  ##                             properties: {
-  ##                                           'customer[email]' => { 
-  ##                                                                   "String" => ["set_actor", "sign_up"],
-  ##                                                                   "Fixnum" => ["purchased", "sign_in"]
-  ##                                         }
-  ##                           
-  ##                             events: {
-  ##                                           'sign_up' => {"name" => String, "address[city]" => "String"}
-  ##                                     }
-  ##                             
-  ##                             profile:{
-  ##                                         "gender" => String, "name" => "String"
-  ##                                     }  
-  ##                             system: {
-  ##                                         "location" => String, "page_view_time" => "String"
-  ##                                     }  
-  ##                           } 
-  ##                 }  
-  ##
-  ##            events: [
+  ##                   time: 2009-02-19 21:00:00 UTC   
+  ##                 }           
+  ##            
+  ##           events: [
   ##                      {
   ##                        id: "3232342434", name: "sign_in", 
   ##                        properties: [{"k" => "name", "v" => "alok"}, {"k" => "address[city]", "v" => "Bangalore"}]
@@ -184,7 +197,7 @@ class App
   ##                      },
   ##                      {..}
   ##                    ],
-  ##            conversions: [
+  ##          conversions: [
   ##                            {
   ##                              id: "32323424355",
   ##                              properties: [{"k" => "button", "v" => "clicked"}, {"k" => "times", "v" => "40"}]
@@ -192,8 +205,8 @@ class App
   ##                              time: 2009-02-19 23:00:00 UTC
   ##                            },
   ##                            {...}
-  ##                         ],
-  ##            errors: [
+  ##                       ],
+  ##          errors: [
   ##                       {
   ##                          id: "3232342434",
   ##                          properties: [{"k" => "name", "v" => "Javascript Error"}, {"k" => "reason", "v" => "dont know"}]
@@ -201,15 +214,15 @@ class App
   ##                          time: 2009-02-19 21:00:00 UTC
   ##                       },
   ##                       {...}
-  ##                    ],
-  ##            actors: [
+  ##                 ],
+  ##          actors: [
   ##                      {
   ##                        id: "3433434", 
   ##                        description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}},
   ##                        time: 2009-02-19 21:00:00 UTC
   ##                      }
   ##                      {..}
-  ##                    ]
+  ##                  ]
   ##        }
   def self.read(params)
     Rails.logger.info("Enter App Read")
@@ -222,37 +235,31 @@ class App
 
     raise et("app.invalid_app_id", id: params[:id]) if app.blank?
 
-    hash[:account] = {id: app.account_id}
-    hash[:app] = {id: app._id, description: app.description, rules: app.format_rules, schema: app.schema}
+    hash[:account] = {id: app.account_id.to_s}
     
+    hash[:app] = app.format_app
     
     if params[:events] == true
       events = Event.where( app_id: params[:id], meta: false ).limit(AppConstants.limit_events).desc(:_id)
-      events.each do |attr|
-        hash[:events] << { 
-                            id: attr._id, name: attr.name, properties: attr.properties, actor_id: attr.actor_id, time: attr.created_at
-                         }
-      end
+      events.each {|attr| hash[:events] << attr.format_event }
       Rails.logger.info("Adding Events")
     end
 
     if params[:conversions] == true
       conversions = Conversion.where(app_id: app._id).limit(AppConstants.limit_conversions).desc(:_id)
-      conversions.each {|attr| hash[:conversions] << {id: attr._id, properties: attr.properties, actor_id: attr.actor_id, time: attr.created_at}}
+      conversions.each {|attr| hash[:conversions] << attr.format_conversion}
       Rails.logger.info("Adding Conversions")
     end
 
     if params[:errors] == true
       errors = Err.where(app_id: app._id).limit(AppConstants.limit_errors).desc(:_id)
-      errors.each {|attr| hash[:errors] << {id: attr._id, properties: attr.properties, actor_id: attr.actor_id, time: attr.created_at}}
+      errors.each {|attr| hash[:errors] << attr.format_err}
       Rails.logger.info("Adding Errors")
     end
 
     if params[:actors] == true
       actors = Actor.where(app_id: app._id).limit(AppConstants.limit_actors).desc(:_id)
-      actors.each do |attr|
-        hash[:actors] << {id: attr._id, description: attr.description, time: attr.created_at}  if attr.meta == false                      
-      end
+      actors.each { |attr| hash[:actors] << attr.format_actor  if attr.meta == false }
       Rails.logger.info("Adding Actors")
     end
   
@@ -287,14 +294,29 @@ class App
 
     event = schema["events"][params[:event]]
 
+    # set profile or system property_type => profile or system
+    type = params[:property_type].to_s
+
     skima.each do |k,v|
-      schema["properties"][k] = {} if schema["properties"][k].blank?
-      schema["properties"][k][v] = [] if schema["properties"][k][v].blank?
-      schema["properties"][k][v] << params[:event]
-      
+      schema["properties"][k] = { "total" => 0, "types" => {}} if schema["properties"][k].blank?
+      property = schema["properties"][k]
+      property["total"] += 1
+
+      property["types"][v] =  {"total" => 0, "events" => {}} if property["types"][v].blank?
+      property["types"][v]["total"] += 1
+      property["types"][v]["events"][params[:event]] = 0 if property["types"][v]["events"][params[:event]].blank?
+      property["types"][v]["events"][params[:event]] += 1
+
       event[k] = v
 
-      schema[params[:property_type].to_s][k] = v if !params[:property_type].blank?
+      # set profile or system property_type => profile or system
+      if !params[:property_type].blank?
+        schema[type][k] = { "total" => 0, "types" => {}} if schema[type][k].blank?
+        schema[type][k]["total"] += 1
+        
+        schema[type][k]["types"][v] = 0 if schema[type][k]["types"][v].blank?
+        schema[type][k]["types"][v] += 1
+      end
     end
 
     save!
@@ -305,29 +327,12 @@ class App
     {:return => false, :error => e}
   end
 
-  
-  def format_rules
-    Rails.logger.info("Enter Format Rules")
-
-    array = []
-    
-    # serialize rules
-    self.rules.each do |rule|
-      rule = rule.attributes
-      rule["id"] = rule["_id"]
-      rule.delete("_id")
-      array << rule 
-    end
-
-    array
-  rescue => e
-    Rails.logger.error("**** ERROR **** #{e.message}")
-    []
-  end
-
   def format_app
     self.description["super_actor_id"] = self.description["super_actor_id"].to_s
-    {id: self._id.to_s, account_id: self.account_id.to_s, description: self.description, schema: self.schema, updated_at: self.updated_at}
+    array = []
+    self.rules.each {|rule| array << rule.format_rule}
+
+    {id: self._id.to_s, account_id: self.account_id.to_s, description: self.description, schema: self.schema, rules: array, time: self.updated_at}
   rescue => e
     Rails.logger.error("**** ERROR **** #{e.message}")
     {}

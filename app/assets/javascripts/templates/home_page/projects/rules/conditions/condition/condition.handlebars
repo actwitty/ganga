@@ -8,28 +8,28 @@
       <optgroup label="{{getvalue view.rules.selected.event}} Properties"> 
 
         {{#eachProperty view.rules.eventSchema}} 
-          {{#ifequal iter_val.actual condition.property}}
-            <option value="{{getvalue iter_key}}" scope="{{getvalue iter_val.scope}}" selected>{{iter_val.show}}</option>
+          {{#ifequal iter_val.key condition.property}}
+            <option value="{{getvalue iter_val.key}}" scope="{{getvalue iter_val.scope}}" selected>{{iter_val.show}}</option>
           {{else}}
-            <option value="{{getvalue iter_key}}" scope="{{getvalue iter_val.scope}}" >{{iter_val.show}}</option>
+            <option value="{{getvalue iter_val.key}}" scope="{{getvalue iter_val.scope}}" >{{iter_val.show}}</option>
           {{/ifequal}} 
         {{/eachProperty}}
       </optgroup> 
       <optgroup label="System Properties"> 
         {{#eachProperty view.rules.systemSchema}}                 
-          {{#ifequal iter_val.actual condition.property}}
-            <option value="{{getvalue iter_key}}"  scope="{{getvalue iter_val.scope}}" selected>{{iter_val.show}}</option>
+          {{#ifequal iter_val.key condition.property}}
+            <option value="{{getvalue iter_val.key}}"  scope="{{getvalue iter_val.scope}}" selected>{{iter_val.show}}</option>
           {{else}}
-            <option value="{{getvalue iter_key}}" scope="{{getvalue iter_val.scope}}" >{{iter_val.show}}</option>
+            <option value="{{getvalue iter_val.key}}" scope="{{getvalue iter_val.scope}}" >{{iter_val.show}}</option>
           {{/ifequal}} -->
         {{/eachProperty}}
       </optgroup> 
       <optgroup label="User Properties"> 
         {{#eachProperty view.rules.actorSchema}}                 
-          {{#ifequal iter_val.actual condition.property}}
-            <option value="{{getvalue iter_key}}" scope="{{getvalue iter_val.scope}}" selected>{{iter_val.show}}</option>
+          {{#ifequal iter_val.key condition.property}}
+            <option value="{{getvalue iter_val.key}}" scope="{{getvalue iter_val.scope}}" selected>{{iter_val.show}}</option>
           {{else}}
-            <option value="{{getvalue iter_key}}" scope="{{getvalue iter_val.scope}}" >{{iter_val.show}}</option>
+            <option value="{{getvalue iter_val.key}}" scope="{{getvalue iter_val.scope}}" >{{iter_val.show}}</option>
           {{/ifequal}} -->
         {{/eachProperty}}
       </optgroup> 

@@ -131,8 +131,7 @@ App.RequiredNumberOnly = Ember.TextField.extend
       message = message.concat(' cannot be blank')
       App.get('router.applicationController').setInlineAlert('error', 'Validation Failed !', message ) 
     else
-      if numReg.test(num) is true
-        console.log 'Number  is good'
+      if numReg.test(num) is true        
         App.get('router.applicationController').setInlineAlert('', '', '' )
       else
         num =  defaultVal

@@ -84,7 +84,7 @@ App.systemSchema =
                   'viewport[width]' : 'Number'
                   'country' : 'String'
                   'language' : 'String'
-                  'plugins' : 'Array'
+                  #'plugins' : 'Array'
                   'timezone' : 'String'
 
 
@@ -94,7 +94,8 @@ App.LimitedValueList =
                     'operatingsystem' : { 'Windows' : 'Microsoft Windows', 'Linux' : 'Ubuntu Linux', 'Mac' : 'Apple Mac', 'Android' : 'Android','iPad':'iPad' }
                     'device[type]' : { 'tab': 'Tablet', 'pc' : 'PC', 'mob' : 'Mobile' }
                     'referrer[name]' : { 't.co': 'Twitter', 'facebook.com' : 'Facebook', 'nyt.com' : 'Newyork Times' } 
-                    'device[name]' : {'android' : 'Android', 'iPad' : 'iPad', 'iPhone' : 'iPhone','nokia':'Nokia','Samsung':'Samsung' ,'kindle':'Kindle' ,'SonyEricsson' : 'Sony Ericsson','Windows':'Windows' }
+                    #'plugins' : {'flash':'Flash','java':'Java','quicktime':'Quicktime','silverlight':'Silverlight'}
+                    'device[name]' : {'Linux' : 'Linux','android' : 'Android', 'iPad' : 'iPad', 'iPhone' : 'iPhone','nokia':'Nokia','Samsung':'Samsung' ,'kindle':'Kindle' ,'SonyEricsson' : 'Sony Ericsson','Windows':'Windows' }
                                       
 
                   

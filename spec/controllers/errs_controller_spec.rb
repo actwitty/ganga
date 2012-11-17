@@ -1,10 +1,13 @@
 require 'spec_helper'
 
 describe ErrsController do
-  login_account
+  #login_account
 
   before(:each) do
     @account = FactoryGirl.create(:account)
+    @account.confirm!
+    sign_in  @account
+
     @app = FactoryGirl.create(:app, account_id: @account._id)
     @actor = FactoryGirl.create(:actor, account_id: @account._id, app_id: @app._id)
     request.env['HTTP_ACCEPT'] = "application/json"
@@ -14,7 +17,6 @@ describe ErrsController do
     
     it "should not create error with invalid actor" do
       get 'create', { 
-                      account_id: @account._id,
                       app_id: @app._id,
                       actor_id: 232,
                       properties: { 
@@ -30,7 +32,6 @@ describe ErrsController do
     it "should not create error with invalid app" do
       # account in this test case is not mapped to app
       get 'create', { 
-                      account_id: @account._id,
                       app_id: 123232,
                       actor_id: @actor._id,
                       properties: { 
@@ -46,7 +47,6 @@ describe ErrsController do
     it "should create error" do
       # account in this test case is not mapped to app
       get 'create', { 
-                      account_id: @account._id,
                       properties: { 
                                     :name => "Javascript failed",
                                     :reason => { err: "dont know", code: 402}
