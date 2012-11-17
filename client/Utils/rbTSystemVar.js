@@ -36,7 +36,6 @@ trigger_fish.rbTSystemVar = {
       this.setPropertyInCookie(systemVars);
       var schema = respData.app.schema;
       this.notifyServerOfChange(schema?schema.system:undefined);
-      //rbTAPP.setSystemProperty(systemVars);
     }
   },
 

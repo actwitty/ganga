@@ -31,14 +31,14 @@ class ApplicationController < ActionController::Base
   def authenticate_cross_site!
     Rails.logger.info("Enter Authenticate Cross Site")
     
-    puts request.env.inspect
+    puts "**************** #{request.env['HTTP_ORIGIN']} ******************"
     if !current_account.blank?
       Rails.logger.info("Authenticated Account")
       return true
     end
 
-    if !request.env['HTTP_HOST'].blank?
-      access = AccessInfo.where(origin: request.env['HTTP_HOST']).first
+    if !request.env['HTTP_ORIGIN'].blank?
+      access = AccessInfo.where(origin: request.env['HTTP_ORIGIN']).first
 
       if !access.blank?
         headers['Access-Control-Allow-Origin'] = request.env['HTTP_ORIGIN']
