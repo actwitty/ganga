@@ -450,58 +450,66 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 				value :'white'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.cr.heading_backgroundcolor',
-	 	 	 	 	 				value :'#e7e7e7'
+	 	 	 	 	 				key :'rb.t.cr.base_backgroundcolor',
+	 	 	 	 	 				value :'white'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.modal_headingcolor',
-	 	 	 	 	 				value :'#525252'
+	 	 	 	 	 				key :'rb.t.cr.heading_backgroundcolor',
+	 	 	 	 	 				value :'#3C5891'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
+	 	 	 	 	 				key :'rb.t.cr.modal_headingcolor',
+	 	 	 	 	 				value :'#F2F0F0'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '7' : {
 	 	 	 	 	 				key :'rb.t.nr.modal_heading_fontsize',
 	 	 	 	 	 				value :'20'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '7' : {
+ 	 	 	 	 	 	 '8' : {
 	 	 	 	 	 				key :'rb.t.ft.heading_fontfamily',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '8' : {
+ 	 	 	 	 	 	 '9' : {
 	 	 	 	 	 				key :'rb.t.cr.modal_heading_textshadow',
 	 	 	 	 	 				value :'#6e6e6e'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '9' : {
+ 	 	 	 	 	 	 '10' : {
 	 	 	 	 	 				key :'rb.t.vsg.modal_heading_text',
 	 	 	 	 	 				value :'This is the Heading '
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.cr.modal_text_color',
-	 	 	 	 	 				value :'#525252'
-	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' : {
+	 	 	 	 	 				key :'rb.t.cr.modal_text_color',
+	 	 	 	 	 				value :'#000000'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '12' : {
 	 	 	 	 	 				key :'rb.t.nr.modal_text_fontsize',
 	 	 	 	 	 				value :'12'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '12' : {
+ 	 	 	 	 	 	 '13' : {
 	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '13' : {
+ 	 	 	 	 	 	 '14' : {
 	 	 	 	 	 				key :'rb.t.vsg.modal_text',
 	 	 	 	 	 				value :'Hello Hello Hello Hello Hello hello heello '
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '14' : {
+ 	 	 	 	 	 	 '15' : {
 	 	 	 	 	 				key :'rb.t.sg.modal_image_path',
 	 	 	 	 	 				value :'../../../images/rails.png'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '15' : {
-	 	 	 	 	 				key :'rb.t.cr.button_backgroundcolor',
-	 	 	 	 	 				value :'#3B5998'
-	 	 	 	 	 	  },
  	 	 	 	 	 	 '16' : {
+	 	 	 	 	 				key :'rb.t.cr.button_backgroundcolor',
+	 	 	 	 	 				value :'#FFCC33'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '17' : {
+	 	 	 	 	 				key :'rb.t.cr.button_text_color',
+	 	 	 	 	 				value :'#000000'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '18' : {
 	 	 	 	 	 				key :'rb.t.ul.modal_button_link',
 	 	 	 	 	 				value :'http://www.google.com'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '17' :{
+ 	 	 	 	 	 	 '19' :{
 	 	 	 	 	 				key :'rb.t.sg.modal_button_label',
 	 	 	 	 	 				value :'Click'
 	 	 	 	 	 	  }
@@ -702,7 +710,7 @@ trigger_fish.rbT.rbTemplSupportOlarkNormalHTML='<!-- --><div id="rbChatGenericNo
 /****************************[[./templates/topbars/rbTemplModalGenericNormal.js]]*************************************/ 
 
 
-trigger_fish.rbT.rbTemplModalGenericNormalHTML='<!-- --><style>#rbModalGenericNormalTranblockContainer {          visibility: visible;         position: fixed;          left: 0px;          top: 0px;           width:100%;           height:100%;       background-color:black;          z-index:{{1}};      opacity:0.6;      filter:alpha(opacity=60);}#rbModalGenericNormalBaseContainer{          visibility: visible;         position: fixed;          left: 0px;          top: 0px;           width:100%;           height:100%;      z-index:{{2}}; }#rbModalGenericNormalSubsubContainer        {                 width:500px; 	           height: 300px;             background-color:{{3}};               border:4px solid #a3a3a3;                position: fixed;             border-radius:5px;             top : 30%;             left : 30%;        }  </style><div id="rbModalGenericNormalTranblockContainer"></div> <div id="rbModalGenericNormalBaseContainer">		<div id="rbModalGenericNormalSubContainer">		<div id="rbModalGenericNormalSubsubContainer"  style="postion:relative;">                                 <div style="top:0px;width:100%;height:18%;left:0px;background-color:{{4}};">           <div style="top:0%;left:0 %;position:absolute;color:{{5}};width:70%; height:14%;font-size:{{6}}px;font-family:{{7}}; overflow:hidden;border-top-left-radius:5px;border-top-right-radius:5px;padding:5px;text-shadow:1px 1px {{8}};">               {{9}}           </div>          <div id="rbModalGenericNormalCloseClick" class="rbClickable"  style="top:1%;right:1%;position:absolute;color:black;font-weight:bold; padding:2px;cursor:pointer;">            X          </div>            </div>           	<div style="top:22%;left:0%;position:absolute;color:{{10}};width:70%;height:65%;overflow:hidden;font-size:{{11}}px;font-family:{{12}};text-align:left;border-bottom-left-radius:5px;border-bottom-right-radius:5px;padding:5px;">           	    {{13}}                         	 </div>             <div style="top:30%;right:5%;width:15%;height:20%;position:absolute;overflow:hidden">              <img src="{{14}}" alt="image"\>             </div> 			               <button   style="bottom:2%;right:2%;position:absolute;color:white;width:75px;height:25px;text-align:center;background-color:{{15}};border-radius:5px;padding-top:2px;border:1px solid #305580 ;font-weight: bold;cursor:pointer;">               <a  id="rbModalGenericNormalRoiClickbutton" class="rbClickable" style="text-decoration:none;color:white;" href= "{{16}}" target="_self" class="rbClickable" >                {{17}}               </a>             </button>	      </div>	</div></div>'
+trigger_fish.rbT.rbTemplModalGenericNormalHTML='<!-- --><style>#rbModalGenericNormalTranblockContainer {          visibility: visible;         position: fixed;          left: 0px;          top: 0px;           width:100%;           height:100%;       background-color:black;          z-index:{{1}};      opacity:0.6;      filter:alpha(opacity=60);}#rbModalGenericNormalBaseContainer{          visibility: visible;         position: fixed;          left: 0px;          top: 0px;           width:100%;           height:100%;      z-index:{{2}}; }#rbModalGenericNormalSubsubContainer        {                 width:500px; 	           height: 350px;             background-color:{{3}};               border:8px solid rgba(0, 0, 0, .7);;                position: fixed;             border-radius:5px;             top : 25%;             left : 30%;             padding : 15px;        }#rbModalGenericNormalSubsubsubContainer        {                 width:500px;              height: 300px;             background-color:{{4}};               border:1px solid #a3a3a3;                position: fixed;             border-radius:5px;                   }  </style><div id="rbModalGenericNormalTranblockContainer"></div> <div id="rbModalGenericNormalBaseContainer">		<div id="rbModalGenericNormalSubContainer">  		<div id="rbModalGenericNormalSubsubContainer">                  <div id="rbModalGenericNormalSubsubsubContainer" style="position:relative;">           <div style="top:0px;width:100%;height:18%;left:0px;background-color:{{5}};">           <div style="top:0%;left:0 %;position:absolute;color:{{6}};width:70%; height:14%;font-size:{{7}}px;font-family:{{8}}; overflow:hidden;border-top-left-radius:5px;border-top-right-radius:5px;padding:5px;text-shadow:1px 1px {{9}};">               {{10}}           </div>          <div id="rbModalGenericNormalCloseClick" class="rbClickable"  style="top:1%;right:1%;position:absolute;color:#F2F0F0;font-weight:bold; padding:2px;cursor:pointer;">            X          </div>            </div>           	<div style="top:22%;left:0%;position:absolute;color:{{11}};width:70%;height:65%;overflow:hidden;font-size:{{12}}px;font-family:{{13}};text-align:left;border-bottom-left-radius:5px;border-bottom-right-radius:5px;padding:5px;">           	    {{14}}                         	 </div>             <div style="top:40%;right:3%;width:15%;height:20%;position:absolute;overflow:hidden">              <img src="{{15}}" alt="image"\>             </div> 			               <button   style="bottom:2%;right:2%;position:absolute;width:100px;height:25px;text-align:center;background-color:{{16}};border-radius:10px;padding-top:2px;border:1px solid #305580 ;font-weight: bold;cursor:pointer;">               <a  id="rbModalGenericNormalRoiClickbutton" class="rbClickable" style="text-decoration:none;color:{{17}};" href= "{{18}}" target="_self" class="rbClickable" >                {{19}}               </a>             </button>	      </div></div>	</div></div>'
 
 
 
