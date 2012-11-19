@@ -145,12 +145,12 @@ trigger_fish.rbT.eventHandler = {
      } 
 
 
-      var Base = document.getElementById(id);
+      var base = document.getElementById(id);
 
       
-      if(Base)
+      if(base)
       {
-         Base.parentNode.removeChild(Base);
+         base.parentNode.removeChild(base);
 
          trigger_fish.rbT.setTemplatesDisplayLockFlags(trigger_fish.rbT.makeFirstLetterSmall(idMatch[0]),false);
          

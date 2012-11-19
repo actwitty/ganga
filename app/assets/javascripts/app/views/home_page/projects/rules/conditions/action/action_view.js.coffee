@@ -61,7 +61,7 @@ App.ActionView = Ember.View.extend
     event.preventDefault()
   # -----------------------------------------------------
   showTemplatePreview: (event) ->   
-    rule = event.context        
+    rule = event.context            
     trigger_fish.rbT.invokeActionScript(rule.serializeAction())
     event.preventDefault()
   # -----------------------------------------------------

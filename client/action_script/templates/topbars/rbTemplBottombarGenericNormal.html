@@ -3,24 +3,25 @@
 <link rel="stylesheet" type="text/css" href="https://s3.amazonaws.com/actwitty_ganga/css/common_styles.css">
 
 <style>
-  .rbBaseDyn{
+  .rbBbGenDyn{
     position: fixed;
     bottom: 0px;
     left: 0px;   
-    z-index: {{rb.f.nr.base_zindex{{=Zindex}}}};    
+    z-index: {{rb.t.nr.base_zindex{{=10000}}}};    
     background: {{rb.t.cr.base_backgroundcolor{{=#181818}}}} !important;
     border-top: 1px solid #333 !important;
     border-bottom: 1px solid #333 !important;
   }
 
-  .barDyn{
+  .rbBbGenDyn .barDyn{
     width: {{rb.t.nr.show_width{{=900}}}}px;
     height: {{rb.t.nr.base_height{{=40}}}}px;
     vertical-align: middle;
+    position: relative;
   }
 
 
-  .rbDynText
+  .rbBbGenDyn .rbDynText
    {
      color:{{rb.t.cr.text_color {{=#ffffff}}}};
      font-size: {{rb.t.nr.text_fontsize{{=14}}}}px;
@@ -30,7 +31,7 @@
      overflow:hidden;
    }
    
-   .rbDynLeftText{
+   .rbBbGenDyn .rbDynLeftText{
     position: absolute;
     left:20px; 
     width:40%;
@@ -40,7 +41,7 @@
 
    }
    
-   .rbDynRightText{
+   .rbBbGenDyn .rbDynRightText{
     position: absolute;
     right: 20px; 
     top: 10px;    
@@ -49,7 +50,7 @@
     margin-left: 20px;
    }
 
-   .rbBtnDyn {      
+   .rbBbGenDyn .rbBtnDyn {      
       padding: 12px 15px 12px;
       text-shadow: none !important;
       border-right: 1px solid #333;
@@ -72,7 +73,7 @@
 
    }
 
-   .rbBtnDyn:hover {
+   .rbBbGenDyn .rbBtnDyn:hover {
       background-color: {{rb.t.cr.button_background_on_focus{{=#333}}}} !important;
       color: {{rb.t.cr.button_color_on_focus{{=#FFFFFF}}}} !important;
       -webkit-transition: background 1s ease;
@@ -80,15 +81,15 @@
       -o-transition: background 1s ease;
       transition: background 1s ease;
    }
-   .rbInfoBtnDyn{
+   .rbBbGenDyn .rbInfoBtnDyn{
     position: absolute;
     top: 5px;
-    right: 5px;
+    right: -130px;
     display: inline-block;
    }
 </style>
 
-<div id="rbBottombarGenericNormalBaseContainer" class="rbBaseStyle rbBaseDyn" >
+<div id="rbBottombarGenericNormalBaseContainer" class="rbBaseStyle rbBbGenDyn" >
 
   <div class="rbBarWidth barDyn">
 

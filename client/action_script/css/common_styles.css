@@ -10,8 +10,7 @@
   }
 
   .rbBaseStyle .rbBarWidth{
-    display: block;    
-    overflow: hidden;    
+    display: block;        
     margin: auto;
   }
 
@@ -21,7 +20,7 @@
     cursor: pointer;
     text-decoration: none;
     text-align:center;
-    display: inline;
+    display: block;
   }
 
 
