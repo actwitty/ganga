@@ -99,8 +99,11 @@ gem "mongoid", "~> 3.0.0"
 gem 'colorize'
 
 gem 'yajl-ruby'
+
 #JSONP middleware
 gem 'rack-jsonp-middleware',  :require => 'rack/jsonp'
+#CORS middleware
+gem 'rack-cors', :require => 'rack/cors'
 
 group :test, :development  do
   gem 'rspec-rails'
