@@ -20,6 +20,7 @@
  * documents the function and classes that are added to jQuery by this plug-in.
  * @memberOf jQuery
  */
+
 var trigger_fish = {};
 
 trigger_fish.rbTAPP = {
@@ -1752,6 +1753,7 @@ trigger_fish.rbTActor = function() {
 
   var __id = "";
   var __prop = {};
+  var __state = false;
 
   return {
 
@@ -1762,10 +1764,17 @@ trigger_fish.rbTActor = function() {
       retFromCookie : function()
       {
       	trigger_fish.rbTDebug.log("retrieveing data for actor from cookie");
-        if (trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorProp))
+        if (trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorProp)) {
           this.setProperties(trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorProp)); 
+          this.enable();
+        }
         if (trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID))
           this.setID(trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID));
+      },
+
+      isReady : function()
+      {
+        return __state;
       },
 
       /** 
@@ -1786,6 +1795,13 @@ trigger_fish.rbTActor = function() {
         return __prop;
       },
 
+
+      enable : function()
+      {
+        __state = true;
+        // FIXME :: CHECK FOR RIGHT LOCATION OF THIS
+        trigger_fish.rbTServerChannel.flushReqWaitingForActor();
+      },  
       /** 
       *  Set Actor ID
       *  @param {string} id 
@@ -1805,6 +1821,7 @@ trigger_fish.rbTActor = function() {
       {
         __prop = prop;
         trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.actorProp, JSON.stringify(prop));
+        this.enable();
       },
 
       /**
@@ -2117,7 +2134,7 @@ trigger_fish.rbTRules = {
     try {
       if (ruleJson.scope === "a") {
         var actorProp = trigger_fish.rbTActor.getProperties();
-        value = eval("actorProp."+p+".slice(-1)[0]");
+        value = eval("actorProp.profile."+p+".slice(-1)[0]");
       } else if (ruleJson.scope === "s") {
         var systemVars = trigger_fish.rbTSystemVar.getProperty();
         value = eval("systemVars."+p);
@@ -2722,9 +2739,7 @@ trigger_fish.rbTServerResponse = {
  */
 trigger_fish.rbTServerChannel = {
   
-  //rbt_url : "http://localhost:3000/",
-  rbt_url : "http://172.18.99.130:3000/",
-
+  rbt_url : "http://localhost:3000/",
 
   
   /* All server url routes to be mapped here */
@@ -2741,6 +2756,7 @@ trigger_fish.rbTServerChannel = {
 
   // Server request queue
   queue : [],
+  actorRQ: [],
 
   /* Default options for server request */
   defaultOptions : {
@@ -2777,11 +2793,37 @@ trigger_fish.rbTServerChannel = {
     if (!this.queue.length)
       return;
     for (var req in this.queue) {
-      this.makeServerRequest(this.queue[req]);
+      var r = this.queue[req];
+      if (r.event && !trigger_fish.rbTActor.isReady()) {
+        this.waitForActor(r);
+      } else {
+        this.makeServerRequest(r);
+      }
     }
     this.queue = [];
   },
 
+
+  /**
+  *
+  *
+  */
+  /* <<<<<<<<<<<<<<<<<<<<< FIXME :: COAELECE THIS >>>>>>>>>>>> */
+  waitForActor : function(obj)
+  {
+    this.actorRQ.push(obj);
+  },
+
+  flushReqWaitingForActor : function()
+  {
+    if (!this.actorRQ.length)
+      return;
+    for (var req in this.actorRQ) {
+      var r = this.actorRQ[req];
+      this.makeServerRequest(r);
+    }
+    this.actorRQ = [];
+  },
 
   /**
   * Check for App status, if alive , flush all req queue and clear interval.
@@ -2917,6 +2959,8 @@ trigger_fish.rbTServerChannel = {
                          }); 
     }
   },
+
+
 
 
   /**
@@ -4209,8 +4253,8 @@ trigger_fish.rbJSON = {
 function testGanga()
 {
   rb.identify("83.samarth@gmail.com");
-  //rb.setActor({"name":"samarth","age":"29"});
-  //rb.sendEvent("sample_event3",{"name":"samarth"});
+  rb.setActor({"name":"samarth","age":"29"});
+  rb.sendEvent("sample_event3",{"name":"samarth"});
   console.log("ENDING TESTING SEQUENCE");
 }
 

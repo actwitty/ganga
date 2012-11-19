@@ -16,9 +16,7 @@
  */
 trigger_fish.rbTServerChannel = {
   
-  //rbt_url : "http://localhost:3000/",
-  rbt_url : "http://172.18.99.130:3000/",
-
+  rbt_url : "http://localhost:3000/",
 
   
   /* All server url routes to be mapped here */
@@ -76,7 +74,7 @@ trigger_fish.rbTServerChannel = {
       if (r.event && !trigger_fish.rbTActor.isReady()) {
         this.waitForActor(r);
       } else {
-        this.makeServerRequest(this.queue[r]);
+        this.makeServerRequest(r);
       }
     }
     this.queue = [];
