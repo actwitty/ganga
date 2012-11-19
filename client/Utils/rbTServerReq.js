@@ -1,3 +1,19 @@
+/**
+ * See (http://jquery.com/).
+ * @name jQuery
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ */
+ 
+/**
+ * See (http://jquery.com/)
+ * @name fn
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ * @memberOf jQuery
+ */
 trigger_fish.rbTServerChannel = {
   
   rbt_url : "http://localhost:3000/",
@@ -27,9 +43,10 @@ trigger_fish.rbTServerChannel = {
   /**
   *
   */
-  serverUrl : function(url)
+  serverUrl : function(type, url)
   {
-    return this.rbt_url + url + ".jsonp";
+    var u = this.rbt_url + url + (type === "POST" ? "" : ".json"); 
+    return u;
   }, 
 
   /**
@@ -175,14 +192,18 @@ trigger_fish.rbTServerChannel = {
       var that = obj;
       var url = (obj.event) ? trigger_fish.rbTServerChannel.url.fireEvent : obj.url;
       jQuery.ajax({
-            url: this.serverUrl(url),
-            type: 'GET',
+            url: this.serverUrl(obj.type,url),
+            type: that.type || 'GET',
             async: asyncSt,
-            dataType: 'jsonp',
-            contentType : 'application/javascript',
+            //dataType: 'json',
+            //contentType : 'application/javascript',
+            contentType : 'application/x-www-form-urlencoded',
             data: reqServerData,
             crossDomain:true,
             timeout : 10000,
+            xhrField : {
+              withCredentials : true
+            },
             beforeSend: function() {
                 if (that.event) {
                   trigger_fish.rbTCookie.setCookie("lastevent", that.event);
@@ -281,6 +302,7 @@ trigger_fish.rbTServerChannel = {
     this.makeRequest({"url"        : rbTServerChannel.url.conversion, 
                       "params"     : params,
                       "conversion" : true,
+                      "type"       : "POST",
                       "cb"         : cb
                      });
   }, 
@@ -294,7 +316,7 @@ trigger_fish.rbTServerChannel = {
   {
     "use strict";
     var callback = this.extendCallbacks(callback);
-    this.makeRequest({"url":this.url.reportError,"params":params,"err":true, "cb":callback});
+    this.makeRequest({"url":this.url.reportError,"params":params,"type":"POST","err":true, "cb":callback});
   },
 
   /** 

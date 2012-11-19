@@ -1,4 +1,5 @@
-require 'pp'
+require 'authenticate'
+
 class ApplicationController < ActionController::Base
   protect_from_forgery
   #respond_to :json, :html
@@ -23,33 +24,47 @@ class ApplicationController < ActionController::Base
   def delete_session
     Rails.logger.info("Enter Delete Session")
     if !self.instance_variable_get(:@tear_down).blank?
+      Rails.logger.info("deleting session")
       sign_out(current_account) 
       self.instance_variable_set(:@tear_down, nil )
     end
   end
 
-  def authenticate_cross_site!
-    Rails.logger.info("Enter Authenticate Cross Site")
-    
-    puts "**************** #{request.env['HTTP_ORIGIN']} ******************"
+  def authenticate_origin!
+    Rails.logger.info("Enter Authenticate Origin")
+   
     if !current_account.blank?
       Rails.logger.info("Authenticated Account")
       return true
     end
 
-    if !request.env['HTTP_ORIGIN'].blank?
-      access = AccessInfo.where(origin: request.env['HTTP_ORIGIN']).first
+    # just to test we are using HTTP_HOST in test mode as HTTP_ORIGIN cant be set
+    Rails.env == "test" ? origin = request.env['HTTP_HOST'] : origin = request.env['HTTP_ORIGIN']
+
+    if !origin.blank?
+      access = AccessInfo.where(origin: origin).first
 
       if !access.blank?
-        headers['Access-Control-Allow-Origin'] = request.env['HTTP_ORIGIN']
-        headers['Access-Control-Request-Method'] = "*"
-        headers['Access-Control-Allow-Headers'] = "*"
+        headers['Access-Control-Allow-Origin'] = origin
+        headers["Access-Control-Allow-Methods"] = %w{GET POST}.join(",")
+        headers["Access-Control-Allow-Headers"] = %w{Origin Accept Content-Type X-Requested-With X-CSRF-Token}.join(",")
+        headers['Access-Control-Max-Age'] = '86400'
+        headers['Access-Control-Expose-Headers'] = 'ETag'
         headers['Access-Control-Allow-Credentials'] = "true"
       else
         raise et("application.unauthorized")
       end
 
-      raise et("application.unauthorized") if build_session(access) == false
+      # Some browsers send an options request to the server first, 
+      # to make sure the correct access headers are set.
+      # We need to catch this in Rails, returning a 200 status with the correct headers.
+      if request.request_method == "OPTIONS"
+        # halt the callback chain and return ok
+        head :ok
+      else
+        # continue with callback chain
+        raise et("application.unauthorized") if build_session(access) == false
+      end
     end
   rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
@@ -57,14 +72,17 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate_api!
-    Rails.logger.info("Enter Authenticate Api")
+    Rails.logger.info("Enter Authenticate #{request.inspect} Api")
 
     if !current_account.blank?
       Rails.logger.info("Authenticated Account")
       return true
     end
+    
+    # just to test we are using HTTP_HOST in test mode as HTTP_ORIGIN cant be set
+    Rails.env == "test" ? origin = request.env['HTTP_HOST'] : origin = request.env['HTTP_ORIGIN']
 
-    if !params["token"].blank?        # API Access
+    if !params["token"].blank? and origin.blank?        # API Access
       access = AccessInfo.where(token: params["token"]).first
 
       if !access.blank?
@@ -82,4 +100,17 @@ class ApplicationController < ActionController::Base
     Rails.logger.error("**** ERROR **** #{er(e)}")
     head :unauthorized
   end     
+
+  def self.authenticate_request(params, options = [])
+    Rails.logger.info("Enter Authenticate Request")
+    
+    before_filter AuthenticateOrigin.new, params[:origin]
+    before_filter AuthenticateApi.new
+    before_filter AuthenticateAccount.new
+
+    after_filter  AuthenticateApi.new
+  rescue => e 
+    Rails.logger.error("**** ERROR **** #{er(e)}")
+    #head :unauthorized
+  end
 end

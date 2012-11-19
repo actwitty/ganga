@@ -3,11 +3,8 @@ require 'utility'
 class AppsController < ApplicationController
 	
   protect_from_forgery
-  before_filter :authenticate_cross_site!, only: [:read]
-  before_filter :authenticate_api!
-  before_filter :authenticate_account!
-  
-  after_filter :delete_session
+
+  authenticate_request( origin: { only: ["read"] } ) 
 
   respond_to  :json
   # NOTE

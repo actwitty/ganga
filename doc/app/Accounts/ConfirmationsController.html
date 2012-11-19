@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+
+<title>class Accounts::ConfirmationsController - Rails Application Documentation</title>
+
+<link type="text/css" media="screen" href="../rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "../";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/darkfish.js"></script>
+
+
+<body id="top" class="class">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="../index.html">Home</a>
+    <a href="../table_of_contents.html#classes">Classes</a>
+    <a href="../table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>app/controllers/accounts/confirmations_controller.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    <nav id="parent-class-section" class="section">
+  <h3 class="section-header">Parent</h3>
+  
+  <p class="link">Devise::ConfirmationsController
+  
+</nav>
+
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-i-after_confirmation_path_for">#after_confirmation_path_for</a>
+    
+    <li><a href="#method-i-after_resending_confirmation_instructions_path_for">#after_resending_confirmation_instructions_path_for</a>
+    
+    <li><a href="#method-i-create">#create</a>
+    
+    <li><a href="#method-i-show">#show</a>
+    
+    <li><a href="#method-i-update">#update</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="../doc/README_FOR_APP.html">README_FOR_APP</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="../Accounts.html">Accounts</a>
+  
+    <li><a href="../Accounts/ConfirmationsController.html">Accounts::ConfirmationsController</a>
+  
+    <li><a href="../Accounts/PasswordsController.html">Accounts::PasswordsController</a>
+  
+    <li><a href="../Accounts/RegistrationsController.html">Accounts::RegistrationsController</a>
+  
+    <li><a href="../Accounts/SessionsController.html">Accounts::SessionsController</a>
+  
+    <li><a href="../Accounts/UnlocksController.html">Accounts::UnlocksController</a>
+  
+    <li><a href="../TestWorker.html">TestWorker</a>
+  
+    <li><a href="../TestWorker/Worker.html">TestWorker::Worker</a>
+  
+    <li><a href="../Utility.html">Utility</a>
+  
+    <li><a href="../Utility/FormatHash.html">Utility::FormatHash</a>
+  
+    <li><a href="../AccessInfo.html">AccessInfo</a>
+  
+    <li><a href="../Account.html">Account</a>
+  
+    <li><a href="../AccountsController.html">AccountsController</a>
+  
+    <li><a href="../AccountsHelper.html">AccountsHelper</a>
+  
+    <li><a href="../Actor.html">Actor</a>
+  
+    <li><a href="../ActorsController.html">ActorsController</a>
+  
+    <li><a href="../ActorsHelper.html">ActorsHelper</a>
+  
+    <li><a href="../App.html">App</a>
+  
+    <li><a href="../ApplicationController.html">ApplicationController</a>
+  
+    <li><a href="../ApplicationHelper.html">ApplicationHelper</a>
+  
+    <li><a href="../AppsController.html">AppsController</a>
+  
+    <li><a href="../AppsHelper.html">AppsHelper</a>
+  
+    <li><a href="../AuthenticateAccount.html">AuthenticateAccount</a>
+  
+    <li><a href="../AuthenticateApi.html">AuthenticateApi</a>
+  
+    <li><a href="../AuthenticateOrigin.html">AuthenticateOrigin</a>
+  
+    <li><a href="../BaseController.html">BaseController</a>
+  
+    <li><a href="../Conversion.html">Conversion</a>
+  
+    <li><a href="../ConversionsController.html">ConversionsController</a>
+  
+    <li><a href="../ConversionsHelper.html">ConversionsHelper</a>
+  
+    <li><a href="../Err.html">Err</a>
+  
+    <li><a href="../ErrsController.html">ErrsController</a>
+  
+    <li><a href="../ErrsHelper.html">ErrsHelper</a>
+  
+    <li><a href="../Event.html">Event</a>
+  
+    <li><a href="../Events.html">Events</a>
+  
+    <li><a href="../EventsController.html">EventsController</a>
+  
+    <li><a href="../EventsHelper.html">EventsHelper</a>
+  
+    <li><a href="../GenerateToken.html">GenerateToken</a>
+  
+    <li><a href="../GetType.html">GetType</a>
+  
+    <li><a href="../Identifier.html">Identifier</a>
+  
+    <li><a href="../IdentifiersController.html">IdentifiersController</a>
+  
+    <li><a href="../IdentifiersHelper.html">IdentifiersHelper</a>
+  
+    <li><a href="../Object.html">Object</a>
+  
+    <li><a href="../Property.html">Property</a>
+  
+    <li><a href="../Rule.html">Rule</a>
+  
+    <li><a href="../RulesController.html">RulesController</a>
+  
+    <li><a href="../RulesHelper.html">RulesHelper</a>
+  
+    <li><a href="../SocialController.html">SocialController</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="class">class Accounts::ConfirmationsController</h1>
+
+  <div id="description" class="description">
+    
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    <!-- Methods -->
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-create" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>POST /resource/confirmation</p>
+          
+
+          
+          <div class="method-source-code" id="create-source">
+            <pre><span class="ruby-comment"># File app/controllers/accounts/confirmations_controller.rb, line 8</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">resource</span> = <span class="ruby-identifier">resource_class</span>.<span class="ruby-identifier">send_confirmation_instructions</span>(<span class="ruby-identifier">resource_params</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">successfully_sent?</span>(<span class="ruby-identifier">resource</span>)
+    <span class="ruby-identifier">respond_with</span>({}, <span class="ruby-value">:location</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">after_resending_confirmation_instructions_path_for</span>(<span class="ruby-identifier">resource_name</span>))
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">respond_with</span>(<span class="ruby-identifier">resource</span>)
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- create-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- create-method -->
+
+    
+      <div id="method-i-show" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">show</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>GET /resource/confirmation?confirmation_token=abcdef</p>
+          
+
+          
+          <div class="method-source-code" id="show-source">
+            <pre><span class="ruby-comment"># File app/controllers/accounts/confirmations_controller.rb, line 46</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">show</span>
+      <span class="ruby-ivar">@confirmable</span> = <span class="ruby-constant">Account</span>.<span class="ruby-identifier">find_or_initialize_with_error_by</span>(<span class="ruby-value">:confirmation_token</span>, <span class="ruby-identifier">params</span>[<span class="ruby-value">:confirmation_token</span>])
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">resource</span> = <span class="ruby-ivar">@confirmable</span>
+  
+
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@confirmable</span>.<span class="ruby-identifier">password_unset?</span>
+    <span class="ruby-ivar">@confirmation_token</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:confirmation_token</span>]
+    <span class="ruby-ivar">@requires_password</span> = <span class="ruby-keyword">true</span>
+    <span class="ruby-identifier">render</span> <span class="ruby-string">'accounts/confirmations/show'</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-ivar">@confirmable</span>.<span class="ruby-identifier">confirm!</span>
+    <span class="ruby-identifier">set_flash_message</span> <span class="ruby-value">:notice</span>, <span class="ruby-value">:confirmed</span>
+    <span class="ruby-identifier">sign_in_and_redirect</span>(<span class="ruby-identifier">resource_name</span>, <span class="ruby-ivar">@confirmable</span>)
+  <span class="ruby-keyword">end</span>  
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- show-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- show-method -->
+
+    
+      <div id="method-i-update" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">update</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>PUT /resource/confirmation</p>
+          
+
+          
+          <div class="method-source-code" id="update-source">
+            <pre><span class="ruby-comment"># File app/controllers/accounts/confirmations_controller.rb, line 18</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">update</span>
+      <span class="ruby-ivar">@confirmable</span> = <span class="ruby-constant">Account</span>.<span class="ruby-identifier">find_or_initialize_with_error_by</span>(<span class="ruby-value">:confirmation_token</span>, <span class="ruby-identifier">params</span>[<span class="ruby-value">:confirmation_token</span>])
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@confirmable</span>.<span class="ruby-identifier">password_unset?</span>
+    <span class="ruby-ivar">@confirmable</span>.<span class="ruby-identifier">attempt_set_password</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:account</span>])
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@confirmable</span>.<span class="ruby-identifier">valid?</span>
+      <span class="ruby-ivar">@confirmable</span>.<span class="ruby-identifier">confirm!</span>
+      <span class="ruby-identifier">set_flash_message</span> <span class="ruby-value">:notice</span>, <span class="ruby-value">:confirmed</span>
+      <span class="ruby-identifier">sign_in_and_redirect</span>(<span class="ruby-identifier">resource_name</span>, <span class="ruby-ivar">@confirmable</span>)
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">resource</span> = <span class="ruby-ivar">@confirmable</span>
+      <span class="ruby-ivar">@confirmation_token</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:confirmation_token</span>]
+      <span class="ruby-ivar">@requires_password</span> = <span class="ruby-keyword">true</span>
+      <span class="ruby-identifier">flash</span>[<span class="ruby-value">:alert</span>] = []
+             <span class="ruby-identifier">processed</span> = {}       
+      <span class="ruby-identifier">resource</span>.<span class="ruby-identifier">errors</span>.<span class="ruby-identifier">full_messages</span>.<span class="ruby-identifier">map</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">msg</span><span class="ruby-operator">|</span> 
+                                                                              <span class="ruby-identifier">flash</span>[<span class="ruby-value">:alert</span>] <span class="ruby-operator">&lt;&lt;</span>  <span class="ruby-identifier">msg</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">processed</span>[<span class="ruby-identifier">msg</span>]
+                                                                              <span class="ruby-identifier">processed</span>[<span class="ruby-identifier">msg</span>] = <span class="ruby-keyword">true</span>                                                                                   
+                                                                      }      
+      <span class="ruby-identifier">clean_up_passwords</span> <span class="ruby-identifier">resource</span>
+      <span class="ruby-identifier">render</span> <span class="ruby-string">'accounts/confirmations/show'</span>
+       
+     <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">else</span>
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">add_error_on</span>(<span class="ruby-keyword">self</span>, <span class="ruby-value">:email</span>, <span class="ruby-value">:password_allready_set</span>)
+  <span class="ruby-keyword">end</span>  
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- update-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- update-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+     <section id="protected-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Protected Instance Methods</h3>
+
+    
+      <div id="method-i-after_confirmation_path_for" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">after_confirmation_path_for</span><span
+            class="method-args">(resource_name, resource)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The path used after confirmation.</p>
+          
+
+          
+          <div class="method-source-code" id="after_confirmation_path_for-source">
+            <pre><span class="ruby-comment"># File app/controllers/accounts/confirmations_controller.rb, line 74</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">after_confirmation_path_for</span>(<span class="ruby-identifier">resource_name</span>, <span class="ruby-identifier">resource</span>)
+  <span class="ruby-identifier">after_sign_in_path_for</span>(<span class="ruby-identifier">resource</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- after_confirmation_path_for-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- after_confirmation_path_for-method -->
+
+    
+      <div id="method-i-after_resending_confirmation_instructions_path_for" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">after_resending_confirmation_instructions_path_for</span><span
+            class="method-args">(resource_name)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>The path used after resending confirmation instructions.</p>
+          
+
+          
+          <div class="method-source-code" id="after_resending_confirmation_instructions_path_for-source">
+            <pre><span class="ruby-comment"># File app/controllers/accounts/confirmations_controller.rb, line 69</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">after_resending_confirmation_instructions_path_for</span>(<span class="ruby-identifier">resource_name</span>)
+  <span class="ruby-identifier">new_session_path</span>(<span class="ruby-identifier">resource_name</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- after_resending_confirmation_instructions_path_for-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- after_resending_confirmation_instructions_path_for-method -->
+
+    
+    </section><!-- protected-instance-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.12.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

@@ -1,7 +1,6 @@
 class ErrsController < ApplicationController
 	protect_from_forgery
-  before_filter :authenticate_account!
-  #before_filter :authenticate_app!
+  authenticate_request( origin: { only: ["create"] } )
 
   respond_to :json
 
@@ -41,9 +40,9 @@ class ErrsController < ApplicationController
 
     raise ret[:error] if !ret[:error].blank?
 
-    respond_with(ret[:return].format_err, status: 200)
+    respond_with(ret[:return].format_err, status: 200, location: "nil")
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    respond_with({errors: e.message}, status: 422)
+    respond_with({errors: e.message}, status: 422, location: "nil")
   end  
 end

@@ -1,3 +1,19 @@
+/**
+ * See (http://jquery.com/).
+ * @name jQuery
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ */
+ 
+/**
+ * See (http://jquery.com/)
+ * @name fn
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ * @memberOf jQuery
+ */
 /* MAIN BUSINESS SPECIFIC CALLS */
 var RBT = function() {
 	this._appID = trigger_fish.rbTAPP.getAppID();
@@ -33,6 +49,7 @@ RBT.prototype.sendEvent = function(event, params)
   }
   trigger_fish.rbTServerChannel.makeRequest({"event" : event, 
                                              "params": params,
+                                             "type"  : "POST",
                                              "cb"    : { success: trigger_fish.rbTServerResponse.handleEvent,
                                                          error  : trigger_fish.rbTServerResponse.defaultError
                                                        }
@@ -51,6 +68,7 @@ RBT.prototype.identify = function(params)
   trigger_fish.rbTServerChannel.makeRequest({"url"     : trigger_fish.rbTServerChannel.url.identify, 
                                              "params"  : params,
                                              "identify": true,
+                                             "type"    : "POST",
                                              "cb"      : { success: trigger_fish.rbTServerResponse.setActorID,
                                                            error  : trigger_fish.rbTServerResponse.defaultError
                                                          }
@@ -73,6 +91,7 @@ RBT.prototype.setActor = function(params)
   trigger_fish.rbTServerChannel.makeRequest({"url"      : trigger_fish.rbTServerChannel.url.setActor, 
                                              "params"   : params,
                                              "set_actor": true,
+                                             "type"    : "POST",
                                              "cb"       : { success: trigger_fish.rbTServerResponse.setActorProperty,
                                                             error  : trigger_fish.rbTServerResponse.defaultError
                                                           }

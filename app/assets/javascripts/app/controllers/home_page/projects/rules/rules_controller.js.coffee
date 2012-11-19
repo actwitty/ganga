@@ -230,7 +230,7 @@ App.RulesController = Em.ArrayController.extend
       scope = condition.get 'scope'    
       if scope is 's'   
         sys = true
-        property =  condition.get 'property'
+        property =  condition.trueProperty()
         defaultVal = null
         type = App.systemSchema[property]
         
@@ -251,7 +251,7 @@ App.RulesController = Em.ArrayController.extend
       
       url = @get 'url.setSystem'
       success= (data) ->
-      error= (data) ->    
+      error= (data) ->   
       App.getRequest url, json, success, error
 
   #########################################################

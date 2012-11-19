@@ -1,7 +1,7 @@
 
 
 
-/***********************[[2012-11-17 13:42:46 +0530]]*********************************/ 
+/***********************[[2012-11-19 14:33:26 +0530]]*********************************/ 
 
 
 
@@ -16,6 +16,22 @@
 /****************************[[rbTAPP.js]]*************************************/ 
 
 
+/**
+ * See (http://jquery.com/).
+ * @name jQuery
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ */
+ 
+/**
+ * See (http://jquery.com/)
+ * @name fn
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ * @memberOf jQuery
+ */
 var trigger_fish = {};
 
 
@@ -41,8 +57,6 @@ trigger_fish.rbTAPP = {
     initialize : function()
     {
       "use strict";
-
-
       trigger_fish.initJStorage();
       // 1). includin jquery if need be
       //rbTUtils.includeJQIfNeeded();
@@ -245,6 +259,22 @@ trigger_fish.rbTAPP = {
 /****************************[[rbTStorage.js]]*************************************/ 
 
 
+/**
+ * See (http://jquery.com/).
+ * @name jQuery
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ */
+ 
+/**
+ * See (http://jquery.com/)
+ * @name fn
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ * @memberOf jQuery
+ */
 /*
  * ----------------------------- JSTORAGE -------------------------------------
  * Simple local storage wrapper to save data on the browser side, supporting
@@ -1395,6 +1425,22 @@ trigger_fish.rbTAPP = {
 /****************************[[rbTActor.js]]*************************************/ 
 
 
+/**
+ * See (http://jquery.com/).
+ * @name jQuery
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ */
+ 
+/**
+ * See (http://jquery.com/)
+ * @name fn
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ * @memberOf jQuery
+ */
 trigger_fish.rbTActor = function() {
 
   var __id = "";
@@ -1475,6 +1521,22 @@ trigger_fish.rbTActor = function() {
 /****************************[[rbTClientDebugger.js]]*************************************/ 
 
 
+/**
+ * See (http://jquery.com/).
+ * @name jQuery
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ */
+ 
+/**
+ * See (http://jquery.com/)
+ * @name fn
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ * @memberOf jQuery
+ */
 /*
  * JavaScript Debug - v0.4 - 6/22/2010
  * http://benalman.com/projects/javascript-debug-console-log/
@@ -1492,6 +1554,22 @@ trigger_fish.rbTDebug=(function(){var i=this,b=Array.prototype.slice,d=i.console
 /****************************[[rbTRules.js]]*************************************/ 
 
 
+/**
+ * See (http://jquery.com/).
+ * @name jQuery
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ */
+ 
+/**
+ * See (http://jquery.com/)
+ * @name fn
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ * @memberOf jQuery
+ */
 var TEST_RBT_RULE_JSON = {
                             "customer":{
                                         "name" :["samarth"],
@@ -1602,7 +1680,7 @@ trigger_fish.rbTRules = {
     
     // Client will not execute any rules if there is no schema set. 
     var appData = trigger_fish.rbTAPP.getAppDetail();
-    if (!appData.schema) {
+    if (!appData.app.schema) {
       trigger_fish.rbTDebug.log({"message":"There is no schema set for app, cannot execute rules"});
       return;
     }
@@ -1613,7 +1691,7 @@ trigger_fish.rbTRules = {
             var isRuleValid = new Function(functionCode)();
             if (isRuleValid) {
               $("#result").append("RULES PASSED");
-              //that.invokeAction(rule);
+              that.invokeAction(rule);
             } else {
               $("#result").append("RULES FAILED");
             }  
@@ -1668,7 +1746,7 @@ trigger_fish.rbTRules = {
       // Hand over action to templating engine for processing event action.
       //rbTTemplates.invoke(this.ruleTable[event].action, this.ruleTable[event].action_param);
       //rbT.invokeActionScript(this.ruleTable[event].action, this.ruleTable[event].action_param);
-      trigger_fish.rbT.invokeActionScript(rule.action, rule.action_param);
+      trigger_fish.rbT.invokeActionScript(rule.action);
     } catch(e) {
       trigger_fish.rbTAPP.reportError({"exception" : e.message,
                           "message": "action could not be invoked" , 
@@ -1692,20 +1770,22 @@ trigger_fish.rbTRules = {
   * @param {string} rule propertry
   * @return {string} datatype of the object.
   */  
-  getDataType : function(event,ruleProp,scope)
+  getDataType : function(event,ruleProp,scope,json)
   {
+    return json.type || undefined;
+    /* 
     // FIXME :: WE NEED TO CHANGE THIS TO GET IT FROM SCHEMA
     //return Object.prototype.toString.call(a).split("]")[0].split(" ")[1];
     var appSchema = trigger_fish.rbTAPP.getAppDetail().app.schema;
 
     if (scope === "e") {
-      return appSchema.events.event[ruleProp];
+      return appSchema.events[event][ruleProp];
     } else if (scope === "s") {
       return appSchema.system[ruleProp];
     } else if (scope === "a") {
       return appSchema.profile[ruleProp];
     }
-
+    */
 
   },
 
@@ -1746,7 +1826,7 @@ trigger_fish.rbTRules = {
       return false;
     }
     
-    var type = this.getDataType(ruleJson.event, ruleJson.property, ruleJson.scope);
+    var type = this.getDataType(ruleJson.event, ruleJson.property, ruleJson.scope, ruleJson);
     if (!type)
         return value;
     if (type === "String")
@@ -1771,7 +1851,6 @@ trigger_fish.rbTRules = {
     // ******FIXME : WE NEED TO GET THE DATA TYPES FROM APP SCHEMA********
     if (!value || !property)
       return undefined;
-    //var dt = this.getDataType(property);
     var dt = dataType;
     try {
         if (dt === "String") {
@@ -1812,14 +1891,8 @@ trigger_fish.rbTRules = {
     var propVal = this.evalProperty(ruleJson);
     if (!propVal)
       return false;
-    var propDT = this.getDataType(ruleJson.event, ruleJson.property, ruleJson.scope);
-    
-    /*if (ruleJson.type === "Date")
-      propDT = ruleJson.type;
-    else if (propDT !== ruleJson.type)
-      return false;
-    */
-    //var v1DT = this.getDataType(ruleJson.event,ruleJson.value1, ruleJson.scope);
+    var propDT = this.getDataType(ruleJson.event, ruleJson.property, ruleJson.scope, ruleJson);
+       
 
     var v1DT = Object.prototype.toString.call(ruleJson.value1).split("]")[0].split(" ")[1];
     if (ruleJson.value2)
@@ -1869,7 +1942,7 @@ trigger_fish.rbTRules = {
       if (!trigger_fish.rbTRules.isValidRule(ruleJson))
           return false;
       var res = false;
-      var propDT = this.getDataType(ruleJson.event, ruleJson.property, ruleJson.scope);
+      var propDT = this.getDataType(ruleJson.event, ruleJson.property, ruleJson.scope, ruleJson);
       var p = trigger_fish.rbTRules.evalProperty(ruleJson),
           a = trigger_fish.rbTRules.valueDataType(ruleJson.property, ruleJson.value1, propDT),
           b = trigger_fish.rbTRules.valueDataType(ruleJson.property, ruleJson.value2, propDT);
@@ -2074,6 +2147,23 @@ trigger_fish.rbTRules = {
 /****************************[[rbTServerResponse.js]]*************************************/ 
 
 
+
+/**
+ * See (http://jquery.com/).
+ * @name jQuery
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ */
+ 
+/**
+ * See (http://jquery.com/)
+ * @name fn
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ * @memberOf jQuery
+ */
 trigger_fish.rbTServerResponse = {
 
   /** 
@@ -2306,6 +2396,22 @@ trigger_fish.rbTServerResponse = {
 /****************************[[rbTServerReq.js]]*************************************/ 
 
 
+/**
+ * See (http://jquery.com/).
+ * @name jQuery
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ */
+ 
+/**
+ * See (http://jquery.com/)
+ * @name fn
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ * @memberOf jQuery
+ */
 trigger_fish.rbTServerChannel = {
   
   rbt_url : "http://localhost:3000/",
@@ -2335,9 +2441,10 @@ trigger_fish.rbTServerChannel = {
   /**
   *
   */
-  serverUrl : function(url)
+  serverUrl : function(type, url)
   {
-    return this.rbt_url + url + ".jsonp";
+    var u = this.rbt_url + url + (type === "POST" ? "" : ".json"); 
+    return u;
   }, 
 
   /**
@@ -2483,14 +2590,18 @@ trigger_fish.rbTServerChannel = {
       var that = obj;
       var url = (obj.event) ? trigger_fish.rbTServerChannel.url.fireEvent : obj.url;
       jQuery.ajax({
-            url: this.serverUrl(url),
-            type: 'GET',
+            url: this.serverUrl(obj.type,url),
+            type: that.type || 'GET',
             async: asyncSt,
-            dataType: 'jsonp',
-            contentType : 'application/javascript',
+            //dataType: 'json',
+            //contentType : 'application/javascript',
+            contentType : 'application/x-www-form-urlencoded',
             data: reqServerData,
             crossDomain:true,
             timeout : 10000,
+            xhrField : {
+              withCredentials : true
+            },
             beforeSend: function() {
                 if (that.event) {
                   trigger_fish.rbTCookie.setCookie("lastevent", that.event);
@@ -2624,6 +2735,22 @@ trigger_fish.rbTServerChannel = {
 /****************************[[rbTSystemVar.js]]*************************************/ 
 
 
+/**
+ * See (http://jquery.com/).
+ * @name jQuery
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ */
+ 
+/**
+ * See (http://jquery.com/)
+ * @name fn
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ * @memberOf jQuery
+ */
 /* Rule Bot scope to handle systems variables */
 trigger_fish.rbTSystemVar = {
 
@@ -3206,6 +3333,22 @@ var session_fetch = (function(win, doc, nav)
 /****************************[[rbTUtils.js]]*************************************/ 
 
 
+/**
+ * See (http://jquery.com/).
+ * @name jQuery
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ */
+ 
+/**
+ * See (http://jquery.com/)
+ * @name fn
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ * @memberOf jQuery
+ */
 trigger_fish.rbTUtils = {
   /** Initialize jquery if needed be
     *  @return void
@@ -3322,6 +3465,22 @@ trigger_fish.rbTUtils = {
 /****************************[[rbTCookieHandler.js]]*************************************/ 
 
 
+/**
+ * See (http://jquery.com/).
+ * @name jQuery
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ */
+ 
+/**
+ * See (http://jquery.com/)
+ * @name fn
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ * @memberOf jQuery
+ */
 trigger_fish.rbTCookie = {
 
   namePrefix : "RBT__",
@@ -3501,6 +3660,22 @@ trigger_fish.rbTCookie = {
 /****************************[[rbTBusiness.js]]*************************************/ 
 
 
+/**
+ * See (http://jquery.com/).
+ * @name jQuery
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ */
+ 
+/**
+ * See (http://jquery.com/)
+ * @name fn
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ * @memberOf jQuery
+ */
 /* MAIN BUSINESS SPECIFIC CALLS */
 var RBT = function() {
 	this._appID = trigger_fish.rbTAPP.getAppID();
@@ -3536,6 +3711,7 @@ RBT.prototype.sendEvent = function(event, params)
   }
   trigger_fish.rbTServerChannel.makeRequest({"event" : event, 
                                              "params": params,
+                                             "type"  : "POST",
                                              "cb"    : { success: trigger_fish.rbTServerResponse.handleEvent,
                                                          error  : trigger_fish.rbTServerResponse.defaultError
                                                        }
@@ -3598,6 +3774,23 @@ RBT.prototype.alias = function(params)
 
 /****************************[[rbJSON.js]]*************************************/ 
 
+
+/**
+ * See (http://jquery.com/).
+ * @name jQuery
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ */
+ 
+/**
+ * See (http://jquery.com/)
+ * @name fn
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ * @memberOf jQuery
+ */
 
 trigger_fish.rbJSON = {
 
@@ -3687,6 +3880,22 @@ trigger_fish.rbJSON = {
 /****************************[[rbTInitApp.js]]*************************************/ 
 
 
+/**
+ * See (http://jquery.com/).
+ * @name jQuery
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ */
+ 
+/**
+ * See (http://jquery.com/)
+ * @name fn
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ * @memberOf jQuery
+ */
 /** Start Rule Bot APP 
 * @param {string} appid App ID for rulebot account
 * @param {string} accid Account ID for rulebot account
@@ -3720,11 +3929,11 @@ trigger_fish.rbJSON = {
 function testGanga()
 {
   //rb.sendEvent("sample_event",{"a":101});
-  rb.identify("83.samarth@gmail.com");
+  //rb.identify("83.samarth@gmail.com");
   //rb.identify({"uid":"83.samarth@gmail.com"});
   //rb.setActor({"name":"samarth","age":"29"});
 
-  rb.sendEvent("sample_event",{"name":"samarth"});
+  rb.sendEvent("sample_event3",{"name":"samarth"});
 
 
   console.log("ENDING TESTING SEQUENCE");
@@ -3800,9 +4009,11 @@ trigger_fish.rbT.templateLib = {
  trigger_fish.rbT.templateName = {
 	 			'bottombar.generic.fblike':'Facebook Like Bottombar',
 	 			'topbar.generic.normal':'Normal Topbar',
+	 			'chat.generic.normal':'Chat Window',
 	 			'topbar.generic.twitterfollow':'Twitter Follow Topbar',
 	 			'bottombar.generic.twitterfollow':'Twitter Follow Bottombar',
 	 			'topbar.generic.fblike':'Facebook Like Topbar',
+	 			'uservoice.generic.normal':'User Voice Feedback',
 	 			'bottombar.generic.twittershare':'Twitter Share Bottombar',
 	 			'support.olark.normal':'Chat Window',
 	 			'modal.generic.normal':'Modal Window',
@@ -3817,342 +4028,352 @@ trigger_fish.rbT.templateLib = {
 	 	  'bottombar.generic.fblike':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.cr.textColor',
+	 	 	 	 	 				key :'rb.t.cr.text_color',
 	 	 	 	 	 				value :'#F2F0F0'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.nr.textFontsize',
+	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
 	 	 	 	 	 				value :'15'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.ft.textFontfamily',
+	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.fw.textFontWeight',
+	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
 	 	 	 	 	 				value :'bold'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.f.nr.baseZindex',
+	 	 	 	 	 				key :'rb.f.nr.base_zindex',
 	 	 	 	 	 				value :'Zindex'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.baseWidth',
+	 	 	 	 	 				key :'rb.t.nr.base_width',
 	 	 	 	 	 				value :'100'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.nr.baseHeight',
+	 	 	 	 	 				key :'rb.t.nr.base_height',
 	 	 	 	 	 				value :'40'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.cr.baseBgColor',
+	 	 	 	 	 				key :'rb.t.cr.base_backgroundcolor',
 	 	 	 	 	 				value :'#3C5891'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.an.baseTextalign',
+	 	 	 	 	 				key :'rb.t.an.base_textalign',
 	 	 	 	 	 				value :'center'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.vsg.textLeft',
+	 	 	 	 	 				key :'rb.t.vsg.text_left',
 	 	 	 	 	 				value :'Hello Hello'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.ul.facebookPage',
+	 	 	 	 	 				key :'rb.t.ul.facebook_page',
 	 	 	 	 	 				value :'http://www.google.com'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '12' :{
-	 	 	 	 	 				key :'rb.t.vsg.textRight',
+	 	 	 	 	 				key :'rb.t.vsg.text_right',
 	 	 	 	 	 				value :'Hello Hello'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'topbar.generic.normal':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.cr.textColor ',
+	 	 	 	 	 				key :'rb.t.cr.text_color ',
 	 	 	 	 	 				value :'#333'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.nr.textFontsize',
+	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
 	 	 	 	 	 				value :'15'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.ft.textFontfamily',
+	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.fw.textFontWeight',
+	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
 	 	 	 	 	 				value :'bold'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.f.nr.baseZindex',
+	 	 	 	 	 				key :'rb.f.nr.base_zindex',
 	 	 	 	 	 				value :'Zindex'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.baseWidth',
+	 	 	 	 	 				key :'rb.t.nr.base_width',
 	 	 	 	 	 				value :'100'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.nr.baseHeight',
+	 	 	 	 	 				key :'rb.t.nr.base_height',
 	 	 	 	 	 				value :'40'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.cr.baseBgColor',
+	 	 	 	 	 				key :'rb.t.cr.base_backgroundcolor',
 	 	 	 	 	 				value :'#DCDCDC'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.an.baseTextalign',
+	 	 	 	 	 				key :'rb.t.an.base_textalign',
 	 	 	 	 	 				value :'center'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.vsg.textLeft',
+	 	 	 	 	 				key :'rb.t.vsg.text_left',
 	 	 	 	 	 				value :'Hello'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.nr.btnFontSize',
+	 	 	 	 	 				key :'rb.t.nr.button_fontSize',
 	 	 	 	 	 				value :'14'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '12' : {
-	 	 	 	 	 				key :'rb.t.cr.btnBgColor',
+	 	 	 	 	 				key :'rb.t.cr.button_backgroundcolor',
 	 	 	 	 	 				value :'#548AC7'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '13' : {
-	 	 	 	 	 				key :'rb.t.cr.btnColor',
+	 	 	 	 	 				key :'rb.t.cr.button_olor',
 	 	 	 	 	 				value :'white'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '14' : {
-	 	 	 	 	 				key :'rb.t.ul.btnLink',
+	 	 	 	 	 				key :'rb.t.ul.button_link',
 	 	 	 	 	 				value :'http://www.google.com'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '15' : {
-	 	 	 	 	 				key :'rb.t.sg.btnLable',
+	 	 	 	 	 				key :'rb.t.sg.button_label',
 	 	 	 	 	 				value :'Click'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '16' :{
-	 	 	 	 	 				key :'rb.t.vsg.textRight',
+	 	 	 	 	 				key :'rb.t.vsg.text_right',
 	 	 	 	 	 				value :'Hello'
+	 	 	 	 	 	  }
+	 	 	 	 	 },
+	 	  'chat.generic.normal':{
+
+ 	 	 	 	 	 	 '1' :{
+	 	 	 	 	 				key :'rb.t.sg.olarkIdentity',
+	 	 	 	 	 				value :'\'6679-845-10-6199\''
 	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'topbar.generic.twitterfollow':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.cr.textColor ',
+	 	 	 	 	 				key :'rb.t.cr.text_color ',
 	 	 	 	 	 				value :'white'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.nr.textFontsize',
+	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
 	 	 	 	 	 				value :'17'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.cr.textShadow',
+	 	 	 	 	 				key :'rb.t.cr.text_shadow',
 	 	 	 	 	 				value :'black'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.ft.textFontfamily',
+	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.fw.textFontWeight',
+	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
 	 	 	 	 	 				value :'bold'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.f.nr.baseZindex',
+	 	 	 	 	 				key :'rb.f.nr.base_zindex',
 	 	 	 	 	 				value :'Zindex'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.nr.baeWidth',
+	 	 	 	 	 				key :'rb.t.nr.base_width',
 	 	 	 	 	 				value :'100'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.nr.baseHeight',
+	 	 	 	 	 				key :'rb.t.nr.base_height',
 	 	 	 	 	 				value :'50'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.cr.baeBgColor',
+	 	 	 	 	 				key :'rb.t.cr.base_backgroundcolor',
 	 	 	 	 	 				value :'#0B8AB8'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.an.baseTextalign',
+	 	 	 	 	 				key :'rb.t.an.base_textalign',
 	 	 	 	 	 				value :'center'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.vsg.textLeft',
+	 	 	 	 	 				key :'rb.t.vsg.textleft',
 	 	 	 	 	 				value :'Hello Hello'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '12' : {
-	 	 	 	 	 				key :'rb.t.sg.twitterAccountLink',
+	 	 	 	 	 				key :'rb.t.sg.twitter_account_link',
 	 	 	 	 	 				value :'@actwitty'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '13' : {
-	 	 	 	 	 				key :'rb.t.sg.twitterAccountLable',
+	 	 	 	 	 				key :'rb.t.sg.twitter_account_label',
 	 	 	 	 	 				value :'@actwitty'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '14' :{
-	 	 	 	 	 				key :'rb.t.vsg.textRight',
+	 	 	 	 	 				key :'rb.t.vsg.text_right',
 	 	 	 	 	 				value :'Hello Hello'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'bottombar.generic.twitterfollow':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.cr.textColor ',
+	 	 	 	 	 				key :'rb.t.cr.text_color',
 	 	 	 	 	 				value :'white'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.nr.textFontsize',
+	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
 	 	 	 	 	 				value :'17'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.cr.textShadow',
+	 	 	 	 	 				key :'rb.t.cr.text_shadow',
 	 	 	 	 	 				value :'black'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.ft.textFontfamily',
+	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.fw.textFontWeight',
+	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
 	 	 	 	 	 				value :'bold'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.f.nr.baseZindex',
+	 	 	 	 	 				key :'rb.f.nr.base_zindex',
 	 	 	 	 	 				value :'Zindex'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.nr.baeWidth',
+	 	 	 	 	 				key :'rb.t.nr.base_width',
 	 	 	 	 	 				value :'100'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.nr.baseHeight',
+	 	 	 	 	 				key :'rb.t.nr.base_height',
 	 	 	 	 	 				value :'50'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.cr.baeBgColor',
+	 	 	 	 	 				key :'rb.t.cr.bae_backgroundcolor',
 	 	 	 	 	 				value :'#0B8AB8'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.an.baseTextalign',
+	 	 	 	 	 				key :'rb.t.an.base_textalign',
 	 	 	 	 	 				value :'center'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.vsg.textLeft',
+	 	 	 	 	 				key :'rb.t.vsg.text_left',
 	 	 	 	 	 				value :'Hello Hello'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '12' : {
-	 	 	 	 	 				key :'rb.t.sg.twitterAccountLink',
+	 	 	 	 	 				key :'rb.t.sg.twitter_account_link',
 	 	 	 	 	 				value :'@actwitty'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '13' : {
-	 	 	 	 	 				key :'rb.t.sg.twitterAccountLable',
+	 	 	 	 	 				key :'rb.t.sg.twitter_account_Label',
 	 	 	 	 	 				value :'@actwitty'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '14' :{
-	 	 	 	 	 				key :'rb.t.vsg.textRight',
+	 	 	 	 	 				key :'rb.t.vsg.text_right',
 	 	 	 	 	 				value :'Hello Hello'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'topbar.generic.fblike':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.cr.textColor ',
+	 	 	 	 	 				key :'rb.t.cr.text_color ',
 	 	 	 	 	 				value :'#F2F0F0'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.nr.textFontsize',
+	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
 	 	 	 	 	 				value :'16'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.ft.textFontfamily',
+	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.fw.textFontWeight',
+	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
 	 	 	 	 	 				value :'bold'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.f.nr.baseZindex',
+	 	 	 	 	 				key :'rb.f.nr.baseZ_zindex',
 	 	 	 	 	 				value :'Zindex'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.baseWidth',
+	 	 	 	 	 				key :'rb.t.nr.base_width',
 	 	 	 	 	 				value :'100'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.nr.baseHeight',
+	 	 	 	 	 				key :'rb.t.nr.base_height',
 	 	 	 	 	 				value :'40'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.cr.baseBgColor',
+	 	 	 	 	 				key :'rb.t.cr.base_backgroundcolor',
 	 	 	 	 	 				value :'#3C5891'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.an.baseTextalign',
+	 	 	 	 	 				key :'rb.t.an.basetextalign',
 	 	 	 	 	 				value :'center'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.vsg.textLeft',
+	 	 	 	 	 				key :'rb.t.vsg.text_left',
 	 	 	 	 	 				value :'Hello Hello'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.ul.facebookPage',
+	 	 	 	 	 				key :'rb.t.ul.facebook_page',
 	 	 	 	 	 				value :'http://www.google.com'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '12' :{
-	 	 	 	 	 				key :'rb.t.vsg.textRight',
+	 	 	 	 	 				key :'rb.t.vsg.text_right',
 	 	 	 	 	 				value :'Hello Hello'
 	 	 	 	 	 	  }
+	 	 	 	 	 },
+	 	  'uservoice.generic.normal':{
+
 	 	 	 	 	 },
 	 	  'bottombar.generic.twittershare':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.cr.textColor ',
+	 	 	 	 	 				key :'rb.t.cr.text_color ',
 	 	 	 	 	 				value :'white'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.nr.textFontsize',
+	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
 	 	 	 	 	 				value :'17'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.cr.textShadow',
+	 	 	 	 	 				key :'rb.t.cr.text_shadow',
 	 	 	 	 	 				value :'black'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.ft.textFontfamily',
+	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.fw.textFontWeight',
+	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
 	 	 	 	 	 				value :'bold'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.f.nr.baseZindex',
+	 	 	 	 	 				key :'rb.f.nr.base_zindex',
 	 	 	 	 	 				value :'Zindex'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.nr.baeWidth',
+	 	 	 	 	 				key :'rb.t.nr.base_width',
 	 	 	 	 	 				value :'100'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.nr.baseHeight',
+	 	 	 	 	 				key :'rb.t.nr.base_height',
 	 	 	 	 	 				value :'50'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.cr.baeBgColor',
+	 	 	 	 	 				key :'rb.t.cr.base_backgroundcolor',
 	 	 	 	 	 				value :'#0B8AB8'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.an.baseTextalign',
+	 	 	 	 	 				key :'rb.t.an.base_textalign',
 	 	 	 	 	 				value :'center'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.vsg.leftText',
+	 	 	 	 	 				key :'rb.t.vsg.left_text',
 	 	 	 	 	 				value :'Hello Hello'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '12' : {
-	 	 	 	 	 				key :'rb.t.sg.twitterSharetext',
+	 	 	 	 	 				key :'rb.t.sg.twitter_share_text',
 	 	 	 	 	 				value :'Twteet please'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '13' :{
-	 	 	 	 	 				key :'rb.t.vsg.rightText',
+	 	 	 	 	 				key :'rb.t.vsg.right_text',
 	 	 	 	 	 				value :'Hello Hello'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
@@ -4166,71 +4387,79 @@ trigger_fish.rbT.templateLib = {
 	 	  'modal.generic.normal':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.f.nr.transBlockZindex',
+	 	 	 	 	 				key :'rb.f.nr.transparentblock_zindex',
 	 	 	 	 	 				value :'Zindex'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.f.nr.baseZindex',
+	 	 	 	 	 				key :'rb.f.nr.base_zindex',
 	 	 	 	 	 				value :'Zindex'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.cr.baseBgColor',
+	 	 	 	 	 				key :'rb.t.cr.base_backgroundcolor',
 	 	 	 	 	 				value :'white'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.cr.headingBgColor',
-	 	 	 	 	 				value :'#e7e7e7'
+	 	 	 	 	 				key :'rb.t.cr.base_backgroundcolor',
+	 	 	 	 	 				value :'white'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.modalHeadingColor',
-	 	 	 	 	 				value :'#525252'
+	 	 	 	 	 				key :'rb.t.cr.heading_backgroundcolor',
+	 	 	 	 	 				value :'#3C5891'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.modalHeadingFontsize',
-	 	 	 	 	 				value :'20'
+	 	 	 	 	 				key :'rb.t.cr.modal_headingcolor',
+	 	 	 	 	 				value :'#F2F0F0'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.ft.headingFontfamily',
-	 	 	 	 	 				value :'Arial'
+	 	 	 	 	 				key :'rb.t.nr.modal_heading_fontsize',
+	 	 	 	 	 				value :'20'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.cr.modalHeadingTextShadow',
-	 	 	 	 	 				value :'#6e6e6e'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.vsg.modalHeadingText',
-	 	 	 	 	 				value :'This is the Heading '
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.cr.modalTextColor',
-	 	 	 	 	 				value :'#525252'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.nr.modalTextFontsize',
-	 	 	 	 	 				value :'12'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '12' : {
-	 	 	 	 	 				key :'rb.t.ft.textFontfamily',
+	 	 	 	 	 				key :'rb.t.ft.heading_fontfamily',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '9' : {
+	 	 	 	 	 				key :'rb.t.cr.modal_heading_textshadow',
+	 	 	 	 	 				value :'#6e6e6e'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '10' : {
+	 	 	 	 	 				key :'rb.t.vsg.modal_heading_text',
+	 	 	 	 	 				value :'This is the Heading '
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '11' : {
+	 	 	 	 	 				key :'rb.t.cr.modal_text_color',
+	 	 	 	 	 				value :'#000000'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '12' : {
+	 	 	 	 	 				key :'rb.t.nr.modal_text_fontsize',
+	 	 	 	 	 				value :'12'
+	 	 	 	 	 	  },
  	 	 	 	 	 	 '13' : {
-	 	 	 	 	 				key :'rb.t.vsg.modalText',
-	 	 	 	 	 				value :'Hello Hello Hello Hello Hello hello heello bjashsdgfsdhvfhsdvcfhsdvhcsd hvhvchjsdvchjsdvchjvsdchvsdhvcjhsdvjvh '
+	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
+	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '14' : {
-	 	 	 	 	 				key :'rb.t.sg.modalImgPath',
-	 	 	 	 	 				value :'../../../images/rails.png'
+	 	 	 	 	 				key :'rb.t.vsg.modal_text',
+	 	 	 	 	 				value :'Hello Hello Hello Hello Hello hello heello '
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '15' : {
-	 	 	 	 	 				key :'rb.t.cr.buttonBgColor',
-	 	 	 	 	 				value :'#3B5998'
+	 	 	 	 	 				key :'rb.t.sg.modal_image_path',
+	 	 	 	 	 				value :'../../../images/rails.png'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '16' : {
-	 	 	 	 	 				key :'rb.t.ul.modalBtnLink',
+	 	 	 	 	 				key :'rb.t.cr.button_backgroundcolor',
+	 	 	 	 	 				value :'#FFCC33'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '17' : {
+	 	 	 	 	 				key :'rb.t.cr.button_text_color',
+	 	 	 	 	 				value :'#000000'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '18' : {
+	 	 	 	 	 				key :'rb.t.ul.modal_button_link',
 	 	 	 	 	 				value :'http://www.google.com'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '17' :{
-	 	 	 	 	 				key :'rb.t.sg.modalBtnLable',
+ 	 	 	 	 	 	 '19' :{
+	 	 	 	 	 				key :'rb.t.sg.modal_button_label',
 	 	 	 	 	 				value :'Click'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
@@ -4240,122 +4469,122 @@ trigger_fish.rbT.templateLib = {
 	 	  'bottombar.generic.normal':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.cr.textColor ',
+	 	 	 	 	 				key :'rb.t.cr.text_color',
 	 	 	 	 	 				value :'#333'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.nr.textFontsize',
+	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
 	 	 	 	 	 				value :'15'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.ft.textFontfamily',
+	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.fw.textFontWeight',
+	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
 	 	 	 	 	 				value :'bold'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.f.nr.baseZindex',
+	 	 	 	 	 				key :'rb.f.nr.base_zindex',
 	 	 	 	 	 				value :'Zindex'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.baseWidth',
+	 	 	 	 	 				key :'rb.t.nr.base_width',
 	 	 	 	 	 				value :'100'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.nr.baseHeight',
+	 	 	 	 	 				key :'rb.t.nr.base_height',
 	 	 	 	 	 				value :'40'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.cr.baseBgColor',
+	 	 	 	 	 				key :'rb.t.cr.base_backgroundcolor',
 	 	 	 	 	 				value :'#DCDCDC'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.an.baseTextalign',
+	 	 	 	 	 				key :'rb.t.an.base_textalign',
 	 	 	 	 	 				value :'center'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.vsg.textLeft',
+	 	 	 	 	 				key :'rb.t.vsg.text_left',
 	 	 	 	 	 				value :'Hello Hello'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.nr.btnFontSize',
+	 	 	 	 	 				key :'rb.t.nr.button_fontsize',
 	 	 	 	 	 				value :'14'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '12' : {
-	 	 	 	 	 				key :'rb.t.cr.btnBgColor',
+	 	 	 	 	 				key :'rb.t.cr.button_backgroundcolor',
 	 	 	 	 	 				value :'#548AC7'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '13' : {
-	 	 	 	 	 				key :'rb.t.cr.btnColor',
+	 	 	 	 	 				key :'rb.t.cr.button_color',
 	 	 	 	 	 				value :'white'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '14' : {
-	 	 	 	 	 				key :'rb.t.ul.btnLink',
+	 	 	 	 	 				key :'rb.t.ul.button_link',
 	 	 	 	 	 				value :'http://www.google.com'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '15' : {
-	 	 	 	 	 				key :'rb.t.sg.btnLable',
+	 	 	 	 	 				key :'rb.t.sg.button_lable',
 	 	 	 	 	 				value :'Click'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '16' :{
-	 	 	 	 	 				key :'rb.t.vsg.textRight',
+	 	 	 	 	 				key :'rb.t.vsg.text_right',
 	 	 	 	 	 				value :'Hello Hello'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'topbar.generic.twittershare':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.cr.textColor ',
+	 	 	 	 	 				key :'rb.t.cr.text_color ',
 	 	 	 	 	 				value :'white'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.nr.textFontsize',
+	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
 	 	 	 	 	 				value :'17'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.cr.textShadow',
+	 	 	 	 	 				key :'rb.t.cr.text_shadow',
 	 	 	 	 	 				value :'black'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.ft.textFontfamily',
+	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.fw.textFontWeight',
+	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
 	 	 	 	 	 				value :'bold'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.f.nr.baseZindex',
+	 	 	 	 	 				key :'rb.f.nr.base_zindex',
 	 	 	 	 	 				value :'Zindex'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.nr.baeWidth',
+	 	 	 	 	 				key :'rb.t.nr.base_width',
 	 	 	 	 	 				value :'100'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.nr.baseHeight',
+	 	 	 	 	 				key :'rb.t.nr.base_height',
 	 	 	 	 	 				value :'50'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.cr.baeBgColor',
+	 	 	 	 	 				key :'rb.t.cr.base_backgroundcolor',
 	 	 	 	 	 				value :'#0B8AB8'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.an.baseTextalign',
+	 	 	 	 	 				key :'rb.t.an.base_textalign',
 	 	 	 	 	 				value :'center'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.vsg.leftText',
+	 	 	 	 	 				key :'rb.t.vsg.left_text',
 	 	 	 	 	 				value :'Hello Hello'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '12' : {
-	 	 	 	 	 				key :'rb.t.sg.twitterSharetext',
+	 	 	 	 	 				key :'rb.t.sg.twitter_share_text',
 	 	 	 	 	 				value :'Twteet please'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '13' :{
-	 	 	 	 	 				key :'rb.t.vsg.rightText',
+	 	 	 	 	 				key :'rb.t.vsg.right_text',
 	 	 	 	 	 				value :'Hello Hello'
 	 	 	 	 	 	  }
 	 	 	 	 	 }
@@ -4430,7 +4659,7 @@ trigger_fish.rbT.rbTemplSupportOlarkNormalHTML='<!-- --><div id="rbChatGenericNo
 /****************************[[./templates/topbars/rbTemplModalGenericNormal.js]]*************************************/ 
 
 
-trigger_fish.rbT.rbTemplModalGenericNormalHTML='<!-- --><style>#rbModalGenericNormalTranblockContainer {          visibility: visible;         position: fixed;          left: 0px;          top: 0px;           width:100%;           height:100%;       background-color:black;          z-index:{{1}};      opacity:0.6;      filter:alpha(opacity=60);}#rbModalGenericNormalBaseContainer{          visibility: visible;         position: fixed;          left: 0px;          top: 0px;           width:100%;           height:100%;      z-index:{{2}}; }#rbModalGenericNormalSubsubContainer        {                 width:500px; 	           height: 300px;             background-color:{{3}};               border:4px solid #a3a3a3;                position: fixed;             border-radius:5px;             top : 30%;             left : 30%;        }  </style><div id="rbModalGenericNormalTranblockContainer"></div> <div id="rbModalGenericNormalBaseContainer">		<div id="rbModalGenericNormalSubContainer">		<div id="rbModalGenericNormalSubsubContainer"  style="postion:relative;">                                 <div style="top:0px;width:100%;height:18%;left:0px;background-color:{{4}};">           <div style="top:0%;left:0 %;position:absolute;color:{{5}};width:70%; height:14%;font-size:{{6}}px;font-family:{{7}}; overflow:hidden;border-top-left-radius:5px;border-top-right-radius:5px;padding:5px;text-shadow:1px 1px {{8}};">               {{9}}           </div>          <div id="rbModalGenericNormalCloseClick" class="rbClickable"  style="top:1%;right:1%;position:absolute;color:black;font-weight:bold; padding:2px;cursor:pointer;">            X          </div>            </div>           	<div style="top:22%;left:0%;position:absolute;color:{{10}};width:70%;height:65%;overflow:hidden;font-size:{{11}}px;font-family:{{12}};text-align:left;border-bottom-left-radius:5px;border-bottom-right-radius:5px;padding:5px;">           	    {{13}}                         	 </div>             <div style="top:30%;right:5%;width:15%;height:20%;position:absolute;overflow:hidden">              <img src="{{14}}" alt="image"\>             </div> 			               <button   style="bottom:2%;right:2%;position:absolute;color:white;width:75px;height:25px;text-align:center;background-color:{{15}};border-radius:5px;padding-top:2px;border:1px solid #305580 ;font-weight: bold;cursor:pointer;">               <a  id="rbModalGenericNormalRoiClickbutton" class="rbClickable" style="text-decoration:none;color:white;" href= "{{16}}" target="_self" class="rbClickable" >                {{17}}               </a>             </button>	      </div>	</div></div>'
+trigger_fish.rbT.rbTemplModalGenericNormalHTML='<!-- --><style>#rbModalGenericNormalTranblockContainer {          visibility: visible;         position: fixed;          left: 0px;          top: 0px;           width:100%;           height:100%;       background-color:black;          z-index:{{1}};      opacity:0.6;      filter:alpha(opacity=60);}#rbModalGenericNormalBaseContainer{          visibility: visible;         position: fixed;          left: 0px;          top: 0px;           width:100%;           height:100%;      z-index:{{2}}; }#rbModalGenericNormalSubsubContainer        {                 width:500px; 	           height: 350px;             background-color:{{3}};               border:8px solid rgba(0, 0, 0, .7);;                position: fixed;             border-radius:5px;             top : 25%;             left : 30%;             padding : 15px;        }#rbModalGenericNormalSubsubsubContainer        {                 width:500px;              height: 300px;             background-color:{{4}};               border:1px solid #a3a3a3;                position: fixed;             border-radius:5px;                   }  </style><div id="rbModalGenericNormalTranblockContainer"></div> <div id="rbModalGenericNormalBaseContainer">		<div id="rbModalGenericNormalSubContainer">  		<div id="rbModalGenericNormalSubsubContainer">                  <div id="rbModalGenericNormalSubsubsubContainer" style="position:relative;">           <div style="top:0px;width:100%;height:18%;left:0px;background-color:{{5}};">           <div style="top:0%;left:0 %;position:absolute;color:{{6}};width:70%; height:14%;font-size:{{7}}px;font-family:{{8}}; overflow:hidden;border-top-left-radius:5px;border-top-right-radius:5px;padding:5px;text-shadow:1px 1px {{9}};">               {{10}}           </div>          <div id="rbModalGenericNormalCloseClick" class="rbClickable"  style="top:1%;right:1%;position:absolute;color:#F2F0F0;font-weight:bold; padding:2px;cursor:pointer;">            X          </div>            </div>           	<div style="top:22%;left:0%;position:absolute;color:{{11}};width:70%;height:65%;overflow:hidden;font-size:{{12}}px;font-family:{{13}};text-align:left;border-bottom-left-radius:5px;border-bottom-right-radius:5px;padding:5px;">           	    {{14}}                         	 </div>             <div style="top:40%;right:3%;width:15%;height:20%;position:absolute;overflow:hidden">              <img src="{{15}}" alt="image"\>             </div> 			               <button   style="bottom:2%;right:2%;position:absolute;width:100px;height:25px;text-align:center;background-color:{{16}};border-radius:10px;padding-top:2px;border:1px solid #305580 ;font-weight: bold;cursor:pointer;">               <a  id="rbModalGenericNormalRoiClickbutton" class="rbClickable" style="text-decoration:none;color:{{17}};" href= "{{18}}" target="_self" class="rbClickable" >                {{19}}               </a>             </button>	      </div></div>	</div></div>'
 
 
 
@@ -4975,11 +5204,9 @@ trigger_fish.rbT.eventHandler = {
     
 // INTEGRATION_ENABLE     
 
-/*
          //trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
         //TODO
 
-*/
 
   },  
 
@@ -5113,7 +5340,7 @@ trigger_fish.rbT.enableTimeOutHadnlingInternal= function(templateName,timerValue
 };
 
 //*************************************************************************************
-trigger_fish.rbT.invokeActionScriptInternal=function(action,actionParams){
+trigger_fish.rbT.invokeActionScriptInternal=function(action){
 
 /*
 
@@ -5127,7 +5354,7 @@ if(1) // Check for Service Type Enhancement
       
       trigger_fish.rbT.init();
       
-
+      var actionParams = action.params;
        
       var type=action.desc.type; 
       var api = action.desc.api;
@@ -5298,16 +5525,16 @@ trigger_fish.rbT.enableTimeOutHadnling =function(templateName,timerValue){
 
 //---------------------------------------------------------------
 
-trigger_fish.rbT.invokeActionScript = function(action,actionParams)
+trigger_fish.rbT.invokeActionScript = function(action)
 {
 
-	if ( typeof actionParams === 'undefined' ){
+	if ( typeof action === 'undefined' ){
 		trigger_fish.rbT.sendErrorToRBServer("Invalid params in rule Json");
 		return "";
 	}
 
 	else{
-          trigger_fish.rbT.invokeActionScriptInternal(action,actionParams); 
+          trigger_fish.rbT.invokeActionScriptInternal(action); 
 	}
 
 	
