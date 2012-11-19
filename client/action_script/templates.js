@@ -49,7 +49,7 @@ trigger_fish.rbT.templateLib = {
 	 			'topbar.generic.twittershare':'Influence a Twitter user to share about your business',
 	 			'chat.generic.normal':'Chat Window',
 	 			'feedback.uservoice.normal':'User Voice Feedback',
-	 			'modal.generic.normal':'Modal Window',
+	 			'modal.generic.normal':'A modal annonucement',
 	 			'topbar.generic.normal':'A promo top bar with link and some text',
 	 			'bottombar.generic.fblike':'A bottom bar to influence visitors from Facebook',
 	 			'uservoice.generic.normal':'User Voice Feedback',
@@ -286,72 +286,84 @@ trigger_fish.rbT.templateLib = {
 	 	  'modal.generic.normal':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.f.nr.transparentblock_zindex',
-	 	 	 	 	 				value :'Zindex'
+	 	 	 	 	 				key :'rb.f.nr.background_zindex',
+	 	 	 	 	 				value :'10000'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.f.nr.base_zindex',
-	 	 	 	 	 				value :'Zindex'
+	 	 	 	 	 				key :'rb.f.nr.dialog_zindex',
+	 	 	 	 	 				value :'10001'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.cr.base_backgroundcolor',
+	 	 	 	 	 				key :'rb.t.cr.background_color',
 	 	 	 	 	 				value :'white'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.cr.heading_backgroundcolor',
-	 	 	 	 	 				value :'#e7e7e7'
+	 	 	 	 	 				key :'rb.t.sg.modal_cover_image',
+	 	 	 	 	 				value :'https://s3.amazonaws.com/actwitty_ganga/image/modal_demo.jpg'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.modal_headingcolor',
-	 	 	 	 	 				value :'#525252'
+	 	 	 	 	 				key :'rb.t.cr.heading_background_color',
+	 	 	 	 	 				value :'#D44413'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.modal_heading_fontsize',
-	 	 	 	 	 				value :'20'
+	 	 	 	 	 				key :'rb.t.cr.heading_color',
+	 	 	 	 	 				value :'#FFFFFF'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
+	 	 	 	 	 				key :'rb.t.nr.heading_font_size',
+	 	 	 	 	 				value :'20'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '8' : {
 	 	 	 	 	 				key :'rb.t.ft.heading_fontfamily',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.cr.modal_heading_textshadow',
-	 	 	 	 	 				value :'#6e6e6e'
-	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.vsg.modal_heading_text',
-	 	 	 	 	 				value :'This is the Heading '
+	 	 	 	 	 				key :'rb.t.cr.heading_text_shadow',
+	 	 	 	 	 				value :'#97310E'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.cr.modal_text_color',
-	 	 	 	 	 				value :'#525252'
+	 	 	 	 	 				key :'rb.t.nr.text_font_size',
+	 	 	 	 	 				value :'20'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.nr.modal_text_fontsize',
-	 	 	 	 	 				value :'12'
+	 	 	 	 	 				key :'rb.t.nr.line-height',
+	 	 	 	 	 				value :'24'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '12' : {
-	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
-	 	 	 	 	 				value :'Arial'
+	 	 	 	 	 				key :'rb.t.cr.text_color',
+	 	 	 	 	 				value :'#000000'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '13' : {
-	 	 	 	 	 				key :'rb.t.vsg.modal_text',
-	 	 	 	 	 				value :'Hello Hello Hello Hello Hello hello heello '
+	 	 	 	 	 				key :'rb.t.cr.button_border',
+	 	 	 	 	 				value :'#f5881f'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '14' : {
-	 	 	 	 	 				key :'rb.t.sg.modal_image_path',
-	 	 	 	 	 				value :'../../../images/rails.png'
+	 	 	 	 	 				key :'rb.t.cr.button_background',
+	 	 	 	 	 				value :'#f15c24'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '15' : {
-	 	 	 	 	 				key :'rb.t.cr.button_backgroundcolor',
-	 	 	 	 	 				value :'#3B5998'
+	 	 	 	 	 				key :'rb.t.cr.button_color',
+	 	 	 	 	 				value :'#fffffd'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '16' : {
-	 	 	 	 	 				key :'rb.t.ul.modal_button_link',
-	 	 	 	 	 				value :'http://www.google.com'
+	 	 	 	 	 				key :'rb.t.nr.button_font_size',
+	 	 	 	 	 				value :'25'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '17' :{
+ 	 	 	 	 	 	 '17' : {
+	 	 	 	 	 				key :'rb.t.vsg.heading_text',
+	 	 	 	 	 				value :'An announcement to catch attention'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '18' : {
+	 	 	 	 	 				key :'rb.t.vsg.offer_text',
+	 	 	 	 	 				value :'This is a way to connect to your customers to woo them to engage with your product.                We can help you to automate the offerings being presented by popping out such modals                when rules get hit. You can change this text.'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '19' : {
+	 	 	 	 	 				key :'rb.t.ul.modal_button_link',
+	 	 	 	 	 				value :'http://www.rulebot.com'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '20' :{
 	 	 	 	 	 				key :'rb.t.sg.modal_button_label',
-	 	 	 	 	 				value :'Click'
+	 	 	 	 	 				value :'Order Now'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'topbar.generic.normal':{

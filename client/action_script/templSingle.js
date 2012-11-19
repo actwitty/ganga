@@ -64,7 +64,7 @@ trigger_fish.rbT.templateLib = {
 	 			'topbar.generic.twittershare':'Influence a Twitter user to share about your business',
 	 			'chat.generic.normal':'Chat Window',
 	 			'feedback.uservoice.normal':'User Voice Feedback',
-	 			'modal.generic.normal':'Modal Window',
+	 			'modal.generic.normal':'A modal annonucement',
 	 			'topbar.generic.normal':'A promo top bar with link and some text',
 	 			'bottombar.generic.fblike':'A bottom bar to influence visitors from Facebook',
 	 			'uservoice.generic.normal':'User Voice Feedback',
@@ -301,72 +301,84 @@ trigger_fish.rbT.templateLib = {
 	 	  'modal.generic.normal':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.f.nr.transparentblock_zindex',
-	 	 	 	 	 				value :'Zindex'
+	 	 	 	 	 				key :'rb.f.nr.background_zindex',
+	 	 	 	 	 				value :'10000'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.f.nr.base_zindex',
-	 	 	 	 	 				value :'Zindex'
+	 	 	 	 	 				key :'rb.f.nr.dialog_zindex',
+	 	 	 	 	 				value :'10001'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.cr.base_backgroundcolor',
+	 	 	 	 	 				key :'rb.t.cr.background_color',
 	 	 	 	 	 				value :'white'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.cr.heading_backgroundcolor',
-	 	 	 	 	 				value :'#e7e7e7'
+	 	 	 	 	 				key :'rb.t.sg.modal_cover_image',
+	 	 	 	 	 				value :'https://s3.amazonaws.com/actwitty_ganga/image/modal_demo.jpg'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.modal_headingcolor',
-	 	 	 	 	 				value :'#525252'
+	 	 	 	 	 				key :'rb.t.cr.heading_background_color',
+	 	 	 	 	 				value :'#D44413'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.modal_heading_fontsize',
-	 	 	 	 	 				value :'20'
+	 	 	 	 	 				key :'rb.t.cr.heading_color',
+	 	 	 	 	 				value :'#FFFFFF'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
+	 	 	 	 	 				key :'rb.t.nr.heading_font_size',
+	 	 	 	 	 				value :'20'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '8' : {
 	 	 	 	 	 				key :'rb.t.ft.heading_fontfamily',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.cr.modal_heading_textshadow',
-	 	 	 	 	 				value :'#6e6e6e'
-	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.vsg.modal_heading_text',
-	 	 	 	 	 				value :'This is the Heading '
+	 	 	 	 	 				key :'rb.t.cr.heading_text_shadow',
+	 	 	 	 	 				value :'#97310E'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.cr.modal_text_color',
-	 	 	 	 	 				value :'#525252'
+	 	 	 	 	 				key :'rb.t.nr.text_font_size',
+	 	 	 	 	 				value :'20'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.nr.modal_text_fontsize',
-	 	 	 	 	 				value :'12'
+	 	 	 	 	 				key :'rb.t.nr.line-height',
+	 	 	 	 	 				value :'24'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '12' : {
-	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
-	 	 	 	 	 				value :'Arial'
+	 	 	 	 	 				key :'rb.t.cr.text_color',
+	 	 	 	 	 				value :'#000000'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '13' : {
-	 	 	 	 	 				key :'rb.t.vsg.modal_text',
-	 	 	 	 	 				value :'Hello Hello Hello Hello Hello hello heello '
+	 	 	 	 	 				key :'rb.t.cr.button_border',
+	 	 	 	 	 				value :'#f5881f'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '14' : {
-	 	 	 	 	 				key :'rb.t.sg.modal_image_path',
-	 	 	 	 	 				value :'../../../images/rails.png'
+	 	 	 	 	 				key :'rb.t.cr.button_background',
+	 	 	 	 	 				value :'#f15c24'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '15' : {
-	 	 	 	 	 				key :'rb.t.cr.button_backgroundcolor',
-	 	 	 	 	 				value :'#3B5998'
+	 	 	 	 	 				key :'rb.t.cr.button_color',
+	 	 	 	 	 				value :'#fffffd'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '16' : {
-	 	 	 	 	 				key :'rb.t.ul.modal_button_link',
-	 	 	 	 	 				value :'http://www.google.com'
+	 	 	 	 	 				key :'rb.t.nr.button_font_size',
+	 	 	 	 	 				value :'25'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '17' :{
+ 	 	 	 	 	 	 '17' : {
+	 	 	 	 	 				key :'rb.t.vsg.heading_text',
+	 	 	 	 	 				value :'An announcement to catch attention'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '18' : {
+	 	 	 	 	 				key :'rb.t.vsg.offer_text',
+	 	 	 	 	 				value :'This is a way to connect to your customers to woo them to engage with your product.                We can help you to automate the offerings being presented by popping out such modals                when rules get hit. You can change this text.'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '19' : {
+	 	 	 	 	 				key :'rb.t.ul.modal_button_link',
+	 	 	 	 	 				value :'http://www.rulebot.com'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '20' :{
 	 	 	 	 	 				key :'rb.t.sg.modal_button_label',
-	 	 	 	 	 				value :'Click'
+	 	 	 	 	 				value :'Order Now'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'topbar.generic.normal':{
@@ -658,7 +670,7 @@ trigger_fish.rbT.rbTemplSupportOlarkNormalHTML='<!-- --><div id="rbChatGenericNo
 /****************************[[./templates/topbars/rbTemplModalGenericNormal.js]]*************************************/ 
 
 
-trigger_fish.rbT.rbTemplModalGenericNormalHTML='<!-- --><style>#rbModalGenericNormalTranblockContainer {          visibility: visible;         position: fixed;          left: 0px;          top: 0px;           width:100%;           height:100%;       background-color:black;          z-index:{{1}};      opacity:0.6;      filter:alpha(opacity=60);}#rbModalGenericNormalBaseContainer{          visibility: visible;         position: fixed;          left: 0px;          top: 0px;           width:100%;           height:100%;      z-index:{{2}}; }#rbModalGenericNormalSubsubContainer        {                 width:500px; 	           height: 300px;             background-color:{{3}};               border:4px solid #a3a3a3;                position: fixed;             border-radius:5px;             top : 30%;             left : 30%;        }  </style><div id="rbModalGenericNormalTranblockContainer"></div> <div id="rbModalGenericNormalBaseContainer">		<div id="rbModalGenericNormalSubContainer">		<div id="rbModalGenericNormalSubsubContainer"  style="postion:relative;">                                 <div style="top:0px;width:100%;height:18%;left:0px;background-color:{{4}};">           <div style="top:0%;left:0 %;position:absolute;color:{{5}};width:70%; height:14%;font-size:{{6}}px;font-family:{{7}}; overflow:hidden;border-top-left-radius:5px;border-top-right-radius:5px;padding:5px;text-shadow:1px 1px {{8}};">               {{9}}           </div>          <div id="rbModalGenericNormalCloseClick" class="rbClickable"  style="top:1%;right:1%;position:absolute;color:black;font-weight:bold; padding:2px;cursor:pointer;">            X          </div>            </div>           	<div style="top:22%;left:0%;position:absolute;color:{{10}};width:70%;height:65%;overflow:hidden;font-size:{{11}}px;font-family:{{12}};text-align:left;border-bottom-left-radius:5px;border-bottom-right-radius:5px;padding:5px;">           	    {{13}}                         	 </div>             <div style="top:30%;right:5%;width:15%;height:20%;position:absolute;overflow:hidden">              <img src="{{14}}" alt="image"\>             </div> 			               <button   style="bottom:2%;right:2%;position:absolute;color:white;width:75px;height:25px;text-align:center;background-color:{{15}};border-radius:5px;padding-top:2px;border:1px solid #305580 ;font-weight: bold;cursor:pointer;">               <a  id="rbModalGenericNormalRoiClickbutton" class="rbClickable" style="text-decoration:none;color:white;" href= "{{16}}" target="_self" class="rbClickable" >                {{17}}               </a>             </button>	      </div>	</div></div>'
+trigger_fish.rbT.rbTemplModalGenericNormalHTML='<!-- --><style>#rbModalGenericNormalTranblockContainer {      visibility: visible;     position: fixed;      left: 0px;      top: 0px;       width:100%;       height:100%;        z-index:{{1}};  opacity:0.6;  filter:alpha(opacity=60);  background-color:black; }#rbModalGenericNormalBaseContainer{      visibility: visible;     position: fixed;      left: 0px;      top: 0px;       width:100%;       height:100%;  z-index:{{2}}; }#rbModalGenericNormalSubsubContainer{      width:500px;   height: 400px;  background-color:{{3}};    border:8px solid rgba(0, 0, 0, .7);;     position: fixed;  top : 25%;  left : 30%;  padding : 15px;  -webkit-border-radius: 5px;  -moz-border-radius: 5px;  border-radius: 5px;  }.rbModalContainer{      width: 500px;   height: 400px;    border:1px solid #a3a3a3;     position: fixed;  -webkit-border-radius: 5px;  -moz-border-radius: 5px;  border-radius: 5px;    }.rbModalCover{  position: absolute;  top: 0px;  left: 0px;  width: 500px;   height: 400px;    padding: 0px;  display: block;  background: #ffffff url(\'{{4}}\') no-repeat right top;             filter:alpha(opacity=60);  opacity:0.6;  -webkit-border-top-left-radius: 5px;  -webkit-border-top-right-radius: 5px;  -moz-border-radius-topleft: 5px;  -moz-border-radius-topright: 5px;  border-top-left-radius: 5px;  border-top-right-radius: 5px;  z-index: -1;  }.rbModalHead{  background-color:{{5}};      width: 100%;  height: 50px;      position: relative;  display: block;  -webkit-border-top-left-radius: 5px;  -webkit-border-top-right-radius: 5px;  -moz-border-radius-topleft: 5px;  -moz-border-radius-topright: 5px;  border-top-left-radius: 5px;  border-top-right-radius: 5px;  z-index: 1;   }  .rbModalHead .rbModalClose{    position: absolute;    top: 4px;    right: 4px;    display: inline-block;    font-size: 14px;    font-weight: normal;    color: white;    cursor: pointer;    z-index: 1;  }  .rbModalClose:hover{    color: #aaa;  }.rbModalHeader{  top:0;  left:0;  position: absolute;    white-space: nowrap;    overflow: hidden;   text-overflow: ellipsis;  color:{{6}};  width:80%;   height:30px;  font-size:{{7}}px;  font-family:{{8}};   overflow:hidden;  border-top-left-radius:5px;  border-top-right-radius:5px;  padding:5px;  padding-top: 10px;  text-shadow:1px 1px {{9}};}.rbOffer{  margin-top: 10px;  width: 100%;  height: 200px;  display: block;    z-index: 1;}.rbModalOffer{  overflow: hidden;   text-overflow: ellipsis;  font-size: {{10}}px;    line-height: {{11}}px;    color:{{12}};   background: rgba(255,255,255,0.1) }.rbModalButton{  bottom: 2%;  right: 2%;  position:absolute;  width: 160px;  height: 30px;  text-align: center;    border:4px solid {{13}};  background-color: {{14}};    color:{{15}};  font-size: {{16}}px;  border-radius:5px;  padding: 5px;    font-weight: normal;  display: block;  float: right;  margin-right: 10px;  cursor:pointer;}</style><div id="rbModalGenericNormalTranblockContainer"></div> <div id="rbModalGenericNormalBaseContainer">   <div id="rbModalGenericNormalSubContainer">      <div id="rbModalGenericNormalSubsubContainer">                  <div class="rbModalContainer" >          <div class="rbModalCover"></div>            <div class="rbModalHead">              <div class="rbModalHeader">                 {{17}}              </div>              <div id="rbModalGenericNormalCloseClick" class="rbModalClose  rbClickable" >                X              </div>                        </div>            <div class="rbOffer">              <p class="rbModalOffer">                 {{18}}              </p>            </div>                     <div  class="rbModalButton">               <div  id="rbModalGenericNormalRoiClickbutton" class="rbClickable" link= "{{19}}" class="rbClickable" >                {{20}}                             </div>             </div>                 </div></div>  </div></div>'
 
 
 
