@@ -39,7 +39,6 @@ trigger_fish.rbTAPP = {
       "use strict";
       trigger_fish.initJStorage();
       trigger_fish.enableCORS(jQuery);
-      trigger_fish.events = new EventTarget();
       // 1). includin jquery if need be
       //rbTUtils.includeJQIfNeeded();
 
