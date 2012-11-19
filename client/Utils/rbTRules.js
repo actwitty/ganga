@@ -1,3 +1,19 @@
+/**
+ * See (http://jquery.com/).
+ * @name jQuery
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ */
+ 
+/**
+ * See (http://jquery.com/)
+ * @name fn
+ * @class 
+ * See the jQuery Library  (http://jquery.com/) for full details.  This just
+ * documents the function and classes that are added to jQuery by this plug-in.
+ * @memberOf jQuery
+ */
 var TEST_RBT_RULE_JSON = {
                             "customer":{
                                         "name" :["samarth"],
@@ -108,7 +124,7 @@ trigger_fish.rbTRules = {
     
     // Client will not execute any rules if there is no schema set. 
     var appData = trigger_fish.rbTAPP.getAppDetail();
-    if (!appData.schema) {
+    if (!appData.app.schema) {
       trigger_fish.rbTDebug.log({"message":"There is no schema set for app, cannot execute rules"});
       return;
     }
@@ -119,7 +135,7 @@ trigger_fish.rbTRules = {
             var isRuleValid = new Function(functionCode)();
             if (isRuleValid) {
               $("#result").append("RULES PASSED");
-              //that.invokeAction(rule);
+              that.invokeAction(rule);
             } else {
               $("#result").append("RULES FAILED");
             }  
@@ -174,7 +190,7 @@ trigger_fish.rbTRules = {
       // Hand over action to templating engine for processing event action.
       //rbTTemplates.invoke(this.ruleTable[event].action, this.ruleTable[event].action_param);
       //rbT.invokeActionScript(this.ruleTable[event].action, this.ruleTable[event].action_param);
-      trigger_fish.rbT.invokeActionScript(rule.action, rule.action_param);
+      trigger_fish.rbT.invokeActionScript(rule.action);
     } catch(e) {
       trigger_fish.rbTAPP.reportError({"exception" : e.message,
                           "message": "action could not be invoked" , 
@@ -198,20 +214,22 @@ trigger_fish.rbTRules = {
   * @param {string} rule propertry
   * @return {string} datatype of the object.
   */  
-  getDataType : function(event,ruleProp,scope)
+  getDataType : function(event,ruleProp,scope,json)
   {
+    return json.type || undefined;
+    /* 
     // FIXME :: WE NEED TO CHANGE THIS TO GET IT FROM SCHEMA
     //return Object.prototype.toString.call(a).split("]")[0].split(" ")[1];
     var appSchema = trigger_fish.rbTAPP.getAppDetail().app.schema;
 
     if (scope === "e") {
-      return appSchema.events.event[ruleProp];
+      return appSchema.events[event][ruleProp];
     } else if (scope === "s") {
       return appSchema.system[ruleProp];
     } else if (scope === "a") {
       return appSchema.profile[ruleProp];
     }
-
+    */
 
   },
 
@@ -252,7 +270,7 @@ trigger_fish.rbTRules = {
       return false;
     }
     
-    var type = this.getDataType(ruleJson.event, ruleJson.property, ruleJson.scope);
+    var type = this.getDataType(ruleJson.event, ruleJson.property, ruleJson.scope, ruleJson);
     if (!type)
         return value;
     if (type === "String")
@@ -277,7 +295,6 @@ trigger_fish.rbTRules = {
     // ******FIXME : WE NEED TO GET THE DATA TYPES FROM APP SCHEMA********
     if (!value || !property)
       return undefined;
-    //var dt = this.getDataType(property);
     var dt = dataType;
     try {
         if (dt === "String") {
@@ -318,14 +335,8 @@ trigger_fish.rbTRules = {
     var propVal = this.evalProperty(ruleJson);
     if (!propVal)
       return false;
-    var propDT = this.getDataType(ruleJson.event, ruleJson.property, ruleJson.scope);
-    
-    /*if (ruleJson.type === "Date")
-      propDT = ruleJson.type;
-    else if (propDT !== ruleJson.type)
-      return false;
-    */
-    //var v1DT = this.getDataType(ruleJson.event,ruleJson.value1, ruleJson.scope);
+    var propDT = this.getDataType(ruleJson.event, ruleJson.property, ruleJson.scope, ruleJson);
+       
 
     var v1DT = Object.prototype.toString.call(ruleJson.value1).split("]")[0].split(" ")[1];
     if (ruleJson.value2)
@@ -375,7 +386,7 @@ trigger_fish.rbTRules = {
       if (!trigger_fish.rbTRules.isValidRule(ruleJson))
           return false;
       var res = false;
-      var propDT = this.getDataType(ruleJson.event, ruleJson.property, ruleJson.scope);
+      var propDT = this.getDataType(ruleJson.event, ruleJson.property, ruleJson.scope, ruleJson);
       var p = trigger_fish.rbTRules.evalProperty(ruleJson),
           a = trigger_fish.rbTRules.valueDataType(ruleJson.property, ruleJson.value1, propDT),
           b = trigger_fish.rbTRules.valueDataType(ruleJson.property, ruleJson.value2, propDT);

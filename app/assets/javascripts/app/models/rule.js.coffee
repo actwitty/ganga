@@ -56,8 +56,10 @@ App.Rule = Ember.Object.extend
 
     hasManyConditions = []
     conditions = @get 'conditions'    
-    if conditions isnt null      
-      for condition in conditions      
+    console.log conditions
+    if conditions isnt null
+
+      for k,condition of conditions   
         newCondition = App.Condition.create(condition)      
         hasManyConditions.pushObject(newCondition)        
       @set 'hasManyConditions', hasManyConditions 

@@ -1,6 +1,6 @@
 class EventsController < ApplicationController
 	protect_from_forgery
-  before_filter :authenticate_account!
+  authenticate_request( origin: { only: ["create"] } )
 
   respond_to  :json
 	# NOTE

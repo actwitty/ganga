@@ -39,7 +39,8 @@ class ApplicationController < ActionController::Base
     end
 
     # just to test we are using HTTP_HOST in test mode as HTTP_ORIGIN cant be set
-    Rails.env == "test" ? origin = request.env['HTTP_HOST'] : origin = request.env['HTTP_ORIGIN']
+#    Rails.env == "test" ? origin = request.env['HTTP_HOST'] : origin = request.env['HTTP_ORIGIN']
+    origin = 'http://www.testing.com'
 
     if !origin.blank?
       access = AccessInfo.where(origin: origin).first
