@@ -16,6 +16,7 @@ App.ActionView = Ember.View.extend
                                 minimumInputLength: 0                                      
                                 closeOnSelect: true
                                 openOnEnter: true)
+    $(".colorpickerProps").colorpicker()  
 
   # -----------------------------------------------------
   setApiChoices: ->
@@ -40,6 +41,8 @@ App.ActionView = Ember.View.extend
     rule.set 'action.desc.type', val
     rule.set 'action.desc.api', null
     @setApiChoices()
+    api = rule.get 'action.desc.api'
+    rule.set 'action.params',rule.setActionParam(val, api)
     @rerender()
     Ember.run.next( this, 'applyJqueryConstructs')
     # rule.loadParam(trigger_fish.rbT.templateArgs[val])
@@ -53,6 +56,8 @@ App.ActionView = Ember.View.extend
     type =  rule.get 'action.desc.type'
     rule.set 'action.desc.api', val  
     rule.set 'action.params',rule.setActionParam(type, val)
+    @rerender()
+    Ember.run.next( this, 'applyJqueryConstructs')
     event.preventDefault()
   # -----------------------------------------------------
   showTemplatePreview: (event) ->   

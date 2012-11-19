@@ -165,10 +165,9 @@ trigger_fish.rbT.eventHandler = {
 //******************************************************************************************************
   
   roiFromTemplClick:function(idMatch,evt){
-
-    var link = evt.target.href;
     
-    window.open(link);
+    var link = evt.target.getAttribute('link');            
+    window.open(link, '_blank');
     
     params={};
 
