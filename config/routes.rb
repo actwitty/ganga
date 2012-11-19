@@ -20,11 +20,11 @@ Ganga::Application.routes.draw do
   get   '/category',          :to => 'rules#category'
  
   # Actor Api
-  get  '/actor/create',      :to => 'actors#create'
+  post '/actor/create',      :to => 'actors#create'
   get  '/actor/read',        :to => 'actors#read'
-  get  '/actor/identify',    :to => 'actors#identify'
-  get  '/actor/set',         :to => 'actors#set'
-  get  '/actor/alias',       :to => 'actors#alias'
+  post '/actor/identify',    :to => 'actors#identify'
+  post '/actor/set',         :to => 'actors#set'
+  post '/actor/alias',       :to => 'actors#alias'
 
 
 
@@ -49,10 +49,10 @@ Ganga::Application.routes.draw do
   get '/rule/delete',         :to => "rules#delete"
 
   # Conversion Api
-  get '/conversion/create',   :to => "conversions#create"
+  post '/conversion/create',   :to => "conversions#create"
 
   # Error Api
-  get '/err/create',          :to => "errs#create"
+  post '/err/create',          :to => "errs#create"
   
   # Some browsers send an options request to the server first, 
   # to make sure the correct access headers are set.

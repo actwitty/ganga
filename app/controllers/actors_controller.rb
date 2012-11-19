@@ -48,10 +48,10 @@ class ActorsController < ApplicationController
       obj = ret[:return]
     end
    
-    respond_with(obj.reload.format_actor, status: 200)
+    respond_with(obj.reload.format_actor, status: 200, location: "nil")
   rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    respond_with({ errors: e.message} , status: 422)
+    respond_with({ errors: e.message} , status: 422, location: "nil")
   end
   
 
@@ -83,10 +83,10 @@ class ActorsController < ApplicationController
 
     raise ret[:error] if !ret[:error].blank?
 
-    respond_with({actor_id: ret[:return]}, status: 200 )
+    respond_with({actor_id: ret[:return]}, status: 200, location: "nil" )
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    respond_with({ errors: e.message} , status: 422)
+    respond_with({ errors: e.message} , status: 422, location: "nil")
   end
 
   # NOTE
@@ -129,10 +129,10 @@ class ActorsController < ApplicationController
 
     raise ret[:error] if !ret[:error].blank?
 
-    respond_with( ret[:return].format_actor, status: 200)
+    respond_with( ret[:return].format_actor, status: 200, location: "nil")
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    respond_with({ errors: e.message} , status: 422)
+    respond_with({ errors: e.message} , status: 422, location: "nil")
   end
 
   # NOTE
@@ -154,11 +154,11 @@ class ActorsController < ApplicationController
 
     raise ret[:error] if !ret[:error].blank?
 
-    respond_with({status: ret[:return]}, status: 200)
+    respond_with({status: ret[:return]}, status: 200, location: "nil")
 
   rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    respond_with({ errors: e.message} , status: 422)
+    respond_with({ errors: e.message} , status: 422, location: "nil")
   end
 
   # NOTE
