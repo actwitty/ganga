@@ -1,69 +1,107 @@
-<!-- {{Title{{=Facebook Like Topbar}}}}-->
+<!-- {{Title{{=A top bar to influence visitors from Facebook}}}}-->
+
+<link rel="stylesheet" type="text/css" href="https://s3.amazonaws.com/actwitty_ganga/css/common_styles.css">
+
+
 
 
 <style>
-.rbTextValue
-   {
-     color:{{rb.t.cr.text_color {{=#F2F0F0}}}};
-     font-size: {{rb.t.nr.text_fontsize{{=16}}}}px;
-     font-family: {{rb.t.ft.text_fontfamily{{=Arial}}}};
-     text-shadow : #1C2C4C 0px -1px 0px;
-     font-style: normal;
-     font-weight:{{rb.t.fw.text_fontweight{{=bold}}}};
+  .rbTbFbLikeDyn{
+    position: fixed;
+    top: 0px;
+    left: 0px;   
+    z-index: {{rb.t.nr.base_zindex{{=10000}}}};    
+    color: white;
+    font-size: {{rb.t.nr.font_size{{=14}}}}px;
+    font-family:'{{rb.t.ft.font{{=Arial}}}}';
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);    
+    border: 1px solid {{rb.t.cr.border_color{{=#304A80}}}};
+    background-color: {{rb.t.cr.background_color{{=#6087C6}}}};    
+  }
+
+  .rbTbFbLikeDyn .barDyn{
+    width: {{rb.t.nr.show_width{{=900}}}}px;
+    height: {{rb.t.nr.bar_height{{=40}}}}px;
+    vertical-align: middle;
+    position: relative;
+  }
+
+
+  .rbTbFbLikeDyn .rbDynText{
+    white-space: nowrap;
+    overflow:hidden;
    }
-
-</style> 
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, "script", "facebook-jssdk"));</script>
-
-
-<div id="rbTopbarGenericFblikeBaseContainer" style="zIndex:{{rb.f.nr.baseZ_zindex{{=Zindex}}}};width:{{rb.t.nr.base_width{{=100}}}}%;height:{{rb.t.nr.base_height{{=40}}}}px;display:block; background-color:{{rb.t.cr.base_backgroundcolor{{=#3C5891}}}};border-style:none; position:fixed; top:0px; left:0px; box-shadow: 2px 2px 2px #888888;text-align:{{rb.t.an.basetextalign{{=center}}}};">
-
-
-    <div id="rbTopbarGenericFblikeLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">
-         {{rb.t.vsg.text_left{{=Hello Hello}}}}  
-   </div> 
-
- 
-        
-
-   <div id="rbTopbarGenericFblikeRoiButton" class ="rbClickable" style="display:inline;position:absolute;bottom:10px;width:80px;left:42%;margin-right:20px;height:25px;background-color:#FFFFFF;border-radius:5px;cursor:pointer;">
-     
-    
-             <div class="fb-like" data-href="{{rb.t.ul.facebook_page{{=http://www.google.com}}}}" data-send="false" data-layout="button_count" data-width="250px" data-show-faces="false" data-font="arial"></div>
    
-   
+   .rbTbFbLikeDyn .rbDynLeftText{
+    position: absolute;
+    left:20px; 
+    width:80%;
+    top: 10px;
+    text-align: center;
+    margin-right: 20px;
+
+   } 
+   .rbTbFbLikeDyn .rbTbFbLikeRight{
+    position: absolute;
+    right:20px; 
+    width:260px;
+    top: 10px;
+    text-align: center;
+    margin-right: 20px;    
+   } 
+
+  .rbTbFbLikeDyn .rbInfoBtnDyn{
+    position: absolute;
+    top: 5px;
+    right: -130px;
+    display: inline-block;
+  }
+  
+</style>
+
+ <div id="fb-root"></div>
+  <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, "script", "facebook-jssdk"));
+  </script>
+
+
+<div id="rbTopbarGenericFblikeBaseContainer" class="rbBaseStyle rbTbFbLikeDyn" >
+  
+
+  <div class="rbBarWidth barDyn">
+
+    <p id="rbTopbarGenericFblikeLeftClick" class="rbTextLeft rbDynLeftText rbDynText" >
+      {{rb.t.vsg.text_left{{=Woo Facebook users coming to your page by writing something to make them like you.}}}}
+    </p>
+
+      
+    <div class="rbTbFbLikeRight" >
+      <div class="fb-like" 
+          data-href="{{rb.t.ul.facebook_page{{=http://www.google.com}}}}" 
+          data-send="true" 
+          data-layout="button_count" 
+          data-width="250px" 
+          data-show-faces="false" 
+          data-font="arial">
+      </div>
     </div>
-   
-
-
-   
-   <div id="rbBottombarGenericFblikeRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">
-         
-         {{rb.t.vsg.text_right{{=Hello Hello}}}}  
-   </div>
-
-
-   <div  style="display:inline; position:absolute;top:5px;right:30px;margin-left:20px;color:#FFFFFF;font-weight:bold;"> 
-       
-            <a id="rbTopbarGenericFblikeRoiHelp" class="rbClickable" style= "text-decoration:none;color:#FFFFFF;" href="http://www.rulebot.com"  >
-            ?
-            </a>   
-
-    </div>
-
-
-
-   <div id="rbTopbarGenericFblikeCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#FFFFFF; top:5px;right:10px;font-weight:bold;cursor:pointer;" >
-     X
-   </div> 
-
     
 
+    <div class="rbInfoBtnDyn">
+      <div class="rb-btn-group" >
+        <button id="rbTopbarGenericFblikeRoiHelp" class="rb-info-btn rb-info-btn-small rbClickable" link="http://www.rulebot.com">
+          ?
+        </button>
+        <button id="rbTopbarGenericFblikeCloseClick" class="rb-info-btn rb-info-btn-small rbClickable" >
+          X
+        </button>            
+      </div>
+    </div>  
+
+  </div>
 </div>

@@ -119,6 +119,7 @@ trigger_fish.rbT.invokeActionScriptInternal=function(action){
       //TODO get the OS version here based on that action display
 
 */
+
 if(1) // Check for Service Type Enhancement
  {   
  
@@ -168,19 +169,13 @@ if(1) // Check for Service Type Enhancement
 
                  }      
 
-          for (var key in actionParams) {
-             
-             if(actionParams.hasOwnProperty(key))
-			  {	
-			     if( 'Zindex' == actionParams[key] )
-			       {
-				       actionParams[key] =  trigger_fish.rbT.findZIndex()+5;
-			       }
-			  
-
-			 } 
-             
-		    } 
+        //   for (var key in actionParams) {             
+        //     if(actionParams.hasOwnProperty(key)){	
+			     //     if( 'Zindex' == actionParams[key] ) {               
+				    //      actionParams[key] =  trigger_fish.rbT.findZIndex()+5;
+			     //     }
+			     //  }              
+		      // } 
 
 		
 

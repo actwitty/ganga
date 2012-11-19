@@ -32,9 +32,9 @@ templPosBasedOnFile = ""
 
 Dir.glob('*.html').each  do|fileName|
 
-	origin= File.basename(fileName,File.extname(fileName))
+  origin= File.basename(fileName,File.extname(fileName))
 
-	destFileName = origin + ".js"
+  destFileName = origin + ".js"
   
   defaultTemplName = ""
   defaultTemplTimer = ""
@@ -44,9 +44,9 @@ Dir.glob('*.html').each  do|fileName|
   str = ""
    
   File.open(fileName) do|file|
-		
-		file.each {|line| str = str.concat(line)}
-	end
+    
+    file.each {|line| str = str.concat(line)}
+  end
 
 
   strfinalforJsWoNewLine = str.delete("\n")
@@ -339,7 +339,7 @@ m = strfinalforJsWoNewLineforArgs.scan(regforMainKey)
 
     
    # templLibStr = templLibStr+ "\t \t  "+ templPropName + ":" + "'#{origin}HTML'" + ",\n"
- end	
+ end  
 
 
 
@@ -374,7 +374,6 @@ File.open('../../templates.js' , "w") do|f|
  f.puts   templFinalStr 
 
 end
-
 
 
 

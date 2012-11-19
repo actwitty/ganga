@@ -7,6 +7,7 @@ App.templatesLibraryVars =
               'string' : 'sg'
               'url' : 'ul'
               'weight': 'fw'
+              'vstring' : 'vsg'
 
 App.templatesConstants = 
                           'show'  : 1
