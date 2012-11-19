@@ -29,7 +29,7 @@ describe "access control" do
   it "should not authenticate cross domain" do
     # lets make out of session request
     # post /app/create not supported for cross site
-    post('/app/update', { format: 'json',  id: @json["id"], description: { :email => "tom.doe@example.com", mobile: "943479474"}},  { "HTTP_HOST" => "http://rulebot.com" })
+    xhr('post', '/app/update', { format: 'json',  id: @json["id"], description: { :email => "tom.doe@example.com", mobile: "943479474"}},  { "HTTP_HOST" => "http://rulebot.com" })
     puts JSON.parse(response.body)
     response.status.should_not eq(200)
   end
@@ -37,7 +37,7 @@ describe "access control" do
 
   it "should authenticate origin for cross_site" do
     # lets make out of session request
-    get( '/app/read', { format: 'json', id: @json["id"], actors: true},  { "HTTP_HOST" => "http://rulebot.com" })
+    xhr('get', '/app/read', { crossDomain: true, xhrFields: {withCredentials: true}, format: 'json', id: @json["id"], actors: true},  { "HTTP_HOST" => "http://rulebot.com" })
     puts JSON.parse(response.body)
     response.status.should eq(200)  
     #resp.status.should eq(200)

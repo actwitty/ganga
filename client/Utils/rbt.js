@@ -2429,9 +2429,10 @@ trigger_fish.rbTServerChannel = {
   /**
   *
   */
-  serverUrl : function(url)
+  serverUrl : function(type, url)
   {
-    return this.rbt_url + url + ".jsonp";
+    var u = this.rbt_url + url + (type === "POST" ? "" : ".json"); 
+    return u;
   }, 
 
   /**
@@ -2577,14 +2578,18 @@ trigger_fish.rbTServerChannel = {
       var that = obj;
       var url = (obj.event) ? trigger_fish.rbTServerChannel.url.fireEvent : obj.url;
       jQuery.ajax({
-            url: this.serverUrl(url),
-            type: 'GET',
+            url: this.serverUrl(obj.type,url),
+            type: that.type || 'GET',
             async: asyncSt,
-            dataType: 'jsonp',
-            contentType : 'application/javascript',
+            //dataType: 'json',
+            //contentType : 'application/javascript',
+            contentType : 'application/x-www-form-urlencoded',
             data: reqServerData,
             crossDomain:true,
             timeout : 10000,
+            xhrField : {
+              withCredentials : true
+            },
             beforeSend: function() {
                 if (that.event) {
                   trigger_fish.rbTCookie.setCookie("lastevent", that.event);
@@ -3694,6 +3699,7 @@ RBT.prototype.sendEvent = function(event, params)
   }
   trigger_fish.rbTServerChannel.makeRequest({"event" : event, 
                                              "params": params,
+                                             "type"  : "POST",
                                              "cb"    : { success: trigger_fish.rbTServerResponse.handleEvent,
                                                          error  : trigger_fish.rbTServerResponse.defaultError
                                                        }
@@ -3911,11 +3917,11 @@ trigger_fish.rbJSON = {
 function testGanga()
 {
   //rb.sendEvent("sample_event",{"a":101});
-  rb.identify("83.samarth@gmail.com");
+  //rb.identify("83.samarth@gmail.com");
   //rb.identify({"uid":"83.samarth@gmail.com"});
-  rb.setActor({"name":"samarth","age":"29"});
+  //rb.setActor({"name":"samarth","age":"29"});
 
-  rb.sendEvent("sample_event",{"name":"samarth"});
+  rb.sendEvent("sample_event3",{"name":"samarth"});
 
 
   console.log("ENDING TESTING SEQUENCE");

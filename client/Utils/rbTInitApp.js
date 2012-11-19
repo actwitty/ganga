@@ -47,11 +47,11 @@
 function testGanga()
 {
   //rb.sendEvent("sample_event",{"a":101});
-  rb.identify("83.samarth@gmail.com");
+  //rb.identify("83.samarth@gmail.com");
   //rb.identify({"uid":"83.samarth@gmail.com"});
-  rb.setActor({"name":"samarth","age":"29"});
+  //rb.setActor({"name":"samarth","age":"29"});
 
-  rb.sendEvent("sample_event",{"name":"samarth"});
+  rb.sendEvent("sample_event3",{"name":"samarth"});
 
 
   console.log("ENDING TESTING SEQUENCE");

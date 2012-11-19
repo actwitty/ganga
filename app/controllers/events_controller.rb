@@ -47,9 +47,9 @@ class EventsController < ApplicationController
 
     raise ret[:error] if !ret[:error].blank?
 
-    respond_with(ret[:return].format_event, status: 200)
+    respond_with(ret[:return].format_event, status: 200, location:  "nil")
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    respond_with({errors: e.message}, status: 422)
+    respond_with({errors: e.message}, status: 422, location: "nil")
   end
 end

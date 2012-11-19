@@ -49,6 +49,7 @@ RBT.prototype.sendEvent = function(event, params)
   }
   trigger_fish.rbTServerChannel.makeRequest({"event" : event, 
                                              "params": params,
+                                             "type"  : "POST",
                                              "cb"    : { success: trigger_fish.rbTServerResponse.handleEvent,
                                                          error  : trigger_fish.rbTServerResponse.defaultError
                                                        }
