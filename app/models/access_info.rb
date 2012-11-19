@@ -46,7 +46,7 @@ class AccessInfo
 
   # OUTPUT => {:return => object, :error => e} 
   def self.add!(params)
-    Rails.logger.info("Enter App Add")
+    Rails.logger.info("Enter Access Info Add")
 
     if params[:account_id].blank? or params[:scope].blank?
       raise et("access_info.invalid_argument_in_create") 

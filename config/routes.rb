@@ -53,7 +53,11 @@ Ganga::Application.routes.draw do
 
   # Error Api
   get '/err/create',          :to => "errs#create"
-
+  
+  # Some browsers send an options request to the server first, 
+  # to make sure the correct access headers are set.
+  # We need to catch this in Rails, returning a 200 status with the correct headers.
+  match '*all' => 'application#authenticate_origin!', constraints: {method: 'OPTIONS'}
 
   match '/:locale' => 'base#index'                                    
   root :to => "base#index"
