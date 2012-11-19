@@ -28,7 +28,8 @@
   </div>
   
   {{view App.ConditionListerView conditionsBinding="controller.content"}}
-  {{template "home_page/projects/rules/actions/action"}}
+  {{view App.ActionView ruleBinding="view.rules.selected"}}
+  
   
   <div class="commands_box" >
     <div class="commands">

@@ -23,6 +23,9 @@ trigger_fish.rbTAPP = {
     initialize : function()
     {
       "use strict";
+
+
+      trigger_fish.initJStorage();
       // 1). includin jquery if need be
       //rbTUtils.includeJQIfNeeded();
 
@@ -174,18 +177,6 @@ trigger_fish.rbTAPP = {
       return cnf;
     },  
 
-
-
-    /** 
-    *  Create Session for current app/account id
-    *  FIXME : THIS NEEDS TO BE DISCUSSED AS WE ARE PLANNING TO HAVE A PROXY IN BETWEEN
-    *  @return {string} sessionID 
-    */ 
-    createSession : function()
-    {
-      trigger_fish.rbTServerChannel.createSession({success:this.setSessionID});
-    },
-
     /** 
     *  Get Application based configs
     *  FIXME : THIS NEEDS TO BE DISCUSSED AS WE ARE PLANNING TO HAVE A PROXY IN BETWEEN
@@ -200,41 +191,6 @@ trigger_fish.rbTAPP = {
                                                                     }
                                                       });
     },  
-
-    /** 
-    * Set System properties
-    * 
-    * @param {object} params Option based on which system property will be set
-    * @return void
-    */
-    setSystemProperty : function(params)
-    {
-      "use strict";
-      if (params) {
-          trigger_fish.rbTServerChannel.makeRequest({"url"   : trigger_fish.rbTServerChannel.url.setSystemProperty,
-                                        "params": params,
-                                        "cb"    : { success: trigger_fish.rbTServerResponse.setSystemProperty,
-                                                    error  : trigger_fish.rbTServerResponse.defaultError
-                                                  }
-                                      });
-      } else {
-          trigger_fish.rbTAPP.reportError({"message"   : "System params could not be found, report error",
-                              "data"      : params
-                             });
-      }
-
-    },
-
-    /** 
-    * Set System properties
-    *  
-    * @return {object} system properties in the form of json
-    */
-    getSystemProperty : function()
-    {
-      return JSON.parse(trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookie.system));
-    },
-
 
     /** 
     *  report error to rbT server

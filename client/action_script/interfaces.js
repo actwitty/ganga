@@ -3,7 +3,7 @@ trigger_fish.rbT.isInitialized = function(){
 	return trigger_fish.rbT.inited;
 };
 //------------------------------------------
-trigger_fish.rbT.getTemplateHTMLByName = function(name){
+trigger_fish.rbT.getTemplateHTMLByName = function(type,api){
 
 	if (!trigger_fish.rbT.isInitialized()){
 		return "";
@@ -13,7 +13,7 @@ trigger_fish.rbT.getTemplateHTMLByName = function(name){
 		trigger_fish.rbT.sendErrorToRBServer("improper access of interface getTemplateHTMLByName");
 		return "";
 	}
-	return trigger_fish.rbT.getTemplateHTMLByNameInternal(name);
+	return trigger_fish.rbT.getTemplateHTMLByNameInternal(type,api);
 };
 //------------------------------------------
 trigger_fish.rbT.getTemplateApplyVars = function(html,vars){
@@ -76,16 +76,16 @@ trigger_fish.rbT.enableTimeOutHadnling =function(templateName,timerValue){
 
 //---------------------------------------------------------------
 
-trigger_fish.rbT.invokeActionScript = function(action,actionParams)
+trigger_fish.rbT.invokeActionScript = function(action)
 {
 
-	if ( typeof actionParams === 'undefined' ){
+	if ( typeof action === 'undefined' ){
 		trigger_fish.rbT.sendErrorToRBServer("Invalid params in rule Json");
 		return "";
 	}
 
 	else{
-          trigger_fish.rbT.invokeActionScriptInternal(action,actionParams); 
+          trigger_fish.rbT.invokeActionScriptInternal(action); 
 	}
 
 	

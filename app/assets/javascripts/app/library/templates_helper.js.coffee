@@ -6,10 +6,11 @@ App.templatesLibraryVars =
               'align' : 'an'
               'string' : 'sg'
               'url' : 'ul'
+              'weight': 'fw'
 
 App.templatesConstants = 
                           'show'  : 1
-                          'type'  : 2
+                          'varType'  : 2
                           'label' : 3
 
 App.templatesFixedData = {
@@ -30,7 +31,12 @@ App.templatesFixedData = {
                                       'center',
                                       'left',
                                       'right'
-                                    ]
+                                    ],
+                          'weight' : [
+                                        'normal',
+                                        'bold',
+                                        'bolder'
+                                     ]
                         }
 
 

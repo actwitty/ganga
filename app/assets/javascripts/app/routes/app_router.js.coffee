@@ -308,6 +308,7 @@ App.Router = Ember.Router.extend
 
             # event ------------------------------------------------------  
             changedProperty: (router, event) ->
+              console.log 'event hit'
               condition = event.context                            
               
               scope = event.view.getNewPropertyScope(event)              
@@ -317,7 +318,7 @@ App.Router = Ember.Router.extend
               condition.set 'property', property
               rulesController = App.get('router.rulesController')
               typeSchema = {}
-
+              property = condition.trueProperty()
               if scope is 'e'
                 typeSchema = rulesController.get('eventSchema')
               else if scope is 's'

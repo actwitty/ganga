@@ -1,10 +1,8 @@
 App.ConditionsView = Ember.View.extend
-  templateName: 'home_page/projects/rules/conditions/conditions'
-  
+  templateName: 'home_page/projects/rules/conditions/conditions'  
   rulesBinding: 'App.router.rulesController'  
   alert: null
-  showHelpInfo: true
-  minimizedState: true
+  showHelpInfo: true  
 
   #------------------------------------------------------
   init: ->
@@ -47,15 +45,6 @@ App.ConditionsView = Ember.View.extend
                                 closeOnSelect: true
                                 openOnEnter: true
                               )
-
-  # -----------------------------------------------------
-  selectTemplate: (event) ->
-    rule = event.context
-    target = $(event.target)    
-    val = target.find('option:selected').val()
-    rule.set 'action', val
-    rule.loadParam(trigger_fish.rbT.templateArgs[val])
-    event.preventDefault()
 
 
   # -----------------------------------------------------
@@ -185,46 +174,6 @@ App.ConditionsView = Ember.View.extend
     if rule.get('event') isnt val
       showAlertEventChange()
 
-    
-
-
-
-
-  
-   
-
-  # -----------------------------------------------------
-  showTemplatePreview: (event) ->   
-    rule = event.context    
-    trigger_fish.rbT.invokeActionScript(rule.get('action'), rule.serializeParams())
-    event.preventDefault()
-  # -----------------------------------------------------
-  manageDeckerMinimize: (event) ->    
-    state = @get "minimizedState"
-    if state is true
-      @set "minimizedState", false
-    else
-      @set "minimizedState", true
-    event.preventDefault()
-
-  # -----------------------------------------------------
-  showTemplateDecker: (->
-    state = @get "minimizedState"
-    if state is true
-      return 'decker decker_hide'
-    else
-      return 'decker decker_show'
-
-  ).property("minimizedState")
-
-  # -----------------------------------------------------
-  showDeckerControl: (->    
-    state = @get "minimizedState"
-    if state is true
-      return 'minimized'
-    else
-      return 'maximized'
-  ).property("minimizedState")
 
   # -----------------------------------------------------
   showInfo: (-> 

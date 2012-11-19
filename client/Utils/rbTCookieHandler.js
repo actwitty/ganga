@@ -5,7 +5,7 @@ trigger_fish.rbTCookie = {
   // If we do not send following params while setting cookies, defaults will be used. 
   defaultOptions : {
     expire : 24 * 60 * 60 * 1000,  // in hours
-    path : "rulebot",
+    path : "/",
     domain : window.location.hostname,
     secure: false
   },
@@ -33,10 +33,11 @@ trigger_fish.rbTCookie = {
   getCookie : function(cookieName)
   {
     "use strict";
-    var results = document.cookie.match ( '(^|;) ?' + this.name(cookieName) + '=([^;]*)(;|$)' );
+    //var results = document.cookie.match ( '(^|;) ?' + this.name(cookieName) + '=([^;]*)(;|$)' );
+    var value = $.jStorage.get(this.name(cookieName));
 
-    if (results)
-        return (unescape(results[2]));
+    if (value)
+        return (unescape(value));
     else
         return undefined;
   },
@@ -47,18 +48,11 @@ trigger_fish.rbTCookie = {
    */
   doesCookieExist : function(cookieName)
   {
-    try {
-      if (document.cookie.indexOf(this.name(cookieName)) >= 0) {
+    //if (document.cookie.indexOf(this.name(cookieName)) >= 0) {
+    if (this.getCookie(cookieName)) {
         return true;
-      } else {
+    } else {
         return false;
-      }
-    } catch(e) {
-      trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                          "message"   : "cookie existence failed",
-                          "name"      : cookieName,
-                          "log"       : true 
-                         });
     }
   }, 
 
@@ -108,16 +102,18 @@ trigger_fish.rbTCookie = {
   {
     "use strict";
     try {
+        
+        /*
         var cookieString = this.name(cookieName) + "=" + escape(cookieValue);
         var cookieOptions =  this.cookieOptions(options);
-
         cookieString += "; expires=" + cookieOptions.expire;
         cookieString += "; path=" + escape(cookieOptions.path);
         cookieString += "; domain=" + escape(cookieOptions.domain);
-
         if (cookieOptions.secure) cookieString += "; secure";
-        
-        document.cookie = cookieString;
+        document.cookie = cookieString; 
+        */
+
+        $.jStorage.set(this.name(cookieName), cookieValue, {TTL: this.defaultOptions.expire});
 
     } catch(e) {
       // FIXME  what to do?
@@ -140,13 +136,8 @@ trigger_fish.rbTCookie = {
   {
     "use strict";
     try {
-        var cookieOptions =  this.cookieOptions(options);
-        document.cookie = this.name(cookieName) + "=" +
-                          "; path=" + cookieOptions.path +
-                          "; domain=" + cookieOptions.domain +
-                          "; expires=Thu, 01-Jan-70 00:00:01 GMT";
+        $.jStorage.deleteKey(this.name(cookieName));                  
     } catch (e) {
-      // FIXME what to do?
       trigger_fish.rbTAPP.reportError({"exception" : e.message,
                           "message"   : "cookie delete failed",
                           "name"      : cookieName,
@@ -164,12 +155,11 @@ trigger_fish.rbTCookie = {
   {
     "use strict";
     try {
-      var cookies = document.cookie.split(";");
+      var cookies = $.jStorage.index();
       for (var i = 0; i < cookies.length; i++) {   
-          var cookie =  cookies[i].split("=");
-          var cookieName = cookie[0].replace(/^\s\s*/, '').replace(/\s\s*$/, '');
-          if (cookieName.lastIndexOf(this.namePrefix, 0) === 0) {
-            this.deleteCookie(cookieName.slice(this.namePrefix.length, cookieName.length));
+          var cookie =  cookies[i]
+          if ((cookie.match("^"+this.namePrefix))) {
+            $.jStorage.deleteKey(cookie);
           }
       }
     } catch(e) {

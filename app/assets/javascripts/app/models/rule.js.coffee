@@ -3,50 +3,95 @@ App.Rule = Ember.Object.extend
   name: null
   event: 'beacon' 
   owner: 'client'
-  action: null
-  action_param: null
+  action: 
+          service: 
+                  name: null
+          desc:
+                type: null
+                api: null
+          params: null
+  
   conditions: null
 
 
   hasManyConditions: []
   actionParamArr: []
 
-  setDefaultAction: ->
+  setActionParam: (type, api)->
+    params = {}
+    params_key = type + '.' + api
+    for param of  trigger_fish.rbT.templateArgs[params_key]  
+      params[param] = trigger_fish.rbT.templateArgs[params_key][param]['value']      
+    return params
+
+  setAction: ->
     action = @get 'action'
-    if action is null
-      defaultAction = ''
+    if action.service.name is null
+      newAction = 
+                  service: {}
+                  desc: {}
+                  params: {}
+
+      newAction['service']['name'] = 'rb_template_lib'
+
+      type = ''
+      api = ''
       for key of trigger_fish.rbT.templateLib
-        defaultAction = key
+        type = key
+        for api_name of trigger_fish.rbT.templateLib[key]
+          api = api_name
+          break
         break
+      
+      newAction['desc']['type'] = type
+      newAction['desc']['api'] = api
 
-      action_param = {}
-      @set 'action', defaultAction      
-      for property of  trigger_fish.rbT.templateArgs[defaultAction]  
-        action_param[property] = trigger_fish.rbT.templateArgs[defaultAction][property]
+      newAction.params = @setActionParam(type, api)
+      @set 'action', newAction
 
-      @set 'action_param', action_param
       
   init: ->
-    @_super  
+    
+    @_super()
+
     hasManyConditions = []
-    conditions = @get 'conditions'
-    if conditions isnt null
-      for k,condition of conditions
-        hasManyConditions.pushObject(App.Condition.create(condition))
+    conditions = @get 'conditions'    
+    if conditions isnt null      
+      for condition in conditions      
+        newCondition = App.Condition.create(condition)      
+        hasManyConditions.pushObject(newCondition)        
       @set 'hasManyConditions', hasManyConditions 
-    else
-      @set 'hasManyConditions', [App.Condition.create()]
+    else      
+      @set 'hasManyConditions', [App.Condition.create()]    
+    @setAction() 
+    
+    
 
-    @setDefaultAction() 
-    @loadParam(@get 'action_param')  
 
+  serializeAction: ->
+    action = @get 'action'
+    actionS = {}
+    
+    serviceS = {}
+    service = @get 'action.service'
+    for key of service
+      serviceS[key] = action.service[key]
 
-  serializeParams: ->
-    params = @get 'actionParamArr'
-    action_param = {}
-    $.each params, (index, param) ->
-      action_param[param.key] = param.value
-    action_param
+    desc = @get 'action.desc'
+    descS = {}
+    for key of desc
+      descS[key] = desc[key]
+
+    params = @get 'action.params'
+    paramsS = {}
+    for key of params
+      paramsS[key] = params[key]
+
+    actionS.service = serviceS
+    actionS.desc = descS
+    actionS.params = paramsS    
+    actionS
+
 
   serialize: ->
     conditions = []
@@ -57,25 +102,18 @@ App.Rule = Ember.Object.extend
       name: @get 'name'
       event: @get 'event'
       owner: @get 'owner'
-      action: @get 'action'
-      action_param: @serializeParams()
+      action: @serializeAction() 
       conditions: conditions      
     }
 
 
-  loadParam: (action_param)->
-    actionParamArr = []    
-    for property of action_param      
-      if action_param.hasOwnProperty(property)
-        param = {}
-        param.key = property
-        param.value = action_param[property]      
-        actionParamArr.push(param)
-    @set 'actionParamArr', actionParamArr
+
 
   displayAction: (->
-    action = @get 'action'
-    trigger_fish.rbT.templateName[action]
+    type = @get 'action.desc.type'
+    api = @get 'action.desc.api'
+    key = type + '.' + api
+    trigger_fish.rbT.templateName[key]
   ).property('action')
 
   

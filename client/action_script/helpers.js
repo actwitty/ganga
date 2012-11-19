@@ -2,7 +2,7 @@
 
 // Templ Sys , Actor and Event Varibales
 
-trigger_fish.rbT.currentSystemVar = {};
+trigger_fish.rbT.currentSystemVar = {} //{'browser':{'name':'Chrome','version':'1.2','name2':{'myname':'Amartya'}}};
 trigger_fish.rbT.currentActorVar = {};
 trigger_fish.rbT.currentEventVar = {};
 
@@ -110,9 +110,18 @@ trigger_fish.rbT.fillTheRuntimeValueForTemplArgs = function(tempMatch,actionparm
 // if s. system hash
 // if a. actor variable
 
+
                            // fetch system variable here 
                            // fetch actor variable here
-                           // fetch event variable here
+                            // fetch event variable here
+
+// INTEGRATION_ENABLE                            
+/*
+                           trigger_fish.rbT.currentSystemVar = trigger_fish.rbTSystemVar.getProperty();
+                           trigger_fish.rbT.currentActorVar = trigger_fish.rbTActor.getProperties();
+                           trigger_fish.rbT.currentEventVar = trigger_fish.rbTAPP.getTransVar();
+*/                           
+
                              
                            for(var i=0 ; i<tempMatch.length ; i++)
                            {
@@ -280,7 +289,7 @@ trigger_fish.rbT.sendEventToRBServer = function(){
 
 trigger_fish.rbT.sendErrorToRBServer = function(string){
 
-  
+// INTEGRATION_ENABLE     
 /*
 
  trigger_fish.rbTAPP.reportError({"message":string,"server":true});
@@ -288,9 +297,9 @@ trigger_fish.rbT.sendErrorToRBServer = function(string){
 
 */
 
-  //TODO: Implement post to server // for console log=true
+ // INTEGRATION_ENABLE   
 
-  /* trigger_fish.rbTAPP.log({"message": "Handling event with server resp","data":respData});
+  /* trigger_fish.rbTAPP.log({"message": string,"data":respData});
  */
   console.log(string);
 };

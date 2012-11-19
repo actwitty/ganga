@@ -4,8 +4,7 @@ App.RulesController = Em.ArrayController.extend
   events: []
   systemSchema: null
   actorSchema: null
-  eventSchema: null
-  templateLib: []
+  eventSchema: null  
   editState: 'new'
 
   url:
@@ -18,26 +17,6 @@ App.RulesController = Em.ArrayController.extend
   #########################################################  
   init: ->
     @_super()
-
-    #Initialize templates library only once
-    templateLib = []
-    templates = trigger_fish.rbT.templateLib
-
-    for k,v of templates
-      template = {}
-      templateNameArr = k.split('.')
-      template['id'] = k
-      if templateNameArr instanceof Array
-        template['category'] = templateNameArr[0].capitalize()
-        template['displayName'] = ''
-        for namespace in templateNameArr
-          template['displayName'] = template['displayName'] + namespace.capitalize()
-      else 
-        template['category'] = templateNameArr.capitalize()
-        template['displayName'] = templateNameArr.capitalize()
-      templateLib.push template
-    
-    @set 'templateLib', templateLib
 
   #########################################################
   serializeRule: ->
@@ -68,15 +47,22 @@ App.RulesController = Em.ArrayController.extend
     serialized = @get 'serializeSelected'
     project = App.get 'router.projectsController.selected'
     editState = @get 'editState'    
+    console.log '1'
     if editState is 'old'      
       editRule = @get 'selected'      
       @set 'selected', null
+      console.log '2'
       @set 'serializeSelected', null
+      console.log '3'
       ruleArr = project.get 'hasManyRules'        
+      console.log '4'
+      console.log serialized
       restoreRule = App.Rule.create(serialized)
+      console.log '5'
       index = ruleArr.indexOf editRule      
       if index >= 0        
         ruleArr[index] = restoreRule     
+        console.log '6'
       App.get("router").send("reenterProjectRules")
     else      
       @set 'selected', null   
@@ -105,8 +91,10 @@ App.RulesController = Em.ArrayController.extend
       prop = 
             'show': @translatePropertyName(k)
             'actual': k
+            'key' : 's.' + k
             'type': v
             'scope': 's'
+            
       props[k] = prop
     @set 'systemSchema', props
 
@@ -116,14 +104,16 @@ App.RulesController = Em.ArrayController.extend
     if project isnt null
       schema = project.get('schema')     
       props = {}
-      if "actor" of project.schema
-        actor_p = project.schema.actor
-        for k,v of actor_p      
+      if project.schema.hasOwnProperty 'profile'
+        profile_p = project.schema.profile          
+        for k,v of profile_p      
           prop = 
                  'show': k       
                  'actual': k
+                 'key' : 'a.' + k
                  'type': v
                  'scope': 'a'
+                 
           props[k] = prop
       @set 'actorSchema', props
 
@@ -146,8 +136,10 @@ App.RulesController = Em.ArrayController.extend
         prop = 
                'show': @translatePropertyName(k)
                'actual': k
+               'key' : 'e.' + k
                'type': v
                'scope': 'e'
+               'scope_name': 'event'
         props[k] = prop
 
     @set 'eventSchema', props    
@@ -274,7 +266,7 @@ App.RulesController = Em.ArrayController.extend
     json = 
             app_id : proj_id
             rule : ruleNew.serialize()
-            rule_id : ruleNew.get('id')
+            id : ruleNew.get('id')
     
 
     App.getRequest  url, json, success, error

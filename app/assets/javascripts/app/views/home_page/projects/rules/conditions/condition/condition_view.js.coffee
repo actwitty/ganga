@@ -41,7 +41,7 @@ App.ConditionView = Ember.View.extend
   # ------------------------------------------
   getNewDataType: (event) ->
     target = $(event.target)
-    val = target.select2("val")
+    val = target.select2('val')
 
   # -------------------------------------------
   getNewNegation: (event) ->
@@ -51,13 +51,12 @@ App.ConditionView = Ember.View.extend
   # ------------------------------------------
   getNewProperty: (event) ->
     target = $(event.target)
-    val = target.select2("val")
+    val = target.select2('val')
   # ------------------------------------------
   getNewPropertyScope: (event) ->
-    target = $(event.target)
-    val = target.select2("val")
-    option = target.find 'option[value="' + val  + '"]'
-    option.attr 'scope'
+    target = $(event.target)    
+    ele = target.select2("data").element[0]       
+    $(ele).attr('scope')
    
 
   
