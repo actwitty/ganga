@@ -18,6 +18,7 @@ trigger_fish.rbTActor = function() {
 
   var __id = "";
   var __prop = {};
+  var __state = false;
 
   return {
 
@@ -28,10 +29,17 @@ trigger_fish.rbTActor = function() {
       retFromCookie : function()
       {
       	trigger_fish.rbTDebug.log("retrieveing data for actor from cookie");
-        if (trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorProp))
+        if (trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorProp)) {
           this.setProperties(trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorProp)); 
+          this.enable();
+        }
         if (trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID))
           this.setID(trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID));
+      },
+
+      isReady : function()
+      {
+        return __state;
       },
 
       /** 
@@ -52,6 +60,13 @@ trigger_fish.rbTActor = function() {
         return __prop;
       },
 
+
+      enable : function()
+      {
+        __state = true;
+        // FIXME :: CHECK FOR RIGHT LOCATION OF THIS
+        trigger_fish.rbTServerChannel.flushReqWaitingForActor();
+      },  
       /** 
       *  Set Actor ID
       *  @param {string} id 
@@ -71,6 +86,7 @@ trigger_fish.rbTActor = function() {
       {
         __prop = prop;
         trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.actorProp, JSON.stringify(prop));
+        this.enable();
       },
 
       /**

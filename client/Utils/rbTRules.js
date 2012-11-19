@@ -253,7 +253,8 @@ trigger_fish.rbTRules = {
     var validProp = 1;
     try {
       if (ruleJson.scope === "a") {
-        value = eval("TEST_RBT_RULE_JSON."+p+".slice(-1)[0]");
+        var actorProp = trigger_fish.rbTActor.getProperties();
+        value = eval("actorProp."+p+".slice(-1)[0]");
       } else if (ruleJson.scope === "s") {
         var systemVars = trigger_fish.rbTSystemVar.getProperty();
         value = eval("systemVars."+p);

@@ -16,7 +16,9 @@
  */
 trigger_fish.rbTServerChannel = {
   
-  rbt_url : "http://localhost:3000/",
+  //rbt_url : "http://localhost:3000/",
+  rbt_url : "http://172.18.99.130:3000/",
+
 
   
   /* All server url routes to be mapped here */
@@ -33,6 +35,7 @@ trigger_fish.rbTServerChannel = {
 
   // Server request queue
   queue : [],
+  actorRQ: [],
 
   /* Default options for server request */
   defaultOptions : {
@@ -69,11 +72,37 @@ trigger_fish.rbTServerChannel = {
     if (!this.queue.length)
       return;
     for (var req in this.queue) {
-      this.makeServerRequest(this.queue[req]);
+      var r = this.queue[req];
+      if (r.event && !trigger_fish.rbTActor.isReady()) {
+        this.waitForActor(r);
+      } else {
+        this.makeServerRequest(this.queue[r]);
+      }
     }
     this.queue = [];
   },
 
+
+  /**
+  *
+  *
+  */
+  /* <<<<<<<<<<<<<<<<<<<<< FIXME :: COAELECE THIS >>>>>>>>>>>> */
+  waitForActor : function(obj)
+  {
+    this.actorRQ.push(obj);
+  },
+
+  flushReqWaitingForActor : function()
+  {
+    if (!this.actorRQ.length)
+      return;
+    for (var req in this.actorRQ) {
+      var r = this.actorRQ[req];
+      this.makeServerRequest(r);
+    }
+    this.actorRQ = [];
+  },
 
   /**
   * Check for App status, if alive , flush all req queue and clear interval.
@@ -92,49 +121,6 @@ trigger_fish.rbTServerChannel = {
   },
 
 
-
-  /** 
-  *  Set Request data for all server interactions
-  *  @param {string} event
-  *  @param {object} reqData
-  *  @return {object}
-  */  
-  makeRequestData : function(event, reqData)
-  {
-    var requestData = {};
-    if (event) {
-      requestData = {};
-      requestData["properties"] = reqData ? reqData:{};
-      requestData["name"] = event;  
-    }
-    requestData["id"] = trigger_fish.rbTAPP.getAppID(); // mandatory
-    requestData["account_id"] = trigger_fish.rbTAPP.getAccountID(); // mandatory  
-
-    return requestData;
-  },
-
-  /**
-  *
-  *
-  *
-  */
-  extendReqData : function(obj, reqData)
-  {
-    if (!obj || !reqData)
-      return {};
-    var requestData = reqData;
-
-    if (obj.set_actor || obj.conversion) {
-      obj.params = obj.params || {};
-      requestData["properties"] = {"profile":reqData ? obj.params : {}};
-      requestData["actor_id"] = trigger_fish.rbTActor.getID() || "";
-    } else if(obj.set_actor_prop) {
-      requestData["actor_id"] = trigger_fish.rbTActor.getID() || "";
-    } else if(obj.identify) {
-      requestData["uid"] = obj.params;
-    }
-    return requestData;
-  },
   /** 
   *  Set Request data for all server interactions
   *  @param {object} obj . The data which needs to be padded with request parameters
@@ -145,7 +131,7 @@ trigger_fish.rbTServerChannel = {
     if (!obj)
       return {};
     var k = {};
-    // FIXME :: **THERE SEEMS TO BE A BIT OF REPEATATION. HANDLE THIS**
+    // FIXME :: **THERE SEEMS TO BE A BIT OF REPEATATION. HANDLE THIS ONCE DECIDED **
     if (obj.event) {
       k = {};
       k["properties"] = obj.params ? obj.params:{};
@@ -181,6 +167,17 @@ trigger_fish.rbTServerChannel = {
   makeServerRequest : function(obj)
   {
     "use strict";
+
+    function getContentType(type)
+    {
+      return type === "POST" ? 'application/x-www-form-urlencoded' : "application/json";
+    }
+
+    function getURL(type, url)
+    {
+      return this.rbt_url + url + (type === "POST" ? "" : ".json"); 
+    }
+
     var that = obj;
     try {
       var reqServerData = this.extendRequestData(obj);
@@ -192,18 +189,15 @@ trigger_fish.rbTServerChannel = {
       var that = obj;
       var url = (obj.event) ? trigger_fish.rbTServerChannel.url.fireEvent : obj.url;
       jQuery.ajax({
-            url: this.serverUrl(obj.type,url),
+            url: getURL.call(this,obj.type,url),
             type: that.type || 'GET',
             async: asyncSt,
             //dataType: 'json',
-            //contentType : 'application/javascript',
-            contentType : 'application/x-www-form-urlencoded',
+            contentType : getContentType(obj.type),
             data: reqServerData,
             crossDomain:true,
             timeout : 10000,
-            xhrField : {
-              withCredentials : true
-            },
+            xhrField : { withCredentials:true},
             beforeSend: function() {
                 if (that.event) {
                   trigger_fish.rbTCookie.setCookie("lastevent", that.event);
@@ -228,10 +222,12 @@ trigger_fish.rbTServerChannel = {
             error:function(XMLHttpRequest,textStatus, errorThrown){ 
                 trigger_fish.rbTAPP.log({"message":"server response error","data_closure":that,"textStatus":textStatus});
                 // FIXME :: ADDED ONLY TO TEST CLIENT SIDE
-                if (that.event)
+                if (that.event) {
                   trigger_fish.rbTRules.executeRulesOnEvent(that.event);
+                  trigger_fish.rbTAPP.setTransVar({}); 
+                }
                 callback.error();
-                trigger_fish.rbTAPP.setTransVar({}); 
+                
             }
       });
     } catch(e) {
@@ -242,6 +238,8 @@ trigger_fish.rbTServerChannel = {
                          }); 
     }
   },
+
+
 
 
   /**

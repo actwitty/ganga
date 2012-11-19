@@ -14,10 +14,8 @@
  * documents the function and classes that are added to jQuery by this plug-in.
  * @memberOf jQuery
  */
+
 var trigger_fish = {};
-
-
-
 
 trigger_fish.rbTAPP = {
     /* Main configs will be holded here */
@@ -40,6 +38,8 @@ trigger_fish.rbTAPP = {
     {
       "use strict";
       trigger_fish.initJStorage();
+      trigger_fish.enableCORS(jQuery);
+      trigger_fish.events = new EventTarget();
       // 1). includin jquery if need be
       //rbTUtils.includeJQIfNeeded();
 

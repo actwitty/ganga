@@ -56,7 +56,7 @@ class Actor
 
   # OUTPUT => {:return => actor_id, :error => nil}
   def self.identify(params)
-    Rails.logger.info("Enter Actor Identify")
+    Rails.logger.info("Enter Actor Identify #{params.inspect}")
 
     if params[:app_id].blank? or params[:account_id].blank? or params[:uid].blank? 
       raise et("actor.invalid_argument_in_identify") 
@@ -77,7 +77,7 @@ class Actor
       # if this is new actor
       if identifier.blank?
         actor = Actor.create!(account_id: params[:account_id], app_id: params[:app_id])
-        actor.identifiers.create!(account_id: params[:account_id], app_id: params[:app_id], uid: params[:uid])
+        Identifier.create!(actor_id: actor._id, account_id: params[:account_id], app_id: params[:app_id], uid: params[:uid])
         Rails.logger.info("creating new actor and new identifier for #{params[:uid]}")
       
       else

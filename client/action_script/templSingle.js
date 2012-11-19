@@ -1239,7 +1239,7 @@ trigger_fish.rbT.eventHandler = {
 
     var link = evt.target.href;
     
-    window.open(link);
+    window.open(link,'_blank');
     
     params={};
 
