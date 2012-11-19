@@ -16,7 +16,7 @@ describe ErrsController do
   describe "create error" do
     
     it "should not create error with invalid actor" do
-      get 'create', { 
+      post 'create', { 
                       app_id: @app._id,
                       actor_id: 232,
                       properties: { 
@@ -31,7 +31,7 @@ describe ErrsController do
     
     it "should not create error with invalid app" do
       # account in this test case is not mapped to app
-      get 'create', { 
+      post 'create', { 
                       app_id: 123232,
                       actor_id: @actor._id,
                       properties: { 
@@ -46,7 +46,7 @@ describe ErrsController do
 
     it "should create error" do
       # account in this test case is not mapped to app
-      get 'create', { 
+      post 'create', { 
                       properties: { 
                                     :name => "Javascript failed",
                                     :reason => { err: "dont know", code: 402}

@@ -7,16 +7,16 @@ class AccessInfo
   # Relations
 
   # Attributes
-  field  :origin,  type: String,   default: ""
+  field  :origin,     type: String,   default: ""
   
-  field  :scope,   type: String,   default: ""
+  field  :scope,      type: String,   default: ""
 
-  field  :token,   type: String,   default: ""
+  field  :token,      type: String,   default: ""
   field  :expires_at, type: Time,  default: AppConstants.token_expiry_days.days.from_now
-  field  :role,    type: Hash,     default: {}
+  field  :role,       type: Hash,     default: {}
 
-  field  :app_id,  type: String
-  field  :account_id,   type: String
+  field  :app_id,     type: String
+  field  :account_id, type: String
 
   # Validation
   validates_presence_of :account_id, :scope, :token

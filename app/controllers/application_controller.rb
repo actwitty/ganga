@@ -101,10 +101,14 @@ class ApplicationController < ActionController::Base
     head :unauthorized
   end     
 
-  def self.authenticate_request(params, options = [])
+  def self.authenticate_request(params = {}, options = [])
     Rails.logger.info("Enter Authenticate Request")
     
-    before_filter AuthenticateOrigin.new, params[:origin]
+    if params[:origin].blank?
+      before_filter AuthenticateOrigin.new
+    else
+      before_filter AuthenticateOrigin.new, params[:origin]
+    end
     before_filter AuthenticateApi.new
     before_filter AuthenticateAccount.new
 

@@ -16,7 +16,7 @@ describe EventsController do
   
   describe "create event" do
     it "should not create event with invalid actor" do
-      get 'create', { 
+      post 'create', { 
                       app_id: @app._id,
                       actor_id: 232,
                       name: 'sign_up',
@@ -31,7 +31,7 @@ describe EventsController do
     
     it "should not create event with invalid app" do
       # account in this test case is not mapped to app
-      get 'create', { 
+      post 'create', { 
                       app_id: 123232,
                       actor_id: @actor._id,
                       name: 'sign_up',
@@ -46,7 +46,7 @@ describe EventsController do
 
     it "should create event" do
       # account in this test case is not mapped to app
-      get 'create', { 
+      post 'create', { 
                       app_id: @app._id,
                       actor_id: @actor._id,
                       name: 'sign_up',
