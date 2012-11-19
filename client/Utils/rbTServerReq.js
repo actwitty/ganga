@@ -302,6 +302,7 @@ trigger_fish.rbTServerChannel = {
     this.makeRequest({"url"        : rbTServerChannel.url.conversion, 
                       "params"     : params,
                       "conversion" : true,
+                      "type"       : "POST",
                       "cb"         : cb
                      });
   }, 
@@ -315,7 +316,7 @@ trigger_fish.rbTServerChannel = {
   {
     "use strict";
     var callback = this.extendCallbacks(callback);
-    this.makeRequest({"url":this.url.reportError,"params":params,"err":true, "cb":callback});
+    this.makeRequest({"url":this.url.reportError,"params":params,"type":"POST","err":true, "cb":callback});
   },
 
   /** 

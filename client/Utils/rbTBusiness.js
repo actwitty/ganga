@@ -68,6 +68,7 @@ RBT.prototype.identify = function(params)
   trigger_fish.rbTServerChannel.makeRequest({"url"     : trigger_fish.rbTServerChannel.url.identify, 
                                              "params"  : params,
                                              "identify": true,
+                                             "type"    : "POST",
                                              "cb"      : { success: trigger_fish.rbTServerResponse.setActorID,
                                                            error  : trigger_fish.rbTServerResponse.defaultError
                                                          }
@@ -90,6 +91,7 @@ RBT.prototype.setActor = function(params)
   trigger_fish.rbTServerChannel.makeRequest({"url"      : trigger_fish.rbTServerChannel.url.setActor, 
                                              "params"   : params,
                                              "set_actor": true,
+                                             "type"    : "POST",
                                              "cb"       : { success: trigger_fish.rbTServerResponse.setActorProperty,
                                                             error  : trigger_fish.rbTServerResponse.defaultError
                                                           }
