@@ -88,11 +88,8 @@ trigger_fish.rbT.applyHtmltoPageInternal = function(html){
 
 	if(html.length){
 
-
 	 jQuery('body').append(html);
-
 	// document.body.innerHTML = document.body.innerHTML+html;
-
 	}else{
 
          trigger_fish.rbT.sendErrorToRBServer("Bad variable array error for template");
