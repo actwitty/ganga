@@ -15,20 +15,20 @@ trigger_fish.rbT = { inited: false};
 
 trigger_fish.rbT.templateLib = {
 'topbar' :{ 
- 				'generic.fblike':'rbTemplTopbarGenericFblikeHTML',
-				'generic.twittershare':'rbTemplTopbarGenericTwittershareHTML',
-				'generic.normal':'rbTemplTopbarGenericNormalHTML',
-				'generic.twitterfollow':'rbTemplTopbarGenericTwitterfollowHTML'
+ 				'generic.normal':'rbTemplTopbarGenericNormalHTML',
+				'generic.twitterfollow':'rbTemplTopbarGenericTwitterfollowHTML',
+				'generic.fblike':'rbTemplTopbarGenericFblikeHTML',
+				'generic.twittershare':'rbTemplTopbarGenericTwittershareHTML'
  
  	 	 	 }, 
 
 
 
  'bottombar' :{ 
- 				'generic.normal':'rbTemplBottombarGenericNormalHTML',
+ 				'generic.fblike':'rbTemplBottombarGenericFblikeHTML',
 				'generic.twitterfollow':'rbTemplBottombarGenericTwitterfollowHTML',
-				'generic.fblike':'rbTemplBottombarGenericFblikeHTML',
-				'generic.twittershare':'rbTemplBottombarGenericTwittershareHTML'
+				'generic.twittershare':'rbTemplBottombarGenericTwittershareHTML',
+				'generic.normal':'rbTemplBottombarGenericNormalHTML'
  
  	 	 	 }, 
 
@@ -58,96 +58,25 @@ trigger_fish.rbT.templateLib = {
 
 
  trigger_fish.rbT.templateName = {
-	 			'bottombar.generic.normal':'A promo bottom bar with link and some text',
-	 			'topbar.generic.fblike':'A top bar to influence visitors from Facebook',
-	 			'bottombar.generic.twitterfollow':'Bottom bar to Gather followers from twitter',
-	 			'topbar.generic.twittershare':'Influence a Twitter user to share about your business',
-	 			'chat.generic.normal':'Chat Window',
-	 			'feedback.uservoice.normal':'User Voice Feedback',
-	 			'modal.generic.normal':'A modal annonucement',
-	 			'topbar.generic.normal':'A promo top bar with link and some text',
 	 			'bottombar.generic.fblike':'A bottom bar to influence visitors from Facebook',
-	 			'uservoice.generic.normal':'User Voice Feedback',
+	 			'topbar.generic.normal':'A promo top bar with link and some text',
+	 			'chat.generic.normal':'Chat Window',
 	 			'topbar.generic.twitterfollow':'Top bar to Gather followers from twitter',
+	 			'bottombar.generic.twitterfollow':'Bottom bar to Gather followers from twitter',
+	 			'topbar.generic.fblike':'A top bar to influence visitors from Facebook',
+	 			'uservoice.generic.normal':'User Voice Feedback',
+	 			'bottombar.generic.twittershare':'Influence a Twitter user to share about your business',
 	 			'support.olark.normal':'Chat Window',
-	 			'bottombar.generic.twittershare':'Influence a Twitter user to share about your business'
+	 			'modal.generic.normal':'A modal annonucement',
+	 			'feedback.uservoice.normal':'User Voice Feedback',
+	 			'bottombar.generic.normal':'A promo bottom bar with link and some text',
+	 			'topbar.generic.twittershare':'Influence a Twitter user to share about your business'
  	 	 	 	 }; 
 
 
 
  trigger_fish.rbT.templateArgs = {
-	 	  'bottombar.generic.normal':{
-
- 	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.nr.base_zindex',
-	 	 	 	 	 				value :'10000'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.cr.base_backgroundcolor',
-	 	 	 	 	 				value :'#181818'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.nr.show_width',
-	 	 	 	 	 				value :'900'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.nr.base_height',
-	 	 	 	 	 				value :'40'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.text_color ',
-	 	 	 	 	 				value :'#ffffff'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
-	 	 	 	 	 				value :'14'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
-	 	 	 	 	 				value :'Arial'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
-	 	 	 	 	 				value :'normal'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.cr.button_background',
-	 	 	 	 	 				value :'#0e0c0b'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.cr.button_color',
-	 	 	 	 	 				value :'#BFBFBF'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.nr.button_fontSize',
-	 	 	 	 	 				value :'14'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '12' : {
-	 	 	 	 	 				key :'rb.t.cr.button_background_on_focus',
-	 	 	 	 	 				value :'#333'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '13' : {
-	 	 	 	 	 				key :'rb.t.cr.button_color_on_focus',
-	 	 	 	 	 				value :'#FFFFFF'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '14' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
-	 	 	 	 	 				value :'Please add the promotional left text here'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '15' : {
-	 	 	 	 	 				key :'rb.t.ul.button_link',
-	 	 	 	 	 				value :'http://www.google.com'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '16' : {
-	 	 	 	 	 				key :'rb.t.sg.button_label',
-	 	 	 	 	 				value :'Promo Link'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '17' :{
-	 	 	 	 	 				key :'rb.t.vsg.text_right',
-	 	 	 	 	 				value :'Please add the promotional right text here'
-	 	 	 	 	 	  }
-	 	 	 	 	 },
-	 	  'topbar.generic.fblike':{
+	 	  'bottombar.generic.fblike':{
 
  	 	 	 	 	 	 '1' : {
 	 	 	 	 	 				key :'rb.t.nr.base_zindex',
@@ -184,6 +113,135 @@ trigger_fish.rbT.templateLib = {
  	 	 	 	 	 	 '9' :{
 	 	 	 	 	 				key :'rb.t.ul.facebook_page',
 	 	 	 	 	 				value :'http://www.google.com'
+	 	 	 	 	 	  }
+	 	 	 	 	 },
+	 	  'topbar.generic.normal':{
+
+ 	 	 	 	 	 	 '1' : {
+	 	 	 	 	 				key :'rb.t.nr.base_zindex',
+	 	 	 	 	 				value :'10000'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '2' : {
+	 	 	 	 	 				key :'rb.t.cr.base_backgroundcolor',
+	 	 	 	 	 				value :'#E24E35'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '3' : {
+	 	 	 	 	 				key :'rb.t.nr.show_width',
+	 	 	 	 	 				value :'900'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '4' : {
+	 	 	 	 	 				key :'rb.t.nr.base_height',
+	 	 	 	 	 				value :'40'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '5' : {
+	 	 	 	 	 				key :'rb.t.cr.text_color ',
+	 	 	 	 	 				value :'#ffffff'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '6' : {
+	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
+	 	 	 	 	 				value :'14'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '7' : {
+	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
+	 	 	 	 	 				value :'Arial'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '8' : {
+	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
+	 	 	 	 	 				value :'normal'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '9' : {
+	 	 	 	 	 				key :'rb.t.cr.button_background',
+	 	 	 	 	 				value :'#E24E35'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '10' : {
+	 	 	 	 	 				key :'rb.t.cr.button_color',
+	 	 	 	 	 				value :'#FFFFFF'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '11' : {
+	 	 	 	 	 				key :'rb.t.nr.button_fontSize',
+	 	 	 	 	 				value :'14'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '12' : {
+	 	 	 	 	 				key :'rb.t.cr.button_background_on_focus',
+	 	 	 	 	 				value :'#CC412A'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '13' : {
+	 	 	 	 	 				key :'rb.t.cr.button_color_on_focus',
+	 	 	 	 	 				value :'#FFFFFF'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '14' : {
+	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				value :'Please add the promotional left text here'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '15' : {
+	 	 	 	 	 				key :'rb.t.ul.button_link',
+	 	 	 	 	 				value :'http://www.google.com'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '16' : {
+	 	 	 	 	 				key :'rb.t.sg.button_label',
+	 	 	 	 	 				value :'Promo Link'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '17' :{
+	 	 	 	 	 				key :'rb.t.vsg.text_right',
+	 	 	 	 	 				value :'Please add the promotional right text here'
+	 	 	 	 	 	  }
+	 	 	 	 	 },
+	 	  'chat.generic.normal':{
+
+ 	 	 	 	 	 	 '1' :{
+	 	 	 	 	 				key :'rb.t.sg.olarkIdentity',
+	 	 	 	 	 				value :'\'6679-845-10-6199\''
+	 	 	 	 	 	  }
+	 	 	 	 	 },
+	 	  'topbar.generic.twitterfollow':{
+
+ 	 	 	 	 	 	 '1' : {
+	 	 	 	 	 				key :'rb.t.nr.base_zindex',
+	 	 	 	 	 				value :'10000'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '2' : {
+	 	 	 	 	 				key :'rb.t.cr.base_background_color',
+	 	 	 	 	 				value :'#377CA8'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '3' : {
+	 	 	 	 	 				key :'rb.t.nr.show_width',
+	 	 	 	 	 				value :'900'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '4' : {
+	 	 	 	 	 				key :'rb.t.nr.base_height',
+	 	 	 	 	 				value :'40'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '5' : {
+	 	 	 	 	 				key :'rb.t.cr.text_color ',
+	 	 	 	 	 				value :'#ffffff'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '6' : {
+	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
+	 	 	 	 	 				value :'14'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '7' : {
+	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
+	 	 	 	 	 				value :'Arial'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '8' : {
+	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
+	 	 	 	 	 				value :'normal'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '9' : {
+	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				value :'Increase your market reach by connecting to users'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '10' : {
+	 	 	 	 	 				key :'rb.t.sg.twitter_account_link',
+	 	 	 	 	 				value :'@act_witty'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '11' : {
+	 	 	 	 	 				key :'rb.t.sg.twitter_label',
+	 	 	 	 	 				value :'@act_witty'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '12' :{
+	 	 	 	 	 				key :'rb.t.vsg.text_right',
+	 	 	 	 	 				value :'Gathering reach on twitter to increase business.'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'bottombar.generic.twitterfollow':{
@@ -237,7 +295,49 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 				value :'Gathering reach on twitter to increase business.'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
-	 	  'topbar.generic.twittershare':{
+	 	  'topbar.generic.fblike':{
+
+ 	 	 	 	 	 	 '1' : {
+	 	 	 	 	 				key :'rb.t.nr.base_zindex',
+	 	 	 	 	 				value :'10000'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '2' : {
+	 	 	 	 	 				key :'rb.t.nr.font_size',
+	 	 	 	 	 				value :'14'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '3' : {
+	 	 	 	 	 				key :'rb.t.ft.font',
+	 	 	 	 	 				value :'Arial'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '4' : {
+	 	 	 	 	 				key :'rb.t.cr.border_color',
+	 	 	 	 	 				value :'#304A80'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '5' : {
+	 	 	 	 	 				key :'rb.t.cr.background_color',
+	 	 	 	 	 				value :'#6087C6'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '6' : {
+	 	 	 	 	 				key :'rb.t.nr.show_width',
+	 	 	 	 	 				value :'900'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '7' : {
+	 	 	 	 	 				key :'rb.t.nr.bar_height',
+	 	 	 	 	 				value :'40'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '8' : {
+	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				value :'Woo Facebook users coming to your page by writing something to make them like you.'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '9' :{
+	 	 	 	 	 				key :'rb.t.ul.facebook_page',
+	 	 	 	 	 				value :'http://www.google.com'
+	 	 	 	 	 	  }
+	 	 	 	 	 },
+	 	  'uservoice.generic.normal':{
+
+	 	 	 	 	 },
+	 	  'bottombar.generic.twittershare':{
 
  	 	 	 	 	 	 '1' : {
 	 	 	 	 	 				key :'rb.t.nr.base_zindex',
@@ -276,27 +376,20 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 				value :'Ask here to twitter user to share your blog'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.ul.button_link',
-	 	 	 	 	 				value :'http://www.google.com'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '11' : {
 	 	 	 	 	 				key :'rb.t.sg.twitter_share_text',
 	 	 	 	 	 				value :'make #twitter user to share about your blog at a sample url like http://www.rulebot.com'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '12' :{
+ 	 	 	 	 	 	 '11' :{
 	 	 	 	 	 				key :'rb.t.vsg.text_right',
 	 	 	 	 	 				value :'Influence your visitors.'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
-	 	  'chat.generic.normal':{
+	 	  'support.olark.normal':{
 
  	 	 	 	 	 	 '1' :{
 	 	 	 	 	 				key :'rb.t.sg.olarkIdentity',
 	 	 	 	 	 				value :'\'6679-845-10-6199\''
 	 	 	 	 	 	  }
-	 	 	 	 	 },
-	 	  'feedback.uservoice.normal':{
-
 	 	 	 	 	 },
 	 	  'modal.generic.normal':{
 
@@ -381,7 +474,10 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 				value :'Order Now'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
-	 	  'topbar.generic.normal':{
+	 	  'feedback.uservoice.normal':{
+
+	 	 	 	 	 },
+	 	  'bottombar.generic.normal':{
 
  	 	 	 	 	 	 '1' : {
 	 	 	 	 	 				key :'rb.t.nr.base_zindex',
@@ -389,7 +485,7 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
 	 	 	 	 	 				key :'rb.t.cr.base_backgroundcolor',
-	 	 	 	 	 				value :'#E24E35'
+	 	 	 	 	 				value :'#181818'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
 	 	 	 	 	 				key :'rb.t.nr.show_width',
@@ -417,11 +513,11 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
 	 	 	 	 	 				key :'rb.t.cr.button_background',
-	 	 	 	 	 				value :'#E24E35'
+	 	 	 	 	 				value :'#0e0c0b'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
 	 	 	 	 	 				key :'rb.t.cr.button_color',
-	 	 	 	 	 				value :'#FFFFFF'
+	 	 	 	 	 				value :'#BFBFBF'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' : {
 	 	 	 	 	 				key :'rb.t.nr.button_fontSize',
@@ -429,7 +525,7 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '12' : {
 	 	 	 	 	 				key :'rb.t.cr.button_background_on_focus',
-	 	 	 	 	 				value :'#CC412A'
+	 	 	 	 	 				value :'#333'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '13' : {
 	 	 	 	 	 				key :'rb.t.cr.button_color_on_focus',
@@ -452,107 +548,7 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 				value :'Please add the promotional right text here'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
-	 	  'bottombar.generic.fblike':{
-
- 	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.nr.base_zindex',
-	 	 	 	 	 				value :'10000'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.nr.font_size',
-	 	 	 	 	 				value :'14'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.ft.font',
-	 	 	 	 	 				value :'Arial'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.cr.border_color',
-	 	 	 	 	 				value :'#304A80'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.background_color',
-	 	 	 	 	 				value :'#6087C6'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.show_width',
-	 	 	 	 	 				value :'900'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.nr.bar_height',
-	 	 	 	 	 				value :'40'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
-	 	 	 	 	 				value :'Woo Facebook users coming to your page by writing something to make them like you.'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '9' :{
-	 	 	 	 	 				key :'rb.t.ul.facebook_page',
-	 	 	 	 	 				value :'http://www.google.com'
-	 	 	 	 	 	  }
-	 	 	 	 	 },
-	 	  'uservoice.generic.normal':{
-
-	 	 	 	 	 },
-	 	  'topbar.generic.twitterfollow':{
-
- 	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.nr.base_zindex',
-	 	 	 	 	 				value :'10000'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.cr.base_background_color',
-	 	 	 	 	 				value :'#377CA8'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.nr.show_width',
-	 	 	 	 	 				value :'900'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.nr.base_height',
-	 	 	 	 	 				value :'40'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.text_color ',
-	 	 	 	 	 				value :'#ffffff'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
-	 	 	 	 	 				value :'14'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
-	 	 	 	 	 				value :'Arial'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
-	 	 	 	 	 				value :'normal'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
-	 	 	 	 	 				value :'Increase your market reach by connecting to users'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.sg.twitter_account_link',
-	 	 	 	 	 				value :'@act_witty'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.sg.twitter_label',
-	 	 	 	 	 				value :'@act_witty'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '12' :{
-	 	 	 	 	 				key :'rb.t.vsg.text_right',
-	 	 	 	 	 				value :'Gathering reach on twitter to increase business.'
-	 	 	 	 	 	  }
-	 	 	 	 	 },
-	 	  'support.olark.normal':{
-
- 	 	 	 	 	 	 '1' :{
-	 	 	 	 	 				key :'rb.t.sg.olarkIdentity',
-	 	 	 	 	 				value :'\'6679-845-10-6199\''
-	 	 	 	 	 	  }
-	 	 	 	 	 },
-	 	  'bottombar.generic.twittershare':{
+	 	  'topbar.generic.twittershare':{
 
  	 	 	 	 	 	 '1' : {
 	 	 	 	 	 				key :'rb.t.nr.base_zindex',
@@ -591,10 +587,14 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 				value :'Ask here to twitter user to share your blog'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
+	 	 	 	 	 				key :'rb.t.ul.button_link',
+	 	 	 	 	 				value :'http://www.google.com'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '11' : {
 	 	 	 	 	 				key :'rb.t.sg.twitter_share_text',
 	 	 	 	 	 				value :'make #twitter user to share about your blog at a sample url like http://www.rulebot.com'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '11' :{
+ 	 	 	 	 	 	 '12' :{
 	 	 	 	 	 				key :'rb.t.vsg.text_right',
 	 	 	 	 	 				value :'Influence your visitors.'
 	 	 	 	 	 	  }
@@ -957,31 +957,14 @@ trigger_fish.rbT.findZIndex = function(){
 
 };
 
-trigger_fish.rbT.getBrowserVersion = function(){
-  //TODO: Modernzer
-};
-
-
-trigger_fish.rbT.getPlatform = function(){
- //TODO: Modernzer
-
-};
-
-
-trigger_fish.rbT.sendEventToRBServer = function(){
-
-
-};
 
 trigger_fish.rbT.sendErrorToRBServer = function(string){
 
 // INTEGRATION_ENABLE     
-/*
 
  trigger_fish.rbTAPP.reportError({"message":string,"server":true});
 
 
-*/
 
  // INTEGRATION_ENABLE   
 
@@ -1214,11 +1197,10 @@ trigger_fish.rbT.eventHandler = {
     
 // INTEGRATION_ENABLE     
 
-/*
-         //trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
+
+         trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
         //TODO
 
-*/
 
   },  
 
@@ -1435,10 +1417,9 @@ if(1) // Check for Service Type Enhancement
 // INTEGRATION_ENABLE     
     
 // Report Server Display of Templ Successfull
-/*
-         //trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
 
-*/
+         trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
+
 
          }
       }	

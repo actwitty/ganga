@@ -195,10 +195,9 @@ if(1) // Check for Service Type Enhancement
 // INTEGRATION_ENABLE     
     
 // Report Server Display of Templ Successfull
-/*
-         //trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
 
-*/
+         trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
+
 
          }
       }	

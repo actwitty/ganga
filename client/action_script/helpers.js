@@ -271,31 +271,14 @@ trigger_fish.rbT.findZIndex = function(){
 
 };
 
-trigger_fish.rbT.getBrowserVersion = function(){
-  //TODO: Modernzer
-};
-
-
-trigger_fish.rbT.getPlatform = function(){
- //TODO: Modernzer
-
-};
-
-
-trigger_fish.rbT.sendEventToRBServer = function(){
-
-
-};
 
 trigger_fish.rbT.sendErrorToRBServer = function(string){
 
 // INTEGRATION_ENABLE     
-/*
 
  trigger_fish.rbTAPP.reportError({"message":string,"server":true});
 
 
-*/
 
  // INTEGRATION_ENABLE   
 
