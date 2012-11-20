@@ -39,9 +39,8 @@ trigger_fish.rbTAPP = {
       "use strict";
       trigger_fish.enableCORS(jQuery);
       trigger_fish.initJStorage();
-     
       this.getAppData();
-
+      //this.createDummyActor();
       trigger_fish.rbTActor.retFromCookie();
 
     },
@@ -174,6 +173,8 @@ trigger_fish.rbTAPP = {
        }
       return cnf;
     },  
+
+   
 
     /** 
     *  Get Application based configs

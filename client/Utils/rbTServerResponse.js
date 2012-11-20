@@ -49,16 +49,8 @@ trigger_fish.rbTServerResponse = {
     "use strict";
     trigger_fish.rbTAPP.log({"message": "Setting actor ID with server resp","data":respData});
     try {
-      if (respData && respData.actor_id) {
-        // FIXME :: Flush and reset all cookies if there is a change in actor.
-        // WAITING AS THERE ARE SOME CHANGES IN BACKEND.
-        var oldActorId = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID);
-        var actorProp = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorProp);
-        if (!oldActorId || (oldActorId !== respData.actor_id) || !actorProp) {
-          trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.actorID, JSON.stringify(respData.actor_id));
-          trigger_fish.rbTActor.setID(respData.actor_id);
-          trigger_fish.rbTServerChannel.actorDetails();
-        }
+      if (respData && respData.id) {
+        trigger_fish.rbTActor.requestActorDetails(respData);
       } else {
         throw new Error("there is no server resp data");
       }
@@ -85,6 +77,7 @@ trigger_fish.rbTServerResponse = {
     try {
       if (respData && respData.actor.description.profile) {
         trigger_fish.rbTActor.setProperties(respData.actor.description.profile);
+
       } else {
         throw new Error("there is no data for setting actor property");
       }
