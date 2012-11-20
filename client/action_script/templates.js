@@ -213,16 +213,16 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 				value :'normal'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
-	 	 	 	 	 				value :'Increase your market reach by connecting to users'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '10' : {
 	 	 	 	 	 				key :'rb.t.sg.twitter_account_link',
 	 	 	 	 	 				value :'@act_witty'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '11' : {
+ 	 	 	 	 	 	 '10' : {
 	 	 	 	 	 				key :'rb.t.sg.twitter_label',
 	 	 	 	 	 				value :'@act_witty'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '11' : {
+	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				value :'Increase your market reach by connecting to users'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '12' :{
 	 	 	 	 	 				key :'rb.t.vsg.text_right',

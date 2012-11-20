@@ -53,10 +53,11 @@
    .rbTpTwFollowDyn .rbBtnDyn {      
           
       position: absolute;      
-      width:150px;
+      width:180px;
       left: 42%;
-      top: 5px;
-      margin-right: 20px;                      
+      top: 0px;
+      margin-right: 20px;     
+      overflow: hidden;                 
 
    }
 
@@ -69,10 +70,14 @@
    }
 </style>
 
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
 
 
 <div id="rbTopbarGenericTwitterfollowBaseContainer" class="rbBaseStyle rbTpTwFollowDyn" >
+
+  <div class='rbIframeContent'><!--<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+  <a  data-show-count="false" data-button = "blue" class="twitter-follow-button" href="https://twitter.com/{{rb.t.sg.twitter_account_link{{=@act_witty}}}}" data-size="large">Follow {{rb.t.sg.twitter_label{{=@act_witty}}}} </a>--></div>
 
   <div class="rbBarWidth barDyn">
 
@@ -80,9 +85,9 @@
       {{rb.t.vsg.text_left{{=Increase your market reach by connecting to users}}}}
     </p>
 
-    <div class ="rbBtn rbBtnDyn" > 
-          <a  data-show-count="false" data-button = "blue" class="twitter-follow-button" href="https://twitter.com/{{rb.t.sg.twitter_account_link{{=@act_witty}}}}" data-size="large">Follow {{rb.t.sg.twitter_label{{=@act_witty}}}} </a>
-    </div>
+    <iframe class ="rbBtn rbIframe rbBtnDyn" > 
+
+    </iframe>
   
     <p  class="rbTextRight rbDynRightText rbDynText" >           
       {{rb.t.vsg.text_right{{=Gathering reach on twitter to increase business.}}}}  
@@ -100,5 +105,22 @@
     </div>  
 
   </div>
+
+  <script>    
+    var base = document.getElementById('rbTopbarGenericTwitterfollowBaseContainer');
+    if( base !== undefined){
+      var inner = base.getElementsByClassName('rbIframeContent');    
+      var iframe = base.getElementsByClassName('rbIframe');
+      if( inner !== undefined && iframe !== undefined  ){
+        var ifrm = iframe[0];
+        ifrm = (ifrm.contentWindow) ? ifrm.contentWindow : (ifrm.contentDocument.document) ? ifrm.contentDocument.document : ifrm.contentDocument;
+        if(ifrm !== undefined){
+          ifrm.document.open();
+          ifrm.document.write(inner[0].firstChild.nodeValue);
+          ifrm.document.close();    
+        }
+      }
+    }
+  </script>
 </div>
 
