@@ -95,7 +95,7 @@ App.LimitedValueList =
                     'device[type]' : { 'tab': 'Tablet', 'pc' : 'PC', 'mob' : 'Mobile' }
                     'referrer[host]' : { 'printo':'Printo', 't.co': 'Twitter', 'facebook.com' : 'Facebook', 'nyt.com' : 'Newyork Times' } 
                     #'plugins' : {'flash':'Flash','java':'Java','quicktime':'Quicktime','silverlight':'Silverlight'}
-                    'device[name]' : {'Linux' : 'Linux','android' : 'Android', 'iPad' : 'iPad', 'iPhone' : 'iPhone','nokia':'Nokia','Samsung':'Samsung' ,'kindle':'Kindle' ,'SonyEricsson' : 'Sony Ericsson','Windows':'Windows' }
+                    'device[name]' : {'Linux' : 'Linux','android' : 'Android','Galaxy Nexus':'Galaxy Nexus' ,'iPad' : 'iPad', 'iPhone' : 'iPhone','nokia':'Nokia','Samsung':'Samsung' ,'kindle':'Kindle' ,'SonyEricsson' : 'Sony Ericsson','Windows':'Windows' }
                                       
 
                   
