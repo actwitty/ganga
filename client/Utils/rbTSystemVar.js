@@ -134,7 +134,7 @@ function EasyjQuery_Cache_IP(fname,json) {
 }
 function EasyjQuery_Get_IP(fname,is_full) {
   var full_version = "";
-  jQuery.getScript("http://api.easyjquery.com/ips/?callback=" + fname + full_version);
+  jQuery.getScript("https://api.easyjquery.com/ips/?callback=" + fname + full_version);
 }
   
 
