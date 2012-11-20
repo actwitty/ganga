@@ -1,5 +1,6 @@
 files = ["rbTAPP.js",
 		 "rbTStorage.js",
+		 "rbTCORS.js",
 	     "rbTActor.js",
 	     "rbTClientDebugger.js",
 	     #"rbTIncludeScript.js",

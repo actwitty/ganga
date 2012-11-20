@@ -1,52 +1,120 @@
-<!-- {{Title{{=Normal Bottombar}}}}-->
+<!-- {{Title{{=A promo bottom bar with link and some text}}}}-->
 
-
+<link rel="stylesheet" type="text/css" href="https://s3.amazonaws.com/actwitty_ganga/css/common_styles.css">
 
 <style>
+  .rbBbGenDyn{
+    position: fixed;
+    bottom: 0px;
+    left: 0px;   
+    z-index: {{rb.t.nr.base_zindex{{=10000}}}};    
+    background: {{rb.t.cr.base_backgroundcolor{{=#181818}}}} !important;
+    border-top: 1px solid #333 !important;
+    border-bottom: 1px solid #333 !important;
+  }
 
-  .rbTextValue
+  .rbBbGenDyn .barDyn{
+    width: {{rb.t.nr.show_width{{=900}}}}px;
+    height: {{rb.t.nr.base_height{{=40}}}}px;
+    vertical-align: middle;
+    position: relative;
+  }
+
+
+  .rbBbGenDyn .rbDynText
    {
-     color:{{rb.t.cr.text_color{{=#333}}}};
-     font-size: {{rb.t.nr.text_fontsize{{=15}}}}px;
+     color:{{rb.t.cr.text_color {{=#ffffff}}}};
+     font-size: {{rb.t.nr.text_fontsize{{=14}}}}px;
      font-family: {{rb.t.ft.text_fontfamily{{=Arial}}}};
-     font-weight:{{rb.t.fw.text_fontweight{{=bold}}}};
+     font-weight:{{rb.t.fw.text_fontweight{{=normal}}}};
+     white-space: nowrap;
+     overflow:hidden;
+   }
+   
+   .rbBbGenDyn .rbDynLeftText{
+    position: absolute;
+    left:20px; 
+    width:40%;
+    top: 10px;
+    text-align: center;
+    margin-right: 20px;
+
+   }
+   
+   .rbBbGenDyn .rbDynRightText{
+    position: absolute;
+    right: 20px; 
+    top: 10px;    
+    width:40%; 
+    text-align: center;   
+    margin-left: 20px;
    }
 
+   .rbBbGenDyn .rbBtnDyn {      
+      padding: 12px 15px 12px;
+      text-shadow: none !important;
+      border-right: 1px solid #333;
+      border-left: 1px solid #333;
+      -webkit-transition: background 1s ease;
+      -moz-transition: background 1s ease;
+      -o-transition: background 1s ease;
+      transition: background 1s ease;            
+      position: absolute;      
+      width:100px;
+      left: 42%;
+      top: 0;
+      margin-right: 20px;                    
+      background-color: {{rb.t.cr.button_background{{=#0e0c0b}}}} !important;
+      color: {{rb.t.cr.button_color{{=#BFBFBF}}}} !important; !important;
+      font-size: {{rb.t.nr.button_fontSize{{=14}}}}px; !important;   
+      white-space: nowrap;  
+      overflow: hidden; 
+      text-overflow: ellipsis;
 
+   }
 
-
+   .rbBbGenDyn .rbBtnDyn:hover {
+      background-color: {{rb.t.cr.button_background_on_focus{{=#333}}}} !important;
+      color: {{rb.t.cr.button_color_on_focus{{=#FFFFFF}}}} !important;
+      -webkit-transition: background 1s ease;
+      -moz-transition: background 1s ease;
+      -o-transition: background 1s ease;
+      transition: background 1s ease;
+   }
+   .rbBbGenDyn .rbInfoBtnDyn{
+    position: absolute;
+    top: 5px;
+    right: -130px;
+    display: inline-block;
+   }
 </style>
 
-<div id="rbBottombarGenericNormalBaseContainer" style="zIndex:{{rb.f.nr.base_zindex{{=Zindex}}}};width:{{rb.t.nr.base_width{{=100}}}}%;height:{{rb.t.nr.base_height{{=40}}}}px;display:block; background-color:{{rb.t.cr.base_backgroundcolor{{=#DCDCDC}}}};border-style:none; position:fixed; bottom:0px; left:0px; box-shadow: 2px -2px 2px #888888;text-align:{{rb.t.an.base_textalign{{=center}}}};">
+<div id="rbBottombarGenericNormalBaseContainer" class="rbBaseStyle rbBbGenDyn" >
 
-   <div id="rbBottombarGenericNormalLeftClick" class="rbTextValue" style="display:inline;  position:absolute;bottom:5px; margin-right:20px; bottom:10px; left:20px; width:40%;overflow:hidden;">
-         {{rb.t.vsg.text_left{{=Hello Hello}}}}  
-   </div> 
+  <div class="rbBarWidth barDyn">
 
+    <p id="rbBottombarGenericNormalLeftClick" class="rbTextLeft rbDynLeftText rbDynText" >
+      {{rb.t.vsg.text_left{{=Please add the promotional left text here}}}}
+    </p>
+
+      <div id="rbBottombarGenericNormalRoiMiddlebutton" class ="rbClickable rbBtn rbBtnDyn" 
+          link="{{rb.t.ul.button_link{{=http://www.google.com}}}}"> 
+      {{rb.t.sg.button_label{{=Promo Link}}}} 
+    </div>
   
-
-<a id="rbBottombarGenericNormalRoiMiddlebutton" class ="rbClickable" style="display:inline;position:absolute;bottom:5px;width:80px;left:42%;margin-right:20px;height:25px; border-radius:5px;text-decoration:none; font-size:{{rb.t.nr.button_fontsize{{=14}}}}px;
-     background-color:{{rb.t.cr.button_backgroundcolor{{=#548AC7}}}};text-shadow: 0px -1px 0px #29588D;  
-     color :{{rb.t.cr.button_color{{=white}}}};text-align:center;border:1px solid #305580;padding-top:3px;cursor:pointer;" href="{{rb.t.ul.button_link{{=http://www.google.com}}}}"> {{rb.t.sg.button_lable{{=Click}}}} </a>
-
-    
-  <div id="rbBottombarGenericNormalRightClick" class="rbTextValue"  style="display:inline;  position:absolute; margin-right:20px; bottom:10px; margin-left:20px; left:49%; width:40%;overflow:hidden;">
-         
-         {{rb.t.vsg.text_right{{=Hello Hello}}}}  
-   </div>
-   
- <div  style="display:inline; position:absolute;right:30px; bottom:5px;margin-left:20px;font-weight:bold;"> 
-       
-            <a id="rbBottombarGenericNormalRoiHelp" class="rbClickable" target="_blank" style= "text-decoration:none;color:#333" href="http://www.rulebot.com" >
-            ?
-            </a>   
+    <p id="rbBottombarGenericNormalRightClick" class="rbTextRight rbDynRightText rbDynText" >           
+      {{rb.t.vsg.text_right{{=Please add the promotional right text here}}}}  
+    </p>
+    <div class="rbInfoBtnDyn">
+      <div class="rb-btn-group" >
+        <button id="rbBottombarGenericNormalRoiHelp" class="rb-info-btn rb-info-btn-small rbClickable" link="http://www.rulebot.com">
+          ?
+        </button>
+        <button id="rbBottombarGenericNormalCloseClick" class="rb-info-btn rb-info-btn-small rbClickable" >
+          X
+        </button>            
+      </div>
+    </div>  
 
   </div>
-
-
-
-    <div id="rbBottombarGenericNormalCloseClick" class="rbClickable" style="display:inline;position:absolute;color:#333; bottom:5px;right:10px;font-weight:bold;cursor:pointer;" >
-     X
-    </div> 
-
 </div>

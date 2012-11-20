@@ -1,19 +1,19 @@
 trigger_fish.rbT.templateLib = {
 'topbar' :{ 
- 				'generic.normal':'rbTemplTopbarGenericNormalHTML',
-				'generic.twitterfollow':'rbTemplTopbarGenericTwitterfollowHTML',
-				'generic.fblike':'rbTemplTopbarGenericFblikeHTML',
-				'generic.twittershare':'rbTemplTopbarGenericTwittershareHTML'
+ 				'generic.fblike':'rbTemplTopbarGenericFblikeHTML',
+				'generic.twittershare':'rbTemplTopbarGenericTwittershareHTML',
+				'generic.normal':'rbTemplTopbarGenericNormalHTML',
+				'generic.twitterfollow':'rbTemplTopbarGenericTwitterfollowHTML'
  
  	 	 	 }, 
 
 
 
  'bottombar' :{ 
- 				'generic.fblike':'rbTemplBottombarGenericFblikeHTML',
+ 				'generic.normal':'rbTemplBottombarGenericNormalHTML',
 				'generic.twitterfollow':'rbTemplBottombarGenericTwitterfollowHTML',
-				'generic.twittershare':'rbTemplBottombarGenericTwittershareHTML',
-				'generic.normal':'rbTemplBottombarGenericNormalHTML'
+				'generic.fblike':'rbTemplBottombarGenericFblikeHTML',
+				'generic.twittershare':'rbTemplBottombarGenericTwittershareHTML'
  
  	 	 	 }, 
 
@@ -43,140 +43,234 @@ trigger_fish.rbT.templateLib = {
 
 
  trigger_fish.rbT.templateName = {
-	 			'bottombar.generic.fblike':'Facebook Like Bottombar',
-	 			'topbar.generic.normal':'Normal Topbar',
+	 			'bottombar.generic.normal':'A promo bottom bar with link and some text',
+	 			'topbar.generic.fblike':'A top bar to influence visitors from Facebook',
+	 			'bottombar.generic.twitterfollow':'Bottom bar to Gather followers from twitter',
+	 			'topbar.generic.twittershare':'Influence a Twitter user to share about your business',
 	 			'chat.generic.normal':'Chat Window',
-	 			'topbar.generic.twitterfollow':'Twitter Follow Topbar',
-	 			'bottombar.generic.twitterfollow':'Twitter Follow Bottombar',
-	 			'topbar.generic.fblike':'Facebook Like Topbar',
-	 			'uservoice.generic.normal':'User Voice Feedback',
-	 			'bottombar.generic.twittershare':'Twitter Share Bottombar',
-	 			'support.olark.normal':'Chat Window',
-	 			'modal.generic.normal':'Modal Window',
 	 			'feedback.uservoice.normal':'User Voice Feedback',
-	 			'bottombar.generic.normal':'Normal Bottombar',
-	 			'topbar.generic.twittershare':'Twitter Share Topbar'
+	 			'modal.generic.normal':'A modal annonucement',
+	 			'topbar.generic.normal':'A promo top bar with link and some text',
+	 			'bottombar.generic.fblike':'A bottom bar to influence visitors from Facebook',
+	 			'uservoice.generic.normal':'User Voice Feedback',
+	 			'topbar.generic.twitterfollow':'Top bar to Gather followers from twitter',
+	 			'support.olark.normal':'Chat Window',
+	 			'bottombar.generic.twittershare':'Influence a Twitter user to share about your business'
  	 	 	 	 }; 
 
 
 
  trigger_fish.rbT.templateArgs = {
-	 	  'bottombar.generic.fblike':{
+	 	  'bottombar.generic.normal':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.cr.text_color',
-	 	 	 	 	 				value :'#F2F0F0'
+	 	 	 	 	 				key :'rb.t.nr.base_zindex',
+	 	 	 	 	 				value :'10000'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
-	 	 	 	 	 				value :'15'
+	 	 	 	 	 				key :'rb.t.cr.base_backgroundcolor',
+	 	 	 	 	 				value :'#181818'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
-	 	 	 	 	 				value :'Arial'
+	 	 	 	 	 				key :'rb.t.nr.show_width',
+	 	 	 	 	 				value :'900'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
-	 	 	 	 	 				value :'bold'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.f.nr.base_zindex',
-	 	 	 	 	 				value :'Zindex'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.base_width',
-	 	 	 	 	 				value :'100'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '7' : {
 	 	 	 	 	 				key :'rb.t.nr.base_height',
 	 	 	 	 	 				value :'40'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.cr.base_backgroundcolor',
-	 	 	 	 	 				value :'#3C5891'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.an.base_textalign',
-	 	 	 	 	 				value :'center'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
-	 	 	 	 	 				value :'Hello Hello'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.ul.facebook_page',
-	 	 	 	 	 				value :'http://www.google.com'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '12' :{
-	 	 	 	 	 				key :'rb.t.vsg.text_right',
-	 	 	 	 	 				value :'Hello Hello'
-	 	 	 	 	 	  }
-	 	 	 	 	 },
-	 	  'topbar.generic.normal':{
-
- 	 	 	 	 	 	 '1' : {
+ 	 	 	 	 	 	 '5' : {
 	 	 	 	 	 				key :'rb.t.cr.text_color ',
-	 	 	 	 	 				value :'#333'
+	 	 	 	 	 				value :'#ffffff'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '2' : {
+ 	 	 	 	 	 	 '6' : {
 	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
-	 	 	 	 	 				value :'15'
+	 	 	 	 	 				value :'14'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '3' : {
+ 	 	 	 	 	 	 '7' : {
 	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
-	 	 	 	 	 				value :'bold'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.f.nr.base_zindex',
-	 	 	 	 	 				value :'Zindex'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.base_width',
-	 	 	 	 	 				value :'100'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.nr.base_height',
-	 	 	 	 	 				value :'40'
-	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.cr.base_backgroundcolor',
-	 	 	 	 	 				value :'#DCDCDC'
+	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
+	 	 	 	 	 				value :'normal'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.an.base_textalign',
-	 	 	 	 	 				value :'center'
+	 	 	 	 	 				key :'rb.t.cr.button_background',
+	 	 	 	 	 				value :'#0e0c0b'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
-	 	 	 	 	 				value :'Hello'
+	 	 	 	 	 				key :'rb.t.cr.button_color',
+	 	 	 	 	 				value :'#BFBFBF'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' : {
 	 	 	 	 	 				key :'rb.t.nr.button_fontSize',
 	 	 	 	 	 				value :'14'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '12' : {
-	 	 	 	 	 				key :'rb.t.cr.button_backgroundcolor',
-	 	 	 	 	 				value :'#548AC7'
+	 	 	 	 	 				key :'rb.t.cr.button_background_on_focus',
+	 	 	 	 	 				value :'#333'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '13' : {
-	 	 	 	 	 				key :'rb.t.cr.button_olor',
-	 	 	 	 	 				value :'white'
+	 	 	 	 	 				key :'rb.t.cr.button_color_on_focus',
+	 	 	 	 	 				value :'#FFFFFF'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '14' : {
+	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				value :'Please add the promotional left text here'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '15' : {
 	 	 	 	 	 				key :'rb.t.ul.button_link',
 	 	 	 	 	 				value :'http://www.google.com'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '15' : {
+ 	 	 	 	 	 	 '16' : {
 	 	 	 	 	 				key :'rb.t.sg.button_label',
-	 	 	 	 	 				value :'Click'
+	 	 	 	 	 				value :'Promo Link'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '16' :{
+ 	 	 	 	 	 	 '17' :{
 	 	 	 	 	 				key :'rb.t.vsg.text_right',
-	 	 	 	 	 				value :'Hello'
+	 	 	 	 	 				value :'Please add the promotional right text here'
+	 	 	 	 	 	  }
+	 	 	 	 	 },
+	 	  'topbar.generic.fblike':{
+
+ 	 	 	 	 	 	 '1' : {
+	 	 	 	 	 				key :'rb.t.nr.base_zindex',
+	 	 	 	 	 				value :'10000'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '2' : {
+	 	 	 	 	 				key :'rb.t.nr.font_size',
+	 	 	 	 	 				value :'14'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '3' : {
+	 	 	 	 	 				key :'rb.t.ft.font',
+	 	 	 	 	 				value :'Arial'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '4' : {
+	 	 	 	 	 				key :'rb.t.cr.border_color',
+	 	 	 	 	 				value :'#304A80'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '5' : {
+	 	 	 	 	 				key :'rb.t.cr.background_color',
+	 	 	 	 	 				value :'#6087C6'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '6' : {
+	 	 	 	 	 				key :'rb.t.nr.show_width',
+	 	 	 	 	 				value :'900'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '7' : {
+	 	 	 	 	 				key :'rb.t.nr.bar_height',
+	 	 	 	 	 				value :'40'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '8' : {
+	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				value :'Woo Facebook users coming to your page by writing something to make them like you.'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '9' :{
+	 	 	 	 	 				key :'rb.t.ul.facebook_page',
+	 	 	 	 	 				value :'http://www.google.com'
+	 	 	 	 	 	  }
+	 	 	 	 	 },
+	 	  'bottombar.generic.twitterfollow':{
+
+ 	 	 	 	 	 	 '1' : {
+	 	 	 	 	 				key :'rb.t.nr.base_zindex',
+	 	 	 	 	 				value :'10000'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '2' : {
+	 	 	 	 	 				key :'rb.t.cr.base_background_color',
+	 	 	 	 	 				value :'#377CA8'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '3' : {
+	 	 	 	 	 				key :'rb.t.nr.show_width',
+	 	 	 	 	 				value :'900'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '4' : {
+	 	 	 	 	 				key :'rb.t.nr.base_height',
+	 	 	 	 	 				value :'40'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '5' : {
+	 	 	 	 	 				key :'rb.t.cr.text_color ',
+	 	 	 	 	 				value :'#ffffff'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '6' : {
+	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
+	 	 	 	 	 				value :'14'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '7' : {
+	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
+	 	 	 	 	 				value :'Arial'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '8' : {
+	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
+	 	 	 	 	 				value :'normal'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '9' : {
+	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				value :'Increase your market reach by connecting to users'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '10' : {
+	 	 	 	 	 				key :'rb.t.sg.twitter_account_link',
+	 	 	 	 	 				value :'@act_witty'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '11' : {
+	 	 	 	 	 				key :'rb.t.sg.twitter_label',
+	 	 	 	 	 				value :'@act_witty'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '12' :{
+	 	 	 	 	 				key :'rb.t.vsg.text_right',
+	 	 	 	 	 				value :'Gathering reach on twitter to increase business.'
+	 	 	 	 	 	  }
+	 	 	 	 	 },
+	 	  'topbar.generic.twittershare':{
+
+ 	 	 	 	 	 	 '1' : {
+	 	 	 	 	 				key :'rb.t.nr.base_zindex',
+	 	 	 	 	 				value :'10000'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '2' : {
+	 	 	 	 	 				key :'rb.t.cr.base_background_color',
+	 	 	 	 	 				value :'#377CA8'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '3' : {
+	 	 	 	 	 				key :'rb.t.nr.show_width',
+	 	 	 	 	 				value :'900'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '4' : {
+	 	 	 	 	 				key :'rb.t.nr.base_height',
+	 	 	 	 	 				value :'40'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '5' : {
+	 	 	 	 	 				key :'rb.t.cr.text_color ',
+	 	 	 	 	 				value :'#ffffff'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '6' : {
+	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
+	 	 	 	 	 				value :'14'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '7' : {
+	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
+	 	 	 	 	 				value :'Arial'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '8' : {
+	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
+	 	 	 	 	 				value :'normal'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '9' : {
+	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				value :'Ask here to twitter user to share your blog'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '10' : {
+	 	 	 	 	 				key :'rb.t.ul.button_link',
+	 	 	 	 	 				value :'http://www.google.com'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '11' : {
+	 	 	 	 	 				key :'rb.t.sg.twitter_share_text',
+	 	 	 	 	 				value :'make #twitter user to share about your blog at a sample url like http://www.rulebot.com'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '12' :{
+	 	 	 	 	 				key :'rb.t.vsg.text_right',
+	 	 	 	 	 				value :'Influence your visitors.'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'chat.generic.normal':{
@@ -186,231 +280,254 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 				value :'\'6679-845-10-6199\''
 	 	 	 	 	 	  }
 	 	 	 	 	 },
-	 	  'topbar.generic.twitterfollow':{
+	 	  'feedback.uservoice.normal':{
+
+	 	 	 	 	 },
+	 	  'modal.generic.normal':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.cr.text_color ',
-	 	 	 	 	 				value :'white'
+	 	 	 	 	 				key :'rb.f.nr.background_zindex',
+	 	 	 	 	 				value :'10000'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
-	 	 	 	 	 				value :'17'
+	 	 	 	 	 				key :'rb.f.nr.dialog_zindex',
+	 	 	 	 	 				value :'10001'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.cr.text_shadow',
-	 	 	 	 	 				value :'black'
+	 	 	 	 	 				key :'rb.t.cr.background_color',
+	 	 	 	 	 				value :'white'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
-	 	 	 	 	 				value :'Arial'
+	 	 	 	 	 				key :'rb.t.sg.modal_cover_image',
+	 	 	 	 	 				value :'https://s3.amazonaws.com/actwitty_ganga/image/modal_demo.jpg'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
-	 	 	 	 	 				value :'bold'
+	 	 	 	 	 				key :'rb.t.cr.heading_background_color',
+	 	 	 	 	 				value :'#D44413'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.f.nr.base_zindex',
-	 	 	 	 	 				value :'Zindex'
+	 	 	 	 	 				key :'rb.t.cr.heading_color',
+	 	 	 	 	 				value :'#FFFFFF'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.nr.base_width',
-	 	 	 	 	 				value :'100'
+	 	 	 	 	 				key :'rb.t.nr.heading_font_size',
+	 	 	 	 	 				value :'20'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.nr.base_height',
-	 	 	 	 	 				value :'50'
+	 	 	 	 	 				key :'rb.t.ft.heading_fontfamily',
+	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.cr.base_backgroundcolor',
-	 	 	 	 	 				value :'#0B8AB8'
+	 	 	 	 	 				key :'rb.t.cr.heading_text_shadow',
+	 	 	 	 	 				value :'#97310E'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.an.base_textalign',
-	 	 	 	 	 				value :'center'
+	 	 	 	 	 				key :'rb.t.nr.text_font_size',
+	 	 	 	 	 				value :'20'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.vsg.textleft',
-	 	 	 	 	 				value :'Hello Hello'
+	 	 	 	 	 				key :'rb.t.nr.line-height',
+	 	 	 	 	 				value :'24'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '12' : {
-	 	 	 	 	 				key :'rb.t.sg.twitter_account_link',
-	 	 	 	 	 				value :'@actwitty'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '13' : {
-	 	 	 	 	 				key :'rb.t.sg.twitter_account_label',
-	 	 	 	 	 				value :'@actwitty'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '14' :{
-	 	 	 	 	 				key :'rb.t.vsg.text_right',
-	 	 	 	 	 				value :'Hello Hello'
-	 	 	 	 	 	  }
-	 	 	 	 	 },
-	 	  'bottombar.generic.twitterfollow':{
-
- 	 	 	 	 	 	 '1' : {
 	 	 	 	 	 				key :'rb.t.cr.text_color',
-	 	 	 	 	 				value :'white'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
-	 	 	 	 	 				value :'17'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.cr.text_shadow',
-	 	 	 	 	 				value :'black'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
-	 	 	 	 	 				value :'Arial'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
-	 	 	 	 	 				value :'bold'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.f.nr.base_zindex',
-	 	 	 	 	 				value :'Zindex'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.nr.base_width',
-	 	 	 	 	 				value :'100'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.nr.base_height',
-	 	 	 	 	 				value :'50'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.cr.bae_backgroundcolor',
-	 	 	 	 	 				value :'#0B8AB8'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.an.base_textalign',
-	 	 	 	 	 				value :'center'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
-	 	 	 	 	 				value :'Hello Hello'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '12' : {
-	 	 	 	 	 				key :'rb.t.sg.twitter_account_link',
-	 	 	 	 	 				value :'@actwitty'
+	 	 	 	 	 				value :'#000000'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '13' : {
-	 	 	 	 	 				key :'rb.t.sg.twitter_account_Label',
-	 	 	 	 	 				value :'@actwitty'
+	 	 	 	 	 				key :'rb.t.cr.button_border',
+	 	 	 	 	 				value :'#f5881f'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '14' :{
-	 	 	 	 	 				key :'rb.t.vsg.text_right',
-	 	 	 	 	 				value :'Hello Hello'
+ 	 	 	 	 	 	 '14' : {
+	 	 	 	 	 				key :'rb.t.cr.button_background',
+	 	 	 	 	 				value :'#f15c24'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '15' : {
+	 	 	 	 	 				key :'rb.t.cr.button_color',
+	 	 	 	 	 				value :'#fffffd'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '16' : {
+	 	 	 	 	 				key :'rb.t.nr.button_font_size',
+	 	 	 	 	 				value :'25'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '17' : {
+	 	 	 	 	 				key :'rb.t.vsg.heading_text',
+	 	 	 	 	 				value :'An announcement to catch attention'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '18' : {
+	 	 	 	 	 				key :'rb.t.vsg.offer_text',
+	 	 	 	 	 				value :'This is a way to connect to your customers to woo them to engage with your product.                We can help you to automate the offerings being presented by popping out such modals                when rules get hit. You can change this text.'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '19' : {
+	 	 	 	 	 				key :'rb.t.ul.modal_button_link',
+	 	 	 	 	 				value :'http://www.rulebot.com'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '20' :{
+	 	 	 	 	 				key :'rb.t.sg.modal_button_label',
+	 	 	 	 	 				value :'Order Now'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
-	 	  'topbar.generic.fblike':{
+	 	  'topbar.generic.normal':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.cr.text_color ',
-	 	 	 	 	 				value :'#F2F0F0'
+	 	 	 	 	 				key :'rb.t.nr.base_zindex',
+	 	 	 	 	 				value :'10000'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
-	 	 	 	 	 				value :'16'
+	 	 	 	 	 				key :'rb.t.cr.base_backgroundcolor',
+	 	 	 	 	 				value :'#E24E35'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
-	 	 	 	 	 				value :'Arial'
+	 	 	 	 	 				key :'rb.t.nr.show_width',
+	 	 	 	 	 				value :'900'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
-	 	 	 	 	 				value :'bold'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.f.nr.baseZ_zindex',
-	 	 	 	 	 				value :'Zindex'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.base_width',
-	 	 	 	 	 				value :'100'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '7' : {
 	 	 	 	 	 				key :'rb.t.nr.base_height',
 	 	 	 	 	 				value :'40'
 	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '5' : {
+	 	 	 	 	 				key :'rb.t.cr.text_color ',
+	 	 	 	 	 				value :'#ffffff'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '6' : {
+	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
+	 	 	 	 	 				value :'14'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '7' : {
+	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
+	 	 	 	 	 				value :'Arial'
+	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.cr.base_backgroundcolor',
-	 	 	 	 	 				value :'#3C5891'
+	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
+	 	 	 	 	 				value :'normal'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.an.basetextalign',
-	 	 	 	 	 				value :'center'
+	 	 	 	 	 				key :'rb.t.cr.button_background',
+	 	 	 	 	 				value :'#E24E35'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
-	 	 	 	 	 				value :'Hello Hello'
+	 	 	 	 	 				key :'rb.t.cr.button_color',
+	 	 	 	 	 				value :'#FFFFFF'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.ul.facebook_page',
+	 	 	 	 	 				key :'rb.t.nr.button_fontSize',
+	 	 	 	 	 				value :'14'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '12' : {
+	 	 	 	 	 				key :'rb.t.cr.button_background_on_focus',
+	 	 	 	 	 				value :'#CC412A'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '13' : {
+	 	 	 	 	 				key :'rb.t.cr.button_color_on_focus',
+	 	 	 	 	 				value :'#FFFFFF'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '14' : {
+	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				value :'Please add the promotional left text here'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '15' : {
+	 	 	 	 	 				key :'rb.t.ul.button_link',
 	 	 	 	 	 				value :'http://www.google.com'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '12' :{
+ 	 	 	 	 	 	 '16' : {
+	 	 	 	 	 				key :'rb.t.sg.button_label',
+	 	 	 	 	 				value :'Promo Link'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '17' :{
 	 	 	 	 	 				key :'rb.t.vsg.text_right',
-	 	 	 	 	 				value :'Hello Hello'
+	 	 	 	 	 				value :'Please add the promotional right text here'
+	 	 	 	 	 	  }
+	 	 	 	 	 },
+	 	  'bottombar.generic.fblike':{
+
+ 	 	 	 	 	 	 '1' : {
+	 	 	 	 	 				key :'rb.t.nr.base_zindex',
+	 	 	 	 	 				value :'10000'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '2' : {
+	 	 	 	 	 				key :'rb.t.nr.font_size',
+	 	 	 	 	 				value :'14'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '3' : {
+	 	 	 	 	 				key :'rb.t.ft.font',
+	 	 	 	 	 				value :'Arial'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '4' : {
+	 	 	 	 	 				key :'rb.t.cr.border_color',
+	 	 	 	 	 				value :'#304A80'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '5' : {
+	 	 	 	 	 				key :'rb.t.cr.background_color',
+	 	 	 	 	 				value :'#6087C6'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '6' : {
+	 	 	 	 	 				key :'rb.t.nr.show_width',
+	 	 	 	 	 				value :'900'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '7' : {
+	 	 	 	 	 				key :'rb.t.nr.bar_height',
+	 	 	 	 	 				value :'40'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '8' : {
+	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				value :'Woo Facebook users coming to your page by writing something to make them like you.'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '9' :{
+	 	 	 	 	 				key :'rb.t.ul.facebook_page',
+	 	 	 	 	 				value :'http://www.google.com'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'uservoice.generic.normal':{
 
 	 	 	 	 	 },
-	 	  'bottombar.generic.twittershare':{
+	 	  'topbar.generic.twitterfollow':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.cr.text_color ',
-	 	 	 	 	 				value :'white'
+	 	 	 	 	 				key :'rb.t.nr.base_zindex',
+	 	 	 	 	 				value :'10000'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
-	 	 	 	 	 				value :'17'
+	 	 	 	 	 				key :'rb.t.cr.base_background_color',
+	 	 	 	 	 				value :'#377CA8'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.cr.text_shadow',
-	 	 	 	 	 				value :'black'
+	 	 	 	 	 				key :'rb.t.nr.show_width',
+	 	 	 	 	 				value :'900'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
+	 	 	 	 	 				key :'rb.t.nr.base_height',
+	 	 	 	 	 				value :'40'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '5' : {
+	 	 	 	 	 				key :'rb.t.cr.text_color ',
+	 	 	 	 	 				value :'#ffffff'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '6' : {
+	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
+	 	 	 	 	 				value :'14'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '7' : {
 	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
-	 	 	 	 	 				value :'bold'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.f.nr.base_zindex',
-	 	 	 	 	 				value :'Zindex'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.nr.base_width',
-	 	 	 	 	 				value :'100'
-	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.nr.base_height',
-	 	 	 	 	 				value :'50'
+	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
+	 	 	 	 	 				value :'normal'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.cr.base_backgroundcolor',
-	 	 	 	 	 				value :'#0B8AB8'
+	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				value :'Increase your market reach by connecting to users'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.an.base_textalign',
-	 	 	 	 	 				value :'center'
+	 	 	 	 	 				key :'rb.t.sg.twitter_account_link',
+	 	 	 	 	 				value :'@act_witty'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.vsg.left_text',
-	 	 	 	 	 				value :'Hello Hello'
+	 	 	 	 	 				key :'rb.t.sg.twitter_label',
+	 	 	 	 	 				value :'@act_witty'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '12' : {
-	 	 	 	 	 				key :'rb.t.sg.twitter_share_text',
-	 	 	 	 	 				value :'Twteet please'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '13' :{
-	 	 	 	 	 				key :'rb.t.vsg.right_text',
-	 	 	 	 	 				value :'Hello Hello'
+ 	 	 	 	 	 	 '12' :{
+	 	 	 	 	 				key :'rb.t.vsg.text_right',
+	 	 	 	 	 				value :'Gathering reach on twitter to increase business.'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'support.olark.normal':{
@@ -420,200 +537,51 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 				value :'\'6679-845-10-6199\''
 	 	 	 	 	 	  }
 	 	 	 	 	 },
-	 	  'modal.generic.normal':{
+	 	  'bottombar.generic.twittershare':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.f.nr.transparentblock_zindex',
-	 	 	 	 	 				value :'Zindex'
+	 	 	 	 	 				key :'rb.t.nr.base_zindex',
+	 	 	 	 	 				value :'10000'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.f.nr.base_zindex',
-	 	 	 	 	 				value :'Zindex'
+	 	 	 	 	 				key :'rb.t.cr.base_background_color',
+	 	 	 	 	 				value :'#377CA8'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.cr.base_backgroundcolor',
-	 	 	 	 	 				value :'white'
+	 	 	 	 	 				key :'rb.t.nr.show_width',
+	 	 	 	 	 				value :'900'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.cr.heading_backgroundcolor',
-	 	 	 	 	 				value :'#e7e7e7'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.modal_headingcolor',
-	 	 	 	 	 				value :'#525252'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.modal_heading_fontsize',
-	 	 	 	 	 				value :'20'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.ft.heading_fontfamily',
-	 	 	 	 	 				value :'Arial'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.cr.modal_heading_textshadow',
-	 	 	 	 	 				value :'#6e6e6e'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.vsg.modal_heading_text',
-	 	 	 	 	 				value :'This is the Heading '
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.cr.modal_text_color',
-	 	 	 	 	 				value :'#525252'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.nr.modal_text_fontsize',
-	 	 	 	 	 				value :'12'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '12' : {
-	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
-	 	 	 	 	 				value :'Arial'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '13' : {
-	 	 	 	 	 				key :'rb.t.vsg.modal_text',
-	 	 	 	 	 				value :'Hello Hello Hello Hello Hello hello heello '
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '14' : {
-	 	 	 	 	 				key :'rb.t.sg.modal_image_path',
-	 	 	 	 	 				value :'../../../images/rails.png'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '15' : {
-	 	 	 	 	 				key :'rb.t.cr.button_backgroundcolor',
-	 	 	 	 	 				value :'#3B5998'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '16' : {
-	 	 	 	 	 				key :'rb.t.ul.modal_button_link',
-	 	 	 	 	 				value :'http://www.google.com'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '17' :{
-	 	 	 	 	 				key :'rb.t.sg.modal_button_label',
-	 	 	 	 	 				value :'Click'
-	 	 	 	 	 	  }
-	 	 	 	 	 },
-	 	  'feedback.uservoice.normal':{
-
-	 	 	 	 	 },
-	 	  'bottombar.generic.normal':{
-
- 	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.cr.text_color',
-	 	 	 	 	 				value :'#333'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
-	 	 	 	 	 				value :'15'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
-	 	 	 	 	 				value :'Arial'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
-	 	 	 	 	 				value :'bold'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.f.nr.base_zindex',
-	 	 	 	 	 				value :'Zindex'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.base_width',
-	 	 	 	 	 				value :'100'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '7' : {
 	 	 	 	 	 				key :'rb.t.nr.base_height',
 	 	 	 	 	 				value :'40'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.cr.base_backgroundcolor',
-	 	 	 	 	 				value :'#DCDCDC'
+ 	 	 	 	 	 	 '5' : {
+	 	 	 	 	 				key :'rb.t.cr.text_color ',
+	 	 	 	 	 				value :'#ffffff'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.an.base_textalign',
-	 	 	 	 	 				value :'center'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
-	 	 	 	 	 				value :'Hello Hello'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.nr.button_fontsize',
+ 	 	 	 	 	 	 '6' : {
+	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
 	 	 	 	 	 				value :'14'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '12' : {
-	 	 	 	 	 				key :'rb.t.cr.button_backgroundcolor',
-	 	 	 	 	 				value :'#548AC7'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '13' : {
-	 	 	 	 	 				key :'rb.t.cr.button_color',
-	 	 	 	 	 				value :'white'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '14' : {
-	 	 	 	 	 				key :'rb.t.ul.button_link',
-	 	 	 	 	 				value :'http://www.google.com'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '15' : {
-	 	 	 	 	 				key :'rb.t.sg.button_lable',
-	 	 	 	 	 				value :'Click'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '16' :{
-	 	 	 	 	 				key :'rb.t.vsg.text_right',
-	 	 	 	 	 				value :'Hello Hello'
-	 	 	 	 	 	  }
-	 	 	 	 	 },
-	 	  'topbar.generic.twittershare':{
-
- 	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.cr.text_color ',
-	 	 	 	 	 				value :'white'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
-	 	 	 	 	 				value :'17'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.cr.text_shadow',
-	 	 	 	 	 				value :'black'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '4' : {
+ 	 	 	 	 	 	 '7' : {
 	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
-	 	 	 	 	 				value :'bold'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.f.nr.base_zindex',
-	 	 	 	 	 				value :'Zindex'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.nr.base_width',
-	 	 	 	 	 				value :'100'
-	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.nr.base_height',
-	 	 	 	 	 				value :'50'
+	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
+	 	 	 	 	 				value :'normal'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.cr.base_backgroundcolor',
-	 	 	 	 	 				value :'#0B8AB8'
+	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				value :'Ask here to twitter user to share your blog'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.an.base_textalign',
-	 	 	 	 	 				value :'center'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.vsg.left_text',
-	 	 	 	 	 				value :'Hello Hello'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '12' : {
 	 	 	 	 	 				key :'rb.t.sg.twitter_share_text',
-	 	 	 	 	 				value :'Twteet please'
+	 	 	 	 	 				value :'make #twitter user to share about your blog at a sample url like http://www.rulebot.com'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '13' :{
-	 	 	 	 	 				key :'rb.t.vsg.right_text',
-	 	 	 	 	 				value :'Hello Hello'
+ 	 	 	 	 	 	 '11' :{
+	 	 	 	 	 				key :'rb.t.vsg.text_right',
+	 	 	 	 	 				value :'Influence your visitors.'
 	 	 	 	 	 	  }
 	 	 	 	 	 }
  	 	 	 	 }; 

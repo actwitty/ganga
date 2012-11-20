@@ -31,7 +31,11 @@ Handlebars.registerHelper "isAlign", (type, api, key, options)->
 
 # ----------------------------------------------------------------
 Handlebars.registerHelper "isString", (type, api, key, options) ->
-  App.testTemplateDataType( this, type, api, key, options, 'string')      
+  App.testTemplateDataType( this, type, api, key, options, 'string')    
+
+# ----------------------------------------------------------------
+Handlebars.registerHelper "isVString", (type, api, key, options) ->
+  App.testTemplateDataType( this, type, api, key, options, 'vstring')     
 
 # ----------------------------------------------------------------
 Handlebars.registerHelper "isUrl", (type, api, key, options) ->
