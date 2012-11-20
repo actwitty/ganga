@@ -121,8 +121,10 @@ describe AppsController do
       hash["description"]["email"].should eq("bon.doe@example.com")
       hash["description"]["customer"]["address"]["city"].should eq("Bangalore")
       hash["description"]["domain"].should eq("http://www.actwitty.com")
-      a = AccessInfo(app_id: hash["id"]).first
-      a.origin.should  eq("http://www.actwitty.com")
+      
+      a = AccessInfo.where(app_id: hash["id"]).first
+      puts a.inspect
+      a.origin.should eq("http://www.actwitty.com")
     end
   end
 
