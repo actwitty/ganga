@@ -87,16 +87,16 @@ trigger_fish.rbTServerResponse = {
 
     // FIXME : check for which property to set
     try {
-      if (respData && respData.description) {
-        trigger_fish.rbTActor.setProperties(respData.description);
+      if (respData && respData.description.profile) {
+        trigger_fish.rbTActor.setProperties(respData.description.profile);
       } else {
         throw new Error("there is no data for setting actor property");
       }
     } catch(e) {
       trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                          "message"   : "setting user property failed",
-                          "data"      : respData
-                        });
+                                       "message"   : "setting user property failed",
+                                       "data"      : respData
+                                      });
     }
   }, 
 

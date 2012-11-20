@@ -1,7 +1,7 @@
 
 
 
-/***********************[[2012-11-19 23:56:26 +0530]]*********************************/ 
+/***********************[[2012-11-20 11:33:10 +0530]]*********************************/ 
 
 
 
@@ -2146,7 +2146,7 @@ trigger_fish.rbTRules = {
     try {
       if (ruleJson.scope === "a") {
         var actorProp = trigger_fish.rbTActor.getProperties();
-        value = eval("actorProp.profile."+p+".slice(-1)[0]");
+        value = eval("actorProp."+p+".slice(-1)[0]");
       } else if (ruleJson.scope === "s") {
         var systemVars = trigger_fish.rbTSystemVar.getProperty();
         value = eval("systemVars."+p);
@@ -2573,16 +2573,16 @@ trigger_fish.rbTServerResponse = {
 
     // FIXME : check for which property to set
     try {
-      if (respData && respData.description) {
-        trigger_fish.rbTActor.setProperties(respData.description);
+      if (respData && respData.description.profile) {
+        trigger_fish.rbTActor.setProperties(respData.description.profile);
       } else {
         throw new Error("there is no data for setting actor property");
       }
     } catch(e) {
       trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                          "message"   : "setting user property failed",
-                          "data"      : respData
-                        });
+                                       "message"   : "setting user property failed",
+                                       "data"      : respData
+                                      });
     }
   }, 
 
