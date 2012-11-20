@@ -14,21 +14,7 @@
  * documents the function and classes that are added to jQuery by this plug-in.
  * @memberOf jQuery
  */
-var TEST_RBT_RULE_JSON = {
-                            "customer":{
-                                        "name" :["samarth"],
-                                        "email":["gmail.com"],
-                                        "val1":[123],
-                                        "val2":[321],
-                                        "swh":["actwitty"],
-                                        "ewh":["actwitty"],
-                                        "cns":["actwitty"],
-                                        "drg":["3/3/2011"],
-                                        "dag":["11/7/2012"],
-                                        "rgx":["deosamarth"],
-                                        "set":["abc"],
-                                       }
-                         };
+
 
 trigger_fish.rbTRules = {
 
@@ -188,8 +174,6 @@ trigger_fish.rbTRules = {
   {
     try {
       // Hand over action to templating engine for processing event action.
-      //rbTTemplates.invoke(this.ruleTable[event].action, this.ruleTable[event].action_param);
-      //rbT.invokeActionScript(this.ruleTable[event].action, this.ruleTable[event].action_param);
       trigger_fish.rbT.invokeActionScript(rule.action);
     } catch(e) {
       trigger_fish.rbTAPP.reportError({"exception" : e.message,
@@ -317,15 +301,9 @@ trigger_fish.rbTRules = {
 
   /**
   * Check the validity of the rule based on permitted operations on data type
-  * @param {string} dt DataType of rule applying.
-  * @param {string} s Scope of rule applying.
-  * @param {string} t Type of rule applying.
-  * @param {string} a Rule property
-  * @param {string} b Rule value 1
-  * @param {string} [c] Rule value 2
+  * @param {object} ruleJson. Type of condition.
   * @return boolean validity
   */
-  //isValidRule : function(dt,s,t,a,b,c)
   isValidRule : function(ruleJson )
   {
     if (!ruleJson.property) 
@@ -384,6 +362,8 @@ trigger_fish.rbTRules = {
       var p = trigger_fish.rbTRules.evalProperty(ruleJson),
           a = trigger_fish.rbTRules.valueDataType(ruleJson.property, ruleJson.value1, propDT),
           b = trigger_fish.rbTRules.valueDataType(ruleJson.property, ruleJson.value2, propDT);
+
+      // FIXME :: we can coalesce this but will we lost datatype?
       switch(ruleJson.operation) {
       case "ltn":
           res = this.rule.ltn(p,a);

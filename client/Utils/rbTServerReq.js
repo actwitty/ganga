@@ -21,14 +21,14 @@ trigger_fish.rbTServerChannel = {
   
   /* All server url routes to be mapped here */
   url : {
-    "appDetails"        : "app/read",
-    "fireEvent"         : "event/create",
-    "identify"          : "actor/identify",
-    "readActor"         : "actor/read",
-    "createActor"       : "actor/create",
-    "setActor"          : "actor/set",
-    "conversion"        : "conversion/create",
-    "reportError"       : "err/create",
+    "appDetails"  : "app/read",
+    "fireEvent"   : "event/create",
+    "identify"    : "actor/identify",
+    "readActor"   : "actor/read",
+    "createActor" : "actor/create",
+    "setActor"    : "actor/set",
+    "conversion"  : "conversion/create",
+    "reportError" : "err/create",
   },
 
   // Server request queue

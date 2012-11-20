@@ -1,57 +1,30 @@
-require 'time'
+require 'garb'
+require 'pp'
+require 'date'
 
-def to_something(val)
-  return val  if val.class == Array
+class Analytic
+  extend Garb::Model
 
-  bool = if_boolean(val)
-  return bool unless bool.nil?  
+  metrics :exits, :pageviews, :visits, :unique_pageviews, :bounces, :timeOnSite, :avgTimeOnSite, :visitors
+  dimensions :page_path, :visitCount
 
-  #does not start with any digit then its string
-  return val if val =~ /^\D+/
-  
-  type = (Integer(val) rescue Float(val) rescue nil)
-  
-  if type.nil? 
-  
-    #does not have atleast 2 special character (<space> -  /  :  .  \) in between letters and digits and NOT starting with digit
-    return val if val !~ /^\d+[\s\-\/\.\:\\]{1}\w+[\s\-\/\.\:\\]{1}\w+/
-  
-    type = (DateTime.parse(val)  rescue nil)
-    type.nil? ? val : type
+  def sign_in(username, password)
+    Garb::Session.login(username, password)
   end
-  type
-rescue => e
-  puts("**** ERROR **** => #{e.message}")
-  val
-end
 
-def if_boolean(str)
-  return true if str =~ /^true$/i
-  return false if str =~ /^false$/i
-  nil
-end
-
-
-def type_map(type)
-  case type
-    when  "Fixnum", "Float"
-      return "Number"
-    when "FalseClass", "TrueClass"
-      return "Boolean"
-    when "DateTime"
-      return "Date"
-    when "Bignum"
-      return "String"
+  def get_profile(id)
+    Garb::Management::Profile.all.detect {|p| p.web_property_id == id}
   end
-  type
+
 end
 
-def get_type(val)
-  type = to_something(val)
-  return type_map(type.class.to_s )
-end
+a = Analytic.new
+session = a.sign_in("alok@actwitty.com", 'mhwy8skq')
+#puts session.inspect
 
-["12012343434343434333343343", "343434", "123.22564566", "12:21:22", "10/10/2009", "testgjrg regjerjrp rpjrjrp", "false", "TRue","2012-11-03T06:57:17.277Z",["2423", 45, "LOK",  ], "alok@gmail.com", "http//google.com/12213", "test12213", "12213test"].each  do |str|
-  something =  get_type(str)
-  p [str, something]
-end
+profile = a.get_profile('UA-24404937-1')
+#puts profile.inspect
+
+
+pp profile.analytic(:filters => {:visitors.gt => 0, :visitCount.matches => 4},:start_date => Date.new(2012, 4, 1), :end_date => Date.new(2012, 8, 30) )
+

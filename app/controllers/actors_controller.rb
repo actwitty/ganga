@@ -27,7 +27,7 @@ class ActorsController < ApplicationController
   ##             "id"=>"50742b0063fe85d42a000005",
   ##             "account_id"=>"50742aff63fe85d42a000001", 
   ##             "app_id"=>"50742b0063fe85d42a000003",
-  ##             "created_at"=>"2012-10-09T13:47:44Z", "updated_at"=>"2012-10-09T13:47:44Z",
+  ##             "time"=> "2009-02-19 00:00:00 UTC",
   ##             "description"=>{"customer[address][city]"=>"Bangalore", "email"=>"john.doe@example.com"}, 
   ##          }
   def create
@@ -74,7 +74,7 @@ class ActorsController < ApplicationController
   ## }
 
 
-  # OUTPUT => {:actor_id => 1232323}
+  # OUTPUT => {:id => 1232323}
   def identify
     Rails.logger.info("Enter Actor Identify")
 
@@ -83,7 +83,7 @@ class ActorsController < ApplicationController
 
     raise ret[:error] if !ret[:error].blank?
 
-    respond_with({actor_id: ret[:return]}, status: 200, location: "nil" )
+    respond_with({id: ret[:return]}, status: 200, location: "nil" )
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
     respond_with({ errors: e.message} , status: 422, location: "nil")
@@ -182,7 +182,7 @@ class ActorsController < ApplicationController
   ##            account: {id: "232342343"}
   ##            app: {id: "234324"}
   ##
-  ##            actor: {id: "3433434", description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}} }
+  ##            actor: {id: "3433434", description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}},time: 2009-02-19 00:00:00 UTC }
   ##            identifiers: [{"a@b.com" => "email"}, {"9999999" => "mobile"}, {"34433444" => "facebook_uid"}],
   ##
   ##            events: [
