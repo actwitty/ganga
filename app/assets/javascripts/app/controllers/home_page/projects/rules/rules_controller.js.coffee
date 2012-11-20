@@ -215,7 +215,7 @@ App.RulesController = Em.ArrayController.extend
             app_id : proj_id
             rule : ruleNew.serialize()
     
-    App.getRequest  url, json, success, error
+    App.postRequest  url, json, success, error
     @updateSystemVariables ruleNew
   #########################################################
   updateSystemVariables: (rule)->    
@@ -252,7 +252,7 @@ App.RulesController = Em.ArrayController.extend
       url = @get 'url.setSystem'
       success= (data) ->
       error= (data) ->   
-      App.getRequest url, json, success, error
+      App.postRequest url, json, success, error
 
   #########################################################
   # Update a Rule  
@@ -269,7 +269,7 @@ App.RulesController = Em.ArrayController.extend
             id : ruleNew.get('id')
     
 
-    App.getRequest  url, json, success, error
+    App.postRequest  url, json, success, error
     @updateSystemVariables ruleNew
 
   #########################################################
@@ -290,7 +290,7 @@ App.RulesController = Em.ArrayController.extend
     # Error callback -------------------------
     error= ()->
       App.get('router.applicationController').setInlineAlert('error', 'Deletion Failed !', 'Failed to delete the rule' ) 
-    App.getRequest url, {app_id : del_app_id, rule_id: del_rule_id}, success, error
+    App.postRequest url, {app_id : del_app_id, id: del_rule_id}, success, error
 
       
 

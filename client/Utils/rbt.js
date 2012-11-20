@@ -45,25 +45,9 @@ trigger_fish.rbTAPP = {
       "use strict";
       trigger_fish.enableCORS(jQuery);
       trigger_fish.initJStorage();
-      // 1). includin jquery if need be
-      //rbTUtils.includeJQIfNeeded();
-
-      // 2). Create session Deferred till further discussion
-      //rbTAPP.createSession();
-
-      // 3). Get rulebot app details
-      //rbTRules.init();
       this.getAppData();
-
+      //this.createDummyActor();
       trigger_fish.rbTActor.retFromCookie();
-
-      // 4). Initialize system variables  
-      //rbTSystemVar.init();
-
-      // 5). FIXME : Check status of last event, if pending, execute it.
-      //rbTRules.executeLastPendingEvent();
-
-      //rbTServerChannel.flushReqQueue();
 
     },
 
@@ -195,6 +179,8 @@ trigger_fish.rbTAPP = {
        }
       return cnf;
     },  
+
+   
 
     /** 
     *  Get Application based configs
@@ -1835,6 +1821,38 @@ trigger_fish.rbTActor = function() {
         var b = JSON.stringify(prop).replace(/(^{)|(}$)/g, "");
         trigger_fish.rbTDebug.log({"stored" : a , "passed" : b, "message":"actor prop existence"});
         return (a.indexOf(b) >= 0) ? true : false;
+      },
+
+      /**
+      * Create a dummy actor when rbt is initialized.
+      * 
+      */
+      createDummyActor : function()
+      {
+        if (!__id || !__prop) {
+          var obj = {"url"      : trigger_fish.rbTServerChannel.url.createActor,
+                     "app_read" : true, 
+                     "cb"       : { success: trigger_fish.rbTServerResponse.setAppDetail,
+                                    error  : trigger_fish.rbTServerResponse.defaultError
+                                  }
+                  };
+          trigger_fish.rbTServerChannel.makeServerRequest(obj);
+        }
+      },
+
+      /**
+      * Request server for actor details if needed.
+      *
+      */
+      requestActorDetails : function(data)
+      {
+        var oldActorId = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID);
+        var actorProp = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorProp);
+        if (!oldActorId || (oldActorId !== data.id) || !actorProp) {
+          trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.actorID, JSON.stringify(data.id));
+          this.setID(data.id);
+          trigger_fish.rbTServerChannel.actorDetails();
+        }
       }
 
   };
@@ -1895,21 +1913,7 @@ trigger_fish.rbTDebug=(function(){var i=this,b=Array.prototype.slice,d=i.console
  * documents the function and classes that are added to jQuery by this plug-in.
  * @memberOf jQuery
  */
-var TEST_RBT_RULE_JSON = {
-                            "customer":{
-                                        "name" :["samarth"],
-                                        "email":["gmail.com"],
-                                        "val1":[123],
-                                        "val2":[321],
-                                        "swh":["actwitty"],
-                                        "ewh":["actwitty"],
-                                        "cns":["actwitty"],
-                                        "drg":["3/3/2011"],
-                                        "dag":["11/7/2012"],
-                                        "rgx":["deosamarth"],
-                                        "set":["abc"],
-                                       }
-                         };
+
 
 trigger_fish.rbTRules = {
 
@@ -2069,8 +2073,6 @@ trigger_fish.rbTRules = {
   {
     try {
       // Hand over action to templating engine for processing event action.
-      //rbTTemplates.invoke(this.ruleTable[event].action, this.ruleTable[event].action_param);
-      //rbT.invokeActionScript(this.ruleTable[event].action, this.ruleTable[event].action_param);
       trigger_fish.rbT.invokeActionScript(rule.action);
     } catch(e) {
       trigger_fish.rbTAPP.reportError({"exception" : e.message,
@@ -2198,15 +2200,9 @@ trigger_fish.rbTRules = {
 
   /**
   * Check the validity of the rule based on permitted operations on data type
-  * @param {string} dt DataType of rule applying.
-  * @param {string} s Scope of rule applying.
-  * @param {string} t Type of rule applying.
-  * @param {string} a Rule property
-  * @param {string} b Rule value 1
-  * @param {string} [c] Rule value 2
+  * @param {object} ruleJson. Type of condition.
   * @return boolean validity
   */
-  //isValidRule : function(dt,s,t,a,b,c)
   isValidRule : function(ruleJson )
   {
     if (!ruleJson.property) 
@@ -2265,6 +2261,8 @@ trigger_fish.rbTRules = {
       var p = trigger_fish.rbTRules.evalProperty(ruleJson),
           a = trigger_fish.rbTRules.valueDataType(ruleJson.property, ruleJson.value1, propDT),
           b = trigger_fish.rbTRules.valueDataType(ruleJson.property, ruleJson.value2, propDT);
+
+      // FIXME :: we can coalesce this but will we lost datatype?
       switch(ruleJson.operation) {
       case "ltn":
           res = this.rule.ltn(p,a);
@@ -2517,16 +2515,8 @@ trigger_fish.rbTServerResponse = {
     "use strict";
     trigger_fish.rbTAPP.log({"message": "Setting actor ID with server resp","data":respData});
     try {
-      if (respData && respData.actor_id) {
-        // FIXME :: Flush and reset all cookies if there is a change in actor.
-        // WAITING AS THERE ARE SOME CHANGES IN BACKEND.
-        var oldActorId = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID);
-        var actorProp = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorProp);
-        if (!oldActorId || (oldActorId !== respData.actor_id) || !actorProp) {
-          trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.actorID, JSON.stringify(respData.actor_id));
-          trigger_fish.rbTActor.setID(respData.actor_id);
-          trigger_fish.rbTServerChannel.actorDetails();
-        }
+      if (respData && respData.id) {
+        trigger_fish.rbTActor.requestActorDetails(respData);
       } else {
         throw new Error("there is no server resp data");
       }
@@ -2553,6 +2543,7 @@ trigger_fish.rbTServerResponse = {
     try {
       if (respData && respData.actor.description.profile) {
         trigger_fish.rbTActor.setProperties(respData.actor.description.profile);
+
       } else {
         throw new Error("there is no data for setting actor property");
       }
@@ -2656,14 +2647,14 @@ trigger_fish.rbTServerChannel = {
   
   /* All server url routes to be mapped here */
   url : {
-    "appDetails"        : "app/read",
-    "fireEvent"         : "event/create",
-    "identify"          : "actor/identify",
-    "readActor"         : "actor/read",
-    "createActor"       : "actor/create",
-    "setActor"          : "actor/set",
-    "conversion"        : "conversion/create",
-    "reportError"       : "err/create",
+    "appDetails"  : "app/read",
+    "fireEvent"   : "event/create",
+    "identify"    : "actor/identify",
+    "readActor"   : "actor/read",
+    "createActor" : "actor/create",
+    "setActor"    : "actor/set",
+    "conversion"  : "conversion/create",
+    "reportError" : "err/create",
   },
 
   // Server request queue
@@ -3963,13 +3954,14 @@ RBT.prototype.sendEvent = function(event, params)
   if (!event || typeof(event) != "string" || event === "" ) {
     return;
   }
-  trigger_fish.rbTServerChannel.makeRequest({"event" : event, 
-                                             "params": params,
-                                             "type"  : "POST",
-                                             "cb"    : { success: trigger_fish.rbTServerResponse.handleEvent,
-                                                         error  : trigger_fish.rbTServerResponse.defaultError
-                                                       }
-                                            });
+  var obj = {"event" : event, 
+             "params": params,
+             "type"  : "POST",
+             "cb"    : { success: trigger_fish.rbTServerResponse.handleEvent,
+                         error  : trigger_fish.rbTServerResponse.defaultError
+                       }
+            };
+  trigger_fish.rbTServerChannel.makeRequest(obj);
 };
 
 /** 
@@ -3981,14 +3973,15 @@ RBT.prototype.sendEvent = function(event, params)
 RBT.prototype.identify = function(params)
 {
   "use strict";
-  trigger_fish.rbTServerChannel.makeRequest({"url"     : trigger_fish.rbTServerChannel.url.identify, 
-                                             "params"  : params,
-                                             "identify": true,
-                                             "type"    : "POST",
-                                             "cb"      : { success: trigger_fish.rbTServerResponse.setActorID,
-                                                           error  : trigger_fish.rbTServerResponse.defaultError
-                                                         }
-                                            });
+  var obj = {"url"     : trigger_fish.rbTServerChannel.url.identify, 
+             "params"  : params,
+             "identify": true,
+             "type"    : "POST",
+             "cb"      : { success: trigger_fish.rbTServerResponse.setActorID,
+                           error  : trigger_fish.rbTServerResponse.defaultError
+                         }
+            };
+  trigger_fish.rbTServerChannel.makeRequest(obj);
 };
 
 
@@ -4004,14 +3997,16 @@ RBT.prototype.setActor = function(params)
   "use strict";
   if (trigger_fish.rbTActor.propExist(params))
     return;
-  trigger_fish.rbTServerChannel.makeRequest({"url"      : trigger_fish.rbTServerChannel.url.setActor, 
-                                             "params"   : params,
-                                             "set_actor": true,
-                                             "type"    : "POST",
-                                             "cb"       : { success: trigger_fish.rbTServerResponse.setActorProperty,
-                                                            error  : trigger_fish.rbTServerResponse.defaultError
-                                                          }
-                                            });
+
+  var obj = {"url"      : trigger_fish.rbTServerChannel.url.setActor, 
+             "params"   : params,
+             "set_actor": true,
+             "type"    : "POST",
+             "cb"       : { success: trigger_fish.rbTServerResponse.setActorProperty,
+                            error  : trigger_fish.rbTServerResponse.defaultError
+                          }
+             };
+  trigger_fish.rbTServerChannel.makeRequest(obj);
 };
 
 
@@ -4026,111 +4021,6 @@ RBT.prototype.alias = function(params)
     // FIXME : what to do?
 };
 
-
-
-/****************************[[rbJSON.js]]*************************************/ 
-
-
-/**
- * See (http://jquery.com/).
- * @name jQuery
- * @class 
- * See the jQuery Library  (http://jquery.com/) for full details.  This just
- * documents the function and classes that are added to jQuery by this plug-in.
- */
- 
-/**
- * See (http://jquery.com/)
- * @name fn
- * @class 
- * See the jQuery Library  (http://jquery.com/) for full details.  This just
- * documents the function and classes that are added to jQuery by this plug-in.
- * @memberOf jQuery
- */
-
-trigger_fish.rbJSON = {
-
-  "rb" : {},
-  "header" : "rbJSON.rb",
-  "state" : [],
-
-  getType : function (a)
-  {
-    return Object.prototype.toString.call(a).split("]")[0].split(" ")[1]
-  },
-
-
-  currentPath : function()
-  {
-    var rState = this.state;
-    var st = this.header;
-    for (var i=0 ; i < rState.length ; ++i) {
-      if (rState[i].type === "Array") {
-        st = st + "." + rState[i].key;
-      } else if (rState[i].type === "Object") {
-        if (rState[i-1] && rState[i-1].type === "Array")
-          st = st + "[" + rState[i].key + "]";
-        else
-          st = st + "." + rState[i].key;
-      }
-    }
-    return st;
-  },
-
-  createNewObj : function(type)
-  {
-    var st = this.currentPath();
-    if (!eval(st)) {
-      if (type === "Array")
-          eval(st+"=[];");
-      else 
-          eval(st+"={};");
-    }
-
-  },
-
-  addValueToObj : function(key, value, type)
-  {
-    if (type === "Array" || type === "Object")
-      var extKey = this.currentPath() + ((type === "Array") ? "["+key+"]" : "." + key);
-    else
-      var extKey = this.currentPath() + "." + key;
-
-    var type = this.getType(value);
-    var str = extKey+'={type:"'+type+'",value:"'+value+'"};';
-    eval(str);
-  },
-
-  extend : function(obj)
-  { 
-    for (var key in obj)
-    {
-      if (obj.hasOwnProperty(key)) {
-          var type = this.getType(obj[key]); 
-          if (type === "Object" || type === "Array" ) {
-            this.state.push({"type":type,"key":key});
-            this.createNewObj(type);
-            this.extend(obj[key]);
-          } else {
-            var pType = (this.state.length) ? this.state[this.state.length-1].type : "";
-            this.addValueToObj(key,obj[key], pType);
-          }
-      }
-    }
-    this.state.pop();
-    return;
-  },
-
-  typify : function(obj)
-  {
-    /*this.rb = {};
-    this.state = [];
-    this.extend(obj);
-    return this.rb;*/
-    return obj;
-  }
-
-};
 
 
 /****************************[[rbTInitApp.js]]*************************************/ 
@@ -4160,7 +4050,7 @@ trigger_fish.rbJSON = {
 *
 */
 (function StartRBTApp(appid,accid){
-  alert("Initializing RBT APP with AppID = " + appid + " Account ID = " + accid);
+  trigger_fish.rbTAPP.log("Initializing RBT APP with AppID = " + appid + " Account ID = " + accid);
   try {
     if (!appid || !accid || appid == "" || accid == "") {
       throw new Error("App-id, Account-ID are not mentioned")

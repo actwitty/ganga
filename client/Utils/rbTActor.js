@@ -99,6 +99,38 @@ trigger_fish.rbTActor = function() {
         var b = JSON.stringify(prop).replace(/(^{)|(}$)/g, "");
         trigger_fish.rbTDebug.log({"stored" : a , "passed" : b, "message":"actor prop existence"});
         return (a.indexOf(b) >= 0) ? true : false;
+      },
+
+      /**
+      * Create a dummy actor when rbt is initialized.
+      * 
+      */
+      createDummyActor : function()
+      {
+        if (!__id || !__prop) {
+          var obj = {"url"      : trigger_fish.rbTServerChannel.url.createActor,
+                     "app_read" : true, 
+                     "cb"       : { success: trigger_fish.rbTServerResponse.setAppDetail,
+                                    error  : trigger_fish.rbTServerResponse.defaultError
+                                  }
+                  };
+          trigger_fish.rbTServerChannel.makeServerRequest(obj);
+        }
+      },
+
+      /**
+      * Request server for actor details if needed.
+      *
+      */
+      requestActorDetails : function(data)
+      {
+        var oldActorId = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID);
+        var actorProp = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorProp);
+        if (!oldActorId || (oldActorId !== data.id) || !actorProp) {
+          trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.actorID, JSON.stringify(data.id));
+          this.setID(data.id);
+          trigger_fish.rbTServerChannel.actorDetails();
+        }
       }
 
   };

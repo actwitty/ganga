@@ -59,7 +59,9 @@ App.Rule = Ember.Object.extend
     console.log conditions
     if conditions isnt null
 
-      for k,condition of conditions   
+      for k,condition of conditions 
+        console.log k
+        console.log  condition          
         newCondition = App.Condition.create(condition)      
         hasManyConditions.pushObject(newCondition)        
       @set 'hasManyConditions', hasManyConditions 
@@ -116,7 +118,7 @@ App.Rule = Ember.Object.extend
     api = @get 'action.desc.api'
     key = type + '.' + api
     trigger_fish.rbT.templateName[key]
-  ).property('action')
+  ).property('action.desc.type', 'action.desc.api')
 
   
 

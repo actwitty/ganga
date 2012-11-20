@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
       before_filter Authenticate::Origin.new, params[:origin]
     end
     before_filter Authenticate::Api.new
-    before_filter Authenticate::Account.new
+    before_filter Authenticate::Acc.new
 
     after_filter  Authenticate::Api.new
   rescue => e 

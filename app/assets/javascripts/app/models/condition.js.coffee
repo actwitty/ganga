@@ -12,28 +12,33 @@ App.Condition = Ember.Object.extend
       
   opList: null
 
+  inited: false
 
-  init: ->
-    @_super()    
+  init: ->    
+    @_super()        
     operation = @get 'operation'     
-
     type = @get 'type'
-    @set 'opList', App.operationsList[type]   
-    if operation is null        
-      for op of App.operationsList[type]
-        
+    @set 'opList', App.operationsList[type]
+
+    if operation is null  
+      console.log 'operation is null'      
+      for op of App.operationsList[type]        
         if App.operationsList[type].hasOwnProperty(op)
           @set 'operation', op
           break
-    
+
+   
     scope = @get 'scope'
     property = @get 'property'
-    @set 'property', scope + '.' + property   
+    @set 'property', scope + '.' + property       
+    
 
-
+    console.log @get('value1')
+    
     if App.LimitedValueList.hasOwnProperty(property)          
       @set 'valueOptions', App.LimitedValueList[property]      
-      value1 = @get 'value1'      
+      value1 = @get('value1')    
+      console.log 'setting ' + value1      
       if value1 is null or value1.length is 0                
         for key of App.LimitedValueList[property]         
           @set 'value1', key        
@@ -41,42 +46,50 @@ App.Condition = Ember.Object.extend
     else
       @set 'valueOptions', null
 
-  observeOperationChange: (->
-    property = @trueProperty()
-    if App.LimitedValueList.hasOwnProperty(property)       
-      for key of App.LimitedValueList[property]
-        @set 'value1', key        
-        break
-      @set 'value2', '' 
-    else
-      @set 'value1', ''
-      @set 'value2', '' 
+    Ember.run.next(this, 'enableObserversAfterInit')
+    
+  enableObserversAfterInit: ->
+    @set 'inited', true
+
+  observeOperationChange: (->  
+    if @get('inited')  is true
+      property = @trueProperty()
+      if App.LimitedValueList.hasOwnProperty(property)       
+        for key of App.LimitedValueList[property]
+          @set 'value1', key        
+          break
+        @set 'value2', '' 
+      else
+        @set 'value1', ''
+        @set 'value2', '' 
 
   ).observes('operation')
 
 
   observesTypeChange: (->
-    type = @get 'type'    
-    @set 'opList', App.operationsList[type]    
-    for op of App.operationsList[type]
-      if App.operationsList[type].hasOwnProperty(op)
-        @set 'operation', op
-        break
+    if @get('inited')  is true
+      type = @get 'type'    
+      @set 'opList', App.operationsList[type]    
+      for op of App.operationsList[type]
+        if App.operationsList[type].hasOwnProperty(op)
+          @set 'operation', op
+          break
   ).observes('type')    
 
 
   observesPropertyChange: (->
-    property = @trueProperty()
-    if App.LimitedValueList.hasOwnProperty(property)       
-      @set 'valueOptions', App.LimitedValueList[property]
-      for key of App.LimitedValueList[property]
-        @set 'value1', key        
-        break
-      @set 'value2', '' 
-    else
-      @set 'valueOptions', null
-      @set 'value1', ''
-      @set 'value2', ''    
+    if @get('inited')  is true
+      property = @trueProperty()
+      if App.LimitedValueList.hasOwnProperty(property)       
+        @set 'valueOptions', App.LimitedValueList[property]
+        for key of App.LimitedValueList[property]
+          @set 'value1', key        
+          break
+        @set 'value2', '' 
+      else
+        @set 'valueOptions', null
+        @set 'value1', ''
+        @set 'value2', ''    
     
       
   ).observes('property')  

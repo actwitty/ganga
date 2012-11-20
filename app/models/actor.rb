@@ -258,7 +258,7 @@ class Actor
   ##            account: {id: "232342343"}
   ##            app: {id: "234324"}
   ##
-  ##            actor: {id: "3433434", description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}} }
+  ##            actor: {id: "3433434", description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}},time: 2009-02-19 00:00:00 UTC }
   ##            identifiers: [{"a@b.com" => "email"}, {"9999999" => "mobile"}, {"34433444" => "facebook_uid"}],
   ##
   ##            events: [

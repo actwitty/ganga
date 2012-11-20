@@ -232,11 +232,7 @@ class Rule
     
     # destroy rules for an event
     elsif !params[:event].blank?
-      app.rules.where(event: params[:event]).destroy_all
-
-    # destroy all rules of app
-    else
-      app.rules.destroy_all
+      app.rules.where(event: params[:event]).destroy_all   
     end
 
     {:return => true, :error => nil}
