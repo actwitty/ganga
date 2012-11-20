@@ -22,16 +22,41 @@ describe AppsController do
       response.status.should eq(422)
     end
 
+    it "should check presence of nested attributes before creating app" do
+      post 'create', { account_id: @account._id, description: { "phone" => 23131 }}
+
+      puts JSON.parse(response.body).inspect
+      response.status.should eq(422)
+    end
+
     it "should create app" do
       post 'create', {account_id: @account._id, description: { :email => "john.doe@example.com",
                                                                :customer => {:address => {:city => "Bangalore"}},
-                                                               :domain => "http://example.com"
-
+                                                               :domain => "http://example.com",
+                                                               :name => "alok 1"
 
                                                                }
                       }
       puts JSON.parse(response.body).inspect
       response.status.should eq(200)
+    end
+
+    it "should check apps with same name while creating app" do
+      post 'create', {account_id: @account._id, description: { :email => "john.doe@example.com",
+                                                               :customer => {:address => {:city => "Bangalore"}},
+                                                               :domain => "http://example.com",
+                                                               :name => "alok 1"
+                     }                                       }
+
+      puts JSON.parse(response.body).inspect
+      response.status.should eq(200)
+
+      post 'create', {account_id: @account._id, description: { :email => "john.doe@example.com",
+                                                               :name => "alok 1"
+                                                             }
+                     }                                        
+      puts JSON.parse(response.body).inspect
+      response.status.should eq(422)
     end
   end
 
@@ -39,7 +64,8 @@ describe AppsController do
     before(:each) do
       post 'create', {  account_id: @account._id, description: { :email => "john.doe@example.com",
                                                                  :customer => {:address => {:city => "Bangalore"}},
-                                                                 :domain => "http://example.com"
+                                                                 :domain => "http://example.com",
+                                                                 :name => "alok 1"
                                                                  }
                         }
 
@@ -63,7 +89,8 @@ describe AppsController do
     before(:each) do
       post 'create', { account_id: @account._id, description: { :email => "john.doe@example.com",
                                                                 :customer => {:address => {:city => "Bangalore"}},
-                                                                :domain => "http://example.com"
+                                                                :domain => "http://example.com",
+                                                                :name => "alok 1"
                                                                 }
                        }
       @app = JSON.parse(response.body)
@@ -98,7 +125,8 @@ describe AppsController do
     before(:each) do
       post 'create', { account_id: @account._id, description: { :email => "john.doe@example.com",
                                                                 :customer => {:address => {:city => "Bangalore"}},
-                                                                :domain => "http://example.com"
+                                                                :domain => "http://example.com",
+                                                                :name => "alok 1"
                                                                 }
                        }
       @app = JSON.parse(response.body)

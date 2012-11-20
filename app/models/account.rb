@@ -56,8 +56,8 @@ class Account
 
   ## Account Description
   field :description,   type:    Hash,      :default => {
-                                                           subscription: AppConstants.subscriptions.free.name,
-                                                           authenticate_app: true 
+                                                          subscription: AppConstants.subscriptions.free.name,
+                                                          authenticate_app: true,
                                                         }
 
   field :name,         type:  String,   default: "" 
@@ -166,7 +166,6 @@ class Account
     Rails.logger.error("**** ERROR **** #{er(e)}")
     {:return => {}, :error => e}  
   end
-
 
   # new function to set the password
   def attempt_set_password(params)
