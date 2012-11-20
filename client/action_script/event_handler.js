@@ -183,11 +183,10 @@ trigger_fish.rbT.eventHandler = {
     
 // INTEGRATION_ENABLE     
 
-/*
-         //trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
+
+         trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
         //TODO
 
-*/
 
   },  
 

@@ -9,3 +9,4 @@ en:
     invalid_argument_in_delete: "Invalid arguments in Delete App"
     invalid_argument_in_create: "Invalid arguments in Create App"
     invalid_argument_in_read:   "Invalid arguments in Read App"
+    app_name_already_exist: "App Name already exists"

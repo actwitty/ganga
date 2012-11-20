@@ -25,9 +25,6 @@ class Event
   field :properties,  type: Array,      default: []
   index({"properties.k" => -1, "properties.v" => -1})
 
-  index({updated_at: -1})
-  index({created_at: -1})
-
   # Callbacks
 
   # Functions

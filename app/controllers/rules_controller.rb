@@ -1,6 +1,7 @@
 class RulesController < ApplicationController
   protect_from_forgery
-  before_filter :authenticate_account!
+
+  authenticate_request
 
   respond_to :json
 
@@ -56,10 +57,10 @@ class RulesController < ApplicationController
 
     raise ret[:error] if !ret[:error].blank?
 
-    respond_with({rule_id: ret[:return]}, status: 200)
+    respond_with({rule_id: ret[:return]}, status: 200, location: "nil")
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    respond_with({errors: e.message}, status: 422)
+    respond_with({errors: e.message}, status: 422, location: "nil")
   end
 
 
@@ -115,10 +116,10 @@ class RulesController < ApplicationController
 
     raise ret[:error] if !ret[:error].blank?
 
-    respond_with({status: ret[:return]}, status: 200)
+    respond_with({status: ret[:return]}, status: 200, location: "nil")
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    respond_with({errors: e.message}, status: 422)
+    respond_with({errors: e.message}, status: 422, location: "nil")
   end
 
 
@@ -177,9 +178,9 @@ class RulesController < ApplicationController
 
     raise ret[:error] if !ret[:error].blank?
 
-    respond_with({status: ret[:return]}, status: 200)
+    respond_with({status: ret[:return]}, status: 200, location: "nil")
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    respond_with({errors: e.message}, status: 422)
+    respond_with({errors: e.message}, status: 422, location: "nil")
   end
 end

@@ -7,16 +7,16 @@ class AccessInfo
   # Relations
 
   # Attributes
-  field  :origin,  type: String,   default: ""
+  field  :origin,         type: String,   default: "" # cross origin domain for whitelisting
   
-  field  :scope,   type: String,   default: ""
+  field  :scope,          type: String,   default: "" # "app" or "account" .. account level key can access all apps in an account
 
-  field  :token,   type: String,   default: ""
-  field  :expires_at, type: Time,  default: AppConstants.token_expiry_days.days.from_now
-  field  :role,    type: Hash,     default: {}
+  field  :token,          type: String,   default: "" # api token
+  field  :expires_at,     type: Time,     default: AppConstants.token_expiry_days.days.from_now
+  field  :role,           type: Hash,     default: {} # will be used for oauth
 
-  field  :app_id,  type: String
-  field  :account_id,   type: String
+  field  :app_id,         type: String
+  field  :account_id,     type: String
 
   # Validation
   validates_presence_of :account_id, :scope, :token
@@ -71,6 +71,7 @@ class AccessInfo
     {:return => nil, :error => e} 
   end
 
+  # Refresh Token at the expiry.. Also updates App or Account based on Scope with token
   def refresh_token
     Rails.logger.info("Enter Refresh Token")
 
