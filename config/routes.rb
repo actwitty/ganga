@@ -45,7 +45,7 @@ Ganga::Application.routes.draw do
   # Rule Api
   post '/rule/create',        :to => "rules#create"
   post '/rule/update',        :to => "rules#update"
-  get  '/rule/read',           :to => "rules#read"
+  get  '/rule/read',          :to => "rules#read"
   post '/rule/delete',        :to => "rules#delete"
 
   # Conversion Api

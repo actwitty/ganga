@@ -161,7 +161,7 @@ class RulesController < ApplicationController
   ## {
   ##  :app_id => "1234444',   [MANDATORY]
   ##
-  ##  :id => "234234234" [OPTIONAL] #read one rule
+  ##  :id => "234234234" [OPTIONAL] #delete one rule
   ##                  OR
   ##  :event => "sign_up"     [OPTIONAL] #read all rules for this event
   ##                 
