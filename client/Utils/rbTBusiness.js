@@ -47,13 +47,14 @@ RBT.prototype.sendEvent = function(event, params)
   if (!event || typeof(event) != "string" || event === "" ) {
     return;
   }
-  trigger_fish.rbTServerChannel.makeRequest({"event" : event, 
-                                             "params": params,
-                                             "type"  : "POST",
-                                             "cb"    : { success: trigger_fish.rbTServerResponse.handleEvent,
-                                                         error  : trigger_fish.rbTServerResponse.defaultError
-                                                       }
-                                            });
+  var obj = {"event" : event, 
+             "params": params,
+             "type"  : "POST",
+             "cb"    : { success: trigger_fish.rbTServerResponse.handleEvent,
+                         error  : trigger_fish.rbTServerResponse.defaultError
+                       }
+            };
+  trigger_fish.rbTServerChannel.makeRequest(obj);
 };
 
 /** 
@@ -65,14 +66,15 @@ RBT.prototype.sendEvent = function(event, params)
 RBT.prototype.identify = function(params)
 {
   "use strict";
-  trigger_fish.rbTServerChannel.makeRequest({"url"     : trigger_fish.rbTServerChannel.url.identify, 
-                                             "params"  : params,
-                                             "identify": true,
-                                             "type"    : "POST",
-                                             "cb"      : { success: trigger_fish.rbTServerResponse.setActorID,
-                                                           error  : trigger_fish.rbTServerResponse.defaultError
-                                                         }
-                                            });
+  var obj = {"url"     : trigger_fish.rbTServerChannel.url.identify, 
+             "params"  : params,
+             "identify": true,
+             "type"    : "POST",
+             "cb"      : { success: trigger_fish.rbTServerResponse.setActorID,
+                           error  : trigger_fish.rbTServerResponse.defaultError
+                         }
+            };
+  trigger_fish.rbTServerChannel.makeRequest(obj);
 };
 
 
@@ -88,14 +90,16 @@ RBT.prototype.setActor = function(params)
   "use strict";
   if (trigger_fish.rbTActor.propExist(params))
     return;
-  trigger_fish.rbTServerChannel.makeRequest({"url"      : trigger_fish.rbTServerChannel.url.setActor, 
-                                             "params"   : params,
-                                             "set_actor": true,
-                                             "type"    : "POST",
-                                             "cb"       : { success: trigger_fish.rbTServerResponse.setActorProperty,
-                                                            error  : trigger_fish.rbTServerResponse.defaultError
-                                                          }
-                                            });
+
+  var obj = {"url"      : trigger_fish.rbTServerChannel.url.setActor, 
+             "params"   : params,
+             "set_actor": true,
+             "type"    : "POST",
+             "cb"       : { success: trigger_fish.rbTServerResponse.setActorProperty,
+                            error  : trigger_fish.rbTServerResponse.defaultError
+                          }
+             };
+  trigger_fish.rbTServerChannel.makeRequest(obj);
 };
 
 

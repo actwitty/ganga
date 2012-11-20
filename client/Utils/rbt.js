@@ -4160,7 +4160,7 @@ trigger_fish.rbJSON = {
 *
 */
 (function StartRBTApp(appid,accid){
-  alert("Initializing RBT APP with AppID = " + appid + " Account ID = " + accid);
+  trigger_fish.rbTAPP.log("Initializing RBT APP with AppID = " + appid + " Account ID = " + accid);
   try {
     if (!appid || !accid || appid == "" || accid == "") {
       throw new Error("App-id, Account-ID are not mentioned")

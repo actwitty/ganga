@@ -11,7 +11,7 @@ files = ["rbTAPP.js",
 	     "rbTUtils.js",
 	     "rbTCookieHandler.js",
 	     "rbTBusiness.js",
-	     "rbJSON.js",
+	     #"rbJSON.js",
 	     "rbTInitApp.js"
 		]
 

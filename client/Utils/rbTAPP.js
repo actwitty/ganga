@@ -39,25 +39,10 @@ trigger_fish.rbTAPP = {
       "use strict";
       trigger_fish.enableCORS(jQuery);
       trigger_fish.initJStorage();
-      // 1). includin jquery if need be
-      //rbTUtils.includeJQIfNeeded();
-
-      // 2). Create session Deferred till further discussion
-      //rbTAPP.createSession();
-
-      // 3). Get rulebot app details
-      //rbTRules.init();
+     
       this.getAppData();
 
       trigger_fish.rbTActor.retFromCookie();
-
-      // 4). Initialize system variables  
-      //rbTSystemVar.init();
-
-      // 5). FIXME : Check status of last event, if pending, execute it.
-      //rbTRules.executeLastPendingEvent();
-
-      //rbTServerChannel.flushReqQueue();
 
     },
 
