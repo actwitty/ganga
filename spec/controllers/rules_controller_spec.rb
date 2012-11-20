@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe RulesController do
-  #login_account
-
   before(:each) do
     @account = FactoryGirl.create(:account)
     @account.confirm!
@@ -35,7 +33,7 @@ describe RulesController do
 
   describe "create event" do
     it "should not create rule with invalid app id" do
-      get 'create', {
+      post 'create', {
         app_id: "1234444",
         rule: @rule
       }
@@ -45,7 +43,7 @@ describe RulesController do
     end
 
     it "should not create rule with invalid arguments" do
-      get 'create', {
+      post 'create', {
         rule: @rule
       }
       puts JSON.parse(response.body).inspect
@@ -54,7 +52,7 @@ describe RulesController do
     end
 
     it "should create rule" do
-      get 'create', {
+      post 'create', {
         app_id: @app._id,
         rule: @rule
       }
@@ -79,7 +77,7 @@ describe RulesController do
     end
 
     it "should not update rule for invalid arguments" do
-      get 'update', {
+      post 'update', {
         id:  @app.rules[0].id.to_s,
         rule: @rule
       }
@@ -87,7 +85,7 @@ describe RulesController do
     end
 
     it "should not update rule for invalid value of arguments" do
-      get 'update', {
+      post 'update', {
         app_id: "1312312312",
         id:  @app.rules[0].id.to_s,
         rule: @rule
@@ -96,7 +94,7 @@ describe RulesController do
     end
 
     it "should not update rule for invalid rule id" do
-      get 'update', {
+      post 'update', {
         app_id: @app._id,
         id:  3433434,
         rule: @rule
@@ -105,7 +103,7 @@ describe RulesController do
     end
 
     it "should update rule" do
-      get 'update', {
+      post 'update', {
         app_id: @app._id,
         id:  @app.rules[0].id.to_s,
         rule: @rule
@@ -216,14 +214,14 @@ describe RulesController do
     end
 
     it "should not delete rule for invalid arguments" do
-      get 'delete', {
+      post 'delete', {
         id:  @app.rules[0].id.to_s,
       }
       response.status.should eq(422)
     end
 
     it "should not delete rule for invalid value of arguments" do
-      get 'delete', {
+      post 'delete', {
         app_id: "1312312312",
         id:  @app.rules[0].id.to_s,
       }
@@ -231,7 +229,7 @@ describe RulesController do
     end
 
     it "should not delete rule for invalid rule id" do
-      get 'delete', {
+      post 'delete', {
         app_id: @app._id,
         id:  3433434,
       }
@@ -240,7 +238,7 @@ describe RulesController do
       response.status.should eq(200)
     end
     it "should not delete rule for invalid event name" do
-      get 'delete', {
+      post 'delete', {
         app_id: @app._id,
         event:  "invalid_event",
       }
@@ -250,7 +248,7 @@ describe RulesController do
       response.status.should eq(200)
     end
     it "should delete rule with valid id" do
-      get 'delete', {
+      post 'delete', {
         app_id: @app._id,
         id:  @app.rules[0].id.to_s,
       }
@@ -259,7 +257,7 @@ describe RulesController do
       response.status.should eq(200)
     end
     it "should read all rules with valid event name" do
-      get 'delete', {
+      post 'delete', {
         app_id: @app._id,
         event: "sign_up",
       }
@@ -269,7 +267,7 @@ describe RulesController do
     end
 
     it "should read all rules of an app" do
-      get 'delete', {
+      post 'delete', {
         app_id: @app._id,
       }
       @app.reload

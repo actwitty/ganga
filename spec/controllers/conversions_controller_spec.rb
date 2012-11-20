@@ -15,7 +15,7 @@ describe ConversionsController do
   
   describe "create conversion" do
     it "should not create conversion with invalid actor" do
-      get 'create', { 
+      post 'create', { 
                       app_id: @app._id,
                       actor_id: 232,
                       properties: { :button => "clicked",
@@ -29,7 +29,7 @@ describe ConversionsController do
     
     it "should not create conversion with invalid app" do
       # account in this test case is not mapped to app
-      get 'create', { 
+      post 'create', { 
                       app_id: 123232,
                       actor_id: @actor._id,
                       properties: { :button => "clicked",
@@ -43,7 +43,7 @@ describe ConversionsController do
 
     it "should create conversion" do
       # account in this test case is not mapped to app
-      get 'create', { 
+      post 'create', { 
                       app_id: @app._id,
                       actor_id: @actor._id,
                       properties: { :button => "clicked",

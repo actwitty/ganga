@@ -12,9 +12,12 @@ class AppsController < ApplicationController
 
   # INPUT
   ## {  
-  ##  	:description => {							[MANDATORY]
-  ##  		:email => "john.doe@example.com",
-  ##        :address => {:city => "Bangalore"}}
+  ##  	:description => {							        [MANDATORY]
+  ##      :name => "App Name 1"               [MANDATORY] # must be unique in account
+  ##      :domain => "http://www.rulebot.com" [OPTIONAL]  # can be used from API
+  ##      :email => "john.doe@example.com",
+  ##      :address => {:city => "Bangalore"}
+  ##    }
   ## }
 
   # OUTPUT => {

@@ -208,12 +208,13 @@ trigger_fish.rbTServerChannel = {
                   trigger_fish.rbTCookie.deleteCookie("lastevent");
                   trigger_fish.rbTRules.executeRulesOnEvent(that.event);
                   if (respData && respData.actor) { 
-                    trigger_fish.rbTServerResponse.setActor(respData.actor);
+                    //trigger_fish.rbTServerResponse.setActor(respData.actor);
                     callback.success(respData);
                   }
                   trigger_fish.rbTAPP.setTransVar({});
                 } else {
                   respData.url = that.url;
+                  if (that.set_actor) respData.actor = respData;
                   callback.success(respData);
                 }
             },
@@ -223,6 +224,8 @@ trigger_fish.rbTServerChannel = {
                 if (that.event) {
                   trigger_fish.rbTRules.executeRulesOnEvent(that.event);
                   trigger_fish.rbTAPP.setTransVar({}); 
+                } else if (that.identify && XMLHttpRequest.responseText.indexOf("is already in use")) {
+                  trigger_fish.rbTServerChannel.actorDetails();
                 }
                 callback.error();
                 
@@ -285,6 +288,21 @@ trigger_fish.rbTServerChannel = {
                       "cb"         : cb
                      });  
   }, 
+
+  /**
+  * Request server to app details
+  * FIXME : IF THERE IS ANYTHING MISSING
+  * @return void
+  */
+  actorDetails : function()
+  {
+    this.makeRequest({"url"           : trigger_fish.rbTServerChannel.url.readActor, 
+                      "set_actor_prop": true,
+                      "cb"            : { success: trigger_fish.rbTServerResponse.setActorProperty,
+                                          error  : trigger_fish.rbTServerResponse.defaultError
+                                        }
+                     });
+  },
 
   /** 
   *  Send conversion to server

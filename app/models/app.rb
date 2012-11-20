@@ -48,6 +48,7 @@ class App
   field       :description, type:    Hash,      :default => {}
   validates_presence_of :description
 
+  index({"description.name" => 1, :account_id =>  1 })
   index({account_id: 1, _id: 1})
   index({"rules.event" => 1})
   # Function
@@ -57,10 +58,13 @@ class App
 
   # INPUT
   ## {  
-  ##    :account_id => "2334534534"   [MANDATORY] 
-  ##    :description => {             [MANDATORY]
+  ##    :account_id => "2334534534"           [MANDATORY] 
+  ##    :description => {                     [MANDATORY]
+  ##      :name => "App Name 1"               [MANDATORY] # must be unique in account
+  ##      :domain => "http://www.rulebot.com" [OPTIONAL]  # can be used from API
   ##      :email => "john.doe@example.com",
-  ##        :address => {:city => "Bangalore"}}
+  ##      :address => {:city => "Bangalore"}
+  ##    }
   ## }
 
   # OUTPUT => {
@@ -69,10 +73,13 @@ class App
   def self.add!(params)
     Rails.logger.info("Enter App Add")
 
-    if params[:account_id].blank? or params[:description].blank?
+    if params[:account_id].blank? or params[:description].blank? or params[:description]["name"].blank?
       raise et("app.invalid_argument_in_create") 
     end
     
+    app = App.where( "description.name" => params[:description]["name"], account_id: params[:account_id]).first
+    raise et("app.app_name_already_exist") if !app.blank?
+
     obj = App.create!(account_id: params[:account_id], description: params[:description])
 
     # create the super actor of app. it will be meta actor
@@ -81,7 +88,7 @@ class App
     obj.description[AppConstants.super_actor] = actor._id 
 
     ret = AccessInfo.add!(app_id: obj._id, account_id: params[:account_id], origin: params[:description][:domain], scope: "app" )
-    raise et("access.access_create_failed") if !ret[:error].blank?
+    raise et("app.access_create_failed") if !ret[:error].blank?
     obj.description[AppConstants.token] = ret[:return].token
 
     obj.save!
@@ -225,7 +232,7 @@ class App
   ##                  ]
   ##        }
   def self.read(params)
-    Rails.logger.info("Enter App Read")
+    Rails.logger.info("Enter App Read #{params.inspect}")
     hash = {events: [], actors: [], conversions: [], errors: []}
 
     if params[:account_id].blank? or params[:id].blank?

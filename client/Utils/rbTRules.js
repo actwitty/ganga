@@ -134,10 +134,10 @@ trigger_fish.rbTRules = {
             var functionCode = prepareFunctionCode(rule.ruleString);
             var isRuleValid = new Function(functionCode)();
             if (isRuleValid) {
-              $("#result").append("RULES PASSED");
+              alert("ALL RULES PASSED");
               that.invokeAction(rule);
             } else {
-              $("#result").append("RULES FAILED");
+              alert("RULES FAILED");
             }  
           });
           
@@ -374,16 +374,9 @@ trigger_fish.rbTRules = {
   {
     var ruleJson = JSON.parse(rule);
     try {
-      var v1   = ruleJson.value1,
-          v2   = ruleJson.value2,
-          neg  = ruleJson.negation,
-          op   = ruleJson.operation,
-          type = ruleJson.type,
-          prop = ruleJson.property,
-          scope= ruleJson.scope,
-          event= ruleJson.event;
-      //if (!trigger_fish.rbTRules.isValidRule(type,scope,op,prop,v1,v2))
-      //   return false;
+      
+      trigger_fish.rbTAPP.log({"message":"for rule condition","rule":ruleJson}); 
+
       if (!trigger_fish.rbTRules.isValidRule(ruleJson))
           return false;
       var res = false;
@@ -391,7 +384,7 @@ trigger_fish.rbTRules = {
       var p = trigger_fish.rbTRules.evalProperty(ruleJson),
           a = trigger_fish.rbTRules.valueDataType(ruleJson.property, ruleJson.value1, propDT),
           b = trigger_fish.rbTRules.valueDataType(ruleJson.property, ruleJson.value2, propDT);
-      switch(op) {
+      switch(ruleJson.operation) {
       case "ltn":
           res = this.rule.ltn(p,a);
           break;

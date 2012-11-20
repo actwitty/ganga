@@ -20,39 +20,39 @@ Ganga::Application.routes.draw do
   get   '/category',          :to => 'rules#category'
  
   # Actor Api
-  post '/actor/create',      :to => 'actors#create'
-  get  '/actor/read',        :to => 'actors#read'
-  post '/actor/identify',    :to => 'actors#identify'
-  post '/actor/set',         :to => 'actors#set'
-  post '/actor/alias',       :to => 'actors#alias'
+  post  '/actor/create',      :to => 'actors#create'
+  get   '/actor/read',        :to => 'actors#read'
+  post  '/actor/identify',    :to => 'actors#identify'
+  post  '/actor/set',         :to => 'actors#set'
+  post  '/actor/alias',       :to => 'actors#alias'
 
 
 
   # App Api
-  post '/app/create',        :to => 'apps#create'
-  get '/app/read',           :to => 'apps#read'
-  post '/app/update',        :to => 'apps#update'
-  post '/app/delete',        :to => 'apps#delete'
+  post  '/app/create',        :to => 'apps#create'
+  get   '/app/read',          :to => 'apps#read'
+  post  '/app/update',        :to => 'apps#update'
+  post  '/app/delete',        :to => 'apps#delete'
   
 
   # Event Api
-  post '/event/create',        :to => 'events#create'
+  post '/event/create',       :to => 'events#create'
  
   # Account Api
   get  '/account/read',       :to => 'accounts#read'
   get  '/account/list_apps',  :to => 'accounts#list_apps'
 
   # Rule Api
-  get '/rule/create',         :to => "rules#create"
-  get '/rule/update',         :to => "rules#update"
-  get '/rule/read',           :to => "rules#read"
-  get '/rule/delete',         :to => "rules#delete"
+  post '/rule/create',        :to => "rules#create"
+  post '/rule/update',        :to => "rules#update"
+  get  '/rule/read',           :to => "rules#read"
+  post '/rule/delete',        :to => "rules#delete"
 
   # Conversion Api
-  post '/conversion/create',   :to => "conversions#create"
+  post '/conversion/create',  :to => "conversions#create"
 
   # Error Api
-  post '/err/create',          :to => "errs#create"
+  post '/err/create',         :to => "errs#create"
   
   # Some browsers send an options request to the server first, 
   # to make sure the correct access headers are set.
