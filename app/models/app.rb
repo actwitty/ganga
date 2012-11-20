@@ -125,14 +125,16 @@ class App
     raise et("app.invalid_app_id", id: params[:id]) if app.blank?
 
     desc = Utility.serialize_to(hash: params[:description], serialize_to: "value")
-    
-    puts app.inspect
+
     desc.each do |k,v|
-      app.description[k.to_sym] = v if k != AppConstants.super_actor and k != AppConstants.token
+      if (k == AppConstants.domain) and (app.description[k] != v)
+        a = AccessInfo.where(app_id: app._id).first
+        a.update_attribute(:origin, v)
+      end
+      app.description[k] = v if k != AppConstants.super_actor and k != AppConstants.token
     end
 
     app.save!
-    puts app.inspect
     {:return => app, :error => nil}  
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")

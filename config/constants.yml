@@ -35,6 +35,7 @@ development: &default
   # String Keys stored in database - Dont changes
   super_actor:             "super_actor_id"
   token:                   "token"
+  domain:                  "domain"
 
   # Limits
   limit_events:           100
