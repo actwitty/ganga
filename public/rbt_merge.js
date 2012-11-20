@@ -4198,7 +4198,7 @@ function testGanga()
 {
   rb.identify("83.samarth@gmail.com");
   rb.setActor({"name":"samarth","age":"29"});
-  rb.sendEvent("sample_event3",{"name":"samarth"});
+  rb.sendEvent("sample_event",{"name":"samarth"});
   console.log("ENDING TESTING SEQUENCE");
 }
 
