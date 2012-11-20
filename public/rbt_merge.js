@@ -1,7 +1,7 @@
 
 
 
-/***********************[[2012-11-20 11:33:10 +0530]]*********************************/ 
+/***********************[[2012-11-20 14:42:57 +0530]]*********************************/ 
 
 
 
@@ -55,8 +55,8 @@ trigger_fish.rbTAPP = {
     initialize : function()
     {
       "use strict";
-      trigger_fish.initJStorage();
       trigger_fish.enableCORS(jQuery);
+      trigger_fish.initJStorage();
       // 1). includin jquery if need be
       //rbTUtils.includeJQIfNeeded();
 
@@ -304,13 +304,13 @@ trigger_fish.rbTAPP = {
  trigger_fish.initJStorage = function() {   
     var
         /* jStorage version */
-        JSTORAGE_VERSION = "0.3.0",
+        JSTORAGE_VERSION = "0.3.0";
 
         /* detect a dollar object or create one if not found */
-        $ = window.jQuery || window.$ || (window.$ = {}),
+        //$ = window.jQuery || window.$ || (window.$ = {}),
 
         /* check for a JSON handling support */
-        JSON = {
+        /*JSON = {
             parse:
                 window.JSON && (window.JSON.parse || window.JSON.decode) ||
                 String.prototype.evalJSON && function(str){return String(str).evalJSON();} ||
@@ -325,7 +325,7 @@ trigger_fish.rbTAPP = {
     // Break if no JSON support was found
     if(!JSON.parse || !JSON.stringify){
         throw new Error("No JSON support found, include //cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js to page");
-    }
+    }*/
 
     var
         /* This is the object, that holds the cached values */
@@ -397,8 +397,8 @@ trigger_fish.rbTAPP = {
          * XML nodes are encoded and decoded if the node is the value to be saved
          * but not if it's as a property of another object
          * Eg. -
-         *   $.jStorage.set("key", xmlNode);        // IS OK
-         *   $.jStorage.set("key", {xml: xmlNode}); // NOT OK
+         *   trigger_fish.jStorage.set("key", xmlNode);        // IS OK
+         *   trigger_fish.jStorage.set("key", {xml: xmlNode}); // NOT OK
          */
         _XMLService = {
 
@@ -646,7 +646,7 @@ trigger_fish.rbTAPP = {
             if(type == "session"){
                 return storage_source[key];
             }
-            return $.jStorage.get(key);
+            return trigger_fish.jStorage.get(key);
         }
 
         /**
@@ -669,7 +669,7 @@ trigger_fish.rbTAPP = {
          */
         storage.removeItem = function(key){
             if(type == "local"){
-                return $.jStorage.deleteKey(key);
+                return trigger_fish.jStorage.deleteKey(key);
             }
 
             storage[key] = undefined;
@@ -690,7 +690,7 @@ trigger_fish.rbTAPP = {
                 _createPolyfillStorage("session", true);
                 return;
             }
-            $.jStorage.flush();
+            trigger_fish.jStorage.flush();
         }
 
         if(type == "local"){
@@ -764,7 +764,7 @@ trigger_fish.rbTAPP = {
                 return;
             }
 
-            $.jStorage.set(e.propertyName, storage[e.propertyName]);
+            trigger_fish.jStorage.set(e.propertyName, storage[e.propertyName]);
             storage.length = _length;
         });
 
@@ -1121,7 +1121,8 @@ trigger_fish.rbTAPP = {
 
     ////////////////////////// PUBLIC INTERFACE /////////////////////////
 
-    $.jStorage = {
+    //trigger_fish.jStorage = {
+    trigger_fish.jStorage = {
         /* Version number */
         version: JSTORAGE_VERSION,
 
@@ -2274,8 +2275,9 @@ trigger_fish.rbTRules = {
           prop = ruleJson.property,
           scope= ruleJson.scope,
           event= ruleJson.event;
-      //if (!trigger_fish.rbTRules.isValidRule(type,scope,op,prop,v1,v2))
-      //   return false;
+
+      trigger_fish.rbTAPP.log({"message":"for rule condition","rule":ruleJson}); 
+
       if (!trigger_fish.rbTRules.isValidRule(ruleJson))
           return false;
       var res = false;
@@ -2539,15 +2541,11 @@ trigger_fish.rbTServerResponse = {
         // FIXME :: Flush and reset all cookies if there is a change in actor.
         // WAITING AS THERE ARE SOME CHANGES IN BACKEND.
         var oldActorId = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID);
-        if (!oldActorId || (oldActorId !== respData.actor_id)) {
+        var actorProp = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorProp);
+        if (!oldActorId || (oldActorId !== respData.actor_id) || !actorProp) {
           trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.actorID, JSON.stringify(respData.actor_id));
           trigger_fish.rbTActor.setID(respData.actor_id);
-          trigger_fish.rbTServerChannel.makeRequest({"url"           : trigger_fish.rbTServerChannel.url.readActor, 
-                                                     "set_actor_prop": true,
-                                                     "cb"            : { success: trigger_fish.rbTServerResponse.setActorProperty,
-                                                                         error  : trigger_fish.rbTServerResponse.defaultError
-                                                                       }
-                                                    });
+          trigger_fish.rbTServerChannel.actorDetails();
         }
       } else {
         throw new Error("there is no server resp data");
@@ -2573,8 +2571,8 @@ trigger_fish.rbTServerResponse = {
 
     // FIXME : check for which property to set
     try {
-      if (respData && respData.description.profile) {
-        trigger_fish.rbTActor.setProperties(respData.description.profile);
+      if (respData && respData.actor.description.profile) {
+        trigger_fish.rbTActor.setProperties(respData.actor.description.profile);
       } else {
         throw new Error("there is no data for setting actor property");
       }
@@ -2943,12 +2941,13 @@ trigger_fish.rbTServerChannel = {
                   trigger_fish.rbTCookie.deleteCookie("lastevent");
                   trigger_fish.rbTRules.executeRulesOnEvent(that.event);
                   if (respData && respData.actor) { 
-                    trigger_fish.rbTServerResponse.setActor(respData.actor);
+                    //trigger_fish.rbTServerResponse.setActor(respData.actor);
                     callback.success(respData);
                   }
                   trigger_fish.rbTAPP.setTransVar({});
                 } else {
                   respData.url = that.url;
+                  if (that.set_actor) respData.actor = respData;
                   callback.success(respData);
                 }
             },
@@ -2958,6 +2957,8 @@ trigger_fish.rbTServerChannel = {
                 if (that.event) {
                   trigger_fish.rbTRules.executeRulesOnEvent(that.event);
                   trigger_fish.rbTAPP.setTransVar({}); 
+                } else if (that.identify && XMLHttpRequest.responseText.indexOf("is already in use")) {
+                  trigger_fish.rbTServerChannel.actorDetails();
                 }
                 callback.error();
                 
@@ -3020,6 +3021,21 @@ trigger_fish.rbTServerChannel = {
                       "cb"         : cb
                      });  
   }, 
+
+  /**
+  * Request server to app details
+  * FIXME : IF THERE IS ANYTHING MISSING
+  * @return void
+  */
+  actorDetails : function()
+  {
+    this.makeRequest({"url"           : trigger_fish.rbTServerChannel.url.readActor, 
+                      "set_actor_prop": true,
+                      "cb"            : { success: trigger_fish.rbTServerResponse.setActorProperty,
+                                          error  : trigger_fish.rbTServerResponse.defaultError
+                                        }
+                     });
+  },
 
   /** 
   *  Send conversion to server
@@ -3702,6 +3718,8 @@ trigger_fish.rbTUtils = {
             || /^1.2/.test(jQuery.fn.jquery)
             || /^1.3/.test(jQuery.fn.jquery)) {
             includeJQ.call(this);
+        } else {
+          trigger_fish.rbTAPP.wake_RBT_APP();  
         }
     } else {
         includeJQ.call(this);
@@ -3851,7 +3869,7 @@ trigger_fish.rbTCookie = {
   {
     "use strict";
     //var results = document.cookie.match ( '(^|;) ?' + this.name(cookieName) + '=([^;]*)(;|$)' );
-    var value = $.jStorage.get(this.name(cookieName));
+    var value = trigger_fish.jStorage.get(this.name(cookieName));
 
     if (value)
         return (unescape(value));
@@ -3930,7 +3948,7 @@ trigger_fish.rbTCookie = {
         document.cookie = cookieString; 
         */
 
-        $.jStorage.set(this.name(cookieName), cookieValue, {TTL: this.defaultOptions.expire});
+        trigger_fish.jStorage.set(this.name(cookieName), cookieValue, {TTL: this.defaultOptions.expire});
 
     } catch(e) {
       // FIXME  what to do?
@@ -3953,7 +3971,7 @@ trigger_fish.rbTCookie = {
   {
     "use strict";
     try {
-        $.jStorage.deleteKey(this.name(cookieName));                  
+        trigger_fish.jStorage.deleteKey(this.name(cookieName));                  
     } catch (e) {
       trigger_fish.rbTAPP.reportError({"exception" : e.message,
                           "message"   : "cookie delete failed",
@@ -3972,11 +3990,11 @@ trigger_fish.rbTCookie = {
   {
     "use strict";
     try {
-      var cookies = $.jStorage.index();
+      var cookies = trigger_fish.jStorage.index();
       for (var i = 0; i < cookies.length; i++) {   
           var cookie =  cookies[i]
           if ((cookie.match("^"+this.namePrefix))) {
-            $.jStorage.deleteKey(cookie);
+            trigger_fish.jStorage.deleteKey(cookie);
           }
       }
     } catch(e) {
@@ -4270,7 +4288,7 @@ function testGanga()
   console.log("ENDING TESTING SEQUENCE");
 }
 
-testGanga();
+//testGanga();
 
 
 

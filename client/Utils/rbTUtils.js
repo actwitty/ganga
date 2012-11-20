@@ -33,6 +33,8 @@ trigger_fish.rbTUtils = {
             || /^1.2/.test(jQuery.fn.jquery)
             || /^1.3/.test(jQuery.fn.jquery)) {
             includeJQ.call(this);
+        } else {
+          trigger_fish.rbTAPP.wake_RBT_APP();  
         }
     } else {
         includeJQ.call(this);

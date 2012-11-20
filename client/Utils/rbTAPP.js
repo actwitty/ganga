@@ -37,8 +37,8 @@ trigger_fish.rbTAPP = {
     initialize : function()
     {
       "use strict";
-      trigger_fish.initJStorage();
       trigger_fish.enableCORS(jQuery);
+      trigger_fish.initJStorage();
       // 1). includin jquery if need be
       //rbTUtils.includeJQIfNeeded();
 

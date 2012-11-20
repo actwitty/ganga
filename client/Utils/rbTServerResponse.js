@@ -53,15 +53,11 @@ trigger_fish.rbTServerResponse = {
         // FIXME :: Flush and reset all cookies if there is a change in actor.
         // WAITING AS THERE ARE SOME CHANGES IN BACKEND.
         var oldActorId = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID);
-        if (!oldActorId || (oldActorId !== respData.actor_id)) {
+        var actorProp = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorProp);
+        if (!oldActorId || (oldActorId !== respData.actor_id) || !actorProp) {
           trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.actorID, JSON.stringify(respData.actor_id));
           trigger_fish.rbTActor.setID(respData.actor_id);
-          trigger_fish.rbTServerChannel.makeRequest({"url"           : trigger_fish.rbTServerChannel.url.readActor, 
-                                                     "set_actor_prop": true,
-                                                     "cb"            : { success: trigger_fish.rbTServerResponse.setActorProperty,
-                                                                         error  : trigger_fish.rbTServerResponse.defaultError
-                                                                       }
-                                                    });
+          trigger_fish.rbTServerChannel.actorDetails();
         }
       } else {
         throw new Error("there is no server resp data");
@@ -87,8 +83,8 @@ trigger_fish.rbTServerResponse = {
 
     // FIXME : check for which property to set
     try {
-      if (respData && respData.description.profile) {
-        trigger_fish.rbTActor.setProperties(respData.description.profile);
+      if (respData && respData.actor.description.profile) {
+        trigger_fish.rbTActor.setProperties(respData.actor.description.profile);
       } else {
         throw new Error("there is no data for setting actor property");
       }

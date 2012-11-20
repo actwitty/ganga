@@ -50,7 +50,7 @@ trigger_fish.rbTCookie = {
   {
     "use strict";
     //var results = document.cookie.match ( '(^|;) ?' + this.name(cookieName) + '=([^;]*)(;|$)' );
-    var value = $.jStorage.get(this.name(cookieName));
+    var value = trigger_fish.jStorage.get(this.name(cookieName));
 
     if (value)
         return (unescape(value));
@@ -129,7 +129,7 @@ trigger_fish.rbTCookie = {
         document.cookie = cookieString; 
         */
 
-        $.jStorage.set(this.name(cookieName), cookieValue, {TTL: this.defaultOptions.expire});
+        trigger_fish.jStorage.set(this.name(cookieName), cookieValue, {TTL: this.defaultOptions.expire});
 
     } catch(e) {
       // FIXME  what to do?
@@ -152,7 +152,7 @@ trigger_fish.rbTCookie = {
   {
     "use strict";
     try {
-        $.jStorage.deleteKey(this.name(cookieName));                  
+        trigger_fish.jStorage.deleteKey(this.name(cookieName));                  
     } catch (e) {
       trigger_fish.rbTAPP.reportError({"exception" : e.message,
                           "message"   : "cookie delete failed",
@@ -171,11 +171,11 @@ trigger_fish.rbTCookie = {
   {
     "use strict";
     try {
-      var cookies = $.jStorage.index();
+      var cookies = trigger_fish.jStorage.index();
       for (var i = 0; i < cookies.length; i++) {   
           var cookie =  cookies[i]
           if ((cookie.match("^"+this.namePrefix))) {
-            $.jStorage.deleteKey(cookie);
+            trigger_fish.jStorage.deleteKey(cookie);
           }
       }
     } catch(e) {

@@ -382,8 +382,9 @@ trigger_fish.rbTRules = {
           prop = ruleJson.property,
           scope= ruleJson.scope,
           event= ruleJson.event;
-      //if (!trigger_fish.rbTRules.isValidRule(type,scope,op,prop,v1,v2))
-      //   return false;
+
+      trigger_fish.rbTAPP.log({"message":"for rule condition","rule":ruleJson}); 
+
       if (!trigger_fish.rbTRules.isValidRule(ruleJson))
           return false;
       var res = false;
