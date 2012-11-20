@@ -5,11 +5,10 @@ App.Project = Ember.Object.extend
   rules: null
   description: 
               email: null
-              address: null
+              comment: null
               domain: 'http://'
               name: null
-              super_actor_id: null
-              created_at: null
+              super_actor_id: null              
   hasManyRules: null
 
 
@@ -36,11 +35,7 @@ App.Project = Ember.Object.extend
       # rules: rules      
     }
    
-  created_time: (->
-    time = @get('description.created_at') 
-    date = new Date (time)
-    date.toString()
-  ).property('description.created_at')
+
 
   filterData: ->
     data = {}

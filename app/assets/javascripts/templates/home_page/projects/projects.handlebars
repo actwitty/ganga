@@ -8,7 +8,7 @@
         <th style="padding-bottom:10px;">Name</th> 
         <th style="padding-bottom:10px;">Domain</th> 
         <th style="padding-bottom:10px;">Email</th> 
-        <th style="padding-bottom:10px;" >Address</th> 
+        <th style="padding-bottom:10px;" >Comment</th> 
         <th style="padding-bottom:10px;"></th>         
       </tr> 
     </thead>
@@ -20,7 +20,7 @@
           <td  {{action showProjectRules project }}>{{project.description.name}}</td> 
           <td  {{action showProjectRules project }}>{{project.description.domain}}</td> 
           <td  {{action showProjectRules project }}>{{project.description.email}}</td> 
-          <td  {{action showProjectRules project }}>{{project.description.address}}</td> 
+          <td  {{action showProjectRules project }}>{{project.description.comment}}</td> 
           <td ><a class="edit_link" {{action editProject project  }}> Edit </a></td>           
         </tr> 
       {{/each}}

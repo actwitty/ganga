@@ -60,7 +60,7 @@ Handlebars.registerHelper "getTemplatePlaceHolder", (type, api, key, options) ->
   key_in = Ember.Handlebars.getPath(context, key, options)
   test_key = trigger_fish.rbT.templateArgs[ type_in + '.' + api_in][key_in]['key']
   namescopeArr = test_key.split('.')
-  namescopeArr[App.templatesConstants.label]
+  namescopeArr[App.templatesConstants.label].replace(/_/g, ' ')
 # ---------------------------------------------------------
 Handlebars.registerHelper "shouldShow", (type, api, key, options) ->
   context = (options.contexts and options.contexts[0]) or this

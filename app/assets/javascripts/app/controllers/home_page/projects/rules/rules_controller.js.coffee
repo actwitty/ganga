@@ -252,7 +252,7 @@ App.RulesController = Em.ArrayController.extend
       url = @get 'url.setSystem'
       success= (data) ->
       error= (data) ->   
-      App.getRequest url, json, success, error
+      App.postRequest url, json, success, error
 
   #########################################################
   # Update a Rule  
