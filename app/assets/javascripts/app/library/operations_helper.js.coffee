@@ -89,6 +89,8 @@ App.systemSchema =
                   'language' : 'String'
                   #'plugins' : 'Array'
                   'timezone' : 'String'
+                  'skip' : 'String'
+
 
 
 App.LimitedValueList =
