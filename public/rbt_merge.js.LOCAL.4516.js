@@ -1,7 +1,7 @@
 
 
 
-/***********************[[2012-11-21 19:30:53 +0530]]*********************************/ 
+/***********************[[2012-11-21 18:59:35 +0530]]*********************************/ 
 
 
 
@@ -2840,13 +2840,12 @@ trigger_fish.rbTServerChannel = {
                 }
             },
             success: function ( respData ) {
-                if (typeof respData === "string") respData = JSON.parse(respData);
                 trigger_fish.rbTAPP.log({"message":"server response success","data":respData});
-
                 if (that.event) {
                   trigger_fish.rbTCookie.deleteCookie("lastevent");
                   trigger_fish.rbTRules.executeRulesOnEvent(that.event);
                   if (respData && respData.actor) { 
+                    //trigger_fish.rbTServerResponse.setActor(respData.actor);
                     callback.success(respData);
                   }
                   trigger_fish.rbTAPP.setTransVar({});
@@ -2933,7 +2932,7 @@ trigger_fish.rbTServerChannel = {
   */
   actorDetails : function()
   {
-    this.makeRequest({"url"           : this.url.readActor, 
+    this.makeRequest({"url"           : trigger_fish.rbTServerChannel.url.readActor, 
                       "set_actor_prop": true,
                       "cb"            : { success: trigger_fish.rbTServerResponse.setActorProperty,
                                           error  : trigger_fish.rbTServerResponse.defaultError
@@ -2955,6 +2954,7 @@ trigger_fish.rbTServerChannel = {
                       "conversion" : true,
                       "type"       : "POST",
                       "cb"         : cb
+
                      });
   }, 
 
@@ -3079,8 +3079,6 @@ trigger_fish.rbTSystemVar = {
     'screen[width]' :  'Number'
     'viewport[height]' : 'Number'
     'viewport[width]' : 'Number'
-    'search[engine]' : 'String'
-    'search[query]'  : 'String'
     'country' : 'String'
     'language' : 'String'
     'plugins' : 'Array'
@@ -3111,7 +3109,6 @@ trigger_fish.rbTSystemVar = {
     this.setProperty("browser_version",json.browser.version);
     this.setProperty("operatingsystem",json.browser.os);
     this.setProperty("referrer",json.current_session.referrer_info);
-    this.setProperty("search",json.current_session.search);
     this.setProperty("device",json.device.type);
     this.setProperty("screen",json.device.screen);
     this.setProperty("viewport",json.device.viewport);
@@ -4091,11 +4088,11 @@ function testGanga()
 {
   rb.identify("83.samarth@gmail.com");
   rb.setActor({"name":"samarth","age":"29"});
-  rb.sendEvent("sample_event3",{"name":"samarth"});
+  rb.sendEvent("sample_event4",{"name":"samarth"});
   console.log("ENDING TESTING SEQUENCE");
 }
 
-//testGanga();
+testGanga();
 
 
 
@@ -4812,6 +4809,7 @@ trigger_fish.rbT.templatesDisplayLockFlags = {
 trigger_fish.rbT.setTemplatesDisplayLockFlags=function(pos,value)
 {
 
+
    if(pos == 'topbar') 
    {
      trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.topbar.displayLock'] = value; 
@@ -5490,18 +5488,29 @@ if(1) // Check for Service Type Enhancement
           
 
          if (trigger_fish.rbT.isTemplateGoodToApply(html)){
-            trigger_fish.rbT.applyHtmltoPage(html);
-            trigger_fish.rbT.enableClickHandling();
-           // trigger_fish.rbT.enableTimeOutHadnling(templateName,trigger_fish.rbT.templTimers['templ.templduration']*1000);
-		    trigger_fish.rbT.setTemplatesDisplayLockFlags(type,true);
+                 
 
-             params.display = servermsg + " " +"Display " + "Success";
+                  trigger_fish.rbT.applyHtmltoPage(html);
 
-// INTEGRATION_ENABLE     
-    
-// Report Server Display of Templ Successfull
 
-         trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
+                  trigger_fish.rbT.enableClickHandling();
+
+
+                 // trigger_fish.rbT.enableTimeOutHadnling(templateName,trigger_fish.rbT.templTimers['templ.templduration']*1000);
+      		        trigger_fish.rbT.setTemplatesDisplayLockFlags(type,true);
+
+                   params.display = servermsg + " " +"Display " + "Success";
+
+                   trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
+
+
+
+      // INTEGRATION_ENABLE     
+          
+      // Report Server Display of Templ Successfull
+              
+
+                  
 
 
          }
@@ -5569,6 +5578,7 @@ trigger_fish.rbT.applyHtmltoPage = function(html){
 		trigger_fish.rbT.sendErrorToRBServer("improper access of interface applyHtmltoPage");
 		return "";
 	}
+
 	return trigger_fish.rbT.applyHtmltoPageInternal(html);
 };
 

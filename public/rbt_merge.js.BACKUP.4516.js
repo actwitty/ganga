@@ -1,7 +1,11 @@
 
 
 
+<<<<<<< HEAD
+/***********************[[2012-11-21 18:59:35 +0530]]*********************************/ 
+=======
 /***********************[[2012-11-21 19:30:53 +0530]]*********************************/ 
+>>>>>>> bb40549d06633970910a60edd066ec2244addace
 
 
 
@@ -2955,6 +2959,7 @@ trigger_fish.rbTServerChannel = {
                       "conversion" : true,
                       "type"       : "POST",
                       "cb"         : cb
+
                      });
   }, 
 
@@ -4091,11 +4096,11 @@ function testGanga()
 {
   rb.identify("83.samarth@gmail.com");
   rb.setActor({"name":"samarth","age":"29"});
-  rb.sendEvent("sample_event3",{"name":"samarth"});
+  rb.sendEvent("sample_event4",{"name":"samarth"});
   console.log("ENDING TESTING SEQUENCE");
 }
 
-//testGanga();
+testGanga();
 
 
 
@@ -4812,6 +4817,7 @@ trigger_fish.rbT.templatesDisplayLockFlags = {
 trigger_fish.rbT.setTemplatesDisplayLockFlags=function(pos,value)
 {
 
+
    if(pos == 'topbar') 
    {
      trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.topbar.displayLock'] = value; 
@@ -5490,18 +5496,36 @@ if(1) // Check for Service Type Enhancement
           
 
          if (trigger_fish.rbT.isTemplateGoodToApply(html)){
+<<<<<<< HEAD
+                 
+=======
             trigger_fish.rbT.applyHtmltoPage(html);
             trigger_fish.rbT.enableClickHandling();
            // trigger_fish.rbT.enableTimeOutHadnling(templateName,trigger_fish.rbT.templTimers['templ.templduration']*1000);
 		    trigger_fish.rbT.setTemplatesDisplayLockFlags(type,true);
+>>>>>>> bb40549d06633970910a60edd066ec2244addace
 
-             params.display = servermsg + " " +"Display " + "Success";
+                  trigger_fish.rbT.applyHtmltoPage(html);
 
-// INTEGRATION_ENABLE     
-    
-// Report Server Display of Templ Successfull
 
-         trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
+                  trigger_fish.rbT.enableClickHandling();
+
+
+                 // trigger_fish.rbT.enableTimeOutHadnling(templateName,trigger_fish.rbT.templTimers['templ.templduration']*1000);
+      		        trigger_fish.rbT.setTemplatesDisplayLockFlags(type,true);
+
+                   params.display = servermsg + " " +"Display " + "Success";
+
+                   trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
+
+
+
+      // INTEGRATION_ENABLE     
+          
+      // Report Server Display of Templ Successfull
+              
+
+                  
 
 
          }
@@ -5569,6 +5593,10 @@ trigger_fish.rbT.applyHtmltoPage = function(html){
 		trigger_fish.rbT.sendErrorToRBServer("improper access of interface applyHtmltoPage");
 		return "";
 	}
+<<<<<<< HEAD
+
+=======
+>>>>>>> bb40549d06633970910a60edd066ec2244addace
 	return trigger_fish.rbT.applyHtmltoPageInternal(html);
 };
 

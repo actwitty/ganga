@@ -2641,7 +2641,7 @@ trigger_fish.rbTServerResponse = {
  */
 trigger_fish.rbTServerChannel = {
   
-  rbt_url : "http://rulebot.com/",
+  rbt_url : "http://localhost:3000/",
 
   
   /* All server url routes to be mapped here */
@@ -2828,12 +2828,13 @@ trigger_fish.rbTServerChannel = {
                 }
             },
             success: function ( respData ) {
+                if (typeof respData === "string") respData = JSON.parse(respData);
                 trigger_fish.rbTAPP.log({"message":"server response success","data":respData});
+
                 if (that.event) {
                   trigger_fish.rbTCookie.deleteCookie("lastevent");
                   trigger_fish.rbTRules.executeRulesOnEvent(that.event);
                   if (respData && respData.actor) { 
-                    //trigger_fish.rbTServerResponse.setActor(respData.actor);
                     callback.success(respData);
                   }
                   trigger_fish.rbTAPP.setTransVar({});
@@ -2920,7 +2921,7 @@ trigger_fish.rbTServerChannel = {
   */
   actorDetails : function()
   {
-    this.makeRequest({"url"           : trigger_fish.rbTServerChannel.url.readActor, 
+    this.makeRequest({"url"           : this.url.readActor, 
                       "set_actor_prop": true,
                       "cb"            : { success: trigger_fish.rbTServerResponse.setActorProperty,
                                           error  : trigger_fish.rbTServerResponse.defaultError
@@ -2937,7 +2938,7 @@ trigger_fish.rbTServerChannel = {
   {
     "use strict";
     var cb = this.extendCallbacks(callback);
-    this.makeRequest({"url"        : rbTServerChannel.url.conversion, 
+    this.makeRequest({"url"        : this.url.conversion, 
                       "params"     : params,
                       "conversion" : true,
                       "type"       : "POST",
@@ -3066,6 +3067,8 @@ trigger_fish.rbTSystemVar = {
     'screen[width]' :  'Number'
     'viewport[height]' : 'Number'
     'viewport[width]' : 'Number'
+    'search[engine]' : 'String'
+    'search[query]'  : 'String'
     'country' : 'String'
     'language' : 'String'
     'plugins' : 'Array'
@@ -3096,6 +3099,7 @@ trigger_fish.rbTSystemVar = {
     this.setProperty("browser_version",json.browser.version);
     this.setProperty("operatingsystem",json.browser.os);
     this.setProperty("referrer",json.current_session.referrer_info);
+    this.setProperty("search",json.current_session.search);
     this.setProperty("device",json.device.type);
     this.setProperty("screen",json.device.screen);
     this.setProperty("viewport",json.device.viewport);
