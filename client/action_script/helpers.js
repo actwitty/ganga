@@ -125,77 +125,76 @@ trigger_fish.rbT.fillTheRuntimeValueForTemplArgs = function(tempMatch,actionparm
                            for(var i=0 ; i<tempMatch.length ; i++)
                            {
 
-                              var objNested = {};
-                               
-                               
-                               var tempMatchForscope = ""
+                                        var objNested = {};
+                                         
+                                         
+                                         var tempMatchForscope = ""
 
-                               tempMatch[i]=tempMatch[i].replace("{{","");
-                               tempMatch[i]=tempMatch[i].replace("}}","");
+                                         tempMatch[i]=tempMatch[i].replace("{{","");
+                                         tempMatch[i]=tempMatch[i].replace("}}","");
 
 
-                               tempMatchForscope = tempMatch[i].match(/[\w]*/g);
+                                         tempMatchForscope = tempMatch[i].match(/[\w]*/g);
 
-                               if(tempMatchForscope[0])
-                               
-                               {
-                                   var k =0;
+                                         if(tempMatchForscope[0])
+                                         
+                                         {
+                                             var k =0;
 
-                                
+                                          
 
-                                    if(tempMatchForscope[0] == "s")
-                                    {
-                                       objNested = trigger_fish.rbT.currentSystemVar; 
-   
-                                       for(k=2;k<=tempMatchForscope.length-2;k++)
-                                       {
-                                         if(k%2 === 0)
-                                          {
-                                             var objNested = objNested[tempMatchForscope[k]] 
+                                              if(tempMatchForscope[0] == "s")
+                                              {
+                                                 objNested = trigger_fish.rbT.currentSystemVar; 
+             
+                                                 for(k=2;k<=tempMatchForscope.length-2;k++)
+                                                 {
+                                                   if(k%2 === 0)
+                                                    {
+                                                       var objNested = objNested[tempMatchForscope[k]] 
 
-                                          } 
-                                       }
-                                   }
+                                                    } 
+                                                 }
+                                             }
 
-                                  else if(tempMatchForscope[0] == "e")
-                                    {
-                                       objNested =trigger_fish.rbT.currentEventVar; 
-   
-                                       for(k=2;k<=tempMatchForscope.length-2;k++)
-                                       {
-                                         if(k%2 === 0)
-                                          {
-                                             var objNested = objNested[tempMatchForscope[k]] 
+                                            else if(tempMatchForscope[0] == "e")
+                                              {
+                                                 objNested =trigger_fish.rbT.currentEventVar; 
+             
+                                                 for(k=2;k<=tempMatchForscope.length-2;k++)
+                                                 {
+                                                   if(k%2 === 0)
+                                                    {
+                                                       var objNested = objNested[tempMatchForscope[k]] 
 
-                                          } 
-                                       }
-                                   }
+                                                    } 
+                                                 }
+                                             }
 
-                                  else if(tempMatchForscope[0] == "a")
-                                    {
-                                       objNested =trigger_fish.rbT.currentActorVar ; 
-   
-                                       for(k=2;k<=tempMatchForscope.length-2;k++)
-                                       {
-                                         if(k%2 === 0)
-                                          {
-                                             var objNested = objNested[tempMatchForscope[k]] 
+                                            else if(tempMatchForscope[0] == "a")
+                                              {
+                                                 objNested =trigger_fish.rbT.currentActorVar ; 
+             
+                                                 for(k=2;k<=tempMatchForscope.length-2;k++)
+                                                 {
+                                                   if(k%2 === 0)
+                                                    {
+                                                       var objNested = objNested[tempMatchForscope[k]] 
 
-                                          } 
-                                       }
-                                   }
+                                                    } 
+                                                 }
+                                             }
 
-                                 
-                          }  
+                                           
+                                    }  
 
-                               tempMatch[i] = '{{'+ tempMatch[i] + '}}';
+                                         tempMatch[i] = '{{'+ tempMatch[i] + '}}';
 
-                               actionparmaskey = actionparmaskey.replace(tempMatch[i],objNested);
-
+                                         actionparmaskey = actionparmaskey.replace(tempMatch[i],objNested);
+                              } 
                                return actionparmaskey;
 
 
-                         }         
               
          }catch(e){
 
