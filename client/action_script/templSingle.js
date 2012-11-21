@@ -1388,15 +1388,11 @@ if(1) // Check for Service Type Enhancement
             trigger_fish.rbT.applyHtmltoPage(html);
             trigger_fish.rbT.enableClickHandling();
            // trigger_fish.rbT.enableTimeOutHadnling(templateName,trigger_fish.rbT.templTimers['templ.templduration']*1000);
-		    trigger_fish.rbT.setTemplatesDisplayLockFlags(type,true);
+		         trigger_fish.rbT.setTemplatesDisplayLockFlags(type,true);
 
              params.display = servermsg + " " +"Display " + "Success";
 
-// INTEGRATION_ENABLE     
-    
-// Report Server Display of Templ Successfull
-
-         trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
+             trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
 
 
          }
