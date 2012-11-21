@@ -2641,7 +2641,7 @@ trigger_fish.rbTServerResponse = {
  */
 trigger_fish.rbTServerChannel = {
   
-  rbt_url : "http://rulebot.com/",
+  rbt_url : "http://localhost:3000/",
 
   
   /* All server url routes to be mapped here */
@@ -3066,6 +3066,8 @@ trigger_fish.rbTSystemVar = {
     'screen[width]' :  'Number'
     'viewport[height]' : 'Number'
     'viewport[width]' : 'Number'
+    'search[engine]' : 'String'
+    'search[query]'  : 'String'
     'country' : 'String'
     'language' : 'String'
     'plugins' : 'Array'
@@ -3096,6 +3098,7 @@ trigger_fish.rbTSystemVar = {
     this.setProperty("browser_version",json.browser.version);
     this.setProperty("operatingsystem",json.browser.os);
     this.setProperty("referrer",json.current_session.referrer_info);
+    this.setProperty("search",json.current_session.search);
     this.setProperty("device",json.device.type);
     this.setProperty("screen",json.device.screen);
     this.setProperty("viewport",json.device.viewport);
