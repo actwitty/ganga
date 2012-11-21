@@ -362,7 +362,7 @@ var session_fetch = (function(win, doc, nav)
         width: win.innerWidth || doc.documentElement.clientWidth || doc.body.clientWidth,
         height: win.innerHeight || doc.documentElement.clientHeight || doc.body.clientHeight 
       };
-      device.is_tablet = !!nav.userAgent.match(/(iPad|SCH-I800|xoom|kindle)/i);
+      device.is_tablet = !!nav.userAgent.match(/(Nexus|iPad|SCH-I800|xoom|kindle)/i);
       device.is_phone = !device.is_tablet && !!nav.userAgent.match(/(iPhone|iPod|blackberry|android 0.5|htc|lg|midp|mmp|mobile|nokia|opera mini|palm|pocket|psp|sgh|smartphone|symbian|treo mini|Playstation Portable|SonyEricsson|Samsung|MobileExplorer|PalmSource|Benq|Windows Phone|Windows Mobile|IEMobile|Windows CE|Nintendo Wii)/i);
       device.is_mobile = device.is_tablet || device.is_phone;
       if (device.is_mobile) {

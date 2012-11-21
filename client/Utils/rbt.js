@@ -205,7 +205,7 @@ trigger_fish.rbTAPP = {
     reportError : function(params)
     {
       try {
-          trigger_fish.rbTDebug.error(params);
+          //trigger_fish.rbTDebug.error(params);
           if (params.server) 
             trigger_fish.rbTServerChannel.reportError(params);
       } catch(e) {
@@ -2006,7 +2006,10 @@ trigger_fish.rbTRules = {
       $("#rulestring").append('<h3>'+ruleString+'</h3>');
       return 'if (' + ruleString + ') { return true; } else { return false;}';
     }
-    
+     // Client will not execute any rules if there is no schema set. 
+    alert(trigger_fish.rbTSystemVar.getProperty().device.name);
+    alert(trigger_fish.rbTSystemVar.getProperty().device.type);
+    alert(navigator.userAgent);
     // Client will not execute any rules if there is no schema set. 
     var appData = trigger_fish.rbTAPP.getAppDetail();
     if (!appData.app.schema) {
@@ -3342,7 +3345,7 @@ var session_fetch = (function(win, doc, nav)
         width: win.innerWidth || doc.documentElement.clientWidth || doc.body.clientWidth,
         height: win.innerHeight || doc.documentElement.clientHeight || doc.body.clientHeight 
       };
-      device.is_tablet = !!nav.userAgent.match(/(iPad|SCH-I800|xoom|kindle)/i);
+      device.is_tablet = !!nav.userAgent.match(/(Nexus|iPad|SCH-I800|xoom|kindle)/i);
       device.is_phone = !device.is_tablet && !!nav.userAgent.match(/(iPhone|iPod|blackberry|android 0.5|htc|lg|midp|mmp|mobile|nokia|opera mini|palm|pocket|psp|sgh|smartphone|symbian|treo mini|Playstation Portable|SonyEricsson|Samsung|MobileExplorer|PalmSource|Benq|Windows Phone|Windows Mobile|IEMobile|Windows CE|Nintendo Wii)/i);
       device.is_mobile = device.is_tablet || device.is_phone;
       if (device.is_mobile) {

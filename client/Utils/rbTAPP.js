@@ -199,7 +199,7 @@ trigger_fish.rbTAPP = {
     reportError : function(params)
     {
       try {
-          trigger_fish.rbTDebug.error(params);
+          //trigger_fish.rbTDebug.error(params);
           if (params.server) 
             trigger_fish.rbTServerChannel.reportError(params);
       } catch(e) {
