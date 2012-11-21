@@ -1,4 +1,4 @@
-l#!/usr/bin/ruby
+#!/usr/bin/ruby
 
 #All TemplType // Will be removed in next version to make it scalable 
 templLibStrTopbar = "'topbar' :{ \n "

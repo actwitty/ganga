@@ -143,7 +143,7 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' : {
 	 	 	 	 	 				key :'rb.t.nr.button_fontSize',
-	 	 	 	 	 				value :'14'
+	 	 	 	 	 				value :'16'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '12' : {
 	 	 	 	 	 				key :'rb.t.cr.button_background_on_focus',
