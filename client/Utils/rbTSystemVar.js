@@ -88,6 +88,8 @@ trigger_fish.rbTSystemVar = {
     'screen[width]' :  'Number'
     'viewport[height]' : 'Number'
     'viewport[width]' : 'Number'
+    'search[engine]' : 'String'
+    'search[query]'  : 'String'
     'country' : 'String'
     'language' : 'String'
     'plugins' : 'Array'
@@ -118,6 +120,7 @@ trigger_fish.rbTSystemVar = {
     this.setProperty("browser_version",json.browser.version);
     this.setProperty("operatingsystem",json.browser.os);
     this.setProperty("referrer",json.current_session.referrer_info);
+    this.setProperty("search",json.current_session.search);
     this.setProperty("device",json.device.type);
     this.setProperty("screen",json.device.screen);
     this.setProperty("viewport",json.device.viewport);

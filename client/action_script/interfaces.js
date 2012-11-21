@@ -9,7 +9,7 @@ trigger_fish.rbT.getTemplateHTMLByName = function(type,api){
 		return "";
 	}
 	
-	if ( typeof name === 'undefined' ){
+	if ( typeof name === undefined ){
 		trigger_fish.rbT.sendErrorToRBServer("improper access of interface getTemplateHTMLByName");
 		return "";
 	}
@@ -21,7 +21,7 @@ trigger_fish.rbT.getTemplateApplyVars = function(html,vars){
 		return "";
 	}
 
-	if ( typeof html === 'undefined' || typeof vars === 'undefined' ){
+	if ( typeof html === undefined || typeof vars === undefined ){
 		trigger_fish.rbT.sendErrorToRBServer("improper access of interface getTemplateApplyVars");
 		return "";
 	}
@@ -33,7 +33,7 @@ trigger_fish.rbT.isTemplateGoodToApply = function(html){
 	if (!trigger_fish.rbT.isInitialized()){
 		return false;
 	}
-	if ( typeof html === 'undefined' ){
+	if ( typeof html === undefined ){
 		trigger_fish.rbT.sendErrorToRBServer("improper access of interface isTemplateGoodToApply");
 		return "";
 	}
@@ -45,7 +45,7 @@ trigger_fish.rbT.applyHtmltoPage = function(html){
 	if (!trigger_fish.rbT.isInitialized()){
 		return "";
 	}
-	if ( typeof html === 'undefined' ){
+	if ( typeof html === undefined ){
 		trigger_fish.rbT.sendErrorToRBServer("improper access of interface applyHtmltoPage");
 		return "";
 	}
@@ -66,7 +66,7 @@ trigger_fish.rbT.enableTimeOutHadnling =function(templateName,timerValue){
    if (!trigger_fish.rbT.isInitialized()){
 		return "";
 	}
-	if ( typeof templateName === 'undefined' ){
+	if ( typeof templateName === undefined ){
 		trigger_fish.rbT.sendErrorToRBServer("improper access of interface enableTimeOutHadnling");
 		return "";
 	}
@@ -79,7 +79,7 @@ trigger_fish.rbT.enableTimeOutHadnling =function(templateName,timerValue){
 trigger_fish.rbT.invokeActionScript = function(action)
 {
 
-	if ( typeof action === 'undefined' ){
+	if ( typeof action === undefined ){
 		trigger_fish.rbT.sendErrorToRBServer("Invalid params in rule Json");
 		return "";
 	}
