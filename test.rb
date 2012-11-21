@@ -26,5 +26,5 @@ profile = a.get_profile('UA-24404937-1')
 #puts profile.inspect
 
 
-pp profile.analytic(:filters => {:visitors.gt => 0, :visitCount.matches => 4},:start_date => Date.new(2012, 4, 1), :end_date => Date.new(2012, 8, 30) )
+pp profile.analytic(:filters => {:visitors.gt => 0, :visitCount.matches => 4},:start_date => Date.new(2012, 10, 1), :end_date => Date.new(2012, 11, 30) )
 
