@@ -790,11 +790,10 @@ trigger_fish.rbT.fillTheRuntimeValueForTemplArgs = function(tempMatch,actionparm
                             // fetch event variable here
 
 // INTEGRATION_ENABLE                            
-/*
+
                            trigger_fish.rbT.currentSystemVar = trigger_fish.rbTSystemVar.getProperty();
                            trigger_fish.rbT.currentActorVar = trigger_fish.rbTActor.getProperties();
                            trigger_fish.rbT.currentEventVar = trigger_fish.rbTAPP.getTransVar();
-*/                           
 
                              
                            for(var i=0 ; i<tempMatch.length ; i++)
