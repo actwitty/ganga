@@ -45,7 +45,6 @@ trigger_fish.rbT.templateLib = {
  trigger_fish.rbT.templateName = {
 	 			'bottombar.generic.fblike':'A bottom bar to influence visitors from Facebook',
 	 			'topbar.generic.normal':'A promo top bar with link and some text',
-	 			'chat.generic.normal':'Chat Window',
 	 			'topbar.generic.twitterfollow':'Top bar to Gather followers from twitter',
 	 			'bottombar.generic.twitterfollow':'Bottom bar to Gather followers from twitter',
 	 			'topbar.generic.fblike':'A top bar to influence visitors from Facebook',
@@ -169,13 +168,6 @@ trigger_fish.rbT.templateLib = {
  	 	 	 	 	 	 '17' :{
 	 	 	 	 	 				key :'rb.t.vsg.text_right',
 	 	 	 	 	 				value :'Please add the promotional right text here'
-	 	 	 	 	 	  }
-	 	 	 	 	 },
-	 	  'chat.generic.normal':{
-
- 	 	 	 	 	 	 '1' :{
-	 	 	 	 	 				key :'rb.t.sg.olarkIdentity',
-	 	 	 	 	 				value :'\'6679-845-10-6199\''
 	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'topbar.generic.twitterfollow':{
