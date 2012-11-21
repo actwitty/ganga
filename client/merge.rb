@@ -4,7 +4,7 @@ files = ["./Utils/rbt.js",
 		 "./action_script/templSingle.js"
 		]
 
-OUTPUT_FILE = "/home/sammy/actwitty/ganga/public/rbt_merge.js"
+OUTPUT_FILE = "/home/amartya/work/ganga/public/rbt_merge.js"
 
 rbt_file = File.new(OUTPUT_FILE,"w")
 
