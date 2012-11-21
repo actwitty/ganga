@@ -34,17 +34,17 @@ App.Condition = Ember.Object.extend
     @set 'property', scope + '.' + property  
   # ----------------------------------------------------
   setOperationList: (reset)->       
-    property = @get 'property' 
-    console.log 'SET OPLIST'      
-    # Override for some system parameters that have a predefined list of values
+    property = @get 'property'        
+    # Override for some system parameters that have a predefined list of values    
     if App.operationListOverrides.hasOwnProperty(property)         
+      
       @set 'opList', App.operationListOverrides[property]
       if reset is true or operation is null      
-        for op of App.operationListOverrides[type]        
-          if App.operationListOverrides[type].hasOwnProperty(op)
+        for op of App.operationListOverrides[property]                  
+          if App.operationListOverrides[property].hasOwnProperty(op)
             @set 'operation', op
             break
-            
+
     else      
       type = @get 'type'         
       @set 'opList', App.operationsList[type]    
