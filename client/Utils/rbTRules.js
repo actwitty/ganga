@@ -107,7 +107,6 @@ trigger_fish.rbTRules = {
       $("#rulestring").append('<h3>'+ruleString+'</h3>');
       return 'if (' + ruleString + ') { return true; } else { return false;}';
     }
-    
     // Client will not execute any rules if there is no schema set. 
     var appData = trigger_fish.rbTAPP.getAppDetail();
     if (!appData.app.schema) {

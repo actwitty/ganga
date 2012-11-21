@@ -4,7 +4,7 @@
       %a.scroll{:href => "/"} Home        
     %li
       %a.scroll{:href => "/accounts/confirmation/new"} Resend Confirmation
-    
+.main_padding
 .row.equal-heights{:style => "text-align: center;"}
   
   = form_for resource, :as => resource_name, :url => update_account_confirmation_path, :html => {:method => 'put'} do |f|

@@ -91,7 +91,7 @@ trigger_fish.rbT.eventHandler = {
          var id = "rb" + trigger_fish.rbT.makeFirstLetterCapital(tempMatch[0])+trigger_fish.rbT.makeFirstLetterCapital(tempMatch[2])+trigger_fish.rbT.makeFirstLetterCapital(tempMatch[4])+"BaseContainer";
          var transId = "rb" + trigger_fish.rbT.makeFirstLetterCapital(tempMatch[0])+trigger_fish.rbT.makeFirstLetterCapital(tempMatch[2])+trigger_fish.rbT.makeFirstLetterCapital(tempMatch[4])+"TranblockContainer";
          var transBase = document.getElementById(transId);
-         if(transBase != 'undefined')
+         if(transBase != undefined)
          transBase.parentNode.removeChild(transBase);
      } 
      
@@ -101,7 +101,7 @@ trigger_fish.rbT.eventHandler = {
         
         var Base = document.getElementById(id);
 
-         if( typeof Base === 'undefined')
+         if( typeof Base === undefined)
          {
          	  trigger_fish.rbT.sendErrorToRBServer("Not able to find template Base for timeout Delete ");
 
@@ -183,7 +183,7 @@ trigger_fish.rbT.eventHandler = {
     
 // INTEGRATION_ENABLE     
 
-
+         
          trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
         //TODO
 

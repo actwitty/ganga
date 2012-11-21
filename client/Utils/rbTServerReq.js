@@ -16,7 +16,7 @@
  */
 trigger_fish.rbTServerChannel = {
   
-  rbt_url : "http://localhost:3000/",
+  rbt_url : "http://rulebot.com/",
 
   
   /* All server url routes to be mapped here */
@@ -222,7 +222,6 @@ trigger_fish.rbTServerChannel = {
                 trigger_fish.rbTAPP.log({"message":"server response error","data_closure":that,"textStatus":textStatus});
                 // FIXME :: ADDED ONLY TO TEST CLIENT SIDE
                 if (that.event) {
-                  trigger_fish.rbTRules.executeRulesOnEvent(that.event);
                   trigger_fish.rbTAPP.setTransVar({}); 
                 } else if (that.identify && XMLHttpRequest.responseText.indexOf("is already in use")) {
                   trigger_fish.rbTServerChannel.actorDetails();
