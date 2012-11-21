@@ -1,134 +1,137 @@
-<!-- {{Title{{=A bottom bar to influence visitors from Facebook}}}}-->
+<div id="rbBottombarGenericFblikeBaseContainer">
+    <!-- {{Title{{=A bottom bar to influence visitors from Facebook}}}}-->
 
-<link rel="stylesheet" type="text/css" href="https://s3.amazonaws.com/actwitty_ganga/css/common_styles.css">
-
-
-
-
-<style>
-  .rbTbFbLikeBtmDyn{
-    position: fixed;
-    bottom: 0px;
-    left: 0px;   
-    z-index: {{rb.t.nr.base_zindex{{=10000}}}};    
-    color: white;
-    font-size: {{rb.t.nr.font_size{{=14}}}}px;
-    font-family:'{{rb.t.ft.font{{=Arial}}}}';
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);    
-    border: 1px solid {{rb.t.cr.border_color{{=#304A80}}}};
-    background-color: {{rb.t.cr.background_color{{=#6087C6}}}};    
-  }
-
-  .rbTbFbLikeBtmDyn .barDyn{
-    width: {{rb.t.nr.show_width{{=900}}}}px;
-    height: {{rb.t.nr.bar_height{{=40}}}}px;
-    vertical-align: middle;
-    position: relative;
-  }
-
-
-  .rbTbFbLikeBtmDyn .rbDynText{
-    white-space: nowrap;
-    overflow:hidden;
-   }
-   
-   .rbTbFbLikeBtmDyn .rbDynLeftText{
-    position: absolute;
-    left:20px; 
-    width:80%;
-    top: 10px;
-    text-align: center;
-    margin-right: 20px;
-
-   } 
-   .rbTbFbLikeBtmDyn .rbTbFbLikeRight{
-    position: absolute;
-    right:0px; 
-    width:200px;    
-    text-align: center;
-    margin: 0px;
-    padding: 0px;
-    
-   } 
-
-  .rbTbFbLikeBtmDyn .rbInfoBtnDyn{
-    position: absolute;
-    top: 5px;
-    right: -130px;
-    display: inline-block;
-    overflow: hidden;  
-  }
-  
-</style>
+    <link rel="stylesheet" type="text/css" href="https://s3.amazonaws.com/actwitty_ganga/css/common_styles.css">
 
 
 
 
-<div id="rbBottombarGenericFblikeBaseContainer" class="rbBaseStyle rbTbFbLikeBtmDyn" >
-
-  <div class='rbIframeContent'><!--<div id="fb-root"></div>
-      <script>
-        (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s); js.id = id;
-        js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
-        fjs.parentNode.insertBefore(js, fjs);
-        }(document, "script", "facebook-jssdk"));
-      </script>
-
-      <div class="fb-like" 
-          data-href="{{rb.t.ul.facebook_page{{=http://www.google.com}}}}" 
-          data-send="true" 
-          data-layout="button_count" 
-          data-width="250px" 
-          data-show-faces="false" 
-          data-font="arial">
-      </div>--></div>
-
-
-
-
-  <div class="rbBarWidth barDyn">
-
-    <p id="rbBottombarGenericFblikeLeftClick" class="rbTextLeft rbDynLeftText rbDynText" >
-      {{rb.t.vsg.text_left{{=Woo Facebook users coming to your page by writing something to make them like you.}}}}
-    </p>
-
-      
-    <iframe class="rbIframe rbTbFbLikeRight">
-
-    </iframe>
-    
-
-    <div class="rbInfoBtnDyn">
-      <div class="rb-btn-group" >
-        <button id="rbBottombarGenericFblikeRoiHelp" class="rb-info-btn rb-info-btn-small rbClickable" link="http://www.rulebot.com">
-          ?
-        </button>
-        <button id="rbBottombarGenericFblikeCloseClick" class="rb-info-btn rb-info-btn-small rbClickable" >
-          X
-        </button>            
-      </div>
-    </div>  
-
-  </div>
-
-  <script>
-    var frameClass='rbIframeContent';
-    var base = document.getElementById('rbBottombarGenericFblikeBaseContainer');
-    if( base !== undefined){
-      var inner = base.getElementsByClassName('rbIframeContent');    
-      var iframe = base.getElementsByClassName('rbIframe');
-      if( inner !== undefined && iframe !== undefined  ){
-        var ifrm = iframe[0];
-        ifrm = (ifrm.contentWindow) ? ifrm.contentWindow : (ifrm.contentDocument.document) ? ifrm.contentDocument.document : ifrm.contentDocument;
-        if(ifrm !== undefined){
-          ifrm.document.open();
-          ifrm.document.write(inner[0].firstChild.nodeValue);
-          ifrm.document.close();    
-        }
+    <style>
+      .rbTbFbLikeBtmDyn{
+        position: fixed;
+        bottom: 0px;
+        left: 0px;   
+        z-index: {{rb.t.nr.base_zindex{{=10000}}}};    
+        color: white;
+        font-size: {{rb.t.nr.font_size{{=14}}}}px;
+        font-family:'{{rb.t.ft.font{{=Arial}}}}';
+        text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);    
+        border: 1px solid {{rb.t.cr.border_color{{=#304A80}}}};
+        background-color: {{rb.t.cr.background_color{{=#6087C6}}}};    
       }
-    }
-  </script>
+
+      .rbTbFbLikeBtmDyn .barDyn{
+        width: {{rb.t.nr.show_width{{=900}}}}px;
+        height: {{rb.t.nr.bar_height{{=40}}}}px;
+        vertical-align: middle;
+        position: relative;
+      }
+
+
+      .rbTbFbLikeBtmDyn .rbDynText{
+        white-space: nowrap;
+        overflow:hidden;
+       }
+       
+       .rbTbFbLikeBtmDyn .rbDynLeftText{
+        position: absolute;
+        left:20px; 
+        width:80%;
+        top: 10px;
+        text-align: center;
+        margin-right: 20px;
+
+       } 
+       .rbTbFbLikeBtmDyn .rbTbFbLikeRight{
+        position: absolute;
+        right:0px; 
+        width:200px;    
+        text-align: center;
+        margin: 0px;
+        padding: 0px;
+        overflow: hidden;
+        
+       } 
+
+      .rbTbFbLikeBtmDyn .rbInfoBtnDyn{
+        position: absolute;
+        top: 5px;
+        right: -130px;
+        display: inline-block;
+        overflow: hidden;  
+      }
+      
+    </style>
+
+
+
+
+    <div  class="rbBaseStyle rbTbFbLikeBtmDyn" >
+
+      <div class='rbIframeContent'><!--<div id="fb-root"></div>
+          <script>
+            (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+            fjs.parentNode.insertBefore(js, fjs);
+            }(document, "script", "facebook-jssdk"));
+          </script>
+
+          <div class="fb-like" 
+              data-href="{{rb.t.ul.facebook_page{{=http://www.google.com}}}}" 
+              data-send="true" 
+              data-layout="button_count" 
+              data-width="250px" 
+              data-show-faces="false" 
+              data-font="arial">
+          </div>--></div>
+
+
+
+
+      <div class="rbBarWidth barDyn">
+
+        <p id="rbBottombarGenericFblikeLeftClick" class="rbTextLeft rbDynLeftText rbDynText" >
+          {{rb.t.vsg.text_left{{=Woo Facebook users coming to your page by writing something to make them like you.}}}}
+        </p>
+
+          
+        <iframe class="rbIframe rbTbFbLikeRight">
+
+        </iframe>
+        
+
+        <div class="rbInfoBtnDyn">
+          <div class="rb-btn-group" >
+            <button id="rbBottombarGenericFblikeRoiHelp" class="rb-info-btn rb-info-btn-small rbClickable" link="http://www.rulebot.com">
+              ?
+            </button>
+            <button id="rbBottombarGenericFblikeCloseClick" class="rb-info-btn rb-info-btn-small rbClickable" >
+              X
+            </button>            
+          </div>
+        </div>  
+
+      </div>
+
+      <script>
+        var frameClass='rbIframeContent';
+        var base = document.getElementById('rbBottombarGenericFblikeBaseContainer');
+        if( base !== undefined){
+          var inner = base.getElementsByClassName('rbIframeContent');    
+          var iframe = base.getElementsByClassName('rbIframe');
+          if( inner !== undefined && iframe !== undefined  ){
+            var ifrm = iframe[0];
+            ifrm = (ifrm.contentWindow) ? ifrm.contentWindow : (ifrm.contentDocument.document) ? ifrm.contentDocument.document : ifrm.contentDocument;
+            if(ifrm !== undefined){
+              ifrm.document.open();
+              ifrm.document.write(inner[0].firstChild.nodeValue);
+              ifrm.document.close();    
+            }
+          }
+        }
+      </script>
+    </div>
 </div>

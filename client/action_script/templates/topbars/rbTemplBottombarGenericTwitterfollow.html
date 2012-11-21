@@ -1,103 +1,130 @@
-<!-- {{Title{{=Bottom bar to Gather followers from twitter}}}}-->
+<div  id="rbBottombarGenericTwitterfollowBaseContainer" >
+  <!-- {{Title{{=Bottom bar to Gather followers from twitter}}}}-->
 
-<link rel="stylesheet" type="text/css" href="https://s3.amazonaws.com/actwitty_ganga/css/common_styles.css">
+  <link rel="stylesheet" type="text/css" href="https://s3.amazonaws.com/actwitty_ganga/css/common_styles.css">
 
-<style>
-  
-  .rbBmTwFollowDyn{
-    position: fixed;
-    bottom: 0px;
-    left: 0px;   
-    z-index: {{rb.t.nr.base_zindex{{=10000}}}};    
-    background: {{rb.t.cr.base_background_color{{=#377CA8}}}} !important;    
-    border-bottom: 1px solid #18496A !important;
-  }
+  <style>
+    
+    .rbBmTwFollowDyn{
+      position: fixed;
+      bottom: 0px;
+      left: 0px;   
+      z-index: {{rb.t.nr.base_zindex{{=10000}}}};    
+      background: {{rb.t.cr.base_background_color{{=#377CA8}}}} !important;    
+      border-bottom: 1px solid #18496A !important;
+    }
 
-  .rbBmTwFollowDyn .barDyn{
-    width: {{rb.t.nr.show_width{{=900}}}}px;
-    height: {{rb.t.nr.base_height{{=40}}}}px;
-    vertical-align: middle;
-    position: relative;
-  }
+    .rbBmTwFollowDyn .barDyn{
+      width: {{rb.t.nr.show_width{{=900}}}}px;
+      height: {{rb.t.nr.base_height{{=40}}}}px;
+      vertical-align: middle;
+      position: relative;
+    }
 
 
-  .rbBmTwFollowDyn .rbDynText
-   {
-     color:{{rb.t.cr.text_color {{=#ffffff}}}};
-     font-size: {{rb.t.nr.text_fontsize{{=14}}}}px;
-     font-family: {{rb.t.ft.text_fontfamily{{=Arial}}}};
-     font-weight:{{rb.t.fw.text_fontweight{{=normal}}}};
-     white-space: nowrap;
-     overflow:hidden;
-   }
-   
-   .rbBmTwFollowDyn .rbDynLeftText{
-    position: absolute;
-    left:20px; 
-    width:40%;
-    top: 10px;
-    text-align: center;
-    margin-right: 20px;
+    .rbBmTwFollowDyn .rbDynText
+     {
+       color:{{rb.t.cr.text_color {{=#ffffff}}}};
+       font-size: {{rb.t.nr.text_fontsize{{=14}}}}px;
+       font-family: {{rb.t.ft.text_fontfamily{{=Arial}}}};
+       font-weight:{{rb.t.fw.text_fontweight{{=normal}}}};
+       white-space: nowrap;
+       overflow:hidden;
+     }
+     
+     .rbBmTwFollowDyn .rbDynLeftText{
+      position: absolute;
+      left:20px; 
+      width:40%;
+      top: 10px;
+      text-align: center;
+      margin-right: 20px;
 
-   }
-   
-   .rbBmTwFollowDyn .rbDynRightText{
-    position: absolute;
-    right: 20px; 
-    top: 10px;    
-    width:30%; 
-    text-align: center;   
-    margin-left: 20px;
-   }
+     }
+     
+     .rbBmTwFollowDyn .rbDynRightText{
+      position: absolute;
+      right: 20px; 
+      top: 10px;    
+      width:30%; 
+      text-align: center;   
+      margin-left: 20px;
+     }
 
-   .rbBmTwFollowDyn .rbBtnDyn {      
-          
-      position: absolute;      
-      width:150px;
-      left: 42%;
+     .rbBmTwFollowDyn .rbBtnDyn {      
+            
+        position: absolute;      
+        width:180px;
+        left: 42%;
+        top: 0px;
+        overflow: hidden;
+        margin-right: 20px;                      
+
+     }
+
+    
+     .rbBmTwFollowDyn .rbInfoBtnDyn{
+      position: absolute;
       top: 5px;
-      margin-right: 20px;                      
-
-   }
-
-  
-   .rbBmTwFollowDyn .rbInfoBtnDyn{
-    position: absolute;
-    top: 5px;
-    right: -130px;
-    display: inline-block;
-   }
-</style>
-
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+      right: -130px;
+      display: inline-block;
+     }
+  </style>
 
 
-<div id="rbBottombarGenericTwitterfollowBaseContainer" class="rbBaseStyle rbBmTwFollowDyn" >
 
-  <div class="rbBarWidth barDyn">
 
-    <p  class="rbTextLeft rbDynLeftText rbDynText" >
-      {{rb.t.vsg.text_left{{=Increase your market reach by connecting to users}}}}
-    </p>
+  <div class="rbBaseStyle rbBmTwFollowDyn" >
 
-    <div class ="rbBtn rbBtnDyn" > 
-          <a  data-show-count="false" data-button = "blue" class="twitter-follow-button" href="https://twitter.com/{{rb.t.sg.twitter_account_link{{=@act_witty}}}}" data-size="large">Follow {{rb.t.sg.twitter_label{{=@act_witty}}}} </a>
+    <div class='rbIframeContent'><!--<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+    <a  data-show-count="false" data-button = "blue" class="twitter-follow-button" href="https://twitter.com/{{rb.t.sg.twitter_account_link{{=@act_witty}}}}" data-size="large">Follow {{rb.t.sg.twitter_label{{=@act_witty}}}} </a>--></div>
+
+    <div class="rbBarWidth barDyn">
+
+    <div class="rbBarWidth barDyn">
+
+      <p  class="rbTextLeft rbDynLeftText rbDynText" >
+        {{rb.t.vsg.text_left{{=Increase your market reach by connecting to users}}}}
+      </p>
+
+      <iframe class ="rbBtn rbIframe rbBtnDyn" > 
+
+      </iframe>
+    
+      <p  class="rbTextRight rbDynRightText rbDynText" >           
+        {{rb.t.vsg.text_right{{=Gathering reach on twitter to increase business.}}}}  
+      </p>
+
+      <div class="rbInfoBtnDyn">
+        <div class="rb-btn-group" >
+          <button id="rbBottombarGenericTwitterfollowRoiHelp" class="rb-info-btn rb-info-btn-small rbClickable" link="http://www.rulebot.com">
+            ?
+          </button>
+          <button id="rbBottombarGenericTwitterfollowCloseClick" class="rb-info-btn rb-info-btn-small rbClickable" >
+            X
+          </button>            
+        </div>
+      </div>  
+
     </div>
-  
-    <p  class="rbTextRight rbDynRightText rbDynText" >           
-      {{rb.t.vsg.text_right{{=Gathering reach on twitter to increase business.}}}}  
-    </p>
 
-    <div class="rbInfoBtnDyn">
-      <div class="rb-btn-group" >
-        <button id="rbBottombarGenericTwitterfollowRoiHelp" class="rb-info-btn rb-info-btn-small rbClickable" link="http://www.rulebot.com">
-          ?
-        </button>
-        <button id="rbBottombarGenericTwitterfollowCloseClick" class="rb-info-btn rb-info-btn-small rbClickable" >
-          X
-        </button>            
-      </div>
-    </div>  
+    <script>    
+      var base = document.getElementById('rbBottombarGenericTwitterfollowBaseContainer');
+      if( base !== undefined){
+        var inner = base.getElementsByClassName('rbIframeContent');    
+        var iframe = base.getElementsByClassName('rbIframe');
+        if( inner !== undefined && iframe !== undefined  ){
+          var ifrm = iframe[0];
+          ifrm = (ifrm.contentWindow) ? ifrm.contentWindow : (ifrm.contentDocument.document) ? ifrm.contentDocument.document : ifrm.contentDocument;
+          if(ifrm !== undefined){
+            ifrm.document.open();
+            ifrm.document.write(inner[0].firstChild.nodeValue);
+            ifrm.document.close();    
+          }
+        }
+      }
+    </script>
 
   </div>
 </div>

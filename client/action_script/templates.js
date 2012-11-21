@@ -45,7 +45,6 @@ trigger_fish.rbT.templateLib = {
  trigger_fish.rbT.templateName = {
 	 			'bottombar.generic.fblike':'A bottom bar to influence visitors from Facebook',
 	 			'topbar.generic.normal':'A promo top bar with link and some text',
-	 			'chat.generic.normal':'Chat Window',
 	 			'topbar.generic.twitterfollow':'Top bar to Gather followers from twitter',
 	 			'bottombar.generic.twitterfollow':'Bottom bar to Gather followers from twitter',
 	 			'topbar.generic.fblike':'A top bar to influence visitors from Facebook',
@@ -136,11 +135,11 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
 	 	 	 	 	 				key :'rb.t.cr.button_background',
-	 	 	 	 	 				value :'#E24E35'
+	 	 	 	 	 				value :'whiteSmoke'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
 	 	 	 	 	 				key :'rb.t.cr.button_color',
-	 	 	 	 	 				value :'#FFFFFF'
+	 	 	 	 	 				value :'#333'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' : {
 	 	 	 	 	 				key :'rb.t.nr.button_fontSize',
@@ -148,11 +147,11 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '12' : {
 	 	 	 	 	 				key :'rb.t.cr.button_background_on_focus',
-	 	 	 	 	 				value :'#CC412A'
+	 	 	 	 	 				value :'#d9d9d9'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '13' : {
 	 	 	 	 	 				key :'rb.t.cr.button_color_on_focus',
-	 	 	 	 	 				value :'#FFFFFF'
+	 	 	 	 	 				value :'#888'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '14' : {
 	 	 	 	 	 				key :'rb.t.vsg.text_left',
@@ -169,13 +168,6 @@ trigger_fish.rbT.templateLib = {
  	 	 	 	 	 	 '17' :{
 	 	 	 	 	 				key :'rb.t.vsg.text_right',
 	 	 	 	 	 				value :'Please add the promotional right text here'
-	 	 	 	 	 	  }
-	 	 	 	 	 },
-	 	  'chat.generic.normal':{
-
- 	 	 	 	 	 	 '1' :{
-	 	 	 	 	 				key :'rb.t.sg.olarkIdentity',
-	 	 	 	 	 				value :'\'6679-845-10-6199\''
 	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'topbar.generic.twitterfollow':{
@@ -264,16 +256,16 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 				value :'normal'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
-	 	 	 	 	 				value :'Increase your market reach by connecting to users'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '10' : {
 	 	 	 	 	 				key :'rb.t.sg.twitter_account_link',
 	 	 	 	 	 				value :'@act_witty'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '11' : {
+ 	 	 	 	 	 	 '10' : {
 	 	 	 	 	 				key :'rb.t.sg.twitter_label',
 	 	 	 	 	 				value :'@act_witty'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '11' : {
+	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				value :'Increase your market reach by connecting to users'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '12' :{
 	 	 	 	 	 				key :'rb.t.vsg.text_right',
@@ -357,12 +349,12 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 				value :'normal'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
-	 	 	 	 	 				value :'Ask here to twitter user to share your blog'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '10' : {
 	 	 	 	 	 				key :'rb.t.sg.twitter_share_text',
 	 	 	 	 	 				value :'make #twitter user to share about your blog at a sample url like http://www.rulebot.com'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '10' : {
+	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				value :'Ask here to twitter user to share your blog'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' :{
 	 	 	 	 	 				key :'rb.t.vsg.text_right',
@@ -568,18 +560,14 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 				value :'normal'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
-	 	 	 	 	 				value :'Ask here to twitter user to share your blog'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.ul.button_link',
-	 	 	 	 	 				value :'http://www.google.com'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '11' : {
 	 	 	 	 	 				key :'rb.t.sg.twitter_share_text',
 	 	 	 	 	 				value :'make #twitter user to share about your blog at a sample url like http://www.rulebot.com'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '12' :{
+ 	 	 	 	 	 	 '10' : {
+	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				value :'Ask here to twitter user to share your blog'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '11' :{
 	 	 	 	 	 				key :'rb.t.vsg.text_right',
 	 	 	 	 	 				value :'Influence your visitors.'
 	 	 	 	 	 	  }
