@@ -13,85 +13,87 @@ App.Condition = Ember.Object.extend
   opList: null
 
   inited: false
-
+  # ----------------------------------------------------
   init: ->    
-    @_super()        
-    operation = @get 'operation'     
-    type = @get 'type'
-    @set 'opList', App.operationsList[type]
+    @_super()            
+    @setUniqProperty()
+    @setValueDefault(false)
+    @setOperationList(false)     
 
-    if operation is null  
-      console.log 'operation is null'      
-      for op of App.operationsList[type]        
-        if App.operationsList[type].hasOwnProperty(op)
-          @set 'operation', op
-          break
-
-   
-    scope = @get 'scope'
-    property = @get 'property'
-    @set 'property', scope + '.' + property       
-    
-
-    console.log @get('value1')
-    
-    if App.LimitedValueList.hasOwnProperty(property)          
-      @set 'valueOptions', App.LimitedValueList[property]      
-      value1 = @get('value1')    
-      console.log 'setting ' + value1      
-      if value1 is null or value1.length is 0                
-        for key of App.LimitedValueList[property]         
-          @set 'value1', key        
-          break  
-    else
-      @set 'valueOptions', null
-
+    # this must be last
     Ember.run.next(this, 'enableObserversAfterInit')
-    
+
+  # ----------------------------------------------------
   enableObserversAfterInit: ->
     @set 'inited', true
 
-  observeOperationChange: (->  
-    if @get('inited')  is true
-      property = @trueProperty()
-      if App.LimitedValueList.hasOwnProperty(property)       
+  # ----------------------------------------------------
+  setUniqProperty: ->
+    scope = @get 'scope'
+    property = @get 'property'
+    @set 'property', scope + '.' + property  
+  # ----------------------------------------------------
+  setOperationList: (reset)->       
+    property = @get 'property'        
+    # Override for some system parameters that have a predefined list of values    
+    if App.operationListOverrides.hasOwnProperty(property)         
+      
+      @set 'opList', App.operationListOverrides[property]
+      if reset is true or operation is null      
+        for op of App.operationListOverrides[property]                  
+          if App.operationListOverrides[property].hasOwnProperty(op)
+            @set 'operation', op
+            break
+
+    else      
+      type = @get 'type'         
+      @set 'opList', App.operationsList[type]    
+      operation = @get 'operation' 
+
+      if reset is true or operation is null      
+        for op of App.operationsList[type]        
+          if App.operationsList[type].hasOwnProperty(op)
+            @set 'operation', op
+            break
+  # ----------------------------------------------------
+  setValueDefault: (reset) ->
+    property = @get 'property'    
+    if App.LimitedValueList.hasOwnProperty(property)       
+      @set 'valueOptions', App.LimitedValueList[property]      
+      value1 = @get('value1')    
+
+      if reset is true or value1 is null or value1.length is 0          
         for key of App.LimitedValueList[property]
+          
           @set 'value1', key        
           break
         @set 'value2', '' 
-      else
+    else
+      if reset is true
+        @set 'valueOptions', null
         @set 'value1', ''
-        @set 'value2', '' 
+        @set 'value2', ''
+
+
+  # ----------------------------------------------------
+  observeOperationChange: (->  
+    if @get('inited')  is true
+      @setValueDefault(true)
 
   ).observes('operation')
 
-
+  # ----------------------------------------------------
   observesTypeChange: (->
     if @get('inited')  is true
-      type = @get 'type'    
-      @set 'opList', App.operationsList[type]    
-      for op of App.operationsList[type]
-        if App.operationsList[type].hasOwnProperty(op)
-          @set 'operation', op
-          break
+      @setOperationList(true)
+      @setValueDefault(true)
   ).observes('type')    
 
 
   observesPropertyChange: (->
-    if @get('inited')  is true
-      property = @trueProperty()
-      if App.LimitedValueList.hasOwnProperty(property)       
-        @set 'valueOptions', App.LimitedValueList[property]
-        for key of App.LimitedValueList[property]
-          @set 'value1', key        
-          break
-        @set 'value2', '' 
-      else
-        @set 'valueOptions', null
-        @set 'value1', ''
-        @set 'value2', ''    
-    
-      
+    if @get('inited')  is true      
+      @setOperationList(true)
+      @setValueDefault(true)              
   ).observes('property')  
 
   trueProperty: ->

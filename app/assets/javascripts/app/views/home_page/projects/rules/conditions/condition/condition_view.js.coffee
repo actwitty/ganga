@@ -16,14 +16,13 @@ App.ConditionView = Ember.View.extend
   # ------------------------------------------
   observeChangeInOperation: (->
     operation = @get('condition').get('operation')
-    
     if App.operationsValuesCount[operation] >= 1
       @set 'showHideInputOne', 'rule_val show'
       if App.operationsValuesCount[operation] >= 2
         @set 'showHideInputTwo', 'rule_val show'
       else
         @set 'showHideInputTwo', 'rule_val hide'
-    else
+    else      
       @set 'showHideInputOne', 'rule_val hide'
       @set 'showHideInputTwo', 'rule_val hide'
   ).observes('condition.operation')
