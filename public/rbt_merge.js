@@ -1,7 +1,7 @@
 
 
 
-/***********************[[2012-11-21 14:10:13 +0530]]*********************************/ 
+/***********************[[2012-11-21 14:55:42 +0530]]*********************************/ 
 
 
 
@@ -2018,10 +2018,6 @@ trigger_fish.rbTRules = {
       $("#rulestring").append('<h3>'+ruleString+'</h3>');
       return 'if (' + ruleString + ') { return true; } else { return false;}';
     }
-     // Client will not execute any rules if there is no schema set. 
-    alert(trigger_fish.rbTSystemVar.getProperty().device.name);
-    alert(trigger_fish.rbTSystemVar.getProperty().device.type);
-    alert(navigator.userAgent);
     // Client will not execute any rules if there is no schema set. 
     var appData = trigger_fish.rbTAPP.getAppDetail();
     if (!appData.app.schema) {
@@ -2863,7 +2859,6 @@ trigger_fish.rbTServerChannel = {
                 trigger_fish.rbTAPP.log({"message":"server response error","data_closure":that,"textStatus":textStatus});
                 // FIXME :: ADDED ONLY TO TEST CLIENT SIDE
                 if (that.event) {
-                  trigger_fish.rbTRules.executeRulesOnEvent(that.event);
                   trigger_fish.rbTAPP.setTransVar({}); 
                 } else if (that.identify && XMLHttpRequest.responseText.indexOf("is already in use")) {
                   trigger_fish.rbTServerChannel.actorDetails();
