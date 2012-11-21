@@ -295,7 +295,7 @@ trigger_fish.rbTServerChannel = {
   */
   actorDetails : function()
   {
-    this.makeRequest({"url"           : trigger_fish.rbTServerChannel.url.readActor, 
+    this.makeRequest({"url"           : this.url.readActor, 
                       "set_actor_prop": true,
                       "cb"            : { success: trigger_fish.rbTServerResponse.setActorProperty,
                                           error  : trigger_fish.rbTServerResponse.defaultError
@@ -312,7 +312,7 @@ trigger_fish.rbTServerChannel = {
   {
     "use strict";
     var cb = this.extendCallbacks(callback);
-    this.makeRequest({"url"        : rbTServerChannel.url.conversion, 
+    this.makeRequest({"url"        : this.url.conversion, 
                       "params"     : params,
                       "conversion" : true,
                       "type"       : "POST",
