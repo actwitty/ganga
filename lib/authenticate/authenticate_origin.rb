@@ -21,6 +21,7 @@ module Authenticate
     Rails.env == "test" ? origin = request.env['HTTP_HOST'] : origin = request.env['HTTP_ORIGIN']
 
     if !origin.blank?
+      origin = "https://www.actwitty.com" if origin =~ /actwitty/
       access = AccessInfo.where(origin: origin).first
 
       if !access.blank?
