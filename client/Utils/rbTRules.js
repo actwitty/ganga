@@ -120,10 +120,10 @@ trigger_fish.rbTRules = {
             var functionCode = prepareFunctionCode(rule.ruleString);
             var isRuleValid = new Function(functionCode)();
             if (isRuleValid) {
-              alert("ALL RULES PASSED");
+              trigger_fish.rbTAPP.log({"message":"++ALL CONDITIONS PASSED++","rule":rule});
               that.invokeAction(rule);
             } else {
-              alert("RULES FAILED");
+              trigger_fish.rbTAPP.log({"message":"**ALL CONDITIONS FAILED**","rule":rule});
             }  
           });
           

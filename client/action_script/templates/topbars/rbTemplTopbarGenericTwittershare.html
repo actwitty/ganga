@@ -1,104 +1,130 @@
-<!-- {{Title{{=Influence a Twitter user to share about your business}}}}-->
+<div id="rbTopbarGenericTwittershareBaseContainer">
+  <!-- {{Title{{=Influence a Twitter user to share about your business}}}}-->
 
-<link rel="stylesheet" type="text/css" href="https://s3.amazonaws.com/actwitty_ganga/css/common_styles.css">
+  <link rel="stylesheet" type="text/css" href="https://s3.amazonaws.com/actwitty_ganga/css/common_styles.css">
 
-<style>
-  
-  .rbTpTwShareDyn{
-    position: fixed;
-    top: 0px;
-    left: 0px;   
-    z-index: {{rb.t.nr.base_zindex{{=10000}}}};    
-    background: {{rb.t.cr.base_background_color{{=#377CA8}}}} !important;    
-    border-bottom: 1px solid #18496A !important;
-  }
+  <style>
+    
+    .rbTpTwShareDyn{
+      position: fixed;
+      top: 0px;
+      left: 0px;   
+      z-index: {{rb.t.nr.base_zindex{{=10000}}}};    
+      background: {{rb.t.cr.base_background_color{{=#377CA8}}}} !important;    
+      border-bottom: 1px solid #18496A !important;
+    }
 
-  .rbTpTwShareDyn .barDyn{
-    width: {{rb.t.nr.show_width{{=900}}}}px;
-    height: {{rb.t.nr.base_height{{=40}}}}px;
-    vertical-align: middle;
-    position: relative;
-  }
+    .rbTpTwShareDyn .barDyn{
+      width: {{rb.t.nr.show_width{{=900}}}}px;
+      height: {{rb.t.nr.base_height{{=40}}}}px;
+      vertical-align: middle;
+      position: relative;
+    }
 
 
-  .rbTpTwShareDyn .rbDynText
-   {
-     color:{{rb.t.cr.text_color {{=#ffffff}}}};
-     font-size: {{rb.t.nr.text_fontsize{{=14}}}}px;
-     font-family: {{rb.t.ft.text_fontfamily{{=Arial}}}};
-     font-weight:{{rb.t.fw.text_fontweight{{=normal}}}};
-     white-space: nowrap;
-     overflow:hidden;
-   }
-   
-   .rbTpTwShareDyn .rbDynLeftText{
-    position: absolute;
-    left:20px; 
-    width:40%;
-    top: 10px;
-    text-align: center;
-    margin-right: 20px;
+    .rbTpTwShareDyn .rbDynText
+     {
+       color:{{rb.t.cr.text_color {{=#ffffff}}}};
+       font-size: {{rb.t.nr.text_fontsize{{=14}}}}px;
+       font-family: {{rb.t.ft.text_fontfamily{{=Arial}}}};
+       font-weight:{{rb.t.fw.text_fontweight{{=normal}}}};
+       white-space: nowrap;
+       overflow:hidden;
+     }
+     
+     .rbTpTwShareDyn .rbDynLeftText{
+      position: absolute;
+      left:20px; 
+      width:40%;
+      top: 10px;
+      text-align: center;
+      margin-right: 20px;
 
-   }
-   
-   .rbTpTwShareDyn .rbDynRightText{
-    position: absolute;
-    right: 20px; 
-    top: 10px;    
-    width:40%; 
-    text-align: center;   
-    margin-left: 20px;
-   }
+     }
+     
+     .rbTpTwShareDyn .rbDynRightText{
+      position: absolute;
+      right: 20px; 
+      top: 10px;    
+      width:40%; 
+      text-align: center;   
+      margin-left: 20px;
+     }
 
-   .rbTpTwShareDyn .rbBtnDyn {      
-          
-      position: absolute;      
-      width:100px;
-      left: 42%;
+     .rbTpTwShareDyn .rbBtnDyn {      
+            
+        position: absolute;      
+        width:100px;
+        left: 42%;
+        top: 0px;
+        overflow: hidden;
+        margin-right: 20px;  
+        border: 0px;                     
+
+     }
+
+    
+     .rbTpTwShareDyn .rbInfoBtnDyn{
+      position: absolute;
       top: 5px;
-      margin-right: 20px;                      
+      right: -130px;
+      display: inline-block;
+     }
+  </style>
 
-   }
 
-  
-   .rbTpTwShareDyn .rbInfoBtnDyn{
-    position: absolute;
-    top: 5px;
-    right: -130px;
-    display: inline-block;
-   }
-</style>
 
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  <div class="rbBaseStyle rbTpTwShareDyn" >
 
-<div id="rbTopbarGenericTwittershareBaseContainer" class="rbBaseStyle rbTpTwShareDyn" >
 
-  <div class="rbBarWidth barDyn">
+    <div class='rbIframeContent'><!--<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
-    <p  class="rbTextLeft rbDynLeftText rbDynText" >
-      {{rb.t.vsg.text_left{{=Ask here to twitter user to share your blog}}}}
-    </p>
+    <a href="https://twitter.com/share?text={{rb.t.sg.twitter_share_text{{=make #twitter user to share about your blog at a sample url like http://www.rulebot.com}}}}" class="twitter-share-button" data-count="none" data-lang="en" data-size="large">Tweet this</a>--></div>
 
-    <div class ="rbBtn rbBtnDyn" 
-          link="{{rb.t.ul.button_link{{=http://www.google.com}}}}"> 
-       <a href="https://twitter.com/share?text={{rb.t.sg.twitter_share_text{{=make #twitter user to share about your blog at a sample url like http://www.rulebot.com}}}}" class="twitter-share-button" data-count="none" data-lang="en" data-size="large">Tweet this</a>
+
+    <div class="rbBarWidth barDyn">
+
+      <p  class="rbTextLeft rbDynLeftText rbDynText" >
+        {{rb.t.vsg.text_left{{=Ask here to twitter user to share your blog}}}}
+      </p>
+
+      <iframe class ="rbBtn rbIframe rbBtnDyn" > 
+
+      </iframe>
+    
+      <p  class="rbTextRight rbDynRightText rbDynText" >           
+        {{rb.t.vsg.text_right{{=Influence your visitors.}}}}  
+      </p>
+
+      <div class="rbInfoBtnDyn">
+        <div class="rb-btn-group" >
+          <button id="rbTopbarGenericTwittershareRoiHelp" class="rb-info-btn rb-info-btn-small rbClickable" link="http://www.rulebot.com">
+            ?
+          </button>
+          <button id="rbTopbarGenericTwittershareCloseClick" class="rb-info-btn rb-info-btn-small rbClickable" >
+            X
+          </button>            
+        </div>
+      </div>  
+
     </div>
-  
-    <p  class="rbTextRight rbDynRightText rbDynText" >           
-      {{rb.t.vsg.text_right{{=Influence your visitors.}}}}  
-    </p>
 
-    <div class="rbInfoBtnDyn">
-      <div class="rb-btn-group" >
-        <button id="rbTopbarGenericTwittershareRoiHelp" class="rb-info-btn rb-info-btn-small rbClickable" link="http://www.rulebot.com">
-          ?
-        </button>
-        <button id="rbTopbarGenericTwittershareCloseClick" class="rb-info-btn rb-info-btn-small rbClickable" >
-          X
-        </button>            
-      </div>
-    </div>  
-
+    <script>    
+        var base = document.getElementById('rbTopbarGenericTwittershareBaseContainer');
+        if( base !== undefined){
+          var inner = base.getElementsByClassName('rbIframeContent');    
+          var iframe = base.getElementsByClassName('rbIframe');
+          if( inner !== undefined && iframe !== undefined  ){
+            var ifrm = iframe[0];
+            ifrm = (ifrm.contentWindow) ? ifrm.contentWindow : (ifrm.contentDocument.document) ? ifrm.contentDocument.document : ifrm.contentDocument;
+            if(ifrm !== undefined){
+              ifrm.document.open();
+              ifrm.document.write(inner[0].firstChild.nodeValue);
+              ifrm.document.close();    
+            }
+          }
+        }
+    </script>
   </div>
 </div>
 

@@ -1,121 +1,130 @@
-<!-- {{Title{{=A promo top bar with link and some text}}}}-->
+<div id="rbTopbarGenericNormalBaseContainer">
+  <!-- {{Title{{=A promo top bar with link and some text}}}}-->
 
-<link rel="stylesheet" type="text/css" href="https://s3.amazonaws.com/actwitty_ganga/css/common_styles.css">
+  <link rel="stylesheet" type="text/css" href="https://s3.amazonaws.com/actwitty_ganga/css/common_styles.css">
 
-<style>
-  
-  .rbTpGenDyn{
-    position: fixed;
-    top: 0px;
-    left: 0px;   
-    z-index: {{rb.t.nr.base_zindex{{=10000}}}};    
-    background: {{rb.t.cr.base_backgroundcolor{{=#E24E35}}}} !important;
-    border-top: 1px solid #CC412A !important;
-    border-bottom: 1px solid #CC412A !important;
-  }
+  <style>
+    
+    .rbTpGenDyn{
+      position: fixed;
+      top: 0px;
+      left: 0px;   
+      z-index: {{rb.t.nr.base_zindex{{=10000}}}};    
+      background: {{rb.t.cr.base_backgroundcolor{{=#E24E35}}}} !important;
+      border-top: 1px solid #CC412A !important;
+      border-bottom: 1px solid #CC412A !important;
+    }
 
-  .rbTpGenDyn .barDyn{
-    width: {{rb.t.nr.show_width{{=900}}}}px;
-    height: {{rb.t.nr.base_height{{=40}}}}px;
-    vertical-align: middle;
-    position: relative;
-  }
+    .rbTpGenDyn .barDyn{
+      width: {{rb.t.nr.show_width{{=900}}}}px;
+      height: {{rb.t.nr.base_height{{=40}}}}px;
+      vertical-align: middle;
+      position: relative;
+    }
 
 
-  .rbTpGenDyn .rbDynText
-   {
-     color:{{rb.t.cr.text_color {{=#ffffff}}}};
-     font-size: {{rb.t.nr.text_fontsize{{=14}}}}px;
-     font-family: {{rb.t.ft.text_fontfamily{{=Arial}}}};
-     font-weight:{{rb.t.fw.text_fontweight{{=normal}}}};
-     white-space: nowrap;
-     overflow:hidden;
-   }
-   
-   .rbTpGenDyn .rbDynLeftText{
-    position: absolute;
-    left:20px; 
-    width:40%;
-    top: 10px;
-    text-align: center;
-    margin-right: 20px;
+    .rbTpGenDyn .rbDynText
+     {
+       color:{{rb.t.cr.text_color {{=#ffffff}}}};
+       font-size: {{rb.t.nr.text_fontsize{{=14}}}}px;
+       font-family: {{rb.t.ft.text_fontfamily{{=Arial}}}};
+       font-weight:{{rb.t.fw.text_fontweight{{=normal}}}};
+       white-space: nowrap;
+       overflow:hidden;
+     }
+     
+     .rbTpGenDyn .rbDynLeftText{
+      position: absolute;
+      left:20px; 
+      width:40%;
+      top: 10px;
+      text-align: center;
+      margin-right: 20px;
 
-   }
-   
-   .rbTpGenDyn .rbDynRightText{
-    position: absolute;
-    right: 20px; 
-    top: 10px;    
-    width:40%; 
-    text-align: center;   
-    margin-left: 20px;
-   }
+     }
+     
+     .rbTpGenDyn .rbDynRightText{
+      position: absolute;
+      right: 20px; 
+      top: 10px;    
+      width:40%; 
+      text-align: center;   
+      margin-left: 20px;
+     }
 
-   .rbTpGenDyn .rbBtnDyn {      
-      padding: 12px 15px 12px;
-      text-shadow: none !important;
-      border-right: 1px solid #CC412A;
-      border-left: 1px solid #E75F48;
-      -webkit-transition: background 1s ease;
-      -moz-transition: background 1s ease;
-      -o-transition: background 1s ease;
-      transition: background 1s ease;            
-      position: absolute;      
-      width:100px;
-      left: 42%;
-      top: 0;
-      margin-right: 20px;                    
-      background-color: {{rb.t.cr.button_background{{=#E24E35}}}} !important;
-      color: {{rb.t.cr.button_color{{=#FFFFFF}}}} !important; !important;
-      font-size: {{rb.t.nr.button_fontSize{{=14}}}}px; !important;   
-      white-space: nowrap;  
-      overflow: hidden; 
-      text-overflow: ellipsis;
+     .rbTpGenDyn .rbBtnDyn {  
+        padding: 5px;  
+        text-shadow: none !important;
+        border: 1px solid #BBB;
+        border: 1px solid #BBB;
+        border-color: #E6E6E6 #E6E6E6 #BFBFBF;
+        border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+        -webkit-transition: background 1s ease;
+        -moz-transition: background 1s ease;
+        -o-transition: background 1s ease;
+        transition: background 1s ease;            
+        position: absolute;      
+        width:100px;
+        left: 42%;
+        top:7%;
+        height:20px;
+        margin-right: 20px;                    
+        background-color: {{rb.t.cr.button_background{{=whiteSmoke}}}} !important;
+        color: {{rb.t.cr.button_color{{=#333}}}} !important; !important;
+        font-size: {{rb.t.nr.button_fontSize{{=14}}}}px; !important; 
+        text-align: center;  
+        white-space: nowrap;  
+        overflow: hidden; 
+        text-overflow: ellipsis;
 
-   }
+     }
 
-   .rbTpGenDyn .rbBtnDyn:hover {
-      background-color: {{rb.t.cr.button_background_on_focus{{=#CC412A}}}} !important;
-      color: {{rb.t.cr.button_color_on_focus{{=#FFFFFF}}}} !important;
-      -webkit-transition: background 1s ease;
-      -moz-transition: background 1s ease;
-      -o-transition: background 1s ease;
-      transition: background 1s ease;
-   }
-   .rbTpGenDyn .rbInfoBtnDyn{
-    position: absolute;
-    top: 5px;
-    right: -130px;
-    display: inline-block;
-   }
-</style>
+     .rbTpGenDyn .rbBtnDyn:hover {
+        background-color: {{rb.t.cr.button_background_on_focus{{=#d9d9d9}}}} !important;
+        color: {{rb.t.cr.button_color_on_focus{{=#888}}}} !important;
+        -webkit-transition: background 1s ease;
+        -moz-transition: background 1s ease;
+        -o-transition: background 1s ease;
+        transition: background 1s ease;
+     }
+     .rbTpGenDyn .rbInfoBtnDyn{
+      position: absolute;
+      top: 5px;
+      right: -130px;
+      display: inline-block;
+     }
+  </style>
 
-<div id="rbTopbarGenericNormalBaseContainer" class="rbBaseStyle rbTpGenDyn" >
+  <div class="rbBaseStyle rbTpGenDyn" >
 
-  <div class="rbBarWidth barDyn">
+    <div class="rbBarWidth barDyn">
 
-    <p id="rbTopbarGenericNormalLeftClick" class="rbTextLeft rbDynLeftText rbDynText" >
-      {{rb.t.vsg.text_left{{=Please add the promotional left text here}}}}
-    </p>
+      <p id="rbTopbarGenericNormalLeftClick" class="rbTextLeft rbDynLeftText rbDynText" >
+        {{rb.t.vsg.text_left{{=Please add the promotional left text here}}}}
+      </p>
 
-      <div id="rbTopbarGenericNormalRoiMiddlebutton" class ="rbClickable rbBtn rbBtnDyn" 
-          link="{{rb.t.ul.button_link{{=http://www.google.com}}}}"> 
-      {{rb.t.sg.button_label{{=Promo Link}}}} 
-    </div>
-  
-    <p id="rbTopbarGenericNormalRightClick" class="rbTextRight rbDynRightText rbDynText" >           
-      {{rb.t.vsg.text_right{{=Please add the promotional right text here}}}}  
-    </p>
-    <div class="rbInfoBtnDyn">
-      <div class="rb-btn-group" >
-        <button id="rbTopbarGenericNormalRoiHelp" class="rb-info-btn rb-info-btn-small rbClickable" link="http://www.rulebot.com">
-          ?
-        </button>
-        <button id="rbTopbarGenericNormalCloseClick" class="rb-info-btn rb-info-btn-small rbClickable" >
-          X
-        </button>            
+        <div id="rbTopbarGenericNormalRoiMiddlebutton" class ="rbClickable rbBtn rbBtnDyn" 
+            link="{{rb.t.ul.button_link{{=http://www.google.com}}}}"> 
+        {{rb.t.sg.button_label{{=Promo Link}}}} 
       </div>
-    </div>  
+    
+      <p id="rbTopbarGenericNormalRightClick" class="rbTextRight rbDynRightText rbDynText" >           
+        {{rb.t.vsg.text_right{{=Please add the promotional right text here}}}}  
+      </p>
+      <div class="rbInfoBtnDyn">
+        <div class="rb-btn-group" >
+          <button id="rbTopbarGenericNormalRoiHelp" class="rb-info-btn rb-info-btn-small rbClickable" link="http://www.rulebot.com">
+            ?
+          </button>
+          <button id="rbTopbarGenericNormalCloseClick" class="rb-info-btn rb-info-btn-small rbClickable" >
+            X
+          </button>            
+        </div>
+      </div>  
 
+    </div>
   </div>
 </div>
