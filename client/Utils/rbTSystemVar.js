@@ -106,8 +106,9 @@ trigger_fish.rbTSystemVar = {
 
   setEJProp : function(json)
   {
-     this.setProperty("country",json.Country); 
-     this.setProperty("timezone",json.LocalTimeZone); 
+    this.setProperty("country",json.Country); 
+    this.setProperty("city",json.CityName); 
+    this.setProperty("timezone",json.LocalTimeZone); 
   },
 
   setSessionJSProp : function(json)
@@ -365,7 +366,7 @@ var session_fetch = (function(win, doc, nav)
       device.is_phone = !device.is_tablet && !!nav.userAgent.match(/(iPhone|iPod|blackberry|android 0.5|htc|lg|midp|mmp|mobile|nokia|opera mini|palm|pocket|psp|sgh|smartphone|symbian|treo mini|Playstation Portable|SonyEricsson|Samsung|MobileExplorer|PalmSource|Benq|Windows Phone|Windows Mobile|IEMobile|Windows CE|Nintendo Wii)/i);
       device.is_mobile = device.is_tablet || device.is_phone;
       if (device.is_mobile) {
-        var name = nav.userAgent.match(/(iPhone|iPod|blackberry|android 0.5|Android 4.0.2|htc|lg|midp|mmp|mobile|nokia|opera mini|palm|pocket|psp|sgh|smartphone|symbian|treo mini|Playstation Portable|SonyEricsson|Samsung|MobileExplorer|PalmSource|Benq|Windows Phone|Windows Mobile|IEMobile|Windows CE|Nintendo Wii|SCH-I800|xoom|kindle)/ig);
+        var name = nav.userAgent.match(/(iPhone|iPod|blackberry|android 0.5|Android|htc|lg|midp|mmp|mobile|nokia|opera mini|palm|pocket|psp|sgh|smartphone|symbian|treo mini|Playstation Portable|SonyEricsson|Samsung|MobileExplorer|PalmSource|Benq|Windows Phone|Windows Mobile|IEMobile|Windows CE|Nintendo Wii|SCH-I800|xoom|kindle)/ig);
         if (name)
           name = name[0];
       }

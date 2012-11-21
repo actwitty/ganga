@@ -1,7 +1,7 @@
 
 
 
-/***********************[[2012-11-20 21:16:19 +0530]]*********************************/ 
+/***********************[[2012-11-21 11:00:14 +0530]]*********************************/ 
 
 
 
@@ -3098,8 +3098,9 @@ trigger_fish.rbTSystemVar = {
 
   setEJProp : function(json)
   {
-     this.setProperty("country",json.Country); 
-     this.setProperty("timezone",json.LocalTimeZone); 
+    this.setProperty("country",json.Country); 
+    this.setProperty("city",json.CityName); 
+    this.setProperty("timezone",json.LocalTimeZone); 
   },
 
   setSessionJSProp : function(json)
@@ -3357,7 +3358,7 @@ var session_fetch = (function(win, doc, nav)
       device.is_phone = !device.is_tablet && !!nav.userAgent.match(/(iPhone|iPod|blackberry|android 0.5|htc|lg|midp|mmp|mobile|nokia|opera mini|palm|pocket|psp|sgh|smartphone|symbian|treo mini|Playstation Portable|SonyEricsson|Samsung|MobileExplorer|PalmSource|Benq|Windows Phone|Windows Mobile|IEMobile|Windows CE|Nintendo Wii)/i);
       device.is_mobile = device.is_tablet || device.is_phone;
       if (device.is_mobile) {
-        var name = nav.userAgent.match(/(iPhone|iPod|blackberry|android 0.5|htc|lg|midp|mmp|mobile|nokia|opera mini|palm|pocket|psp|sgh|smartphone|symbian|treo mini|Playstation Portable|SonyEricsson|Samsung|MobileExplorer|PalmSource|Benq|Windows Phone|Windows Mobile|IEMobile|Windows CE|Nintendo Wii|SCH-I800|xoom|kindle)/ig);
+        var name = nav.userAgent.match(/(iPhone|iPod|blackberry|android 0.5|Android|htc|lg|midp|mmp|mobile|nokia|opera mini|palm|pocket|psp|sgh|smartphone|symbian|treo mini|Playstation Portable|SonyEricsson|Samsung|MobileExplorer|PalmSource|Benq|Windows Phone|Windows Mobile|IEMobile|Windows CE|Nintendo Wii|SCH-I800|xoom|kindle)/ig);
         if (name)
           name = name[0];
       }
@@ -4209,12 +4210,12 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 				value :'40'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
-	 	 	 	 	 				value :'Woo Facebook users coming to your page by writing something to make them like you.'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '9' :{
 	 	 	 	 	 				key :'rb.t.ul.facebook_page',
 	 	 	 	 	 				value :'http://www.google.com'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '9' :{
+	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				value :'Woo Facebook users coming to your page by writing something to make them like you.'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'topbar.generic.normal':{
@@ -4330,16 +4331,16 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 				value :'normal'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
-	 	 	 	 	 				value :'Increase your market reach by connecting to users'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '10' : {
 	 	 	 	 	 				key :'rb.t.sg.twitter_account_link',
 	 	 	 	 	 				value :'@act_witty'
 	 	 	 	 	 	  },
- 	 	 	 	 	 	 '11' : {
+ 	 	 	 	 	 	 '10' : {
 	 	 	 	 	 				key :'rb.t.sg.twitter_label',
 	 	 	 	 	 				value :'@act_witty'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '11' : {
+	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				value :'Increase your market reach by connecting to users'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '12' :{
 	 	 	 	 	 				key :'rb.t.vsg.text_right',
@@ -4428,12 +4429,12 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 				value :'40'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
-	 	 	 	 	 				value :'Woo Facebook users coming to your page by writing something to make them like you.'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '9' :{
 	 	 	 	 	 				key :'rb.t.ul.facebook_page',
 	 	 	 	 	 				value :'http://www.google.com'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '9' :{
+	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				value :'Woo Facebook users coming to your page by writing something to make them like you.'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'uservoice.generic.normal':{
@@ -4709,7 +4710,7 @@ trigger_fish.rbT.templateLib = {
 /****************************[[./templates/topbars/rbTemplBottombarGenericFblike.js]]*************************************/ 
 
 
-trigger_fish.rbT.rbTemplBottombarGenericFblikeHTML='<!-- --><link rel="stylesheet" type="text/css" href="https://s3.amazonaws.com/actwitty_ganga/css/common_styles.css"><style>  .rbTbFbLikeBtmDyn{    position: fixed;    bottom: 0px;    left: 0px;       z-index: {{1}};        color: white;    font-size: {{2}}px;    font-family:\'{{3}}\';    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);        border: 1px solid {{4}};    background-color: {{5}};      }  .rbTbFbLikeBtmDyn .barDyn{    width: {{6}}px;    height: {{7}}px;    vertical-align: middle;    position: relative;  }  .rbTbFbLikeBtmDyn .rbDynText{    white-space: nowrap;    overflow:hidden;   }      .rbTbFbLikeBtmDyn .rbDynLeftText{    position: absolute;    left:20px;     width:80%;    top: 10px;    text-align: center;    margin-right: 20px;   }    .rbTbFbLikeBtmDyn .rbTbFbLikeRight{    position: absolute;    right:20px;     width:260px;    top: 10px;    text-align: center;    margin-right: 20px;       }   .rbTbFbLikeBtmDyn .rbInfoBtnDyn{    position: absolute;    top: 5px;    right: -130px;    display: inline-block;  }  </style> <div id="fb-root"></div>  <script>(function(d, s, id) {    var js, fjs = d.getElementsByTagName(s)[0];    if (d.getElementById(id)) return;    js = d.createElement(s); js.id = id;    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";    fjs.parentNode.insertBefore(js, fjs);  }(document, "script", "facebook-jssdk"));  </script><div id="rbBottombarGenericFblikeBaseContainer" class="rbBaseStyle rbTbFbLikeBtmDyn" >    <div class="rbBarWidth barDyn">    <p id="rbBottombarGenericFblikeLeftClick" class="rbTextLeft rbDynLeftText rbDynText" >      {{8}}    </p>          <div class="rbTbFbLikeRight" >      <div class="fb-like"           data-href="{{9}}"           data-send="true"           data-layout="button_count"           data-width="250px"           data-show-faces="false"           data-font="arial">      </div>    </div>        <div class="rbInfoBtnDyn">      <div class="rb-btn-group" >        <button id="rbBottombarGenericFblikeRoiHelp" class="rb-info-btn rb-info-btn-small rbClickable" link="http://www.rulebot.com">          ?        </button>        <button id="rbBottombarGenericFblikeCloseClick" class="rb-info-btn rb-info-btn-small rbClickable" >          X        </button>                  </div>    </div>    </div></div>'
+trigger_fish.rbT.rbTemplBottombarGenericFblikeHTML='<!-- --><link rel="stylesheet" type="text/css" href="https://s3.amazonaws.com/actwitty_ganga/css/common_styles.css"><style>  .rbTbFbLikeBtmDyn{    position: fixed;    bottom: 0px;    left: 0px;       z-index: {{1}};        color: white;    font-size: {{2}}px;    font-family:\'{{3}}\';    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);        border: 1px solid {{4}};    background-color: {{5}};      }  .rbTbFbLikeBtmDyn .barDyn{    width: {{6}}px;    height: {{7}}px;    vertical-align: middle;    position: relative;  }  .rbTbFbLikeBtmDyn .rbDynText{    white-space: nowrap;    overflow:hidden;   }      .rbTbFbLikeBtmDyn .rbDynLeftText{    position: absolute;    left:20px;     width:80%;    top: 10px;    text-align: center;    margin-right: 20px;   }    .rbTbFbLikeBtmDyn .rbTbFbLikeRight{    position: absolute;    right:0px;     width:200px;        text-align: center;    margin: 0px;    padding: 0px;       }   .rbTbFbLikeBtmDyn .rbInfoBtnDyn{    position: absolute;    top: 5px;    right: -130px;    display: inline-block;  }  </style><div id="rbBottombarGenericFblikeBaseContainer" class="rbBaseStyle rbTbFbLikeBtmDyn" >  <div class=\'rbIframeContent\'><!--<div id="fb-root"></div>      <script>        (function(d, s, id) {        var js, fjs = d.getElementsByTagName(s)[0];        if (d.getElementById(id)) return;        js = d.createElement(s); js.id = id;        js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";        fjs.parentNode.insertBefore(js, fjs);        }(document, "script", "facebook-jssdk"));      </script>      <div class="fb-like"           data-href="{{8}}"           data-send="true"           data-layout="button_count"           data-width="250px"           data-show-faces="false"           data-font="arial">      </div>--></div>  <div class="rbBarWidth barDyn">    <p id="rbBottombarGenericFblikeLeftClick" class="rbTextLeft rbDynLeftText rbDynText" >      {{9}}    </p>          <iframe class="rbIframe rbTbFbLikeRight">    </iframe>        <div class="rbInfoBtnDyn">      <div class="rb-btn-group" >        <button id="rbBottombarGenericFblikeRoiHelp" class="rb-info-btn rb-info-btn-small rbClickable" link="http://www.rulebot.com">          ?        </button>        <button id="rbBottombarGenericFblikeCloseClick" class="rb-info-btn rb-info-btn-small rbClickable" >          X        </button>                  </div>    </div>    </div>  <script>    var frameClass=\'rbIframeContent\';    var base = document.getElementById(\'rbBottombarGenericFblikeBaseContainer\');    if( base !== undefined){      var inner = base.getElementsByClassName(\'rbIframeContent\');          var iframe = base.getElementsByClassName(\'rbIframe\');      if( inner !== undefined && iframe !== undefined  ){        var ifrm = iframe[0];        ifrm = (ifrm.contentWindow) ? ifrm.contentWindow : (ifrm.contentDocument.document) ? ifrm.contentDocument.document : ifrm.contentDocument;        if(ifrm !== undefined){          ifrm.document.open();          ifrm.document.write(inner[0].firstChild.nodeValue);          ifrm.document.close();            }      }    }  </script></div>'
 
 
 
@@ -4737,14 +4738,14 @@ trigger_fish.rbT.rbTemplBottombarGenericTwittershareHTML='<!-- --><link rel="sty
 /****************************[[./templates/topbars/rbTemplTopbarGenericFblike.js]]*************************************/ 
 
 
-trigger_fish.rbT.rbTemplTopbarGenericFblikeHTML='<!-- --><link rel="stylesheet" type="text/css" href="https://s3.amazonaws.com/actwitty_ganga/css/common_styles.css"><style>  .rbTbFbLikeDyn{    position: fixed;    top: 0px;    left: 0px;       z-index: {{1}};        color: white;    font-size: {{2}}px;    font-family:\'{{3}}\';    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);        border: 1px solid {{4}};    background-color: {{5}};      }  .rbTbFbLikeDyn .barDyn{    width: {{6}}px;    height: {{7}}px;    vertical-align: middle;    position: relative;  }  .rbTbFbLikeDyn .rbDynText{    white-space: nowrap;    overflow:hidden;   }      .rbTbFbLikeDyn .rbDynLeftText{    position: absolute;    left:20px;     width:80%;    top: 10px;    text-align: center;    margin-right: 20px;   }    .rbTbFbLikeDyn .rbTbFbLikeRight{    position: absolute;    right:20px;     width:260px;    top: 10px;    text-align: center;    margin-right: 20px;       }   .rbTbFbLikeDyn .rbInfoBtnDyn{    position: absolute;    top: 5px;    right: -130px;    display: inline-block;  }  </style> <div id="fb-root"></div>  <script>(function(d, s, id) {    var js, fjs = d.getElementsByTagName(s)[0];    if (d.getElementById(id)) return;    js = d.createElement(s); js.id = id;    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";    fjs.parentNode.insertBefore(js, fjs);  }(document, "script", "facebook-jssdk"));  </script><div id="rbTopbarGenericFblikeBaseContainer" class="rbBaseStyle rbTbFbLikeDyn" >    <div class="rbBarWidth barDyn">    <p id="rbTopbarGenericFblikeLeftClick" class="rbTextLeft rbDynLeftText rbDynText" >      {{8}}    </p>          <div class="rbTbFbLikeRight" >      <div class="fb-like"           data-href="{{9}}"           data-send="true"           data-layout="button_count"           data-width="250px"           data-show-faces="false"           data-font="arial">      </div>    </div>        <div class="rbInfoBtnDyn">      <div class="rb-btn-group" >        <button id="rbTopbarGenericFblikeRoiHelp" class="rb-info-btn rb-info-btn-small rbClickable" link="http://www.rulebot.com">          ?        </button>        <button id="rbTopbarGenericFblikeCloseClick" class="rb-info-btn rb-info-btn-small rbClickable" >          X        </button>                  </div>    </div>    </div></div>'
+trigger_fish.rbT.rbTemplTopbarGenericFblikeHTML='<!-- --><link rel="stylesheet" type="text/css" href="https://s3.amazonaws.com/actwitty_ganga/css/common_styles.css"><style>  .rbTbFbLikeDyn{    position: fixed;    top: 0px;    left: 0px;       z-index: {{1}};        color: white;    font-size: {{2}}px;    font-family:\'{{3}}\';    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);        border: 1px solid {{4}};    background-color: {{5}};      }  .rbTbFbLikeDyn .barDyn{    width: {{6}}px;    height: {{7}}px;    vertical-align: middle;    position: relative;  }  .rbTbFbLikeDyn .rbDynText{    white-space: nowrap;    overflow:hidden;   }      .rbTbFbLikeDyn .rbDynLeftText{    position: absolute;    left:20px;     width:80%;    top: 10px;    text-align: center;    margin-right: 20px;   }    .rbTbFbLikeDyn .rbTbFbLikeRight{    position: absolute;    right:0px;     width:200px;        text-align: center;    margin: 0px;    padding: 0px;       }   .rbTbFbLikeDyn .rbInfoBtnDyn{    position: absolute;    top: 5px;    right: -130px;    display: inline-block;  }  </style><div id="rbTopbarGenericFblikeBaseContainer" class="rbBaseStyle rbTbFbLikeDyn" >  <div class=\'rbIframeContent\'><!--<div id="fb-root"></div>      <script>        (function(d, s, id) {        var js, fjs = d.getElementsByTagName(s)[0];        if (d.getElementById(id)) return;        js = d.createElement(s); js.id = id;        js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";        fjs.parentNode.insertBefore(js, fjs);        }(document, "script", "facebook-jssdk"));      </script>      <div class="fb-like"           data-href="{{8}}"           data-send="true"           data-layout="button_count"           data-width="250px"           data-show-faces="false"           data-font="arial">      </div>--></div>  <div class="rbBarWidth barDyn">    <p id="rbBottombarGenericFblikeLeftClick" class="rbTextLeft rbDynLeftText rbDynText" >      {{9}}    </p>          <iframe class="rbIframe rbTbFbLikeRight">    </iframe>        <div class="rbInfoBtnDyn">      <div class="rb-btn-group" >        <button id="rbTopbarGenericFblikeRoiHelp" class="rb-info-btn rb-info-btn-small rbClickable" link="http://www.rulebot.com">          ?        </button>        <button id="rbTopbarGenericFblikeCloseClick" class="rb-info-btn rb-info-btn-small rbClickable" >          X        </button>                  </div>    </div>    </div>  <script>    var frameClass=\'rbIframeContent\';    var base = document.getElementById(\'rbTopbarGenericFblikeBaseContainer\');    if( base !== undefined){      var inner = base.getElementsByClassName(\'rbIframeContent\');          var iframe = base.getElementsByClassName(\'rbIframe\');      if( inner !== undefined && iframe !== undefined  ){        var ifrm = iframe[0];        ifrm = (ifrm.contentWindow) ? ifrm.contentWindow : (ifrm.contentDocument.document) ? ifrm.contentDocument.document : ifrm.contentDocument;        if(ifrm !== undefined){          ifrm.document.open();          ifrm.document.write(inner[0].firstChild.nodeValue);          ifrm.document.close();            }      }    }  </script></div>'
 
 
 
 /****************************[[./templates/topbars/rbTemplTopbarGenericTwitterfollow.js]]*************************************/ 
 
 
-trigger_fish.rbT.rbTemplTopbarGenericTwitterfollowHTML='<!-- --><link rel="stylesheet" type="text/css" href="https://s3.amazonaws.com/actwitty_ganga/css/common_styles.css"><style>    .rbTpTwFollowDyn{    position: fixed;    top: 0px;    left: 0px;       z-index: {{1}};        background: {{2}} !important;        border-bottom: 1px solid #18496A !important;  }  .rbTpTwFollowDyn .barDyn{    width: {{3}}px;    height: {{4}}px;    vertical-align: middle;    position: relative;  }  .rbTpTwFollowDyn .rbDynText   {     color:{{5}};     font-size: {{6}}px;     font-family: {{7}};     font-weight:{{8}};     white-space: nowrap;     overflow:hidden;   }      .rbTpTwFollowDyn .rbDynLeftText{    position: absolute;    left:20px;     width:40%;    top: 10px;    text-align: center;    margin-right: 20px;   }      .rbTpTwFollowDyn .rbDynRightText{    position: absolute;    right: 20px;     top: 10px;        width:30%;     text-align: center;       margin-left: 20px;   }   .rbTpTwFollowDyn .rbBtnDyn {                      position: absolute;            width:150px;      left: 42%;      top: 5px;      margin-right: 20px;                         }     .rbTpTwFollowDyn .rbInfoBtnDyn{    position: absolute;    top: 5px;    right: -130px;    display: inline-block;   }</style><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script><div id="rbTopbarGenericTwitterfollowBaseContainer" class="rbBaseStyle rbTpTwFollowDyn" >  <div class="rbBarWidth barDyn">    <p  class="rbTextLeft rbDynLeftText rbDynText" >      {{9}}    </p>    <div class ="rbBtn rbBtnDyn" >           <a  data-show-count="false" data-button = "blue" class="twitter-follow-button" href="https://twitter.com/{{10}}" data-size="large">Follow {{11}} </a>    </div>      <p  class="rbTextRight rbDynRightText rbDynText" >                 {{12}}      </p>    <div class="rbInfoBtnDyn">      <div class="rb-btn-group" >        <button id="rbTopbarGenericTwitterfollowRoiHelp" class="rb-info-btn rb-info-btn-small rbClickable" link="http://www.rulebot.com">          ?        </button>        <button id="rbTopbarGenericTwitterfollowCloseClick" class="rb-info-btn rb-info-btn-small rbClickable" >          X        </button>                  </div>    </div>    </div></div>'
+trigger_fish.rbT.rbTemplTopbarGenericTwitterfollowHTML='<!-- --><link rel="stylesheet" type="text/css" href="https://s3.amazonaws.com/actwitty_ganga/css/common_styles.css"><style>    .rbTpTwFollowDyn{    position: fixed;    top: 0px;    left: 0px;       z-index: {{1}};        background: {{2}} !important;        border-bottom: 1px solid #18496A !important;  }  .rbTpTwFollowDyn .barDyn{    width: {{3}}px;    height: {{4}}px;    vertical-align: middle;    position: relative;  }  .rbTpTwFollowDyn .rbDynText   {     color:{{5}};     font-size: {{6}}px;     font-family: {{7}};     font-weight:{{8}};     white-space: nowrap;     overflow:hidden;   }      .rbTpTwFollowDyn .rbDynLeftText{    position: absolute;    left:20px;     width:40%;    top: 10px;    text-align: center;    margin-right: 20px;   }      .rbTpTwFollowDyn .rbDynRightText{    position: absolute;    right: 20px;     top: 10px;        width:30%;     text-align: center;       margin-left: 20px;   }   .rbTpTwFollowDyn .rbBtnDyn {                      position: absolute;            width:180px;      left: 42%;      top: 0px;      margin-right: 20px;           overflow: hidden;                    }     .rbTpTwFollowDyn .rbInfoBtnDyn{    position: absolute;    top: 5px;    right: -130px;    display: inline-block;   }</style><div id="rbTopbarGenericTwitterfollowBaseContainer" class="rbBaseStyle rbTpTwFollowDyn" >  <div class=\'rbIframeContent\'><!--<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>  <a  data-show-count="false" data-button = "blue" class="twitter-follow-button" href="https://twitter.com/{{9}}" data-size="large">Follow {{10}} </a>--></div>  <div class="rbBarWidth barDyn">    <p  class="rbTextLeft rbDynLeftText rbDynText" >      {{11}}    </p>    <iframe class ="rbBtn rbIframe rbBtnDyn" >     </iframe>      <p  class="rbTextRight rbDynRightText rbDynText" >                 {{12}}      </p>    <div class="rbInfoBtnDyn">      <div class="rb-btn-group" >        <button id="rbTopbarGenericTwitterfollowRoiHelp" class="rb-info-btn rb-info-btn-small rbClickable" link="http://www.rulebot.com">          ?        </button>        <button id="rbTopbarGenericTwitterfollowCloseClick" class="rb-info-btn rb-info-btn-small rbClickable" >          X        </button>                  </div>    </div>    </div>  <script>        var base = document.getElementById(\'rbTopbarGenericTwitterfollowBaseContainer\');    if( base !== undefined){      var inner = base.getElementsByClassName(\'rbIframeContent\');          var iframe = base.getElementsByClassName(\'rbIframe\');      if( inner !== undefined && iframe !== undefined  ){        var ifrm = iframe[0];        ifrm = (ifrm.contentWindow) ? ifrm.contentWindow : (ifrm.contentDocument.document) ? ifrm.contentDocument.document : ifrm.contentDocument;        if(ifrm !== undefined){          ifrm.document.open();          ifrm.document.write(inner[0].firstChild.nodeValue);          ifrm.document.close();            }      }    }  </script></div>'
 
 
 
@@ -5412,11 +5413,8 @@ trigger_fish.rbT.applyHtmltoPageInternal = function(html){
 
 	if(html.length){
 
-
 	 jQuery('body').append(html);
-
 	// document.body.innerHTML = document.body.innerHTML+html;
-
 	}else{
 
          trigger_fish.rbT.sendErrorToRBServer("Bad variable array error for template");
