@@ -2,6 +2,7 @@ require 'domainatrix'
 
 # parses the url for example http://api.actwitty.co.uk/tytyt?s=8&ert=34
 module Url
+  # INPUT - http://api.actwitty.co.uk/tytyt?s=8&ert=34  # url linke this
   # OUTPUT - {
   #            "url" => "http://api.actwitty.co.uk/tytyt?s=8&ert=34",
   #            "domain" => "actwitty",
@@ -17,6 +18,6 @@ module Url
   end
 
   def self.base(url)
-    
+
   end
 end
