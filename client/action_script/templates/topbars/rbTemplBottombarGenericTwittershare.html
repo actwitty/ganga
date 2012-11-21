@@ -55,7 +55,8 @@
       position: absolute;      
       width:100px;
       left: 42%;
-      top: 5px;
+      top: 0px;
+      overflow: hidden;
       margin-right: 20px;                      
 
    }
@@ -69,9 +70,12 @@
    }
 </style>
 
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
 <div id="rbBottombarGenericTwittershareBaseContainer" class="rbBaseStyle rbBmTwShareDyn" >
+
+  <div class='rbIframeContent'><!--<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+  <a href="https://twitter.com/share?text={{rb.t.sg.twitter_share_text{{=make #twitter user to share about your blog at a sample url like http://www.rulebot.com}}}}" class="twitter-share-button" data-count="none" data-lang="en" data-size="large">Tweet this</a>--></div>
 
   <div class="rbBarWidth barDyn">
 
@@ -79,9 +83,9 @@
       {{rb.t.vsg.text_left{{=Ask here to twitter user to share your blog}}}}
     </p>
 
-    <div class ="rbBtn rbBtnDyn"> 
-       <a href="https://twitter.com/share?text={{rb.t.sg.twitter_share_text{{=make #twitter user to share about your blog at a sample url like http://www.rulebot.com}}}}" class="twitter-share-button" data-count="none" data-lang="en" data-size="large">Tweet this</a>
-    </div>
+    <iframe class ="rbBtn rbIframe rbBtnDyn" > 
+
+    </iframe>
   
     <p  class="rbTextRight rbDynRightText rbDynText" >           
       {{rb.t.vsg.text_right{{=Influence your visitors.}}}}  
@@ -99,6 +103,22 @@
     </div>  
 
   </div>
+  <script>    
+      var base = document.getElementById('rbBottombarGenericTwittershareBaseContainer');
+      if( base !== undefined){
+        var inner = base.getElementsByClassName('rbIframeContent');    
+        var iframe = base.getElementsByClassName('rbIframe');
+        if( inner !== undefined && iframe !== undefined  ){
+          var ifrm = iframe[0];
+          ifrm = (ifrm.contentWindow) ? ifrm.contentWindow : (ifrm.contentDocument.document) ? ifrm.contentDocument.document : ifrm.contentDocument;
+          if(ifrm !== undefined){
+            ifrm.document.open();
+            ifrm.document.write(inner[0].firstChild.nodeValue);
+            ifrm.document.close();    
+          }
+        }
+      }
+  </script>
 </div>
 
 
