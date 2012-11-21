@@ -113,6 +113,8 @@ App.operationListOverrides =
                                               'cns' : 'contains'
                             's.city' :
                                     'eql' : 'equal to'
+                            's.skip' :
+                                    'set' : 'set'
 
 
 
