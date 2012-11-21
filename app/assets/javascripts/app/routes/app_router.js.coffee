@@ -307,8 +307,7 @@ App.Router = Ember.Router.extend
               event.preventDefault()
 
             # event ------------------------------------------------------  
-            changedProperty: (router, event) ->
-              console.log 'event hit'
+            changedProperty: (router, event) ->              
               condition = event.context                            
               
               scope = event.view.getNewPropertyScope(event)              
