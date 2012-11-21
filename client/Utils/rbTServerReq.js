@@ -203,12 +203,13 @@ trigger_fish.rbTServerChannel = {
                 }
             },
             success: function ( respData ) {
+                if (typeof respData === "string") respData = JSON.parse(respData);
                 trigger_fish.rbTAPP.log({"message":"server response success","data":respData});
+
                 if (that.event) {
                   trigger_fish.rbTCookie.deleteCookie("lastevent");
                   trigger_fish.rbTRules.executeRulesOnEvent(that.event);
                   if (respData && respData.actor) { 
-                    //trigger_fish.rbTServerResponse.setActor(respData.actor);
                     callback.success(respData);
                   }
                   trigger_fish.rbTAPP.setTransVar({});
@@ -220,7 +221,6 @@ trigger_fish.rbTServerChannel = {
             },
             error:function(XMLHttpRequest,textStatus, errorThrown){ 
                 trigger_fish.rbTAPP.log({"message":"server response error","data_closure":that,"textStatus":textStatus});
-                // FIXME :: ADDED ONLY TO TEST CLIENT SIDE
                 if (that.event) {
                   trigger_fish.rbTAPP.setTransVar({}); 
                 } else if (that.identify && XMLHttpRequest.responseText.indexOf("is already in use")) {
