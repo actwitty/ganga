@@ -21,11 +21,17 @@ module Authenticate
     Rails.env == "test" ? origin = request.env['HTTP_HOST'] : origin = request.env['HTTP_ORIGIN']
 
     if !origin.blank?
+      temp_origin = origin
       origin = "https://www.actwitty.com" if origin == "http://www.actwitty.com"
       access = AccessInfo.where(origin: origin).first
 
       if !access.blank?
         headers['Access-Control-Allow-Origin'] = origin
+
+        if temp_origin == "http://www.actwitty.com"
+          headers['Access-Control-Allow-Origin'] = temp_origin
+        end
+
         headers["Access-Control-Allow-Methods"] = %w{GET POST}.join(",")
         headers["Access-Control-Allow-Headers"] = %w{Origin Accept Content-Type X-Requested-With X-CSRF-Token}.join(",")
         headers['Access-Control-Max-Age'] = '86400'
