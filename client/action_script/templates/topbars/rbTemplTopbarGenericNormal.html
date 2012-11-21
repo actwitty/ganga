@@ -51,11 +51,16 @@
     margin-left: 20px;
    }
 
-   .rbTpGenDyn .rbBtnDyn {      
-      padding: 12px 15px 12px;
+   .rbTpGenDyn .rbBtnDyn {  
+      padding: 5px;  
       text-shadow: none !important;
-      border-right: 1px solid #CC412A;
-      border-left: 1px solid #E75F48;
+      border: 1px solid #BBB;
+      border: 1px solid #BBB;
+      border-color: #E6E6E6 #E6E6E6 #BFBFBF;
+      border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      border-radius: 4px;
       -webkit-transition: background 1s ease;
       -moz-transition: background 1s ease;
       -o-transition: background 1s ease;
@@ -63,11 +68,13 @@
       position: absolute;      
       width:100px;
       left: 42%;
-      top: 0;
+      top:7%;
+      height:20px;
       margin-right: 20px;                    
-      background-color: {{rb.t.cr.button_background{{=#E24E35}}}} !important;
-      color: {{rb.t.cr.button_color{{=#FFFFFF}}}} !important; !important;
-      font-size: {{rb.t.nr.button_fontSize{{=14}}}}px; !important;   
+      background-color: {{rb.t.cr.button_background{{=whiteSmoke}}}} !important;
+      color: {{rb.t.cr.button_color{{=#333}}}} !important; !important;
+      font-size: {{rb.t.nr.button_fontSize{{=14}}}}px; !important; 
+      text-align: center;  
       white-space: nowrap;  
       overflow: hidden; 
       text-overflow: ellipsis;
@@ -75,8 +82,8 @@
    }
 
    .rbTpGenDyn .rbBtnDyn:hover {
-      background-color: {{rb.t.cr.button_background_on_focus{{=#CC412A}}}} !important;
-      color: {{rb.t.cr.button_color_on_focus{{=#FFFFFF}}}} !important;
+      background-color: {{rb.t.cr.button_background_on_focus{{=#d9d9d9}}}} !important;
+      color: {{rb.t.cr.button_color_on_focus{{=#888}}}} !important;
       -webkit-transition: background 1s ease;
       -moz-transition: background 1s ease;
       -o-transition: background 1s ease;

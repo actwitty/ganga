@@ -136,11 +136,11 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
 	 	 	 	 	 				key :'rb.t.cr.button_background',
-	 	 	 	 	 				value :'#E24E35'
+	 	 	 	 	 				value :'whiteSmoke'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
 	 	 	 	 	 				key :'rb.t.cr.button_color',
-	 	 	 	 	 				value :'#FFFFFF'
+	 	 	 	 	 				value :'#333'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' : {
 	 	 	 	 	 				key :'rb.t.nr.button_fontSize',
@@ -148,11 +148,11 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '12' : {
 	 	 	 	 	 				key :'rb.t.cr.button_background_on_focus',
-	 	 	 	 	 				value :'#CC412A'
+	 	 	 	 	 				value :'#d9d9d9'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '13' : {
 	 	 	 	 	 				key :'rb.t.cr.button_color_on_focus',
-	 	 	 	 	 				value :'#FFFFFF'
+	 	 	 	 	 				value :'#888'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '14' : {
 	 	 	 	 	 				key :'rb.t.vsg.text_left',
