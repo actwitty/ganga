@@ -44,10 +44,30 @@ puts key.public_key.to_pem
 require 'rubygems'
 require 'domainatrix'
 
-url = Domainatrix.parse("http://api.actwitty.co.uk/tytyt?s=8&ert=34")
-p url.url       # => "http://www.pauldix.net" (the original url)
-p url.public_suffix       # => "net"
-p url.domain    # => "pauldix"
-p url.canonical # => "net.pauldix"
-p url.subdomain
-p url.path
+def parse(url)
+  url = "http://" + url if url !~ /^http\:\/\/|^https\:\/\//
+  url = Domainatrix.parse(url)
+  p url.url       # => "http://www.pauldix.net" (the original url)
+  p url.public_suffix       # => "net"
+  p url.domain    # => "pauldix"
+  p url.canonical # => "net.pauldix"
+  p url.subdomain
+  p url.path
+
+  p url.domain + "." + url.public_suffix
+end
+
+
+def base(url)
+    url = "http://" + url if url !~ /^http\:\/\/|^https\:\/\//
+    
+    u = Domainatrix.parse(url)
+    p u.domain + "." + u.public_suffix
+  rescue => e 
+    puts("**** ERROR **** #{e.message}")
+    nil  
+  end
+
+u = "apu.actwitty.com/dcsd?23432&fjwe"
+#parse(u)
+base(u)
