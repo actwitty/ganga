@@ -100,10 +100,8 @@ gem 'colorize'
 
 gem 'yajl-ruby'
 
-#JSONP middleware
-gem 'rack-jsonp-middleware',  :require => 'rack/jsonp'
-#CORS middleware
-gem 'rack-cors', :require => 'rack/cors'
+# domain parser
+gem 'domainatrix'
 
 group :test, :development  do
   gem 'rspec-rails'

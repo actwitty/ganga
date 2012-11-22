@@ -20,6 +20,7 @@ App.Condition = Ember.Object.extend
     @setValueDefault(false)
     @setOperationList(false)     
 
+    # this must be last
     Ember.run.next(this, 'enableObserversAfterInit')
 
   # ----------------------------------------------------
@@ -33,19 +34,27 @@ App.Condition = Ember.Object.extend
     @set 'property', scope + '.' + property  
   # ----------------------------------------------------
   setOperationList: (reset)->       
-    property = @get 'property'       
-    # Override for some system parameters that have a predefined list of values
+    property = @get 'property'        
+    # Override for some system parameters that have a predefined list of values    
     if App.operationListOverrides.hasOwnProperty(property)         
+      
       @set 'opList', App.operationListOverrides[property]
+      if reset is true or operation is null      
+        for op of App.operationListOverrides[property]                  
+          if App.operationListOverrides[property].hasOwnProperty(op)
+            @set 'operation', op
+            break
+
     else      
       type = @get 'type'         
       @set 'opList', App.operationsList[type]    
-    operation = @get 'operation'     
-    if reset is true or operation is null      
-      for op of App.operationsList[type]        
-        if App.operationsList[type].hasOwnProperty(op)
-          @set 'operation', op
-          break
+      operation = @get 'operation' 
+
+      if reset is true or operation is null      
+        for op of App.operationsList[type]        
+          if App.operationsList[type].hasOwnProperty(op)
+            @set 'operation', op
+            break
   # ----------------------------------------------------
   setValueDefault: (reset) ->
     property = @get 'property'    

@@ -1179,7 +1179,7 @@ trigger_fish.rbT.eventHandler = {
 // INTEGRATION_ENABLE     
 
          
-         trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
+        // trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
         //TODO
 
 
@@ -1392,7 +1392,7 @@ if(1) // Check for Service Type Enhancement
 
              params.display = servermsg + " " +"Display " + "Success";
 
-             trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
+             //trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
 
 
          }
