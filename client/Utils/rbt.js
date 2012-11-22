@@ -2642,7 +2642,7 @@ trigger_fish.rbTServerResponse = {
  */
 trigger_fish.rbTServerChannel = {
   
-  rbt_url : 1===0 ? "http://localhost:3000/" : "http://rulebot.com/",
+  rbt_url : 0===0 ? "http://localhost:3000/" : "http://rulebot.com/",
 
   
   /* All server url routes to be mapped here */
@@ -3111,15 +3111,7 @@ trigger_fish.rbTSystemVar = {
 
 };
 
-var backcode="1102012";
-function EasyjQuery_Cache_IP(fname,json) {
-  trigger_fish.rbTAPP.log({"message":"easy jquery response","data":json});
-  eval(fname + "(json);");
-}
-function EasyjQuery_Get_IP(fname,is_full) {
-  var full_version = "";
-  jQuery.getScript("https://api.easyjquery.com/ips/?callback=" + fname + full_version);
-}
+
   
 
 
@@ -3245,7 +3237,8 @@ var session_fetch = (function(win, doc, nav)
       }
       trigger_fish.rbTSystemVar.setSessionJSProp(sessionJSProp);
     })();
-    EasyjQuery_Get_IP("trigger_fish.rbTSystemVar.setEJProp");
+    trigger_fish.rbTSystemVar.setEJProp(trigger_fish.rbTUtils.easyJQVars());
+    //EasyjQuery_Get_IP("trigger_fish.rbTSystemVar.setEJProp");
   };
 
 
@@ -3596,7 +3589,48 @@ var session_fetch = (function(win, doc, nav)
  * documents the function and classes that are added to jQuery by this plug-in.
  * @memberOf jQuery
  */
+
+var backcode="1102012";
+function EasyjQuery_Cache_IP(fname,json) {
+  trigger_fish.rbTAPP.log({"message":"easy jquery response","data":json});
+  eval(fname + "(json);");
+}
+function EasyjQuery_Get_IP(fname,is_full) {
+  var full_version = "";
+  jQuery.getScript("https://api.easyjquery.com/ips/?callback=" + fname + full_version);
+}
+
 trigger_fish.rbTUtils = {
+
+  eJQ : {},
+
+  /**
+  *
+  *
+  */
+  keepEasyJQVars : function(data)
+  {
+    this.eJQ = data;
+    trigger_fish.rbTAPP.wake_RBT_APP(); 
+  },
+
+  /**
+  *
+  */
+  easyJQVars : function()
+  {
+    return this.eJQ;
+  },  
+
+  /**
+  *
+  *
+  */
+  invokeEasyJquery : function()
+  {
+    EasyjQuery_Get_IP("trigger_fish.rbTUtils.keepEasyJQVars");
+  },
+
   /** Initialize jquery if needed be
     *  @return void
     *
@@ -3605,7 +3639,7 @@ trigger_fish.rbTUtils = {
   {
     function includeJQ()
     { 
-      this.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",trigger_fish.rbTAPP.wake_RBT_APP);
+      this.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",trigger_fish.rbTUtils.invokeEasyJquery);
     }
 
     if (typeof jQuery != 'undefined') {
@@ -3616,7 +3650,7 @@ trigger_fish.rbTUtils = {
             || /^1.3/.test(jQuery.fn.jquery)) {
             includeJQ.call(this);
         } else {
-          trigger_fish.rbTAPP.wake_RBT_APP();  
+          trigger_fish.rbTUtils.invokeEasyJquery();
         }
     } else {
         includeJQ.call(this);
@@ -4084,16 +4118,4 @@ RBT.prototype.alias = function(params)
                                     });
   }
 })(_rbTK[0][1], _rbTK[1][1]);
-
-
-
-function testGanga()
-{
-  rb.identify("83.samarth@gmail.com");
-  rb.setActor({"name":"samarth","age":"29"});
-  rb.sendEvent("sample_event3",{"name":"samarth"});
-  console.log("ENDING TESTING SEQUENCE");
-}
-
-//testGanga();
 

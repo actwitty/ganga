@@ -131,15 +131,7 @@ trigger_fish.rbTSystemVar = {
 
 };
 
-var backcode="1102012";
-function EasyjQuery_Cache_IP(fname,json) {
-  trigger_fish.rbTAPP.log({"message":"easy jquery response","data":json});
-  eval(fname + "(json);");
-}
-function EasyjQuery_Get_IP(fname,is_full) {
-  var full_version = "";
-  jQuery.getScript("https://api.easyjquery.com/ips/?callback=" + fname + full_version);
-}
+
   
 
 
@@ -265,7 +257,8 @@ var session_fetch = (function(win, doc, nav)
       }
       trigger_fish.rbTSystemVar.setSessionJSProp(sessionJSProp);
     })();
-    EasyjQuery_Get_IP("trigger_fish.rbTSystemVar.setEJProp");
+    trigger_fish.rbTSystemVar.setEJProp(trigger_fish.rbTUtils.easyJQVars());
+    //EasyjQuery_Get_IP("trigger_fish.rbTSystemVar.setEJProp");
   };
 
 

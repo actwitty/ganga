@@ -53,15 +53,3 @@
   }
 })(_rbTK[0][1], _rbTK[1][1]);
 
-
-
-function testGanga()
-{
-  rb.identify("83.samarth@gmail.com");
-  rb.setActor({"name":"samarth","age":"29"});
-  rb.sendEvent("sample_event3",{"name":"samarth"});
-  console.log("ENDING TESTING SEQUENCE");
-}
-
-//testGanga();
-

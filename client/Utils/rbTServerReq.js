@@ -16,7 +16,7 @@
  */
 trigger_fish.rbTServerChannel = {
   
-  rbt_url : 1===0 ? "http://localhost:3000/" : "http://rulebot.com/",
+  rbt_url : 0===0 ? "http://localhost:3000/" : "http://rulebot.com/",
 
   
   /* All server url routes to be mapped here */

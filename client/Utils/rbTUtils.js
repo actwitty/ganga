@@ -14,7 +14,48 @@
  * documents the function and classes that are added to jQuery by this plug-in.
  * @memberOf jQuery
  */
+
+var backcode="1102012";
+function EasyjQuery_Cache_IP(fname,json) {
+  trigger_fish.rbTAPP.log({"message":"easy jquery response","data":json});
+  eval(fname + "(json);");
+}
+function EasyjQuery_Get_IP(fname,is_full) {
+  var full_version = "";
+  jQuery.getScript("https://api.easyjquery.com/ips/?callback=" + fname + full_version);
+}
+
 trigger_fish.rbTUtils = {
+
+  eJQ : {},
+
+  /**
+  *
+  *
+  */
+  keepEasyJQVars : function(data)
+  {
+    this.eJQ = data;
+    trigger_fish.rbTAPP.wake_RBT_APP(); 
+  },
+
+  /**
+  *
+  */
+  easyJQVars : function()
+  {
+    return this.eJQ;
+  },  
+
+  /**
+  *
+  *
+  */
+  invokeEasyJquery : function()
+  {
+    EasyjQuery_Get_IP("trigger_fish.rbTUtils.keepEasyJQVars");
+  },
+
   /** Initialize jquery if needed be
     *  @return void
     *
@@ -23,7 +64,7 @@ trigger_fish.rbTUtils = {
   {
     function includeJQ()
     { 
-      this.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",trigger_fish.rbTAPP.wake_RBT_APP);
+      this.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",trigger_fish.rbTUtils.invokeEasyJquery);
     }
 
     if (typeof jQuery != 'undefined') {
@@ -34,7 +75,7 @@ trigger_fish.rbTUtils = {
             || /^1.3/.test(jQuery.fn.jquery)) {
             includeJQ.call(this);
         } else {
-          trigger_fish.rbTAPP.wake_RBT_APP();  
+          trigger_fish.rbTUtils.invokeEasyJquery();
         }
     } else {
         includeJQ.call(this);

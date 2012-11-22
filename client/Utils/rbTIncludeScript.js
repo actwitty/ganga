@@ -8,7 +8,7 @@ _rbTK.push(['_setAccount', '509cfa0e56b26aa55c000001']);
   var rj = d.createElement('script'); rj.type = 'text/javascript'; rj.async = true;
   rj.src = 'https://s3.amazonaws.com/actwitty_ganga/rbt_merge'+(tfGzip?'.js.jgz':'.min.js');
   rj.id = id;
-  d.getElementsByTagName("head")[0].appendChild(rbtJS);
+  d.getElementsByTagName("head")[0].appendChild(rj);
   (function(w,e){
     var k,j=e.length;w.rb = {};
     w.rb.q = [];
