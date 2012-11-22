@@ -16,7 +16,7 @@
  */
 trigger_fish.rbTServerChannel = {
   
-  rbt_url : "http://localhost:3000/",
+  rbt_url : 1===0 ? "http://localhost:3000/" : "http://rulebot.com/",
 
   
   /* All server url routes to be mapped here */
@@ -194,7 +194,8 @@ trigger_fish.rbTServerChannel = {
             contentType : getContentType(obj.type),
             data: reqServerData,
             crossDomain:true,
-            timeout : 10000,
+            //timeout : 10000,
+            cache:false,
             xhrField : { withCredentials:true},
             beforeSend: function() {
                 if (that.event) {

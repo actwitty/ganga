@@ -190,7 +190,8 @@ trigger_fish.rbTAPP = {
     getAppData : function()
     {
       trigger_fish.rbTServerChannel.makeServerRequest({"url"      : trigger_fish.rbTServerChannel.url.appDetails,
-                                                       "app_read" : true, 
+                                                       "app_read" : true,
+                                                       "async"    : "noasync", 
                                                        "cb"       : { success: trigger_fish.rbTServerResponse.setAppDetail,
                                                                       error  : trigger_fish.rbTServerResponse.defaultError
                                                                     }
@@ -2641,7 +2642,7 @@ trigger_fish.rbTServerResponse = {
  */
 trigger_fish.rbTServerChannel = {
   
-  rbt_url : "http://localhost:3000/",
+  rbt_url : 1===0 ? "http://localhost:3000/" : "http://rulebot.com/",
 
   
   /* All server url routes to be mapped here */
@@ -2819,7 +2820,8 @@ trigger_fish.rbTServerChannel = {
             contentType : getContentType(obj.type),
             data: reqServerData,
             crossDomain:true,
-            timeout : 10000,
+            //timeout : 10000,
+            cache:false,
             xhrField : { withCredentials:true},
             beforeSend: function() {
                 if (that.event) {
@@ -2846,7 +2848,6 @@ trigger_fish.rbTServerChannel = {
             },
             error:function(XMLHttpRequest,textStatus, errorThrown){ 
                 trigger_fish.rbTAPP.log({"message":"server response error","data_closure":that,"textStatus":textStatus});
-                // FIXME :: ADDED ONLY TO TEST CLIENT SIDE
                 if (that.event) {
                   trigger_fish.rbTAPP.setTransVar({}); 
                 } else if (that.identify && XMLHttpRequest.responseText.indexOf("is already in use")) {
@@ -4054,6 +4055,17 @@ RBT.prototype.alias = function(params)
 */
 (function StartRBTApp(appid,accid){
   trigger_fish.rbTAPP.log("Initializing RBT APP with AppID = " + appid + " Account ID = " + accid);
+  function releasePreInitCalls(w)
+  {
+    if (w.rb && w.rb.q.length) {
+      var l = w.rb.q;
+      w.rb = new RBT();
+      for (var c in l) {
+        var o = l[c];
+        rb[o.t](o.a,o.b,o.c);
+      }    
+    }
+  }
   try {
     if (!appid || !accid || appid == "" || accid == "") {
       throw new Error("App-id, Account-ID are not mentioned")
@@ -4062,7 +4074,7 @@ RBT.prototype.alias = function(params)
       trigger_fish.rbTAPP.setAppID(appid);
       trigger_fish.rbTAPP.setAccountID(accid);
       trigger_fish.rbTUtils.includeJQIfNeeded();
-      window.rb = new RBT();
+      releasePreInitCalls(window);
     }
   } catch (e) {
     trigger_fish.rbTAPP.reportError({"exception": e.message, 
