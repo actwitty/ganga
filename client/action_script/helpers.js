@@ -15,6 +15,15 @@ trigger_fish.rbT.templTimers= {
 
 };
 
+
+//templ delay Q
+
+trigger_fish.rbT.qSize = 10;
+trigger_fish.rbT.globalDelayQ = new Array(trigger_fish.rbT.qSize);
+trigger_fish.rbT.globalDelayQTimeVal = new Array(trigger_fish.rbT.qSize); 
+
+
+
 // display lock for templ positions
 
 trigger_fish.rbT.templatesDisplayLockFlags = {
@@ -28,7 +37,88 @@ trigger_fish.rbT.templatesDisplayLockFlags = {
 
 };
 
-//function fir set the display lock for templ postions
+//function to handle on timout for templ delay display
+trigger_fish.rbT.handleTimeoutforTemplDelayedDisplay = function(timerIndexforDisplayDelay,actionIndexforDisplayDeplay)
+{ 
+   console.log(timerIndexforDisplayDelay);
+   console.log(actionIndexforDisplayDeplay);
+
+
+   if(trigger_fish.rbT.globalDelayQ[actionIndexforDisplayDeplay] != undefined )
+   {
+      var i =0;
+      var j= 0;
+      
+      trigger_fish.rbT.globalDelayQ[0].timers.delay = 0;
+      
+      var tempStatus=trigger_fish.rbT.invokeActionScript(trigger_fish.rbT.globalDelayQ[actionIndexforDisplayDeplay]);
+      
+      trigger_fish.rbT.globalDelayQ[actionIndexforDisplayDeplay] = undefined;
+      
+    } 
+    
+    if(trigger_fish.rbT.globalDelayQTimeVal[timerIndexforDisplayDelay] != undefined)
+    {  
+      clearInterval(trigger_fish.rbT.globalDelayQTimeVal[timerIndexforDisplayDelay]);
+        
+      trigger_fish.rbT.globalDelayQTimeVal[timerIndexforDisplayDelay] = undefined; 
+    }    
+};
+
+
+//function for handling delay for templ display
+ trigger_fish.rbT.handlingOfDelayForTemplDisplay=function(action)
+ {
+
+    var i= 0;
+    var j = 0;
+    var foundTimerIndex = false;
+    var foundActionIndex = false;
+
+
+    var delay = action.timers.delay;
+
+    for(i=0 ; i<trigger_fish.rbT.globalDelayQTimeVal.length;i++)
+    {
+      if(trigger_fish.rbT.globalDelayQTimeVal[i] == undefined)
+       { 
+         foundTimerIndex =true; 
+          break;
+        } 
+
+    }
+
+    for(j=0 ; j<trigger_fish.rbT.globalDelayQTimeVal.length;j++)
+    {
+      if(trigger_fish.rbT.globalDelayQTimeVal[j] == undefined)
+      {
+        foundActionIndex =true; 
+        break;
+       }  
+
+    }
+    if(foundActionIndex ==true && foundTimerIndex == true )
+    {    
+        var timerIndexforDisplayDelay = i;
+        var actionIndexforDisplayDeplay = j;
+        trigger_fish.rbT.globalDelayQ[j] = action; 
+        
+
+        trigger_fish.rbT.globalDelayQTimeVal[timerIndexforDisplayDelay] = setInterval(function(){trigger_fish.rbT.handleTimeoutforTemplDelayedDisplay(timerIndexforDisplayDelay,actionIndexforDisplayDeplay)}
+          ,delay*1000);
+     }else{
+            trigger_fish.rbT.sendErrorToRBServer("Delay Q is Full");    
+     }   
+
+
+
+ };
+
+
+
+
+
+//function for set the display lock for templ postions
 
 trigger_fish.rbT.setTemplatesDisplayLockFlags=function(pos,value)
 {
@@ -117,9 +207,9 @@ trigger_fish.rbT.fillTheRuntimeValueForTemplArgs = function(tempMatch,actionparm
 
 // INTEGRATION_ENABLE                            
 
-                           trigger_fish.rbT.currentSystemVar = trigger_fish.rbTSystemVar.getProperty();
-                           trigger_fish.rbT.currentActorVar = trigger_fish.rbTActor.getProperties();
-                           trigger_fish.rbT.currentEventVar = trigger_fish.rbTAPP.getTransVar();
+                         //  trigger_fish.rbT.currentSystemVar = trigger_fish.rbTSystemVar.getProperty();
+                         //  trigger_fish.rbT.currentActorVar = trigger_fish.rbTActor.getProperties();
+                         //  trigger_fish.rbT.currentEventVar = trigger_fish.rbTAPP.getTransVar();
 
                              
                            for(var i=0 ; i<tempMatch.length ; i++)
@@ -274,9 +364,11 @@ trigger_fish.rbT.sendErrorToRBServer = function(string){
 
 // INTEGRATION_ENABLE  
    
- trigger_fish.rbTAPP.log({"message": string,"log":true});
+// trigger_fish.rbTAPP.log({"message": string,"log":true});
 
- trigger_fish.rbTAPP.reportError({"message":string,"server":true});
+// trigger_fish.rbTAPP.reportError({"message":string,"server":true});
+
+console.log(string);
 
 };
 

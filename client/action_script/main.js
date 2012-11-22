@@ -8,8 +8,9 @@
 
 trigger_fish.rbT.init = function(){
 	trigger_fish.rbT.keyPrefix = "{{";
-	trigger_fish.rbT.keySuffix = "}}";
-	trigger_fish.rbT.inited = true;
+	trigger_fish.rbT.keySuffix = "}}";  
+  trigger_fish.rbT.inited = true;
+
 
 };
 
@@ -109,6 +110,7 @@ trigger_fish.rbT.enableTimeOutHadnlingInternal= function(templateName,timerValue
 };
 
 //*************************************************************************************
+
 trigger_fish.rbT.invokeActionScriptInternal=function(action){
 
 /*
@@ -117,83 +119,97 @@ trigger_fish.rbT.invokeActionScriptInternal=function(action){
 
 */
 
+
+
+
 if(1) // Check for Service Type Enhancement
  {   
  
       params= {};  
       
       trigger_fish.rbT.init();
-      
-      var actionParams = action.params;
-       
-      var type=action.desc.type; 
-      var api = action.desc.api;
-      var servermsg = type + "."+api;
-      
-      var isPosOccupied = trigger_fish.rbT.isTemplPosOccupied(type);
 
-      if(isPosOccupied)
-      {
 
-          trigger_fish.rbT.sendErrorToRBServer("Postion Occupied by Another Template");
-      }
-      else
-      {
-          var html = trigger_fish.rbT.getTemplateHTMLByName(type,api);
+      var delayVal = action.timers.delay;
 
-          
-              for (var key in actionParams)
-                 {
-                  if(actionParams.hasOwnProperty(key))
-                  {
-                     var keyVal = key;
-                       var value = actionParams[key];
-                       var tempMatch = ""
-                       var tempMatch = value.match(/\{\{[\w.\=\%\:\/\s\#\@\-\']*\}\}/g);
-                      
-                       if(tempMatch)
+
+      if(1)
+        {
+            var actionParams = action.params;
+             
+            var type=action.desc.type; 
+            var api = action.desc.api;
+            var servermsg = type + "."+api;
+            
+            var isPosOccupied = trigger_fish.rbT.isTemplPosOccupied(type);
+
+            if(isPosOccupied)
+            {
+
+                trigger_fish.rbT.sendErrorToRBServer("Postion Occupied by Another Template");
+            }
+            else
+            {
+                var html = trigger_fish.rbT.getTemplateHTMLByName(type,api);
+
+                
+                    for (var key in actionParams)
                        {
-                       	  var tempActionKeyRetVal =""
-                       	  tempActionKeyRetVal=trigger_fish.rbT.fillTheRuntimeValueForTemplArgs(tempMatch,actionParams[key]);
-                          
+                        if(actionParams.hasOwnProperty(key))
+                        {
+                           var keyVal = key;
+                             var value = actionParams[key];
+                             var tempMatch = ""
+                             var tempMatch = value.match(/\{\{[\w.\=\%\:\/\s\#\@\-\']*\}\}/g);
+                            
+                             if(tempMatch)
+                             {
+                             	  var tempActionKeyRetVal =""
+                             	  tempActionKeyRetVal=trigger_fish.rbT.fillTheRuntimeValueForTemplArgs(tempMatch,actionParams[key]);
+                                
 
-                          if(tempActionKeyRetVal != undefined)
-                          {	
-                             actionParams[key] = tempActionKeyRetVal;
-                          }   
-                       }
-                   }
+                                if(tempActionKeyRetVal != undefined)
+                                {	
+                                   actionParams[key] = tempActionKeyRetVal;
+                                }   
+                             }
+                         }
 
-                 }      
+                       }      
 
-        //   for (var key in actionParams) {             
-        //     if(actionParams.hasOwnProperty(key)){	
-			     //     if( 'Zindex' == actionParams[key] ) {               
-				    //      actionParams[key] =  trigger_fish.rbT.findZIndex()+5;
-			     //     }
-			     //  }              
-		      // } 
+              //   for (var key in actionParams) {             
+              //     if(actionParams.hasOwnProperty(key)){	
+      			     //     if( 'Zindex' == actionParams[key] ) {               
+      				    //      actionParams[key] =  trigger_fish.rbT.findZIndex()+5;
+      			     //     }
+      			     //  }              
+      		      // } 
 
-		
-
-
-
-          html = trigger_fish.rbT.getTemplateApplyVars(html, actionParams);
-          
-
-         if (trigger_fish.rbT.isTemplateGoodToApply(html)){
-            trigger_fish.rbT.applyHtmltoPage(html);
-            trigger_fish.rbT.enableClickHandling();
-           // trigger_fish.rbT.enableTimeOutHadnling(templateName,trigger_fish.rbT.templTimers['templ.templduration']*1000);
-		         trigger_fish.rbT.setTemplatesDisplayLockFlags(type,true);
-
-             params.display = servermsg + " " +"Display " + "Success";
-
-             //trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
+      		
 
 
-         }
-      }	
+
+                html = trigger_fish.rbT.getTemplateApplyVars(html, actionParams);
+                
+
+               if (trigger_fish.rbT.isTemplateGoodToApply(html)){
+                  trigger_fish.rbT.applyHtmltoPage(html);
+                  trigger_fish.rbT.enableClickHandling();
+                 // trigger_fish.rbT.enableTimeOutHadnling(templateName,trigger_fish.rbT.templTimers['templ.templduration']*1000);
+      		         trigger_fish.rbT.setTemplatesDisplayLockFlags(type,true);
+
+                   params.display = servermsg + " " +"Display " + "Success";
+
+                   //trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
+
+
+               }
+            }
+      }else{
+
+                trigger_fish.rbT.handlingOfDelayForTemplDisplay(action);
+
+      } 	
   }else{
 
   	 // Report to Server for If Service Type Wrong

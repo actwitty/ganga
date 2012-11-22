@@ -63,7 +63,6 @@ trigger_fish.rbT.templateLib = {
 	 			'topbar.generic.twitterfollow':'Top bar to Gather followers from twitter',
 	 			'bottombar.generic.twitterfollow':'Bottom bar to Gather followers from twitter',
 	 			'topbar.generic.fblike':'A top bar to influence visitors from Facebook',
-	 			'uservoice.generic.normal':'User Voice Feedback',
 	 			'bottombar.generic.twittershare':'Influence a Twitter user to share about your business',
 	 			'support.olark.normal':'Chat Window',
 	 			'modal.generic.normal':'A modal annonucement',
@@ -78,391 +77,388 @@ trigger_fish.rbT.templateLib = {
 	 	  'bottombar.generic.fblike':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.nr.base_zindex',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_zindex',
 	 	 	 	 	 				value :'10000'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.nr.font_size',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_font_size',
 	 	 	 	 	 				value :'14'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.ft.font',
+	 	 	 	 	 				key :'rb.t.ft.h.bar_font',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.cr.border_color',
+	 	 	 	 	 				key :'rb.t.cr.h.bar_border_color',
 	 	 	 	 	 				value :'#304A80'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.background_color',
+	 	 	 	 	 				key :'rb.t.cr.h.bar_background_color',
 	 	 	 	 	 				value :'#6087C6'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.show_width',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_width',
 	 	 	 	 	 				value :'900'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.nr.bar_height',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_height',
 	 	 	 	 	 				value :'40'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.ul.facebook_page',
+	 	 	 	 	 				key :'rb.t.ul.e.facebook_page',
 	 	 	 	 	 				value :'http://www.google.com'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' :{
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				key :'rb.t.vsg.e.text_left',
 	 	 	 	 	 				value :'Woo Facebook users coming to your page by writing something to make them like you.'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'topbar.generic.normal':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.nr.base_zindex',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_zindex',
 	 	 	 	 	 				value :'10000'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.cr.base_backgroundcolor',
+	 	 	 	 	 				key :'rb.t.cr.h.bar_background_color',
 	 	 	 	 	 				value :'#E24E35'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.nr.show_width',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_width',
 	 	 	 	 	 				value :'900'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.nr.base_height',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_height',
 	 	 	 	 	 				value :'40'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.text_color ',
+	 	 	 	 	 				key :'rb.t.cr.h.text_color ',
 	 	 	 	 	 				value :'#ffffff'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
+	 	 	 	 	 				key :'rb.t.nr.h.text_fontsize',
 	 	 	 	 	 				value :'14'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
+	 	 	 	 	 				key :'rb.t.ft.h.text_fontfamily',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
+	 	 	 	 	 				key :'rb.t.fw.h.text_fontweight',
 	 	 	 	 	 				value :'normal'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.cr.button_background',
+	 	 	 	 	 				key :'rb.t.cr.h.button_background_color',
 	 	 	 	 	 				value :'whiteSmoke'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.cr.button_color',
+	 	 	 	 	 				key :'rb.t.cr.h.button_color',
 	 	 	 	 	 				value :'#333'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.nr.button_fontSize',
+	 	 	 	 	 				key :'rb.t.nr.h.button_fontSize',
 	 	 	 	 	 				value :'16'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '12' : {
-	 	 	 	 	 				key :'rb.t.cr.button_background_on_focus',
+	 	 	 	 	 				key :'rb.t.cr.h.button_background_on_focus',
 	 	 	 	 	 				value :'#d9d9d9'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '13' : {
-	 	 	 	 	 				key :'rb.t.cr.button_color_on_focus',
+	 	 	 	 	 				key :'rb.t.cr.h.button_color_on_focus',
 	 	 	 	 	 				value :'#888'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '14' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				key :'rb.t.vsg.e.text_left',
 	 	 	 	 	 				value :'Please add the promotional left text here'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '15' : {
-	 	 	 	 	 				key :'rb.t.ul.button_link',
+	 	 	 	 	 				key :'rb.t.ul.e.button_link',
 	 	 	 	 	 				value :'http://www.google.com'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '16' : {
-	 	 	 	 	 				key :'rb.t.sg.button_label',
+	 	 	 	 	 				key :'rb.t.sg.e.button_label',
 	 	 	 	 	 				value :'Promo Link'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '17' :{
-	 	 	 	 	 				key :'rb.t.vsg.text_right',
+	 	 	 	 	 				key :'rb.t.vsg.e.text_right',
 	 	 	 	 	 				value :'Please add the promotional right text here'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'topbar.generic.twitterfollow':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.nr.base_zindex',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_zindex',
 	 	 	 	 	 				value :'10000'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.cr.base_background_color',
+	 	 	 	 	 				key :'rb.t.cr.h.bar_background_color',
 	 	 	 	 	 				value :'#377CA8'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.nr.show_width',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_width',
 	 	 	 	 	 				value :'900'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.nr.base_height',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_height',
 	 	 	 	 	 				value :'40'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.text_color ',
+	 	 	 	 	 				key :'rb.t.cr.h.text_color ',
 	 	 	 	 	 				value :'#ffffff'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
+	 	 	 	 	 				key :'rb.t.nr.h.text_fontsize',
 	 	 	 	 	 				value :'14'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
+	 	 	 	 	 				key :'rb.t.ft.h.text_fontfamily',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
+	 	 	 	 	 				key :'rb.t.fw.h.text_fontweight',
 	 	 	 	 	 				value :'normal'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.sg.twitter_account_link',
+	 	 	 	 	 				key :'rb.t.sg.e.twitter_account_link',
 	 	 	 	 	 				value :'@act_witty'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.sg.twitter_label',
+	 	 	 	 	 				key :'rb.t.sg.e.twitter_label',
 	 	 	 	 	 				value :'@act_witty'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				key :'rb.t.vsg.e.text_left',
 	 	 	 	 	 				value :'Increase your market reach by connecting to users'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '12' :{
-	 	 	 	 	 				key :'rb.t.vsg.text_right',
+	 	 	 	 	 				key :'rb.t.vsg.e.text_right',
 	 	 	 	 	 				value :'Gathering reach on twitter to increase business.'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'bottombar.generic.twitterfollow':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.nr.base_zindex',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_zindex',
 	 	 	 	 	 				value :'10000'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.cr.base_background_color',
+	 	 	 	 	 				key :'rb.t.cr.h.bar_background_color',
 	 	 	 	 	 				value :'#377CA8'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.nr.show_width',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_width',
 	 	 	 	 	 				value :'900'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.nr.base_height',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_height',
 	 	 	 	 	 				value :'40'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.text_color ',
+	 	 	 	 	 				key :'rb.t.cr.h.text_color ',
 	 	 	 	 	 				value :'#ffffff'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
+	 	 	 	 	 				key :'rb.t.nr.h.text_fontsize',
 	 	 	 	 	 				value :'14'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
+	 	 	 	 	 				key :'rb.t.ft.h.text_fontfamily',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
+	 	 	 	 	 				key :'rb.t.fw.h.text_fontweight',
 	 	 	 	 	 				value :'normal'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.sg.twitter_account_link',
+	 	 	 	 	 				key :'rb.t.sg.e.twitter_account_link',
 	 	 	 	 	 				value :'@act_witty'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.sg.twitter_label',
+	 	 	 	 	 				key :'rb.t.sg.e.twitter_label',
 	 	 	 	 	 				value :'@act_witty'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				key :'rb.t.vsg.e.text_left',
 	 	 	 	 	 				value :'Increase your market reach by connecting to users'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '12' :{
-	 	 	 	 	 				key :'rb.t.vsg.text_right',
+	 	 	 	 	 				key :'rb.t.vsg.e.text_right',
 	 	 	 	 	 				value :'Gathering reach on twitter to increase business.'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'topbar.generic.fblike':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.nr.base_zindex',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_zindex',
 	 	 	 	 	 				value :'10000'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.nr.font_size',
+	 	 	 	 	 				key :'rb.t.nr.h.bar.font_size',
 	 	 	 	 	 				value :'14'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.ft.font',
+	 	 	 	 	 				key :'rb.t.ft.h.bar_font',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.cr.border_color',
+	 	 	 	 	 				key :'rb.t.cr.h.bar_border_color',
 	 	 	 	 	 				value :'#304A80'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.background_color',
+	 	 	 	 	 				key :'rb.t.cr.h.bar_background_color',
 	 	 	 	 	 				value :'#6087C6'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.show_width',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_show_width',
 	 	 	 	 	 				value :'900'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.nr.bar_height',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_height',
 	 	 	 	 	 				value :'40'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.ul.facebook_page',
+	 	 	 	 	 				key :'rb.t.ul.e.facebook_page',
 	 	 	 	 	 				value :'http://www.google.com'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' :{
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				key :'rb.t.vsg.e.text_left',
 	 	 	 	 	 				value :'Woo Facebook users coming to your page by writing something to make them like you.'
 	 	 	 	 	 	  }
-	 	 	 	 	 },
-	 	  'uservoice.generic.normal':{
-
 	 	 	 	 	 },
 	 	  'bottombar.generic.twittershare':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.nr.base_zindex',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_zindex',
 	 	 	 	 	 				value :'10000'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.cr.base_background_color',
+	 	 	 	 	 				key :'rb.t.cr.h.bar_background_color',
 	 	 	 	 	 				value :'#377CA8'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.nr.show_width',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_width',
 	 	 	 	 	 				value :'900'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.nr.base_height',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_height',
 	 	 	 	 	 				value :'40'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.text_color ',
+	 	 	 	 	 				key :'rb.t.cr.h.text_color ',
 	 	 	 	 	 				value :'#ffffff'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
+	 	 	 	 	 				key :'rb.t.nr.h.text_fontsize',
 	 	 	 	 	 				value :'14'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
+	 	 	 	 	 				key :'rb.t.ft.h.text_fontfamily',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
+	 	 	 	 	 				key :'rb.t.fw.h.text_fontweight',
 	 	 	 	 	 				value :'normal'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.sg.twitter_share_text',
+	 	 	 	 	 				key :'rb.t.sg.e.twitter_share_text',
 	 	 	 	 	 				value :'make #twitter user to share about your blog at a sample url like http://www.rulebot.com'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				key :'rb.t.vsg.e.text_left',
 	 	 	 	 	 				value :'Ask here to twitter user to share your blog'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' :{
-	 	 	 	 	 				key :'rb.t.vsg.text_right',
+	 	 	 	 	 				key :'rb.t.vsg.e.text_right',
 	 	 	 	 	 				value :'Influence your visitors.'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'support.olark.normal':{
 
  	 	 	 	 	 	 '1' :{
-	 	 	 	 	 				key :'rb.t.sg.olarkIdentity',
+	 	 	 	 	 				key :'rb.t.sg.e.olarkIdentity',
 	 	 	 	 	 				value :'\'6679-845-10-6199\''
 	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'modal.generic.normal':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.f.nr.background_zindex',
+	 	 	 	 	 				key :'rb.f.nr.h.overlay_background_zindex',
 	 	 	 	 	 				value :'10000'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.f.nr.dialog_zindex',
+	 	 	 	 	 				key :'rb.f.nr.h.dialog_zindex',
 	 	 	 	 	 				value :'10001'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.cr.background_color',
+	 	 	 	 	 				key :'rb.t.cr.h.dialog_background_color',
 	 	 	 	 	 				value :'white'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.sg.modal_cover_image',
+	 	 	 	 	 				key :'rb.t.sg.e.cover_image',
 	 	 	 	 	 				value :'https://s3.amazonaws.com/actwitty_ganga/image/modal_demo.jpg'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.heading_background_color',
+	 	 	 	 	 				key :'rb.t.cr.h.heading_background_color',
 	 	 	 	 	 				value :'#D44413'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.cr.heading_color',
+	 	 	 	 	 				key :'rb.t.cr.h.heading_color',
 	 	 	 	 	 				value :'#FFFFFF'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.nr.heading_font_size',
+	 	 	 	 	 				key :'rb.t.nr.h.heading_font_size',
 	 	 	 	 	 				value :'20'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.ft.heading_fontfamily',
+	 	 	 	 	 				key :'rb.t.ft.h.heading_fontfamily',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.cr.heading_text_shadow',
+	 	 	 	 	 				key :'rb.t.cr.h.heading_text_shadow',
 	 	 	 	 	 				value :'#97310E'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.nr.text_font_size',
+	 	 	 	 	 				key :'rb.t.nr.h.offer_text_font_size',
 	 	 	 	 	 				value :'20'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.nr.line-height',
+	 	 	 	 	 				key :'rb.t.nr.h.offer_line_height',
 	 	 	 	 	 				value :'24'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '12' : {
-	 	 	 	 	 				key :'rb.t.cr.text_color',
+	 	 	 	 	 				key :'rb.t.cr.h.offer_text_color',
 	 	 	 	 	 				value :'#000000'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '13' : {
-	 	 	 	 	 				key :'rb.t.cr.button_border',
+	 	 	 	 	 				key :'rb.t.cr.h.button_border',
 	 	 	 	 	 				value :'#f5881f'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '14' : {
-	 	 	 	 	 				key :'rb.t.cr.button_background',
+	 	 	 	 	 				key :'rb.t.cr.h.button_background_color',
 	 	 	 	 	 				value :'#f15c24'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '15' : {
-	 	 	 	 	 				key :'rb.t.cr.button_color',
+	 	 	 	 	 				key :'rb.t.cr.h.button_label_color',
 	 	 	 	 	 				value :'#fffffd'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '16' : {
-	 	 	 	 	 				key :'rb.t.nr.button_font_size',
+	 	 	 	 	 				key :'rb.t.nr.h.button_font_size',
 	 	 	 	 	 				value :'25'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '17' : {
-	 	 	 	 	 				key :'rb.t.vsg.heading_text',
+	 	 	 	 	 				key :'rb.t.vsg.e.heading_text',
 	 	 	 	 	 				value :'An announcement to catch attention'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '18' : {
-	 	 	 	 	 				key :'rb.t.vsg.offer_text',
+	 	 	 	 	 				key :'rb.t.vsg.e.offer_text',
 	 	 	 	 	 				value :'This is a way to connect to your customers to woo them to engage with your product.                We can help you to automate the offerings being presented by popping out such modals                when rules get hit. You can change this text.'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '19' : {
-	 	 	 	 	 				key :'rb.t.ul.modal_button_link',
+	 	 	 	 	 				key :'rb.t.ul.e.button_link',
 	 	 	 	 	 				value :'http://www.rulebot.com'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '20' :{
-	 	 	 	 	 				key :'rb.t.sg.modal_button_label',
+	 	 	 	 	 				key :'rb.t.sg.e.button_label',
 	 	 	 	 	 				value :'Order Now'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
@@ -472,118 +468,118 @@ trigger_fish.rbT.templateLib = {
 	 	  'bottombar.generic.normal':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.nr.base_zindex',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_zindex',
 	 	 	 	 	 				value :'10000'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.cr.base_backgroundcolor',
+	 	 	 	 	 				key :'rb.t.cr.h.bar_background_color',
 	 	 	 	 	 				value :'#181818'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.nr.show_width',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_width',
 	 	 	 	 	 				value :'900'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.nr.base_height',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_height',
 	 	 	 	 	 				value :'40'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.text_color ',
+	 	 	 	 	 				key :'rb.t.cr.h.text_color ',
 	 	 	 	 	 				value :'#ffffff'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
+	 	 	 	 	 				key :'rb.t.nr.h.text_fontsize',
 	 	 	 	 	 				value :'14'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
+	 	 	 	 	 				key :'rb.t.ft.h.text_fontfamily',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
+	 	 	 	 	 				key :'rb.t.fw.h.text_fontweight',
 	 	 	 	 	 				value :'normal'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.cr.button_background',
+	 	 	 	 	 				key :'rb.t.cr.h.button_background_color',
 	 	 	 	 	 				value :'#0e0c0b'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.cr.button_color',
+	 	 	 	 	 				key :'rb.t.cr.h.button_color',
 	 	 	 	 	 				value :'#BFBFBF'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.nr.button_fontSize',
+	 	 	 	 	 				key :'rb.t.nr.h.button_fontSize',
 	 	 	 	 	 				value :'14'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '12' : {
-	 	 	 	 	 				key :'rb.t.cr.button_background_on_focus',
+	 	 	 	 	 				key :'rb.t.cr.h.button_background_on_focus',
 	 	 	 	 	 				value :'#333'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '13' : {
-	 	 	 	 	 				key :'rb.t.cr.button_color_on_focus',
+	 	 	 	 	 				key :'rb.t.cr.h.button_color_on_focus',
 	 	 	 	 	 				value :'#FFFFFF'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '14' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				key :'rb.t.vsg.e.text_left',
 	 	 	 	 	 				value :'Please add the promotional left text here'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '15' : {
-	 	 	 	 	 				key :'rb.t.ul.button_link',
+	 	 	 	 	 				key :'rb.t.ul.e.button_link',
 	 	 	 	 	 				value :'http://www.google.com'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '16' : {
-	 	 	 	 	 				key :'rb.t.sg.button_label',
+	 	 	 	 	 				key :'rb.t.sg.e.button_label',
 	 	 	 	 	 				value :'Promo Link'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '17' :{
-	 	 	 	 	 				key :'rb.t.vsg.text_right',
+	 	 	 	 	 				key :'rb.t.vsg.e.text_right',
 	 	 	 	 	 				value :'Please add the promotional right text here'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'topbar.generic.twittershare':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.nr.base_zindex',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_zindex',
 	 	 	 	 	 				value :'10000'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.cr.base_background_color',
+	 	 	 	 	 				key :'rb.t.cr.h.bar_background_color',
 	 	 	 	 	 				value :'#377CA8'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.nr.show_width',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_width',
 	 	 	 	 	 				value :'900'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.nr.base_height',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_height',
 	 	 	 	 	 				value :'40'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.text_color ',
+	 	 	 	 	 				key :'rb.t.cr.h.text_color ',
 	 	 	 	 	 				value :'#ffffff'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
+	 	 	 	 	 				key :'rb.t.nr.h.text_fontsize',
 	 	 	 	 	 				value :'14'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
+	 	 	 	 	 				key :'rb.t.ft.h.text_fontfamily',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
+	 	 	 	 	 				key :'rb.t.fw.h.text_fontweight',
 	 	 	 	 	 				value :'normal'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.sg.twitter_share_text',
+	 	 	 	 	 				key :'rb.t.sg.e.twitter_share_text',
 	 	 	 	 	 				value :'make #twitter user to share about your blog at a sample url like http://www.rulebot.com'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				key :'rb.t.vsg.e.text_left',
 	 	 	 	 	 				value :'Ask here to twitter user to share your blog'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' :{
-	 	 	 	 	 				key :'rb.t.vsg.text_right',
+	 	 	 	 	 				key :'rb.t.vsg.e.text_right',
 	 	 	 	 	 				value :'Influence your visitors.'
 	 	 	 	 	 	  }
 	 	 	 	 	 }
@@ -689,6 +685,15 @@ trigger_fish.rbT.templTimers= {
 
 };
 
+
+//templ delay Q
+
+trigger_fish.rbT.qSize = 10;
+trigger_fish.rbT.globalDelayQ = new Array(trigger_fish.rbT.qSize);
+trigger_fish.rbT.globalDelayQTimeVal = new Array(trigger_fish.rbT.qSize); 
+
+
+
 // display lock for templ positions
 
 trigger_fish.rbT.templatesDisplayLockFlags = {
@@ -702,7 +707,88 @@ trigger_fish.rbT.templatesDisplayLockFlags = {
 
 };
 
-//function fir set the display lock for templ postions
+//function to handle on timout for templ delay display
+trigger_fish.rbT.handleTimeoutforTemplDelayedDisplay = function(timerIndexforDisplayDelay,actionIndexforDisplayDeplay)
+{ 
+   console.log(timerIndexforDisplayDelay);
+   console.log(actionIndexforDisplayDeplay);
+
+
+   if(trigger_fish.rbT.globalDelayQ[actionIndexforDisplayDeplay] != undefined )
+   {
+      var i =0;
+      var j= 0;
+      
+      trigger_fish.rbT.globalDelayQ[0].timers.delay = 0;
+      
+      var tempStatus=trigger_fish.rbT.invokeActionScript(trigger_fish.rbT.globalDelayQ[actionIndexforDisplayDeplay]);
+      
+      trigger_fish.rbT.globalDelayQ[actionIndexforDisplayDeplay] = undefined;
+      
+    } 
+    
+    if(trigger_fish.rbT.globalDelayQTimeVal[timerIndexforDisplayDelay] != undefined)
+    {  
+      clearInterval(trigger_fish.rbT.globalDelayQTimeVal[timerIndexforDisplayDelay]);
+        
+      trigger_fish.rbT.globalDelayQTimeVal[timerIndexforDisplayDelay] = undefined; 
+    }    
+};
+
+
+//function for handling delay for templ display
+ trigger_fish.rbT.handlingOfDelayForTemplDisplay=function(action)
+ {
+
+    var i= 0;
+    var j = 0;
+    var foundTimerIndex = false;
+    var foundActionIndex = false;
+
+
+    var delay = action.timers.delay;
+
+    for(i=0 ; i<trigger_fish.rbT.globalDelayQTimeVal.length;i++)
+    {
+      if(trigger_fish.rbT.globalDelayQTimeVal[i] == undefined)
+       { 
+         foundTimerIndex =true; 
+          break;
+        } 
+
+    }
+
+    for(j=0 ; j<trigger_fish.rbT.globalDelayQTimeVal.length;j++)
+    {
+      if(trigger_fish.rbT.globalDelayQTimeVal[j] == undefined)
+      {
+        foundActionIndex =true; 
+        break;
+       }  
+
+    }
+    if(foundActionIndex ==true && foundTimerIndex == true )
+    {    
+        var timerIndexforDisplayDelay = i;
+        var actionIndexforDisplayDeplay = j;
+        trigger_fish.rbT.globalDelayQ[j] = action; 
+        
+
+        trigger_fish.rbT.globalDelayQTimeVal[timerIndexforDisplayDelay] = setInterval(function(){trigger_fish.rbT.handleTimeoutforTemplDelayedDisplay(timerIndexforDisplayDelay,actionIndexforDisplayDeplay)}
+          ,delay*1000);
+     }else{
+            trigger_fish.rbT.sendErrorToRBServer("Delay Q is Full");    
+     }   
+
+
+
+ };
+
+
+
+
+
+//function for set the display lock for templ postions
 
 trigger_fish.rbT.setTemplatesDisplayLockFlags=function(pos,value)
 {
@@ -791,9 +877,9 @@ trigger_fish.rbT.fillTheRuntimeValueForTemplArgs = function(tempMatch,actionparm
 
 // INTEGRATION_ENABLE                            
 
-                           trigger_fish.rbT.currentSystemVar = trigger_fish.rbTSystemVar.getProperty();
-                           trigger_fish.rbT.currentActorVar = trigger_fish.rbTActor.getProperties();
-                           trigger_fish.rbT.currentEventVar = trigger_fish.rbTAPP.getTransVar();
+                         //  trigger_fish.rbT.currentSystemVar = trigger_fish.rbTSystemVar.getProperty();
+                         //  trigger_fish.rbT.currentActorVar = trigger_fish.rbTActor.getProperties();
+                         //  trigger_fish.rbT.currentEventVar = trigger_fish.rbTAPP.getTransVar();
 
                              
                            for(var i=0 ; i<tempMatch.length ; i++)
@@ -948,9 +1034,11 @@ trigger_fish.rbT.sendErrorToRBServer = function(string){
 
 // INTEGRATION_ENABLE  
    
- trigger_fish.rbTAPP.log({"message": string,"log":true});
+// trigger_fish.rbTAPP.log({"message": string,"log":true});
 
- trigger_fish.rbTAPP.reportError({"message":string,"server":true});
+// trigger_fish.rbTAPP.reportError({"message":string,"server":true});
+
+console.log(string);
 
 };
 
@@ -1211,8 +1299,9 @@ trigger_fish.rbT.eventHandler = {
 
 trigger_fish.rbT.init = function(){
 	trigger_fish.rbT.keyPrefix = "{{";
-	trigger_fish.rbT.keySuffix = "}}";
-	trigger_fish.rbT.inited = true;
+	trigger_fish.rbT.keySuffix = "}}";  
+  trigger_fish.rbT.inited = true;
+
 
 };
 
@@ -1312,6 +1401,7 @@ trigger_fish.rbT.enableTimeOutHadnlingInternal= function(templateName,timerValue
 };
 
 //*************************************************************************************
+
 trigger_fish.rbT.invokeActionScriptInternal=function(action){
 
 /*
@@ -1320,83 +1410,97 @@ trigger_fish.rbT.invokeActionScriptInternal=function(action){
 
 */
 
+
+
+
 if(1) // Check for Service Type Enhancement
  {   
  
       params= {};  
       
       trigger_fish.rbT.init();
-      
-      var actionParams = action.params;
-       
-      var type=action.desc.type; 
-      var api = action.desc.api;
-      var servermsg = type + "."+api;
-      
-      var isPosOccupied = trigger_fish.rbT.isTemplPosOccupied(type);
 
-      if(isPosOccupied)
-      {
 
-          trigger_fish.rbT.sendErrorToRBServer("Postion Occupied by Another Template");
-      }
-      else
-      {
-          var html = trigger_fish.rbT.getTemplateHTMLByName(type,api);
+      var delayVal = action.timers.delay;
 
-          
-              for (var key in actionParams)
-                 {
-                  if(actionParams.hasOwnProperty(key))
-                  {
-                     var keyVal = key;
-                       var value = actionParams[key];
-                       var tempMatch = ""
-                       var tempMatch = value.match(/\{\{[\w.\=\%\:\/\s\#\@\-\']*\}\}/g);
-                      
-                       if(tempMatch)
+
+      if(1)
+        {
+            var actionParams = action.params;
+             
+            var type=action.desc.type; 
+            var api = action.desc.api;
+            var servermsg = type + "."+api;
+            
+            var isPosOccupied = trigger_fish.rbT.isTemplPosOccupied(type);
+
+            if(isPosOccupied)
+            {
+
+                trigger_fish.rbT.sendErrorToRBServer("Postion Occupied by Another Template");
+            }
+            else
+            {
+                var html = trigger_fish.rbT.getTemplateHTMLByName(type,api);
+
+                
+                    for (var key in actionParams)
                        {
-                       	  var tempActionKeyRetVal =""
-                       	  tempActionKeyRetVal=trigger_fish.rbT.fillTheRuntimeValueForTemplArgs(tempMatch,actionParams[key]);
-                          
+                        if(actionParams.hasOwnProperty(key))
+                        {
+                           var keyVal = key;
+                             var value = actionParams[key];
+                             var tempMatch = ""
+                             var tempMatch = value.match(/\{\{[\w.\=\%\:\/\s\#\@\-\']*\}\}/g);
+                            
+                             if(tempMatch)
+                             {
+                             	  var tempActionKeyRetVal =""
+                             	  tempActionKeyRetVal=trigger_fish.rbT.fillTheRuntimeValueForTemplArgs(tempMatch,actionParams[key]);
+                                
 
-                          if(tempActionKeyRetVal != undefined)
-                          {	
-                             actionParams[key] = tempActionKeyRetVal;
-                          }   
-                       }
-                   }
+                                if(tempActionKeyRetVal != undefined)
+                                {	
+                                   actionParams[key] = tempActionKeyRetVal;
+                                }   
+                             }
+                         }
 
-                 }      
+                       }      
 
-        //   for (var key in actionParams) {             
-        //     if(actionParams.hasOwnProperty(key)){	
-			     //     if( 'Zindex' == actionParams[key] ) {               
-				    //      actionParams[key] =  trigger_fish.rbT.findZIndex()+5;
-			     //     }
-			     //  }              
-		      // } 
+              //   for (var key in actionParams) {             
+              //     if(actionParams.hasOwnProperty(key)){	
+      			     //     if( 'Zindex' == actionParams[key] ) {               
+      				    //      actionParams[key] =  trigger_fish.rbT.findZIndex()+5;
+      			     //     }
+      			     //  }              
+      		      // } 
 
-		
-
-
-
-          html = trigger_fish.rbT.getTemplateApplyVars(html, actionParams);
-          
-
-         if (trigger_fish.rbT.isTemplateGoodToApply(html)){
-            trigger_fish.rbT.applyHtmltoPage(html);
-            trigger_fish.rbT.enableClickHandling();
-           // trigger_fish.rbT.enableTimeOutHadnling(templateName,trigger_fish.rbT.templTimers['templ.templduration']*1000);
-		         trigger_fish.rbT.setTemplatesDisplayLockFlags(type,true);
-
-             params.display = servermsg + " " +"Display " + "Success";
-
-             //trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
+      		
 
 
-         }
-      }	
+
+                html = trigger_fish.rbT.getTemplateApplyVars(html, actionParams);
+                
+
+               if (trigger_fish.rbT.isTemplateGoodToApply(html)){
+                  trigger_fish.rbT.applyHtmltoPage(html);
+                  trigger_fish.rbT.enableClickHandling();
+                 // trigger_fish.rbT.enableTimeOutHadnling(templateName,trigger_fish.rbT.templTimers['templ.templduration']*1000);
+      		         trigger_fish.rbT.setTemplatesDisplayLockFlags(type,true);
+
+                   params.display = servermsg + " " +"Display " + "Success";
+
+                   //trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
+
+
+               }
+            }
+      }else{
+
+                trigger_fish.rbT.handlingOfDelayForTemplDisplay(action);
+
+      } 	
   }else{
 
   	 // Report to Server for If Service Type Wrong
