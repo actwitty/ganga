@@ -133,7 +133,7 @@ if(1) // Check for Service Type Enhancement
       var delayVal = action.timers.delay;
 
 
-      if(1)
+      if(1)//delayVal==0)  //check for delay value to display templates
         {
             var actionParams = action.params;
              

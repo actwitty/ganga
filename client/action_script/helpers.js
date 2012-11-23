@@ -18,9 +18,9 @@ trigger_fish.rbT.templTimers= {
 
 //templ delay Q
 
-trigger_fish.rbT.qSize = 10;
-trigger_fish.rbT.globalDelayQ = new Array(trigger_fish.rbT.qSize);
-trigger_fish.rbT.globalDelayQTimeVal = new Array(trigger_fish.rbT.qSize); 
+trigger_fish.rbT.minPipeSize = 10;
+trigger_fish.rbT.globalDelayQ = new Array(trigger_fish.rbT.minPipeSize);
+trigger_fish.rbT.globalDelayQTimeVal = new Array(trigger_fish.rbT.minPipeSize); 
 
 
 
@@ -38,22 +38,15 @@ trigger_fish.rbT.templatesDisplayLockFlags = {
 };
 
 //function to handle on timout for templ delay display
-trigger_fish.rbT.handleTimeoutforTemplDelayedDisplay = function(timerIndexforDisplayDelay,actionIndexforDisplayDeplay)
+trigger_fish.rbT.handleTimeoutforTemplDelayedDisplay = function(timerIndexforDisplayDelay,actionIndexforDisplayDelay)
 { 
-   console.log(timerIndexforDisplayDelay);
-   console.log(actionIndexforDisplayDeplay);
-
-
-   if(trigger_fish.rbT.globalDelayQ[actionIndexforDisplayDeplay] != undefined )
+   if(trigger_fish.rbT.globalDelayQ[actionIndexforDisplayDelay] != undefined )
    {
-      var i =0;
-      var j= 0;
+      trigger_fish.rbT.globalDelayQ[actionIndexforDisplayDelay].timers.delay = 0;
       
-      trigger_fish.rbT.globalDelayQ[0].timers.delay = 0;
+      var tempStatus=trigger_fish.rbT.invokeActionScript(trigger_fish.rbT.globalDelayQ[actionIndexforDisplayDelay]);
       
-      var tempStatus=trigger_fish.rbT.invokeActionScript(trigger_fish.rbT.globalDelayQ[actionIndexforDisplayDeplay]);
-      
-      trigger_fish.rbT.globalDelayQ[actionIndexforDisplayDeplay] = undefined;
+      trigger_fish.rbT.globalDelayQ[actionIndexforDisplayDelay] = undefined;
       
     } 
     
@@ -78,37 +71,46 @@ trigger_fish.rbT.handleTimeoutforTemplDelayedDisplay = function(timerIndexforDis
 
     var delay = action.timers.delay;
 
+    
     for(i=0 ; i<trigger_fish.rbT.globalDelayQTimeVal.length;i++)
     {
       if(trigger_fish.rbT.globalDelayQTimeVal[i] == undefined)
        { 
-         foundTimerIndex =true; 
+         foundTimerIndex =true;
           break;
         } 
 
     }
+    
 
-    for(j=0 ; j<trigger_fish.rbT.globalDelayQTimeVal.length;j++)
+    for(j=0 ;j<trigger_fish.rbT.globalDelayQ.length;j++)
     {
-      if(trigger_fish.rbT.globalDelayQTimeVal[j] == undefined)
+      if(trigger_fish.rbT.globalDelayQ[j] == undefined)
       {
         foundActionIndex =true; 
         break;
        }  
 
     }
-    if(foundActionIndex ==true && foundTimerIndex == true )
-    {    
-        var timerIndexforDisplayDelay = i;
-        var actionIndexforDisplayDeplay = j;
-        trigger_fish.rbT.globalDelayQ[j] = action; 
-        
+ 
+    if(foundActionIndex ==true && foundTimerIndex == false)
+     {
+        trigger_fish.rbT.globalDelayQTimeVal.push('undefined');
+        i = i+1;
+     } 
 
-        trigger_fish.rbT.globalDelayQTimeVal[timerIndexforDisplayDelay] = setInterval(function(){trigger_fish.rbT.handleTimeoutforTemplDelayedDisplay(timerIndexforDisplayDelay,actionIndexforDisplayDeplay)}
-          ,delay*1000);
-     }else{
-            trigger_fish.rbT.sendErrorToRBServer("Delay Q is Full");    
-     }   
+     else if(foundActionIndex == false && foundTimerIndex == true)
+     {
+        trigger_fish.rbT.globalDelayQ.push('undefined');
+        j = j+1;
+     } 
+
+      var timerIndexforDisplayDelay = i;
+      var actionIndexforDisplayDelay = j;
+      trigger_fish.rbT.globalDelayQ[j] = action; 
+      
+      trigger_fish.rbT.globalDelayQTimeVal[timerIndexforDisplayDelay] = setInterval(function(){trigger_fish.rbT.handleTimeoutforTemplDelayedDisplay(timerIndexforDisplayDelay,actionIndexforDisplayDelay)}
+          ,delay*1000); 
 
 
 
