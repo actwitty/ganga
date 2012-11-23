@@ -1,20 +1,6 @@
 #!/usr/bin/ruby
 
-#All TemplType // Will be removed in next version to make it scalable 
-templLibStrTopbar = "'topbar' :{ \n "
-templLibStrBottombar = "'bottombar' :{ \n "
-templLibStrSupport = "'support' :{ \n "
-templLibStrModal = "'modal' :{ \n "
-templLibStrFeedback = "'feedback' :{ \n "
-
-typetopbar = 'topbar'
-typebottombar = 'bottombar' 
-typemodal = 'modal'
-typesupport = 'support'
-typefeedback = 'feedback' 
-
-
-
+templLibStrSubArrs = Array.new(1)
 
 templLibStr = "trigger_fish.rbT.templateLib = {\n"
 
@@ -156,10 +142,8 @@ Dir.glob('*.html').each  do|fileName|
 
           
         tempMatch.length.times  do|index|  
-             
-             #for templ LIb Hash
-
-
+          
+          # TEMPL LIB HASH
               if index>0 and index==2 and index!=templength
                 tempLibStr = "'"+ tempLibStr + tempMatch[index]+"." 
 
@@ -259,50 +243,75 @@ Dir.glob('*.html').each  do|fileName|
         m = "\t \t  "+ templPropName + ":" + m
 
         templNameStr = templNameStr+ "\t \t\t\t" + templPropName + ":" + "'#{defaultTemplName}'" + ",\n"
+        
+        found = 0
+        arrayLen = 0
+
+        tempHashProp = "'"+templPosBasedOnFile+"'" 
+
+        templLibStrSubArrs.length.times do |i|
+          
+          if templLibStrSubArrs[i] == nil
+            templLibStrSubArrs[i]=templPosBasedOnFile
+            templLibStrSubArrs[i] = "'"+ templLibStrSubArrs[i]+"':{ \n"
+            found = 1
+            break
+
+          end
+
+          match = ""
+
+          match = templLibStrSubArrs[i].match(/\'[\w]*\'/)
+         # puts match 
+          #puts tempHashProp
+          if match
+               if match[0] == tempHashProp
+                 found = 1
+                 break
+              end
+          end  
+        end  
+        
+
+        if found == 0
+          templLibStrSubArrs.push(templPosBasedOnFile) 
+          arrayLen =templLibStrSubArrs.length
+          templLibStrSubArrs[arrayLen-1] = "'"+ templLibStrSubArrs[arrayLen-1]+"':{ \n"
+        end  
             
         tempArgsStr = tempArgsStr + m
-#making templLib hash ...will be modiled in next version to make it scalable
-        if templPosBasedOnFile == typetopbar
-          templLibStrTopbar = templLibStrTopbar + "\t\t\t\t"+ templLibPropName + ":" + "'#{origin}HTML'" + ",\n"
-         
-        elsif templPosBasedOnFile == typebottombar
 
-          templLibStrBottombar = templLibStrBottombar + "\t\t\t\t"+ templLibPropName + ":" + "'#{origin}HTML'" + ",\n"
-
-
-        elsif templPosBasedOnFile == typemodal
-
-          templLibStrModal= templLibStrModal + "\t\t\t\t"+ templLibPropName + ":" + "'#{origin}HTML'" + ",\n"
-
-        elsif templPosBasedOnFile == typesupport
-
-          templLibStrSupport= templLibStrSupport + "\t\t\t\t"+ templLibPropName + ":" + "'#{origin}HTML'" + ",\n"
-
-
-        elsif templPosBasedOnFile == typefeedback
-
-            templLibStrFeedback = templLibStrFeedback + "\t\t\t\t"+ templLibPropName + ":" + "'#{origin}HTML'" + ",\n"
-              
+###################################################################
+         templLibStrSubArrs.length.times do |i|
+                  match = ""
+                  match = templLibStrSubArrs[i].match(/\'[\w]*\'/)
+                 # puts match 
+                  #puts tempHashProp
+                  if match
+                       if match[0] == tempHashProp
+                         templLibStrSubArrs[i] = templLibStrSubArrs[i] + "\t\t\t\t"+ templLibPropName + ":" + "'#{origin}HTML'" + ",\n"
+                         break
+                       end
+                  end  
           end  
 
-         # templLibStr = templLibStr+ "\t \t  "+ templPropName + ":" + "'#{origin}HTML'" + ",\n"
- end  
+###################################################################
 
-#this part will be modified in next version to make it scalable
+end  
+
+
+ templLibStrSubArrs.length.times do |i|
+   templLibStrSubArrs[i] = templLibStrSubArrs[i].chop.chop  + "\n \n \t \t \t },\n"
+ end 
  
- templLibStrTopbar = templLibStrTopbar.chop.chop  + "\n \n \t \t \t }, \n\n\n\n "
- 
- templLibStrBottombar = templLibStrBottombar.chop.chop  + "\n \n \t \t \t }, \n\n\n\n "
+ templen=templLibStrSubArrs.length
+ templLibStrSubArrs[templen-1] = templLibStrSubArrs[templen-1]
 
- templLibStrModal = templLibStrModal.chop.chop  + "\n \n \t \t \t }, \n\n\n\n "
+ templLibStrSubArrs.length.times do |i|
+   templLibStr = templLibStr + "\t\t"+templLibStrSubArrs[i]
+ end 
 
- templLibStrSupport = templLibStrSupport.chop.chop  + "\n \n \t \t \t }, \n\n\n\n "
-
- templLibStrFeedback = templLibStrFeedback.chop.chop  + "\n \n \t \t \t },\n"
-
- templLibStr= templLibStr+templLibStrTopbar+templLibStrBottombar+templLibStrModal+templLibStrSupport+templLibStrFeedback
-
- templLibStr = templLibStr.chop.chop + "\n \n \t \t \t }; \n\n\n\n "
+templLibStr = templLibStr.chop.chop + "\n \n }; \n\n\n\n "
 
  templNameStr = templNameStr.chop.chop + "\n \t\ \t \t \t }; \n\n\n\n "
 
