@@ -755,7 +755,7 @@ trigger_fish.rbT.handleTimeoutforTemplDelayedDisplay = function(timerIndexforDis
 
     for(j=0 ;j<trigger_fish.rbT.globalDelayQ.length;j++)
     {
-      if(trigger_fish.rbT.globalDelayQ[j] == undefined)
+      if(trigger_fish.rbT.globalDelayQ[j] === undefined)
       {
         foundActionIndex =true; 
         break;
@@ -763,13 +763,13 @@ trigger_fish.rbT.handleTimeoutforTemplDelayedDisplay = function(timerIndexforDis
 
     }
  
-    if(foundActionIndex ==true && foundTimerIndex == false)
+    if(foundActionIndex === true && foundTimerIndex === false)
      {
         trigger_fish.rbT.globalDelayQTimeVal.push('undefined');
         i = i+1;
      } 
 
-     else if(foundActionIndex == false && foundTimerIndex == true)
+     else if(foundActionIndex === false && foundTimerIndex === true)
      {
         trigger_fish.rbT.globalDelayQ.push('undefined');
         j = j+1;
@@ -795,27 +795,27 @@ trigger_fish.rbT.handleTimeoutforTemplDelayedDisplay = function(timerIndexforDis
 trigger_fish.rbT.setTemplatesDisplayLockFlags=function(pos,value)
 {
 
-   if(pos == 'topbar') 
+   if(pos === 'topbar') 
    {
      trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.topbar.displayLock'] = value; 
    }
 
-   else if(pos == 'bottombar') 
+   else if(pos === 'bottombar') 
    {
      trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.bottombar.displayLock'] = value; 
    }
 
-   else if(pos == 'modal') 
+   else if(pos === 'modal') 
    {
      trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.modal.displayLock'] = value; 
    }
 
-   else if(pos == 'chat') 
+   else if(pos === 'chat') 
    {
      trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.chat.displayLock'] = value; 
    }
 
-  else if(pos == 'feedback') 
+  else if(pos === 'feedback') 
    {
      trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.feedback.displayLock'] = value; 
    }
@@ -954,7 +954,7 @@ trigger_fish.rbT.fillTheRuntimeValueForTemplArgs = function(tempMatch,actionparm
 
                                          actionparmaskey = actionparmaskey.replace(tempMatch[i],objNested);
                               } 
-                               return actionparmaskey;
+                              return actionparmaskey;
 
 
               
@@ -974,31 +974,31 @@ trigger_fish.rbT.isTemplPosOccupied = function(pos){
    var ret = false;
  
 
-   if(pos == 'topbar' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.topbar.displayLock'] 
+   if(pos === 'topbar' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.topbar.displayLock'] 
     == true ) 
    {
      ret= true;
       
    }
-   else if(pos == 'bottombar' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.bottombar.displayLock'] 
+   else if(pos === 'bottombar' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.bottombar.displayLock'] 
     == true ) 
    {
      ret= true;
     }
-  else if(pos == 'modal' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.modal.displayLock'] 
+  else if(pos === 'modal' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.modal.displayLock'] 
     == true )
   {
      //TODO
   }
 
- else if(pos == 'chat' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.chat.displayLock'] 
+ else if(pos === 'chat' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.chat.displayLock'] 
     == true )
   {
      ret= true;
   }
 
 
-  else if(pos == 'feedback')
+  else if(pos === 'feedback')
   {
      //TODO
   }
@@ -1116,12 +1116,12 @@ trigger_fish.rbT.eventHandler = {
 
    if (idMatch[3])
    {
-     if ( idMatch[3] == 'Close')
+     if ( idMatch[3] === 'Close')
      {
         trigger_fish.rbT.eventHandler.closeTempl(idMatch);
      }
   
-    else if ( idMatch[3] == 'Roi' )
+    else if ( idMatch[3] === 'Roi' )
     {
          trigger_fish.rbT.eventHandler.roiFromTemplClick(idMatch,evt);
 
@@ -1170,7 +1170,7 @@ trigger_fish.rbT.eventHandler = {
        }     
 
 
-     else if(tempMatch[0] == 'modal')
+     else if(tempMatch[0] === 'modal')
      {
 
          var id = "rb" + trigger_fish.rbT.makeFirstLetterCapital(tempMatch[0])+trigger_fish.rbT.makeFirstLetterCapital(tempMatch[2])+trigger_fish.rbT.makeFirstLetterCapital(tempMatch[4])+"BaseContainer";
@@ -1211,7 +1211,7 @@ trigger_fish.rbT.eventHandler = {
           clearInterval(trigger_fish.rbT.templTimers['templ.displaytimer']);
 
       }
-      if(idMatch[0] == 'Topbar' || idMatch[0] == 'Bottombar' )
+      if(idMatch[0] === 'Topbar' || idMatch[0] === 'Bottombar' )
 
      {   
 
@@ -1220,7 +1220,7 @@ trigger_fish.rbT.eventHandler = {
 
      }
 
-     else if(idMatch[0] == 'Modal')
+     else if(idMatch[0] === 'Modal')
      {
 
          var id = "rb" + idMatch[0]+idMatch[1]+idMatch[2]+"BaseContainer";
