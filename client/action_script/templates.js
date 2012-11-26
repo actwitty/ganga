@@ -13,8 +13,16 @@ trigger_fish.rbT.templateLib = {
 				'generic.twittershare':'rbTemplTopbarGenericTwittershareHTML'
  
  	 	 	 },
+		'uservoice':{ 
+				'generic.normal':'rbTemplUservoiceGenericNormalHTML'
+ 
+ 	 	 	 },
 		'support':{ 
 				'olark.normal':'rbTemplSupportOlarkNormalHTML'
+ 
+ 	 	 	 },
+		'modal':{ 
+				'generic.normal':'rbTemplModalGenericNormalHTML'
  
  	 	 	 },
 		'feedback':{ 
@@ -32,8 +40,10 @@ trigger_fish.rbT.templateLib = {
 	 			'topbar.generic.twitterfollow':'Top bar to Gather followers from twitter',
 	 			'bottombar.generic.twitterfollow':'Bottom bar to Gather followers from twitter',
 	 			'topbar.generic.fblike':'A top bar to influence visitors from Facebook',
+	 			'uservoice.generic.normal':'User Voice Feedback',
 	 			'bottombar.generic.twittershare':'Influence a Twitter user to share about your business',
 	 			'support.olark.normal':'Chat Window',
+	 			'modal.generic.normal':'A modal annonucement',
 	 			'feedback.uservoice.normal':'User Voice Feedback',
 	 			'bottombar.generic.normal':'A promo bottom bar with link and some text',
 	 			'topbar.generic.twittershare':'Influence a Twitter user to share about your business'
@@ -293,6 +303,9 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 				value :'Woo Facebook users coming to your page by writing something to make them like you.'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
+	 	  'uservoice.generic.normal':{
+
+	 	 	 	 	 },
 	 	  'bottombar.generic.twittershare':{
 
  	 	 	 	 	 	 '1' : {
@@ -345,6 +358,89 @@ trigger_fish.rbT.templateLib = {
  	 	 	 	 	 	 '1' :{
 	 	 	 	 	 				key :'rb.t.sg.e.olarkIdentity',
 	 	 	 	 	 				value :'\'6679-845-10-6199\''
+	 	 	 	 	 	  }
+	 	 	 	 	 },
+	 	  'modal.generic.normal':{
+
+ 	 	 	 	 	 	 '1' : {
+	 	 	 	 	 				key :'rb.f.nr.h.overlay_background_zindex',
+	 	 	 	 	 				value :'10000'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '2' : {
+	 	 	 	 	 				key :'rb.f.nr.h.dialog_zindex',
+	 	 	 	 	 				value :'10001'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '3' : {
+	 	 	 	 	 				key :'rb.t.cr.h.dialog_background_color',
+	 	 	 	 	 				value :'white'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '4' : {
+	 	 	 	 	 				key :'rb.t.sg.e.cover_image',
+	 	 	 	 	 				value :'https://s3.amazonaws.com/actwitty_ganga/image/modal_demo.jpg'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '5' : {
+	 	 	 	 	 				key :'rb.t.cr.h.heading_background_color',
+	 	 	 	 	 				value :'#D44413'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '6' : {
+	 	 	 	 	 				key :'rb.t.cr.h.heading_color',
+	 	 	 	 	 				value :'#FFFFFF'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '7' : {
+	 	 	 	 	 				key :'rb.t.nr.h.heading_font_size',
+	 	 	 	 	 				value :'20'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '8' : {
+	 	 	 	 	 				key :'rb.t.ft.h.heading_fontfamily',
+	 	 	 	 	 				value :'Arial'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '9' : {
+	 	 	 	 	 				key :'rb.t.cr.h.heading_text_shadow',
+	 	 	 	 	 				value :'#97310E'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '10' : {
+	 	 	 	 	 				key :'rb.t.nr.h.offer_text_font_size',
+	 	 	 	 	 				value :'20'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '11' : {
+	 	 	 	 	 				key :'rb.t.nr.h.offer_line_height',
+	 	 	 	 	 				value :'24'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '12' : {
+	 	 	 	 	 				key :'rb.t.cr.h.offer_text_color',
+	 	 	 	 	 				value :'#000000'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '13' : {
+	 	 	 	 	 				key :'rb.t.cr.h.button_border',
+	 	 	 	 	 				value :'#f5881f'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '14' : {
+	 	 	 	 	 				key :'rb.t.cr.h.button_background_color',
+	 	 	 	 	 				value :'#f15c24'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '15' : {
+	 	 	 	 	 				key :'rb.t.cr.h.button_label_color',
+	 	 	 	 	 				value :'#fffffd'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '16' : {
+	 	 	 	 	 				key :'rb.t.nr.h.button_font_size',
+	 	 	 	 	 				value :'25'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '17' : {
+	 	 	 	 	 				key :'rb.t.vsg.e.heading_text',
+	 	 	 	 	 				value :'An announcement to catch attention'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '18' : {
+	 	 	 	 	 				key :'rb.t.vsg.e.offer_text',
+	 	 	 	 	 				value :'This is a way to connect to your customers to woo them to engage with your product.                We can help you to automate the offerings being presented by popping out such modals                when rules get hit. You can change this text.'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '19' : {
+	 	 	 	 	 				key :'rb.t.ul.e.button_link',
+	 	 	 	 	 				value :'http://www.rulebot.com'
+	 	 	 	 	 	  },
+ 	 	 	 	 	 	 '20' :{
+	 	 	 	 	 				key :'rb.t.sg.e.button_label',
+	 	 	 	 	 				value :'Order Now'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'feedback.uservoice.normal':{
