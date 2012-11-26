@@ -50,6 +50,7 @@ trigger_fish.rbTServerResponse = {
     trigger_fish.rbTAPP.log({"message": "Setting actor ID with server resp","data":respData});
     try {
       if (respData && respData.id) {
+        trigger_fish.rbTActor.setID(respData.id);
         trigger_fish.rbTActor.requestActorDetails(respData);
       } else {
         throw new Error("there is no server resp data");
@@ -149,7 +150,8 @@ trigger_fish.rbTServerResponse = {
     trigger_fish.rbTAPP.setAppDetail(respData);
     trigger_fish.rbTRules.setRulesTable(respData.app.rules || {});
     trigger_fish.rbTSystemVar.init(respData);
-    trigger_fish.rbTAPP.configs.status = true;
+    trigger_fish.rbTActor.retFromCookie();
+    trigger_fish.rbTAPP.setrbTAlive();
   }
 
 };

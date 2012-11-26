@@ -7,15 +7,13 @@
       all pages of the site
     </p>
     <div class="code_section">
-      <pre >
-        <code class="html">
-          //Add this code to the main script
-          &ltscript&gt
-            var account_id = '{{getvalue view.account.id}}';
-            var app_id = '{{getvalue view.projectId}}';
-            trigger_fish.rbT.initializeCode();
-          &lt/script&gt
-        </code>
+      <pre class="prettyprint">
+// Add this code snippet to the start of head tag
+
+&lt;script type="text/javascript" src="https://s3.amazonaws.com/actwitty-rbt/tgG.js.jgz"&gt;&lt;/script&gt;
+&lt;script type="application/javascript"&gt;
+var a=a||[];a.push(["_setApp","{{getvalue view.projectId}}"]),a.push(["_setAccount","{{getvalue view.account.id}}"]),function(a,b){if(!a.getElementById(b)){var c=a.createElement("script");c.type="text/javascript",c.async=!0,c.src="https://s3.amazonaws.com/actwitty-rbt/rbt"+(tfGzip?".min.js.jgz":".min.js"),c.id=b,a.getElementsByTagName("head")[0].appendChild(c),function(a,b){function e(b){a.rb[b]=function(c,d,e){a.rb.q.push({t:b,a:c,b:d,c:e})}}var c,d=b.length;a.rb={},a.rb.q=[];for(c=0;c&lt;d;c++)e(b[c])}(window,["identify","sendEvent","setActor","alias"])}}(document,"trigger-fish-pdk")
+&lt;&#47;script&gt;
       </pre>
     </div>
   

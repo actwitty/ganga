@@ -19,6 +19,7 @@ trigger_fish.rbTActor = function() {
   var __id = "";
   var __prop = {};
   var __state = false;
+  var __eventRQ = [];
 
   return {
 
@@ -33,8 +34,11 @@ trigger_fish.rbTActor = function() {
           this.setProperties(trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorProp)); 
           this.enable();
         }
-        if (trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID))
+        if (trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID)) {
           this.setID(trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID));
+        } else {
+          this.createDummyActor();
+        }
       },
 
       isReady : function()
@@ -64,8 +68,7 @@ trigger_fish.rbTActor = function() {
       enable : function()
       {
         __state = true;
-        // FIXME :: CHECK FOR RIGHT LOCATION OF THIS
-        trigger_fish.rbTServerChannel.flushReqWaitingForActor();
+        this.flushEvRQ();
       },  
       /** 
       *  Set Actor ID
@@ -110,7 +113,7 @@ trigger_fish.rbTActor = function() {
         if (!__id || !__prop) {
           var obj = {"url"      : trigger_fish.rbTServerChannel.url.createActor,
                      "app_read" : true, 
-                     "cb"       : { success: trigger_fish.rbTServerResponse.setAppDetail,
+                     "cb"       : { success: trigger_fish.rbTServerResponse.setActorID,
                                     error  : trigger_fish.rbTServerResponse.defaultError
                                   }
                   };
@@ -131,8 +134,23 @@ trigger_fish.rbTActor = function() {
           this.setID(data.id);
           trigger_fish.rbTServerChannel.actorDetails();
         }
-      }
+      },
 
+      bufferEvRQ : function(obj)
+      {
+        __eventRQ.push(obj);
+      },
+
+      flushEvRQ : function()
+      {
+        if (!__eventRQ.length)
+          return;
+        for (var req in __eventRQ) {
+          var r = __eventRQ[req];
+          trigger_fish.rbTServerChannel.makeServerRequest(r);
+        }
+        __eventRQ = [];
+      }
   };
 
 }();
