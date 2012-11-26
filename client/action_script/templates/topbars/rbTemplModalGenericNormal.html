@@ -11,7 +11,7 @@
   width:100%;     
   height:100%; 
      
-  z-index:{{rb.f.nr.background_zindex{{=10000}}}};
+  z-index:{{rb.f.nr.h.overlay_background_zindex{{=10000}}}};
   opacity:0.6;
   filter:alpha(opacity=60);
   background-color:black; 
@@ -24,7 +24,7 @@
   top: 0px;     
   width:100%;     
   height:100%;
-  z-index:{{rb.f.nr.dialog_zindex{{=10001}}}}; 
+  z-index:{{rb.f.nr.h.dialog_zindex{{=10001}}}}; 
 }
 
 
@@ -32,7 +32,7 @@
 #rbModalGenericNormalSubsubContainer{    
   width:500px; 
   height: 400px;
-  background-color:{{rb.t.cr.background_color{{=white}}}};  
+  background-color:{{rb.t.cr.h.dialog_background_color{{=white}}}};  
   border:8px solid rgba(0, 0, 0, .7);;   
   position: fixed;
   top : 25%;
@@ -64,8 +64,10 @@
   height: 400px;  
   padding: 0px;
   display: block;
-  background: #ffffff url('{{rb.t.sg.modal_cover_image{{=https://s3.amazonaws.com/actwitty_ganga/image/modal_demo.jpg}}}}') no-repeat right top;           
+  background: #ffffff url('{{rb.t.sg.e.cover_image{{=https://s3.amazonaws.com/actwitty_ganga/image/modal_demo.jpg}}}}') no-repeat right top;           
   filter:alpha(opacity=60);
+  background-size:500px 400px;
+  background-repeat:no-repeat;
   opacity:0.6;
   -webkit-border-top-left-radius: 5px;
   -webkit-border-top-right-radius: 5px;
@@ -78,7 +80,7 @@
 }
 
 .rbModalHead{
-  background-color:{{rb.t.cr.heading_background_color{{=#D44413}}}};    
+  background-color:{{rb.t.cr.h.heading_background_color{{=#D44413}}}};    
   width: 100%;
   height: 50px;    
   position: relative;
@@ -118,17 +120,17 @@
   white-space: nowrap;  
   overflow: hidden; 
   text-overflow: ellipsis;
-  color:{{rb.t.cr.heading_color{{=#FFFFFF}}}};
+  color:{{rb.t.cr.h.heading_color{{=#FFFFFF}}}};
   width:80%; 
   height:30px;
-  font-size:{{rb.t.nr.heading_font_size{{=20}}}}px;
-  font-family:{{rb.t.ft.heading_fontfamily{{=Arial}}}}; 
+  font-size:{{rb.t.nr.h.heading_font_size{{=20}}}}px;
+  font-family:{{rb.t.ft.h.heading_fontfamily{{=Arial}}}}; 
   overflow:hidden;
   border-top-left-radius:5px;
   border-top-right-radius:5px;
   padding:5px;
   padding-top: 10px;
-  text-shadow:1px 1px {{rb.t.cr.heading_text_shadow{{=#97310E}}}};
+  text-shadow:1px 1px {{rb.t.cr.h.heading_text_shadow{{=#97310E}}}};
 }
 
 .rbOffer{
@@ -141,9 +143,9 @@
 .rbModalOffer{
   overflow: hidden; 
   text-overflow: ellipsis;
-  font-size: {{rb.t.nr.text_font_size{{=20}}}}px;  
-  line-height: {{rb.t.nr.line-height{{=24}}}}px;  
-  color:{{rb.t.cr.text_color{{=#000000}}}}; 
+  font-size: {{rb.t.nr.h.offer_text_font_size{{=20}}}}px;  
+  line-height: {{rb.t.nr.h.offer_line_height{{=24}}}}px;  
+  color:{{rb.t.cr.h.offer_text_color{{=#000000}}}}; 
   background: rgba(255,255,255,0.1)
  }
 
@@ -154,10 +156,10 @@
   width: 160px;
   height: 30px;
   text-align: center;  
-  border:4px solid {{rb.t.cr.button_border{{=#f5881f}}}};
-  background-color: {{rb.t.cr.button_background{{=#f15c24}}}};  
-  color:{{rb.t.cr.button_color{{=#fffffd}}}};
-  font-size: {{rb.t.nr.button_font_size{{=25}}}}px;
+  border:4px solid {{rb.t.cr.h.button_border{{=#f5881f}}}};
+  background-color: {{rb.t.cr.h.button_background_color{{=#f15c24}}}};  
+  color:{{rb.t.cr.h.button_label_color{{=#fffffd}}}};
+  font-size: {{rb.t.nr.h.button_font_size{{=25}}}}px;
   border-radius:5px;
   padding: 5px;  
   font-weight: normal;
@@ -188,7 +190,7 @@
             <div class="rbModalHead">
 
               <div class="rbModalHeader"> 
-                {{rb.t.vsg.heading_text{{=An announcement to catch attention}}}}
+                {{rb.t.vsg.e.heading_text{{=An announcement to catch attention}}}}
               </div>
 
               <div id="rbModalGenericNormalCloseClick" class="rbModalClose  rbClickable" >
@@ -199,7 +201,7 @@
 
             <div class="rbOffer">
               <p class="rbModalOffer">
-                 {{rb.t.vsg.offer_text{{=This is a way to connect to your customers to woo them to engage with your product.
+                 {{rb.t.vsg.e.offer_text{{=This is a way to connect to your customers to woo them to engage with your product.
                 We can help you to automate the offerings being presented by popping out such modals
                 when rules get hit. You can change this text.}}}}
               </p>
@@ -207,8 +209,8 @@
          
 
             <div  class="rbModalButton">
-               <div  id="rbModalGenericNormalRoiClickbutton" class="rbClickable" link= "{{rb.t.ul.modal_button_link{{=http://www.rulebot.com}}}}" class="rbClickable" >
-                {{rb.t.sg.modal_button_label{{=Order Now}}}}               
+               <div  id="rbModalGenericNormalRoiClickbutton" class="rbClickable" link= "{{rb.t.ul.e.button_link{{=http://www.rulebot.com}}}}" class="rbClickable" >
+                {{rb.t.sg.e.button_label{{=Order Now}}}}               
               </div> 
             </div> 
           

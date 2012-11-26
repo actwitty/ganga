@@ -15,6 +15,15 @@ trigger_fish.rbT.templTimers= {
 
 };
 
+
+//templ delay Q
+
+trigger_fish.rbT.minPipeSize = 10;
+trigger_fish.rbT.globalDelayQ = new Array(trigger_fish.rbT.minPipeSize);
+trigger_fish.rbT.globalDelayQTimeVal = new Array(trigger_fish.rbT.minPipeSize); 
+
+
+
 // display lock for templ positions
 
 trigger_fish.rbT.templatesDisplayLockFlags = {
@@ -28,32 +37,115 @@ trigger_fish.rbT.templatesDisplayLockFlags = {
 
 };
 
-//function fir set the display lock for templ postions
+//function to handle on timout for templ delay display
+trigger_fish.rbT.handleTimeoutforTemplDelayedDisplay = function(timerIndexforDisplayDelay,actionIndexforDisplayDelay)
+{ 
+   if(trigger_fish.rbT.globalDelayQ[actionIndexforDisplayDelay] != undefined )
+   {
+      trigger_fish.rbT.globalDelayQ[actionIndexforDisplayDelay].timers.delay = 0;
+      
+      var tempStatus=trigger_fish.rbT.invokeActionScript(trigger_fish.rbT.globalDelayQ[actionIndexforDisplayDelay]);
+      
+      trigger_fish.rbT.globalDelayQ[actionIndexforDisplayDelay] = undefined;
+      
+    } 
+    
+    if(trigger_fish.rbT.globalDelayQTimeVal[timerIndexforDisplayDelay] != undefined)
+    {  
+      clearInterval(trigger_fish.rbT.globalDelayQTimeVal[timerIndexforDisplayDelay]);
+        
+      trigger_fish.rbT.globalDelayQTimeVal[timerIndexforDisplayDelay] = undefined; 
+    }    
+};
+
+
+//function for handling delay for templ display
+ trigger_fish.rbT.handlingOfDelayForTemplDisplay=function(action)
+ {
+
+    var i= 0;
+    var j = 0;
+    var foundTimerIndex = false;
+    var foundActionIndex = false;
+
+
+    var delay = action.timers.delay;
+
+    
+    for(i=0 ; i<trigger_fish.rbT.globalDelayQTimeVal.length;i++)
+    {
+      if(trigger_fish.rbT.globalDelayQTimeVal[i] == undefined)
+       { 
+         foundTimerIndex =true;
+          break;
+        } 
+
+    }
+    
+
+    for(j=0 ;j<trigger_fish.rbT.globalDelayQ.length;j++)
+    {
+      if(trigger_fish.rbT.globalDelayQ[j] === undefined)
+      {
+        foundActionIndex =true; 
+        break;
+       }  
+
+    }
+ 
+    if(foundActionIndex === true && foundTimerIndex === false)
+     {
+        trigger_fish.rbT.globalDelayQTimeVal.push('undefined');
+        i = i+1;
+     } 
+
+     else if(foundActionIndex === false && foundTimerIndex === true)
+     {
+        trigger_fish.rbT.globalDelayQ.push('undefined');
+        j = j+1;
+     } 
+
+      var timerIndexforDisplayDelay = i;
+      var actionIndexforDisplayDelay = j;
+      trigger_fish.rbT.globalDelayQ[j] = action; 
+      
+      trigger_fish.rbT.globalDelayQTimeVal[timerIndexforDisplayDelay] = setInterval(function(){trigger_fish.rbT.handleTimeoutforTemplDelayedDisplay(timerIndexforDisplayDelay,actionIndexforDisplayDelay)}
+          ,delay*1000); 
+
+
+
+ };
+
+
+
+
+
+//function for set the display lock for templ postions
 
 trigger_fish.rbT.setTemplatesDisplayLockFlags=function(pos,value)
 {
 
-   if(pos == 'topbar') 
+   if(pos === 'topbar') 
    {
      trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.topbar.displayLock'] = value; 
    }
 
-   else if(pos == 'bottombar') 
+   else if(pos === 'bottombar') 
    {
      trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.bottombar.displayLock'] = value; 
    }
 
-   else if(pos == 'modal') 
+   else if(pos === 'modal') 
    {
      trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.modal.displayLock'] = value; 
    }
 
-   else if(pos == 'chat') 
+   else if(pos === 'chat') 
    {
      trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.chat.displayLock'] = value; 
    }
 
-  else if(pos == 'feedback') 
+  else if(pos === 'feedback') 
    {
      trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.feedback.displayLock'] = value; 
    }
@@ -117,9 +209,9 @@ trigger_fish.rbT.fillTheRuntimeValueForTemplArgs = function(tempMatch,actionparm
 
 // INTEGRATION_ENABLE                            
 
-                           trigger_fish.rbT.currentSystemVar = trigger_fish.rbTSystemVar.getProperty();
-                           trigger_fish.rbT.currentActorVar = trigger_fish.rbTActor.getProperties();
-                           trigger_fish.rbT.currentEventVar = trigger_fish.rbTAPP.getTransVar();
+                         //  trigger_fish.rbT.currentSystemVar = trigger_fish.rbTSystemVar.getProperty();
+                         //  trigger_fish.rbT.currentActorVar = trigger_fish.rbTActor.getProperties();
+                         //  trigger_fish.rbT.currentEventVar = trigger_fish.rbTAPP.getTransVar();
 
                              
                            for(var i=0 ; i<tempMatch.length ; i++)
@@ -192,7 +284,7 @@ trigger_fish.rbT.fillTheRuntimeValueForTemplArgs = function(tempMatch,actionparm
 
                                          actionparmaskey = actionparmaskey.replace(tempMatch[i],objNested);
                               } 
-                               return actionparmaskey;
+                              return actionparmaskey;
 
 
               
@@ -212,31 +304,31 @@ trigger_fish.rbT.isTemplPosOccupied = function(pos){
    var ret = false;
  
 
-   if(pos == 'topbar' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.topbar.displayLock'] 
+   if(pos === 'topbar' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.topbar.displayLock'] 
     == true ) 
    {
      ret= true;
       
    }
-   else if(pos == 'bottombar' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.bottombar.displayLock'] 
+   else if(pos === 'bottombar' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.bottombar.displayLock'] 
     == true ) 
    {
      ret= true;
     }
-  else if(pos == 'modal' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.modal.displayLock'] 
+  else if(pos === 'modal' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.modal.displayLock'] 
     == true )
   {
      //TODO
   }
 
- else if(pos == 'chat' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.chat.displayLock'] 
+ else if(pos === 'chat' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.chat.displayLock'] 
     == true )
   {
      ret= true;
   }
 
 
-  else if(pos == 'feedback')
+  else if(pos === 'feedback')
   {
      //TODO
   }
@@ -274,9 +366,11 @@ trigger_fish.rbT.sendErrorToRBServer = function(string){
 
 // INTEGRATION_ENABLE  
    
- trigger_fish.rbTAPP.log({"message": string,"log":true});
+// trigger_fish.rbTAPP.log({"message": string,"log":true});
 
- trigger_fish.rbTAPP.reportError({"message":string,"server":true});
+// trigger_fish.rbTAPP.reportError({"message":string,"server":true});
+
+console.log(string);
 
 };
 

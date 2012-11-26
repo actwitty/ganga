@@ -11,18 +11,18 @@
         position: fixed;
         bottom: 0px;
         left: 0px;   
-        z-index: {{rb.t.nr.base_zindex{{=10000}}}};    
+        z-index: {{rb.t.nr.h.bar_zindex{{=10000}}}};    
         color: white;
-        font-size: {{rb.t.nr.font_size{{=14}}}}px;
-        font-family:'{{rb.t.ft.font{{=Arial}}}}';
+        font-size: {{rb.t.nr.h.bar_font_size{{=14}}}}px;
+        font-family:'{{rb.t.ft.h.bar_font{{=Arial}}}}';
         text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);    
-        border: 1px solid {{rb.t.cr.border_color{{=#304A80}}}};
-        background-color: {{rb.t.cr.background_color{{=#6087C6}}}};    
+        border: 1px solid {{rb.t.cr.h.bar_border_color{{=#304A80}}}};
+        background-color: {{rb.t.cr.h.bar_background_color{{=#6087C6}}}};    
       }
 
       .rbTbFbLikeBtmDyn .barDyn{
-        width: {{rb.t.nr.show_width{{=900}}}}px;
-        height: {{rb.t.nr.bar_height{{=40}}}}px;
+        width: {{rb.t.nr.h.bar_width{{=900}}}}px;
+        height: {{rb.t.nr.h.bar_height{{=40}}}}px;
         vertical-align: middle;
         position: relative;
       }
@@ -82,7 +82,7 @@
           </script>
 
           <div class="fb-like" 
-              data-href="{{rb.t.ul.facebook_page{{=http://www.google.com}}}}" 
+              data-href="{{rb.t.ul.e.facebook_page{{=http://www.google.com}}}}" 
               data-send="true" 
               data-layout="button_count" 
               data-width="250px" 
@@ -96,7 +96,7 @@
       <div class="rbBarWidth barDyn">
 
         <p id="rbBottombarGenericFblikeLeftClick" class="rbTextLeft rbDynLeftText rbDynText" >
-          {{rb.t.vsg.text_left{{=Woo Facebook users coming to your page by writing something to make them like you.}}}}
+          {{rb.t.vsg.e.text_left{{=Woo Facebook users coming to your page by writing something to make them like you.}}}}
         </p>
 
           

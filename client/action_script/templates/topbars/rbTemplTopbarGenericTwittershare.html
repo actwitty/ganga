@@ -9,14 +9,14 @@
       position: fixed;
       top: 0px;
       left: 0px;   
-      z-index: {{rb.t.nr.base_zindex{{=10000}}}};    
-      background: {{rb.t.cr.base_background_color{{=#377CA8}}}} !important;    
+      z-index: {{rb.t.nr.h.bar_zindex{{=10000}}}};    
+      background: {{rb.t.cr.h.bar_background_color{{=#377CA8}}}} !important;    
       border-bottom: 1px solid #18496A !important;
     }
 
     .rbTpTwShareDyn .barDyn{
-      width: {{rb.t.nr.show_width{{=900}}}}px;
-      height: {{rb.t.nr.base_height{{=40}}}}px;
+      width: {{rb.t.nr.h.bar_width{{=900}}}}px;
+      height: {{rb.t.nr.h.bar_height{{=40}}}}px;
       vertical-align: middle;
       position: relative;
     }
@@ -24,10 +24,10 @@
 
     .rbTpTwShareDyn .rbDynText
      {
-       color:{{rb.t.cr.text_color {{=#ffffff}}}};
-       font-size: {{rb.t.nr.text_fontsize{{=14}}}}px;
-       font-family: {{rb.t.ft.text_fontfamily{{=Arial}}}};
-       font-weight:{{rb.t.fw.text_fontweight{{=normal}}}};
+       color:{{rb.t.cr.h.text_color {{=#ffffff}}}};
+       font-size: {{rb.t.nr.h.text_fontsize{{=14}}}}px;
+       font-family: {{rb.t.ft.h.text_fontfamily{{=Arial}}}};
+       font-weight:{{rb.t.fw.h.text_fontweight{{=normal}}}};
        white-space: nowrap;
        overflow:hidden;
      }
@@ -79,13 +79,13 @@
 
     <div class='rbIframeContent'><!--<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
-    <a href="https://twitter.com/share?text={{rb.t.sg.twitter_share_text{{=make #twitter user to share about your blog at a sample url like http://www.rulebot.com}}}}" class="twitter-share-button" data-count="none" data-lang="en" data-size="large">Tweet this</a>--></div>
+    <a href="https://twitter.com/share?text={{rb.t.sg.e.twitter_share_text{{=make #twitter user to share about your blog at a sample url like http://www.rulebot.com}}}}" class="twitter-share-button" data-count="none" data-lang="en" data-size="large">Tweet this</a>--></div>
 
 
     <div class="rbBarWidth barDyn">
 
       <p  class="rbTextLeft rbDynLeftText rbDynText" >
-        {{rb.t.vsg.text_left{{=Ask here to twitter user to share your blog}}}}
+        {{rb.t.vsg.e.text_left{{=Ask here to twitter user to share your blog}}}}
       </p>
 
       <iframe class ="rbBtn rbIframe rbBtnDyn" > 
@@ -93,7 +93,7 @@
       </iframe>
     
       <p  class="rbTextRight rbDynRightText rbDynText" >           
-        {{rb.t.vsg.text_right{{=Influence your visitors.}}}}  
+        {{rb.t.vsg.e.text_right{{=Influence your visitors.}}}}  
       </p>
 
       <div class="rbInfoBtnDyn">

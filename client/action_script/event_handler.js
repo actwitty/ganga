@@ -31,12 +31,12 @@ trigger_fish.rbT.eventHandler = {
 
    if (idMatch[3])
    {
-     if ( idMatch[3] == 'Close')
+     if ( idMatch[3] === 'Close')
      {
         trigger_fish.rbT.eventHandler.closeTempl(idMatch);
      }
   
-    else if ( idMatch[3] == 'Roi' )
+    else if ( idMatch[3] === 'Roi' )
     {
          trigger_fish.rbT.eventHandler.roiFromTemplClick(idMatch,evt);
 
@@ -85,7 +85,7 @@ trigger_fish.rbT.eventHandler = {
        }     
 
 
-     else if(tempMatch[0] == 'modal')
+     else if(tempMatch[0] === 'modal')
      {
 
          var id = "rb" + trigger_fish.rbT.makeFirstLetterCapital(tempMatch[0])+trigger_fish.rbT.makeFirstLetterCapital(tempMatch[2])+trigger_fish.rbT.makeFirstLetterCapital(tempMatch[4])+"BaseContainer";
@@ -126,7 +126,7 @@ trigger_fish.rbT.eventHandler = {
           clearInterval(trigger_fish.rbT.templTimers['templ.displaytimer']);
 
       }
-      if(idMatch[0] == 'Topbar' || idMatch[0] == 'Bottombar' )
+      if(idMatch[0] === 'Topbar' || idMatch[0] === 'Bottombar' )
 
      {   
 
@@ -135,7 +135,7 @@ trigger_fish.rbT.eventHandler = {
 
      }
 
-     else if(idMatch[0] == 'Modal')
+     else if(idMatch[0] === 'Modal')
      {
 
          var id = "rb" + idMatch[0]+idMatch[1]+idMatch[2]+"BaseContainer";
