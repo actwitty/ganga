@@ -5,7 +5,7 @@ module Url
   # INPUT - http://api.actwitty.co.uk/tytyt?s=8&ert=34  # url linke this
   # OUTPUT - {
   #            "url" => "http://api.actwitty.co.uk/tytyt?s=8&ert=34",
-  #            "domain" => "actwitty",
+  #            "origin" => "actwitty",
   #            "suffix" => "co.uk", 
   #            "subdomain" => "api"
   #            "canonical" => "uk.co.actwitty.api/tytyt?s=8&ert=34"
@@ -16,7 +16,7 @@ module Url
     url = "http://" + url if url !~ /^http\:\/\/|^https\:\/\//
 
     u = Domainatrix.parse(url)
-    {url: u.url, domain: u.domain, suffix: u.public_suffix, subdomain: u.subdomain, canonical: u.canonical, path: u.path}
+    {url: u.url, origin: u.domain, suffix: u.public_suffix, subdomain: u.subdomain, canonical: u.canonical, path: u.path}
   rescue => e 
     Rails.logger.error("**** ERROR **** #{e.message}")
     {}

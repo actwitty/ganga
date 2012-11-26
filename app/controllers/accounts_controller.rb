@@ -113,7 +113,7 @@ class AccountsController < ApplicationController
   ##           apps: [
   ##                   { 
   ##                     id: "343433433", account_id: "324324", 
-  ##                     description: {"name": "my app", "domain": "http://myapp.com"},
+  ##                     description: {"name": "my app", "origin": "http://myapp.com"},
   ##                     schema: {
   ##                             properties: {
   ##                                           'customer[email]' => {  
