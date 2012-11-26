@@ -18,6 +18,6 @@ _rbTK.push(['_setAccount', '509cfa0e56b26aa55c000001']);
       }
     }
     for (k = 0; k < j; k++) q(e[k]);
-  })(window,["identify","sendEvent","setActor","alias"]);
+  })(window,["identify","sendEvent","setUser","alias"]);
 })(document,"trigger-fish-pdk");
 </script>
