@@ -53,7 +53,7 @@ trigger_fish.rbTCookie = {
     var value = trigger_fish.jStorage.get(this.name(cookieName));
 
     if (value)
-        return (unescape(value));
+        return value;
     else
         return undefined;
   },

@@ -25,13 +25,10 @@
   trigger_fish.rbTAPP.log("Initializing RBT APP with AppID = " + appid + " Account ID = " + accid);
   function releasePreInitCalls(w)
   {
-    if (w.rb && w.rb.q.length) {
-      var l = w.rb.q;
-      w.rb = new RBT();
-      for (var c in l) {
-        var o = l[c];
-        rb[o.t](o.a,o.b,o.c);
-      }    
+    var l = w.rb.q;
+    w.rb = new RBT();
+    if (l.length) {
+      for (var c in l) { var o = l[c]; rb[o.t](o.a,o.b,o.c); }    
     }
   }
   try {

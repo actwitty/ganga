@@ -85,7 +85,7 @@ RBT.prototype.identify = function(params)
 * @param {object} params Option based on which actor property will be set
 * @return void
 */
-RBT.prototype.setActor = function(params)
+RBT.prototype.setUser = function(params)
 {
   "use strict";
   if (trigger_fish.rbTActor.propExist(params))
