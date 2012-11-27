@@ -25,7 +25,9 @@ App.EventsListView = Ember.View.extend
 
   #---------------------------------------------
   applyHighlighting: ->
-    hljs.tabReplace = '  '
-    hljs.initHighlighting()
+    prettyPrint()
+    #hljs.tabReplace = '  '
+    #hljs.initHighlighting()
+
 
 

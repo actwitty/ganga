@@ -20,8 +20,10 @@ var trigger_fish = {};
 trigger_fish.rbTAPP = {
     /* Main configs will be holded here */
     configs : {
-      "status" : false
+      "status" : false,
+      "transVar" : {}
     },
+    el : {},
     
     /** 
     *  Do following tasks on initialization of the app
@@ -37,11 +39,8 @@ trigger_fish.rbTAPP = {
     initialize : function()
     {
       "use strict";
-      trigger_fish.enableCORS(jQuery);
-      trigger_fish.initJStorage();
       this.getAppData();
-      //this.createDummyActor();
-      trigger_fish.rbTActor.retFromCookie();
+      
 
     },
 
@@ -56,6 +55,16 @@ trigger_fish.rbTAPP = {
     {
        return this.configs.status;
     },  
+
+    /**
+    *
+    */
+    setrbTAlive : function()
+    {
+      this.configs.status = true;
+      //this.dispatchEL("isRbtAlive");
+      trigger_fish.rbTServerChannel.flushReqQueue();
+    },
 
     /**
     * Set RBT APP Status to true to signal app is alive
@@ -100,9 +109,9 @@ trigger_fish.rbTAPP = {
     *
     *
     */   
-    setTransVar : function(data)
+    setTransVar : function(event,data)
     {
-      this.configs.transVar = data;
+      this.configs.transVar.event = data;
     },
 
     /**
@@ -112,6 +121,33 @@ trigger_fish.rbTAPP = {
     {
       this.configs.appData = data;
     },
+
+    /**
+    *
+    */
+    addEL : function(event, cb, scope)
+    {
+      if (!this.el.event)
+        this.el.event = [];
+      var listenerObj = {"action":cb,"scope":scope};
+      if (this.el.event.indexOf(JSON.stringify(listenerObj)) === -1)
+        this.el.event.push(listenerObj);
+    },
+
+    /**
+    *
+    */
+    dispatchEL : function(event)
+    {
+      if (!this.el.event)
+        return;
+      var wL = this.el.event.length;
+      for(var i = 0 ; i < wL ; ++i) {
+        var listener = this.el.event[i];
+        listener.action.apply(listener.scope);
+      }
+      this.el.event = [];
+    },  
 
     /** 
     *  Get App ID
@@ -143,9 +179,9 @@ trigger_fish.rbTAPP = {
     /**
     *
     */
-    getTransVar : function()
+    getTransVar : function(event)
     {
-      return this.configs.transVar;
+      return this.configs.transVar.event;
     },
 
     /**
@@ -184,7 +220,8 @@ trigger_fish.rbTAPP = {
     getAppData : function()
     {
       trigger_fish.rbTServerChannel.makeServerRequest({"url"      : trigger_fish.rbTServerChannel.url.appDetails,
-                                                       "app_read" : true, 
+                                                       "app_read" : true,
+                                                       "async"    : "noasync", 
                                                        "cb"       : { success: trigger_fish.rbTServerResponse.setAppDetail,
                                                                       error  : trigger_fish.rbTServerResponse.defaultError
                                                                     }

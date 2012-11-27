@@ -23,6 +23,14 @@
 */
 (function StartRBTApp(appid,accid){
   trigger_fish.rbTAPP.log("Initializing RBT APP with AppID = " + appid + " Account ID = " + accid);
+  function releasePreInitCalls(w)
+  {
+    var l = w.rb.q;
+    w.rb = new RBT();
+    if (l.length) {
+      for (var c in l) { var o = l[c]; rb[o.t](o.a,o.b,o.c); }    
+    }
+  }
   try {
     if (!appid || !accid || appid == "" || accid == "") {
       throw new Error("App-id, Account-ID are not mentioned")
@@ -31,7 +39,7 @@
       trigger_fish.rbTAPP.setAppID(appid);
       trigger_fish.rbTAPP.setAccountID(accid);
       trigger_fish.rbTUtils.includeJQIfNeeded();
-      window.rb = new RBT();
+      releasePreInitCalls(window);
     }
   } catch (e) {
     trigger_fish.rbTAPP.reportError({"exception": e.message, 
@@ -41,16 +49,4 @@
                                     });
   }
 })(_rbTK[0][1], _rbTK[1][1]);
-
-
-
-function testGanga()
-{
-  rb.identify("83.samarth@gmail.com");
-  rb.setActor({"name":"samarth","age":"29"});
-  rb.sendEvent("sample_event3",{"name":"samarth"});
-  console.log("ENDING TESTING SEQUENCE");
-}
-
-//testGanga();
 

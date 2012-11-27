@@ -9,15 +9,15 @@
       position: fixed;
       top: 0px;
       left: 0px;   
-      z-index: {{rb.t.nr.base_zindex{{=10000}}}};    
-      background: {{rb.t.cr.base_backgroundcolor{{=#E24E35}}}} !important;
+      z-index: {{rb.t.nr.h.bar_zindex{{=10000}}}};    
+      background: {{rb.t.cr.h.bar_background_color{{=#E24E35}}}} !important;
       border-top: 1px solid #CC412A !important;
       border-bottom: 1px solid #CC412A !important;
     }
 
     .rbTpGenDyn .barDyn{
-      width: {{rb.t.nr.show_width{{=900}}}}px;
-      height: {{rb.t.nr.base_height{{=40}}}}px;
+      width: {{rb.t.nr.h.bar_width{{=900}}}}px;
+      height: {{rb.t.nr.h.bar_height{{=40}}}}px;
       vertical-align: middle;
       position: relative;
     }
@@ -25,10 +25,10 @@
 
     .rbTpGenDyn .rbDynText
      {
-       color:{{rb.t.cr.text_color {{=#ffffff}}}};
-       font-size: {{rb.t.nr.text_fontsize{{=14}}}}px;
-       font-family: {{rb.t.ft.text_fontfamily{{=Arial}}}};
-       font-weight:{{rb.t.fw.text_fontweight{{=normal}}}};
+       color:{{rb.t.cr.h.text_color {{=#ffffff}}}};
+       font-size: {{rb.t.nr.h.text_fontsize{{=14}}}}px;
+       font-family: {{rb.t.ft.h.text_fontfamily{{=Arial}}}};
+       font-weight:{{rb.t.fw.h.text_fontweight{{=normal}}}};
        white-space: nowrap;
        overflow:hidden;
      }
@@ -72,9 +72,9 @@
         top:7%;
         height:20px;
         margin-right: 20px;                    
-        background-color: {{rb.t.cr.button_background{{=whiteSmoke}}}} !important;
-        color: {{rb.t.cr.button_color{{=#333}}}} !important; !important;
-        font-size: {{rb.t.nr.button_fontSize{{=16}}}}px; 
+        background-color: {{rb.t.cr.h.button_background_color{{=whiteSmoke}}}} !important;
+        color: {{rb.t.cr.h.button_color{{=#333}}}} !important; !important;
+        font-size: {{rb.t.nr.h.button_fontSize{{=16}}}}px; 
         text-align: center;  
         white-space: nowrap;  
         overflow: hidden; 
@@ -83,8 +83,8 @@
      }
 
      .rbTpGenDyn .rbBtnDyn:hover {
-        background-color: {{rb.t.cr.button_background_on_focus{{=#d9d9d9}}}} !important;
-        color: {{rb.t.cr.button_color_on_focus{{=#888}}}} !important;
+        background-color: {{rb.t.cr.h.button_background_on_focus{{=#d9d9d9}}}} !important;
+        color: {{rb.t.cr.h.button_color_on_focus{{=#888}}}} !important;
         -webkit-transition: background 1s ease;
         -moz-transition: background 1s ease;
         -o-transition: background 1s ease;
@@ -103,16 +103,16 @@
     <div class="rbBarWidth barDyn">
 
       <p id="rbTopbarGenericNormalLeftClick" class="rbTextLeft rbDynLeftText rbDynText" >
-        {{rb.t.vsg.text_left{{=Please add the promotional left text here}}}}
+        {{rb.t.vsg.e.text_left{{=Please add the promotional left text here}}}}
       </p>
 
         <div id="rbTopbarGenericNormalRoiMiddlebutton" class ="rbClickable rbBtn rbBtnDyn" 
-            link="{{rb.t.ul.button_link{{=http://www.google.com}}}}"> 
-        {{rb.t.sg.button_label{{=Promo Link}}}} 
+            link="{{rb.t.ul.e.button_link{{=http://www.google.com}}}}"> 
+        {{rb.t.sg.e.button_label{{=Promo Link}}}} 
       </div>
     
       <p id="rbTopbarGenericNormalRightClick" class="rbTextRight rbDynRightText rbDynText" >           
-        {{rb.t.vsg.text_right{{=Please add the promotional right text here}}}}  
+        {{rb.t.vsg.e.text_right{{=Please add the promotional right text here}}}}  
       </p>
       <div class="rbInfoBtnDyn">
         <div class="rb-btn-group" >

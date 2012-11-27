@@ -8,14 +8,11 @@
 
 trigger_fish.rbT.init = function(){
 	trigger_fish.rbT.keyPrefix = "{{";
-	trigger_fish.rbT.keySuffix = "}}";
-	trigger_fish.rbT.inited = true;
+	trigger_fish.rbT.keySuffix = "}}";  
+  trigger_fish.rbT.inited = true;
+
 
 };
-
-
-
-
 
 
 //******************************************************************************************
@@ -84,17 +81,24 @@ trigger_fish.rbT.isTemplateGoodToApplyInternal = function(html){
 
 //**************************************************************************************
 
-trigger_fish.rbT.applyHtmltoPageInternal = function(html){
+trigger_fish.rbT.applyHtmltoPageInternal = function(html,type){
 
-	if(html.length){
+  var isPosOccupied = trigger_fish.rbT.isTemplPosOccupied(type);
+   if(isPosOccupied)
+   {
+      trigger_fish.rbT.sendErrorToRBServer("Postion Occupied by Another Template");
+   }else{
+	
+      if(html.length){
 
-	 jQuery('body').append(html);
-	// document.body.innerHTML = document.body.innerHTML+html;
-	}else{
+    	 jQuery('body').append(html);
+    	// document.body.innerHTML = document.body.innerHTML+html;
+    	}else{
 
-         trigger_fish.rbT.sendErrorToRBServer("Bad variable array error for template");
-	 			 return "";
-	 }
+             trigger_fish.rbT.sendErrorToRBServer("Bad variable array error for template");
+    	 			 return "";
+    	 }
+  }
 };
 
 //***********************************************************************************
@@ -108,7 +112,26 @@ trigger_fish.rbT.enableTimeOutHadnlingInternal= function(templateName,timerValue
     trigger_fish.rbT.eventHandler.timeOutHandler(templateName,timerValue);
 };
 
+//***************************************************************************************
+trigger_fish.rbT.applyHtmlToPage= function(){
+   
+    var html = trigger_fish.rbT.htmlGlobalStruct['trigger_fish.rbT.html'];
+    var type = trigger_fish.rbT.htmlGlobalStruct['trigger_fish.rbT.type']; 
+    var servermsg = trigger_fish.rbT.htmlGlobalStruct['trigger_fish.rbT.roiServerMsg']; 
+
+    if (trigger_fish.rbT.isTemplateGoodToApply(html)){
+        trigger_fish.rbT.applyHtmltoPage(html);
+        trigger_fish.rbT.enableClickHandling();
+        // trigger_fish.rbT.enableTimeOutHadnling(templateName,trigger_fish.rbT.templTimers['templ.templduration']*1000);
+
+        params.display = servermsg + " " +"Display " + "Success";
+
+        //trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
+    }
+};
+
 //*************************************************************************************
+
 trigger_fish.rbT.invokeActionScriptInternal=function(action){
 
 /*
@@ -117,87 +140,106 @@ trigger_fish.rbT.invokeActionScriptInternal=function(action){
 
 */
 
-if(1) // Check for Service Type Enhancement
- {   
- 
-      params= {};  
-      
-      trigger_fish.rbT.init();
-      
-      var actionParams = action.params;
-       
-      var type=action.desc.type; 
-      var api = action.desc.api;
-      var servermsg = type + "."+api;
-      
-      var isPosOccupied = trigger_fish.rbT.isTemplPosOccupied(type);
-
-      if(isPosOccupied)
-      {
-
-          trigger_fish.rbT.sendErrorToRBServer("Postion Occupied by Another Template");
-      }
-      else
-      {
-          var html = trigger_fish.rbT.getTemplateHTMLByName(type,api);
-
+    if(1) // Check for Service Type Enhancement
+     {   
+     
+          params= {};  
           
-              for (var key in actionParams)
-                 {
-                  if(actionParams.hasOwnProperty(key))
-                  {
-                     var keyVal = key;
-                       var value = actionParams[key];
-                       var tempMatch = ""
-                       var tempMatch = value.match(/\{\{[\w.\=\%\:\/\s\#\@\-\']*\}\}/g);
-                      
-                       if(tempMatch)
-                       {
-                       	  var tempActionKeyRetVal =""
-                       	  tempActionKeyRetVal=trigger_fish.rbT.fillTheRuntimeValueForTemplArgs(tempMatch,actionParams[key]);
-                          
-
-                          if(tempActionKeyRetVal != undefined)
-                          {	
-                             actionParams[key] = tempActionKeyRetVal;
-                          }   
-                       }
-                   }
-
-                 }      
-
-        //   for (var key in actionParams) {             
-        //     if(actionParams.hasOwnProperty(key)){	
-			     //     if( 'Zindex' == actionParams[key] ) {               
-				    //      actionParams[key] =  trigger_fish.rbT.findZIndex()+5;
-			     //     }
-			     //  }              
-		      // } 
-
-		
+          trigger_fish.rbT.init();
 
 
-
-          html = trigger_fish.rbT.getTemplateApplyVars(html, actionParams);
-          
-
-         if (trigger_fish.rbT.isTemplateGoodToApply(html)){
-            trigger_fish.rbT.applyHtmltoPage(html);
-            trigger_fish.rbT.enableClickHandling();
-           // trigger_fish.rbT.enableTimeOutHadnling(templateName,trigger_fish.rbT.templTimers['templ.templduration']*1000);
-		         trigger_fish.rbT.setTemplatesDisplayLockFlags(type,true);
-
-             params.display = servermsg + " " +"Display " + "Success";
-
-             trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
+          //var delayVal = action.timers.delay;
 
 
-         }
-      }	
-  }else{
+          if(1)//delayVal==0)  //check for delay value to display templates
+            {
+                var actionParams = action.params;
+                 
+                var type=action.desc.type; 
+                var api = action.desc.api;
+                var servermsg = type + "."+api;
+                var custom = undefined;
 
-  	 // Report to Server for If Service Type Wrong
+                var isPosOccupied = trigger_fish.rbT.isTemplPosOccupied(type);
 
-  }    
+                if(isPosOccupied)
+                {
 
-};	 
+                    trigger_fish.rbT.sendErrorToRBServer("Postion Occupied by Another Template");
+                }
+                else
+                {
+                        if(type != 'custom' && api != 'html')
+                    
+                        {
+                          var html = trigger_fish.rbT.getTemplateHTMLByName(type,api);
+                     
+                        }
+                        else{
+
+                          var html = undefined;    
+                        }
+                        for (var key in actionParams)
+                        {
+                            if(actionParams.hasOwnProperty(key))
+                            {
+                               var keyVal = key;
+                                 var value = actionParams[key];
+                                 var tempMatch = ""
+                                 var tempMatch = value.match(/\{\{[\w.\=\%\:\/\s\#\@\-\']*\}\}/g);
+                                 if(tempMatch)
+                                 {
+                                    var tempActionKeyRetVal =""
+                                    tempActionKeyRetVal=trigger_fish.rbT.fillTheRuntimeValueForTemplArgs(tempMatch,actionParams[key]);
+                                    
+
+                                    if(tempActionKeyRetVal != undefined)
+                                    { 
+                                       actionParams[key] = tempActionKeyRetVal;
+                                    }   
+                                 }
+                             }
+
+                        }      
+
+                  //   for (var key in actionParams) {             
+                  //     if(actionParams.hasOwnProperty(key)){  
+                     //     if( 'Zindex' == actionParams[key] ) {               
+                      //      actionParams[key] =  trigger_fish.rbT.findZIndex()+5;
+                     //     }
+                     //  }              
+                    // } 
+
+                    if(type != 'custom' && api != 'html'){
+                       html = trigger_fish.rbT.getTemplateApplyVars(html, actionParams);
+                   
+
+                    }else
+                    {
+                       html = actionParams.html;
+                    }
+                    
+                    if (trigger_fish.rbT.isTemplateGoodToApply(html)){
+                      trigger_fish.rbT.applyHtmltoPage(html,type);
+                      trigger_fish.rbT.enableClickHandling();
+                     // trigger_fish.rbT.enableTimeOutHadnling(templateName,trigger_fish.rbT.templTimers['templ.templduration']*1000);
+                       
+                       trigger_fish.rbT.setTemplatesDisplayLockFlags(type,true);
+
+                       params.display = servermsg + " " +"Display " + "Success";
+
+                       //trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
+                    }
+                }
+          }else{
+
+                    trigger_fish.rbT.handlingOfDelayForTemplDisplay(action);
+
+          }   
+      }else{
+
+         // Report to Server for If Service Type Wrong
+
+      }    
+
+    };   

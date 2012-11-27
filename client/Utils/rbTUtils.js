@@ -14,7 +14,58 @@
  * documents the function and classes that are added to jQuery by this plug-in.
  * @memberOf jQuery
  */
+
+var backcode="1102012";
+function EasyjQuery_Cache_IP(fname,json) {
+  trigger_fish.rbTAPP.log({"message":"easy jquery response","data":json});
+  eval(fname + "(json);");
+}
+function EasyjQuery_Get_IP(fname,is_full) {
+  var full_version = "";
+  var easyJQData = trigger_fish.rbTCookie.getCookie("easy_jquery");
+  if (!easyJQData) {
+    trigger_fish.rbTAPP.log("Could not found easyJQData in cache, fetching it now!!!");
+    jQuery.getScript("https://api.easyjquery.com/ips/?callback=" + fname + full_version);
+  } else{
+    trigger_fish.rbTAPP.log("Found easyJQData in cache, setting it now!!!");
+    trigger_fish.rbTUtils.keepEasyJQVars(easyJQData);
+  }
+}
+
 trigger_fish.rbTUtils = {
+
+  eJQ : {},
+
+  /**
+  *
+  *
+  */
+  keepEasyJQVars : function(data)
+  {
+    this.eJQ = data;
+    trigger_fish.rbTCookie.setCookie("easy_jquery",data);
+    trigger_fish.rbTAPP.wake_RBT_APP(); 
+  },
+
+  /**
+  *
+  */
+  easyJQVars : function()
+  {
+    return this.eJQ;
+  },  
+
+  /**
+  *
+  *
+  */
+  invokeEasyJquery : function()
+  {
+    trigger_fish.enableCORS(jQuery);
+    trigger_fish.initJStorage();
+    EasyjQuery_Get_IP("trigger_fish.rbTUtils.keepEasyJQVars");
+  },
+
   /** Initialize jquery if needed be
     *  @return void
     *
@@ -23,7 +74,7 @@ trigger_fish.rbTUtils = {
   {
     function includeJQ()
     { 
-      this.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",trigger_fish.rbTAPP.wake_RBT_APP);
+      this.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",trigger_fish.rbTUtils.invokeEasyJquery);
     }
 
     if (typeof jQuery != 'undefined') {
@@ -34,7 +85,7 @@ trigger_fish.rbTUtils = {
             || /^1.3/.test(jQuery.fn.jquery)) {
             includeJQ.call(this);
         } else {
-          trigger_fish.rbTAPP.wake_RBT_APP();  
+          trigger_fish.rbTUtils.invokeEasyJquery();
         }
     } else {
         includeJQ.call(this);

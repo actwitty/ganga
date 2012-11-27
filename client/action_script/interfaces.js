@@ -41,7 +41,7 @@ trigger_fish.rbT.isTemplateGoodToApply = function(html){
 };
 
 //------------------------------------------
-trigger_fish.rbT.applyHtmltoPage = function(html){
+trigger_fish.rbT.applyHtmltoPage = function(html,type){
 	if (!trigger_fish.rbT.isInitialized()){
 		return "";
 	}
@@ -49,7 +49,7 @@ trigger_fish.rbT.applyHtmltoPage = function(html){
 		trigger_fish.rbT.sendErrorToRBServer("improper access of interface applyHtmltoPage");
 		return "";
 	}
-	return trigger_fish.rbT.applyHtmltoPageInternal(html);
+	return trigger_fish.rbT.applyHtmltoPageInternal(html,type);
 };
 
 

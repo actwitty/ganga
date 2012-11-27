@@ -20,19 +20,6 @@ trigger_fish.rbTRules = {
 
   ruleTable : {},
 
-  operations : { 
-                  'gtn': 'greater than',
-                  'ltn': 'lesser than',
-                  'eql': 'equal to',
-                  'swh': 'starts with',
-                  'ewh': 'ends with',
-                  'cns': 'contains',
-                  'btn': 'between',
-                  'rgx': 'regex',
-                  'dag': 'days ago',
-                  'drg': 'date range',
-                  'set': 'set'
-  },
   "permissions" : {
           'String': [ 'eql', 'swh','ewh','cns','rgx','set' ],
           'Date': [ 'gtn','ltn','eql','dag','drg','set' ],  
@@ -46,43 +33,19 @@ trigger_fish.rbTRules = {
   setRulesTable : function(rules)
   {
     "use strict";
-    //rules = this.sample_json;
-    var ruleString = "";
-
-
-    function ruleConnect(rule)
-    {
-      if (rule.connect) {
-        if (rule.connect === "and")
-          return "&& ";
-        else if (rule.connect === "or")
-          return " || ";
-        else 
-          return " ";
-      } else 
-        return " ";
-    }
-    function ruleParams(rule,event)
-    {
-      //return "('"+JSON.stringify(rule)+",'"+event+"')";
-      rule.event = event;
-      return "('"+JSON.stringify(rule)+"')";
-    }
-
     try {
         jQuery.each(rules, function(index, ruleList) {
           if (!trigger_fish.rbTRules.ruleTable[ruleList.event])
             trigger_fish.rbTRules.ruleTable[ruleList.event] = [];
-          ruleString = " ";
+          var conditions = [];
           for (var rule in ruleList.conditions) {
-            ruleString = ruleString + "trigger_fish.rbTRules.evalRule" + 
-                         ruleParams(ruleList.conditions[rule],ruleList.event) + 
-                         ruleConnect(ruleList.conditions[rule]);
+            ruleList.conditions[rule].event = ruleList.event; // FIXME ::
+            conditions.push(ruleList.conditions[rule]);
           }
           trigger_fish.rbTRules.ruleTable[ruleList.event].push({ "name"         : ruleList.name,
-                                                                 "ruleString"   : ruleString,
                                                                  "action"       : ruleList.action,
-                                                                 "action_param" : ruleList.action_param
+                                                                 "action_param" : ruleList.action_param,
+                                                                 "conditions"   : conditions
                                                                });                                                  
 
         });
@@ -102,22 +65,23 @@ trigger_fish.rbTRules = {
   */
   executeRulesOnEvent : function(event)
   {
-    function prepareFunctionCode(ruleString) 
-    {
-      $("#rulestring").append('<h3>'+ruleString+'</h3>');
-      return 'if (' + ruleString + ') { return true; } else { return false;}';
-    }
     // Client will not execute any rules if there is no schema set. 
     var appData = trigger_fish.rbTAPP.getAppDetail();
+    var that=this;
     if (!appData.app.schema) {
       trigger_fish.rbTDebug.log({"message":"There is no schema set for app, cannot execute rules"});
       return;
     }
     try {
-          var that=this;
           jQuery.each(this.ruleTable[event], function(index, rule) {
-            var functionCode = prepareFunctionCode(rule.ruleString);
-            var isRuleValid = new Function(functionCode)();
+            var conditionCount = rule.conditions.length;
+            var isRuleValid = true;
+            for(var i = 0; i < conditionCount ; i++) {
+              if (!that.evalRule(rule.conditions[i])) {
+                isRuleValid = false;
+                break;
+              }
+            } 
             if (isRuleValid) {
               trigger_fish.rbTAPP.log({"message":"++ALL CONDITIONS PASSED++","rule":rule});
               that.invokeAction(rule);
@@ -127,8 +91,8 @@ trigger_fish.rbTRules = {
           });
           
     } catch (e) {
-      if (this.ruleTable[event])
-        var ruleStr = this.ruleTable[event].ruleString || "--";
+      if (that.ruleTable[event])
+        var ruleStr = that.ruleTable[event].ruleString || "--";
       else
         var ruleStr = "Rule string cannot be formed!";  
         trigger_fish.rbTAPP.reportError({"exception"  : e.message,
@@ -181,16 +145,6 @@ trigger_fish.rbTRules = {
                          });
     }
   },
- 
-  /**
-  * Check the negate status
-  * @param {string} negation status
-  * @return boolean !negate status
-  */
-  isNegate :  function(x)
-  {
-    return (x === "true") ? true : false; 
-  },
 
   /**
   * Check the data type of object
@@ -232,21 +186,28 @@ trigger_fish.rbTRules = {
  
     var p = ruleJson.property.replace(/]/g,"").replace(/\[/g,".");
     var value = null;
+    var validProp = true;
 
-    var validProp = 1;
+    function findprop(obj,path) {
+      var args=path.split('.'), l=args.length;
+      for (var i=0;i<l;i++) {
+        if (!obj.hasOwnProperty(args[i]) )
+            return undefined;
+        obj=obj[ args[i] ];
+      }
+      return obj; 
+    }
+
     try {
       if (ruleJson.scope === "a") {
-        var actorProp = trigger_fish.rbTActor.getProperties();
-        value = eval("actorProp."+p+".slice(-1)[0]");
+        value = findprop(trigger_fish.rbTActor.getProperties(),p).slice(-1)[0];
       } else if (ruleJson.scope === "s") {
-        var systemVars = trigger_fish.rbTSystemVar.getProperty();
-        value = eval("systemVars."+p);
+        value = findprop(trigger_fish.rbTSystemVar.getProperty(),p);
       } else if (ruleJson.scope === "e") {
-        var transVar = trigger_fish.rbTAPP.getTransVar(); 
-        value = eval("transVar."+p); 
+        value = findprop(trigger_fish.rbTAPP.getTransVar(ruleJson.event),p);
       }
     } catch (e) {
-      validProp = 0;
+      validProp = false;
     } 
 
     if (!validProp || !value) {
@@ -257,13 +218,9 @@ trigger_fish.rbTRules = {
     var type = this.getDataType(ruleJson.event, ruleJson.property, ruleJson.scope, ruleJson);
     if (!type)
         return value;
-    if (type === "String")
-        return value.toString(); 
-    else if (type === "Date")
-        return new Date(value);
-    else if (type === "Number")
-        return parseFloat(value);
-    
+
+    return this.valueDataType(ruleJson.property, value, type);
+
   },
 
   /**
@@ -309,7 +266,6 @@ trigger_fish.rbTRules = {
       return false;
     if (ruleJson.type ==="set") 
       return true;
-    //var propVal = this.evalProperty(ruleJson.property,ruleJson.type,ruleJson.scope);
     var propVal = this.evalProperty(ruleJson);
     if (!propVal)
       return false;
@@ -349,61 +305,30 @@ trigger_fish.rbTRules = {
   */
   evalRule : function(rule)
   {
-    var ruleJson = JSON.parse(rule);
+    var ruleJson = typeof rule === "object" ? rule :ruleJSON.parse(rule);
     try {
       
       trigger_fish.rbTAPP.log({"message":"for rule condition","rule":ruleJson}); 
-
-      if (!trigger_fish.rbTRules.isValidRule(ruleJson))
-          return false;
       var res = false;
-      var propDT = this.getDataType(ruleJson.event, ruleJson.property, ruleJson.scope, ruleJson);
-      var p = trigger_fish.rbTRules.evalProperty(ruleJson),
-          a = trigger_fish.rbTRules.valueDataType(ruleJson.property, ruleJson.value1, propDT),
-          b = trigger_fish.rbTRules.valueDataType(ruleJson.property, ruleJson.value2, propDT);
 
-      // FIXME :: we can coalesce this but will we lost datatype?
-      switch(ruleJson.operation) {
-      case "ltn":
-          res = this.rule.ltn(p,a);
-          break;
-      case "gtn":
-          res = this.rule.gtn(p,a);
-          break;
-      case "eql":
-          res = this.rule.eql(p,a);
-          break;
-      case "cns":
-          res = this.rule.cns(p,a);
-          break;
-      case "swh":
-          res = this.rule.swh(p,a);
-          break;
-      case "ewh":
-          res = this.rule.ewh(p,a);
-          break;
-      case "btn":
-          res = this.rule.btn(p,a,b);
-          break;
-      case "rgx":
-          res = this.rule.rgx(p,a);
-          break;
-      case "drg":
-          res = this.rule.drg(p,a,b);
-          break;
-      case "dag":
-          res = this.rule.dag(p,a);
-          break;
-      case "set":
-          res = this.rule.set(p,a);
-          break;
-      }
+      if (!this.isValidRule(ruleJson) || !this.rule.hasOwnProperty(ruleJson.operation))
+          return res;
+
+      var propDT = this.getDataType(ruleJson.event, ruleJson.property, ruleJson.scope, ruleJson),f
+          p = this.evalProperty(ruleJson),
+          a = this.valueDataType(ruleJson.property, ruleJson.value1, propDT),
+          b = this.valueDataType(ruleJson.property, ruleJson.value2, propDT);
+
+      res = this.rule[ruleJson.operation](p,a,b);
+      
       return (ruleJson.negation === "true") ? !res : res;
+
     } catch (e) {
       trigger_fish.rbTAPP.reportError({"exception" : e.message,
                                        "message"   :"rule evaluation on"+ ruleJson.operation +" failed" , 
                                        "rule"      : ruleJson,
                                       });
+      return false;
     }
   },
 
