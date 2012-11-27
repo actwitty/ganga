@@ -28,7 +28,7 @@ module Authenticate
     Rails.env == "test" ? origin = request.env['HTTP_HOST'] : origin = request.env['HTTP_ORIGIN']
 
     if !params["token"].blank? and origin.blank?        # API Access
-      obj = verify_token!(params["token"])
+      obj = verify_token!(params)
      
       raise et("application.unauthorized") if obj.blank?
       
@@ -40,14 +40,21 @@ module Authenticate
   end
 
   # validates access token and refresh it if needed
-  def verify_token!(token)
+  def verify_token!(params)
     Rails.logger.info("Enter Verify Token")
+
+    token = params["token"]
 
     if token[0] == AppConstants.account_token_prefix
       obj = Account.where("access_info.token" => token).first
       
     elsif token[0] == AppConstants.app_token_prefix
       obj = App.where("access_info.token" => token).first
+
+      # if app id is not matching with requests app id return unauthorised 
+      if !params[:id].blank? and (params[:id] != obj._id.to_s)
+        raise et("application.unauthorized")
+      end
     else
       raise et("application.invalid_token")
     end

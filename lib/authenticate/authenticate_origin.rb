@@ -24,9 +24,14 @@ module Authenticate
       origin_base = Url.base(origin)
       raise et("application.invalid_origin", url: params[:origin]) if origin_base.blank?
 
-      object = App.where("access_info.origin_base" => origin_base).first
+      app = App.where("access_info.origin_base" => origin_base).first
+      
+      # if app id is not matching with requests app id return unauthorised 
+      if !params[:id].blank? and (params[:id] != app._id.to_s)
+        raise et("application.unauthorized")
+      end
 
-      if !object.blank?
+      if !app.blank?
         headers['Access-Control-Allow-Origin'] = origin
 
         headers["Access-Control-Allow-Methods"] = %w{GET POST}.join(",")
@@ -46,7 +51,7 @@ module Authenticate
         head :ok
       else
         # continue with callback chain
-        raise et("application.unauthorized") if build_session(object) == false
+        raise et("application.unauthorized") if build_session(app) == false
       end
     end
   rescue => e 

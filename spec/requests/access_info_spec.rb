@@ -19,6 +19,7 @@ describe "access control" do
 
     resp = page.driver.post('/app/create', { format: 'json', account_id: @account._id, description: { :name => "tito", :email => "john.doe@example.com", origin: "http://rulebot.com"}})
     @json = JSON.parse(resp.body)
+    a = App.where(id: @json["id"]).first
   end
   
   it "should be able to make session request" do
@@ -34,6 +35,13 @@ describe "access control" do
     response.status.should_not eq(200)
   end
 
+  it "should not authenticate origin for cross_site with wrong app id" do
+    # lets make out of session request
+    get('/app/read', {  format: 'json', id: "2312312321", actors: true},  { "HTTP_HOST" => "http://rulebot.com" })
+    puts JSON.parse(response.body)
+    response.status.should_not eq(200)  
+    #resp.status.should eq(200)
+  end
 
   it "should authenticate origin for cross_site" do
     # lets make out of session request
@@ -47,6 +55,16 @@ describe "access control" do
     # lets make out of session request
     # wrong token
     post('/app/update',{ format: 'json', token: "534645645645", id: @json["id"], description: { :name => "hello", :email => "tom.doe@example.com", mobile: "943479474"}},  { "HTTP_HOST" => "" })
+    puts JSON.parse(response.body)
+    response.status.should_not eq(200)
+  end
+
+  it "should not authenticate api with wrong app id" do
+    # lets make out of session request
+
+    #request object is not available in request spec
+    a = App.find(@json["id"])
+    post('/app/update', { format: 'json', token: a.access_info.token, id: "3423423423", description: { :name => "hello", :email => "tom.doe@example.com", mobile: "943479474"}},  { "HTTP_HOST" => "" })
     puts JSON.parse(response.body)
     response.status.should_not eq(200)
   end
