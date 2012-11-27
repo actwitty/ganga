@@ -3,3 +3,5 @@ en:
     unauthorized: "No Authorization"
     account_invalid: "Invalid Account id retrieved from Access Info !!"
     refresh_token_failed: "Refreshing access token failed"
+    invalid_token: "Invalid Token"
+    invalid_origin: "%{url} url is not valid"

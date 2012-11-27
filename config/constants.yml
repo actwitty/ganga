@@ -35,7 +35,11 @@ development: &default
   # String Keys stored in database - Dont changes
   super_actor:             "super_actor_id"
   token:                   "token"
-  domain:                  "domain"
+  origin:                  "origin"
+
+  # Token Prefix
+  app_token_prefix:       "1"
+  account_token_prefix:   "2"
 
   # Limits
   limit_events:           100

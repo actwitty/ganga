@@ -5,3 +5,4 @@ en:
     invalid_scope: "Invalid scope.. something went wrong"
     invalid_account_id: "Account not found.. Invalid Account ID"
     invalid_app_id: "App not found.. Invalid App ID" 
+    invalid_origin: "%{url} url is not valid"

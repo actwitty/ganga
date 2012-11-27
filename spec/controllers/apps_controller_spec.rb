@@ -32,19 +32,21 @@ describe AppsController do
     it "should create app" do
       post 'create', {account_id: @account._id, description: { :email => "john.doe@example.com",
                                                                :customer => {:address => {:city => "Bangalore"}},
-                                                               :domain => "http://example.com",
-                                                               :name => "alok 1"
-
+                                                               :name => "alok 1",
+                                                               origin: "https://actwitty.com"
                                                                }
                       }
       puts JSON.parse(response.body).inspect
       response.status.should eq(200)
+      a= App.where("access_info.origin_base" => "actwitty.com").first
+      a.should_not be_blank
+      puts a.inspect
     end
 
     it "should check apps with same name while creating app" do
       post 'create', {account_id: @account._id, description: { :email => "john.doe@example.com",
                                                                :customer => {:address => {:city => "Bangalore"}},
-                                                               :domain => "http://example.com",
+                                                               :origin => "http://example.com",
                                                                :name => "alok 1"
                      }                                       }
 
@@ -64,7 +66,7 @@ describe AppsController do
     before(:each) do
       post 'create', {  account_id: @account._id, description: { :email => "john.doe@example.com",
                                                                  :customer => {:address => {:city => "Bangalore"}},
-                                                                 :domain => "http://example.com",
+                                                                 :origin => "http://example.com",
                                                                  :name => "alok 1"
                                                                  }
                         }
@@ -89,7 +91,7 @@ describe AppsController do
     before(:each) do
       post 'create', { account_id: @account._id, description: { :email => "john.doe@example.com",
                                                                 :customer => {:address => {:city => "Bangalore"}},
-                                                                :domain => "http://example.com",
+                                                                :origin => "http://example.com",
                                                                 :name => "alok 1"
                                                                 }
                        }
@@ -111,7 +113,7 @@ describe AppsController do
     it "should update app" do
       post 'update', {account_id: @account._id, :id => @app["id"],:description => { email: "bon.doe@example.com",address: {city: "Bangalore"}, 
                                                                                     super_actor_id: 2323232, token: "fsdfsdfsdf", 
-                                                                                    domain: "http://www.actwitty.com" }}
+                                                                                    origin: "http://www.actwitty.com" }}
 
       response.status.should eq(200)
 
@@ -120,11 +122,11 @@ describe AppsController do
 
       hash["description"]["email"].should eq("bon.doe@example.com")
       hash["description"]["customer"]["address"]["city"].should eq("Bangalore")
-      hash["description"]["domain"].should eq("http://www.actwitty.com")
+      hash["description"]["origin"].should eq("http://www.actwitty.com")
       
-      a = AccessInfo.where(app_id: hash["id"]).first
-      puts a.inspect
-      a.origin.should eq("http://www.actwitty.com")
+      a = App.where("access_info.origin_base" => "actwitty.com").first
+      a.should_not be_blank
+      puts a.access_info.inspect
     end
   end
 
@@ -132,7 +134,7 @@ describe AppsController do
     before(:each) do
       post 'create', { account_id: @account._id, description: { :email => "john.doe@example.com",
                                                                 :customer => {:address => {:city => "Bangalore"}},
-                                                                :domain => "http://example.com",
+                                                                :origin => "http://example.com",
                                                                 :name => "alok 1"
                                                                 }
                        }

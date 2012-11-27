@@ -21,16 +21,18 @@ module Authenticate
     Rails.env == "test" ? origin = request.env['HTTP_HOST'] : origin = request.env['HTTP_ORIGIN']
 
     if !origin.blank?
-      temp_origin = origin
-      origin = "https://www.actwitty.com" if origin == "http://www.actwitty.com"
-      access = AccessInfo.where(origin: origin).first
+      origin_base = Url.base(origin)
+      raise et("application.invalid_origin", url: params[:origin]) if origin_base.blank?
 
-      if !access.blank?
+      app = App.where("access_info.origin_base" => origin_base).first
+      
+      # if app id is not matching with requests app id return unauthorised 
+      if !params[:id].blank? and (params[:id] != app._id.to_s)
+        raise et("application.unauthorized")
+      end
+
+      if !app.blank?
         headers['Access-Control-Allow-Origin'] = origin
-
-        if temp_origin == "http://www.actwitty.com"
-          headers['Access-Control-Allow-Origin'] = temp_origin
-        end
 
         headers["Access-Control-Allow-Methods"] = %w{GET POST}.join(",")
         headers["Access-Control-Allow-Headers"] = %w{Origin Accept Content-Type X-Requested-With X-CSRF-Token}.join(",")
@@ -49,11 +51,11 @@ module Authenticate
         head :ok
       else
         # continue with callback chain
-        raise et("application.unauthorized") if build_session(access) == false
+        raise et("application.unauthorized") if build_session(app) == false
       end
     end
   rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
     head :unauthorized
-  end
+  end  
 end
