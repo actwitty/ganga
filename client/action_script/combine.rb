@@ -12,6 +12,7 @@ files = [ "include.js",
           "./templates/topbars/rbTemplTopbarGenericTwittershare.js",
           "./templates/topbars/rbTemplSupportOlarkNormal.js",
           "./templates/topbars/rbTemplFeedbackUservoiceNormal.js",
+          "./templates/topbars/rbTemplModalGenericNormal.js",
 
           "helpers.js",
           "externals.js",
