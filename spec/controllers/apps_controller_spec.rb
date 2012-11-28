@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'json'
 
 describe AppsController do
   #login_account

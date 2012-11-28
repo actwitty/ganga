@@ -11,6 +11,9 @@ class App
 
   has_many    :actors,  :dependent => :destroy
   has_many    :events
+  has_many    :identifiers
+  has_many    :conversions
+  has_many    :errs,    :dependent => :destroy # errs can exist only app scope, independent of actor
 
   embeds_many :rules
   embeds_one  :access_info

@@ -54,6 +54,33 @@ class ActorsController < ApplicationController
     respond_with({ errors: e.message} , status: 422, location: "nil")
   end
   
+  # NOTE
+  ## Delete Actor
+
+  # INPUT
+  ## {  
+  ##    :id => 123                [MANDATORY]
+  ## }
+
+  # OUTPUT => {status; true or false}
+  def delete
+    Rails.logger.info("Enter App Delete")
+    
+    if params[:id].blank?
+      raise et("actor.invalid_argument_in_delete") 
+    end
+
+    # Create Anonymous actor
+    params[:account_id] = current_account._id 
+
+    Actor.where(account_id: params[:account_id] , _id: params[:id]).destroy
+
+    respond_with({status: true}, status: 200, :location => "nil")     
+  rescue => e
+    Rails.logger.error("**** ERROR **** #{er(e)}")
+    respond_with({ errors:  e.message}, status: 422, :location => "nil")
+  end
+
 
   # NOTE
   ## Uniqly identify an actor..
