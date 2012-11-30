@@ -8,19 +8,19 @@ gem 'rb-readline'
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-  gem "bootstrap-sass", "~> 2.0.4.0"
-  gem 'sass-rails',   '~> 3.2.3'
-  gem 'coffee-rails', '~> 3.2.1'
+  gem "bootstrap-sass"
+  gem 'sass-rails'
+  gem 'coffee-rails'
   gem 'less-rails'
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   gem 'therubyracer'
 
-  gem 'uglifier', '>= 1.0.3'
+  gem 'uglifier'
 end
 
 # Add Jquery source gems for asset pipline
-gem 'jquery-rails', "1.0.19"
+gem 'jquery-rails'
 gem 'fancybox-rails'
 gem "select2-rails"
 gem 'jquery-datatables-rails'
