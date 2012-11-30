@@ -39,7 +39,6 @@ puts key.private_decrypt str
 
 puts key.to_pem
 puts key.public_key.to_pem
-=end
 
 require 'rubygems'
 require 'domainatrix'
@@ -71,3 +70,25 @@ def base(url)
 u = "apu.actwitty.com/dcsd?23432&fjwe"
 #parse(u)
 base(u)
+=end
+
+require 'yaml'
+require 'pp'
+
+class Svc
+ def initialize
+   Dir.glob('./config/svcs/*.yml') do |rb_file|
+     thing = YAML.load_file(rb_file)
+     key = thing["svc"].keys[0]
+
+     #self.class.module_eval do 
+		 #	 attr_accessor key
+		 #end
+     self.class.send("@@"+key+"=", thing["svc"][key])
+     #self.send(key+"=", thing["svc"][key])
+   
+   end
+ end
+end
+
+pp Svc.methods
