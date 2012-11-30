@@ -75,20 +75,57 @@ base(u)
 require 'yaml'
 require 'pp'
 
-class Svc
- def initialize
-   Dir.glob('./config/svcs/*.yml') do |rb_file|
-     thing = YAML.load_file(rb_file)
-     key = thing["svc"].keys[0]
+class String
+  def underscore
+    self.gsub(/::/, '/').
+    gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
+    gsub(/([a-z\d])([A-Z])/,'\1_\2').
+    tr("-", "_").
+    downcase
+  end
 
-     #self.class.module_eval do 
-		 #	 attr_accessor key
-		 #end
-     self.class.send("@@"+key+"=", thing["svc"][key])
-     #self.send(key+"=", thing["svc"][key])
-   
-   end
- end
+  def camelize
+    chomp.split( /[^a-zA-Z]+/ ).map {|w| w.capitalize}.join
+  end
 end
 
-pp Svc.methods
+module Svc
+  class FullContact
+  
+  end
+  class Gmail
+  
+  end
+  class MailChimp
+    def self.method_missing(name, *args, &block)
+      if name.to_s == "config"
+        puts self.name.underscore.split('/')[1]
+        thing = YAML.load_file(self.name.underscore)
+      end
+    end
+  end
+  
+  def self.load
+    Dir.glob('./config/svcs/*.yml') do |rb_file|
+      thing = YAML.load_file(rb_file)
+      key = thing["svc"].keys[0]
+
+      str = key.camelize
+      klass = Object.const_get("#{self.name}").const_get(str)
+      klass.instance_eval %Q?
+        def config=(val)
+          @config=val
+        end
+        def config
+          @config
+        end
+      ?
+      klass.send("config=", thing["svc"][key])
+    end
+  end  
+end
+
+Svc.load
+pp Svc::Gmail.config
+pp Svc::FullContact.config
+pp Svc::MailChimp.config
