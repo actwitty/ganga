@@ -89,6 +89,12 @@ class String
   end
 end
 
+class Rails
+  def self.root
+    '.'
+  end
+end
+
 module Svc
   class FullContact
   
@@ -98,9 +104,20 @@ module Svc
   end
   class MailChimp
     def self.method_missing(name, *args, &block)
+
       if name.to_s == "config"
-        puts self.name.underscore.split('/')[1]
-        thing = YAML.load_file(self.name.underscore)
+        key = self.name.underscore.split('/')[1]
+        thing = YAML.load_file("#{Rails.root}/config/svcs/#{key}.yml")
+
+        self.instance_eval %Q?
+          def config=(val)
+            @config=val
+          end
+          def config
+            @config
+          end
+        ?       
+        self.send("config=", thing["svc"][key])
       end
     end
   end
@@ -110,8 +127,8 @@ module Svc
       thing = YAML.load_file(rb_file)
       key = thing["svc"].keys[0]
 
-      str = key.camelize
-      klass = Object.const_get("#{self.name}").const_get(str)
+      klass = Object.const_get("#{self.name}").const_get(key.camelize)
+
       klass.instance_eval %Q?
         def config=(val)
           @config=val
@@ -126,6 +143,7 @@ module Svc
 end
 
 Svc.load
-pp Svc::Gmail.config
-pp Svc::FullContact.config
+# pp Svc::Gmail.config
+# pp Svc::FullContact.config
+pp Svc::MailChimp.config
 pp Svc::MailChimp.config

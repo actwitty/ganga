@@ -1,0 +1,17 @@
+svc:
+  sample:
+    keys: 
+      api: 
+    triggers: 
+      [ 
+        { 
+          name: Sample Trigger 1, 
+          endpoint: "TODO", 
+          params: {}
+        },
+        { 
+          name: Sample Trigger 2, 
+          endpoint: "TODO", 
+          params: {}
+        }
+      ]
