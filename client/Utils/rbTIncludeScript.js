@@ -3,6 +3,7 @@
 var _rbTK = _rbTK || [];
 _rbTK.push(['_setApp', '509cfa7556b26aa55c000003']);
 _rbTK.push(['_setAccount', '509cfa0e56b26aa55c000001']);
+_rbTK.push(['_setVer', '1.0.1']);
 (function(d,id) {
   if (d.getElementById(id)) {return;}
   var rj = d.createElement('script'); rj.type = 'text/javascript'; rj.async = true;

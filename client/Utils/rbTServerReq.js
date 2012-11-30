@@ -151,7 +151,6 @@ trigger_fish.rbTServerChannel = {
             url: getURL.call(this,obj.type,url),
             type: that.type || 'GET',
             async: asyncSt,
-            //dataType: 'json',
             contentType : getContentType(obj.type),
             data: reqServerData,
             crossDomain:true,
@@ -159,7 +158,7 @@ trigger_fish.rbTServerChannel = {
             xhrField : { withCredentials:true},
             beforeSend: function() {
                 if (that.event) {
-                  trigger_fish.rbTCookie.setCookie("lastevent", that.event);
+                  trigger_fish.rbTStore.set("lastevent", that.event);
                   trigger_fish.rbTAPP.setTransVar(that.event,that.params);
                 }
             },
@@ -168,7 +167,7 @@ trigger_fish.rbTServerChannel = {
                 trigger_fish.rbTAPP.log({"message":"server response success " + that.url,"data":respData});
 
                 if (that.event) {
-                  trigger_fish.rbTCookie.deleteCookie("lastevent");
+                  trigger_fish.rbTStore.deleteKey("lastevent");
                   trigger_fish.rbTRules.executeRulesOnEvent(that.event);
                   if (respData && respData.actor) { 
                     callback.success(respData);
@@ -193,16 +192,13 @@ trigger_fish.rbTServerChannel = {
             }
       });
     } catch(e) {
-      trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                          "message"   :"SERVER REQUEST FAILED" , 
+      trigger_fish.rbTAPP.reportError({ "exception" : e.message,
+                          "message"   : "SERVER REQUEST FAILED" , 
                           "obj"       : JSON.stringify(that),
                           "log"       : "error" 
                          }); 
     }
   },
-
-
-
 
   /**
   * Prepare Server request, queue req's if needed be.
@@ -213,7 +209,7 @@ trigger_fish.rbTServerChannel = {
     var that = obj;
     if (!obj)
       return;
-    if (!trigger_fish.rbTAPP.isrbTAlive()) {
+    if (!trigger_fish.rbTAPP.isAlive()) {
       if (obj.url)
         obj.async = obj.async || "async";
       this.queueReq(obj); 
@@ -239,14 +235,15 @@ trigger_fish.rbTServerChannel = {
   *  FIXME : IF THERE IS ANYTHING MISSING
   *  @return void
   */  
-  appDetails : function(params, callback)
+  appDetails : function()
   {
     "use strict";
-    var cb = this.extendCallbacks(callback);
-    this.makeServerRequest({"url": this.url.details,
-                      "params"     : params,
-                      "cb"         : cb
-                     });  
+    this.makeServerRequest({"url": this.url.appDetails,
+                            "app_read" : true,
+                            "cb"       : { success: trigger_fish.rbTServerResponse.setAppDetail,
+                                           error  : trigger_fish.rbTServerResponse.defaultError
+                                         }
+                           });  
   }, 
 
   /**

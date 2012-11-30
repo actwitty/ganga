@@ -28,7 +28,7 @@ trigger_fish.rbTSystemVar = {
     "use strict";
     function isSystemVarDirty()
     {
-      var sysVarInCookie = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.systemProp);
+      var sysVarInCookie = trigger_fish.rbTStore.get(trigger_fish.rbTStore.defaultKeys.systemProp);
       
       if (!sysVarInCookie) {
         return true; 
@@ -103,7 +103,7 @@ trigger_fish.rbTSystemVar = {
 
   setPropertyInCookie : function(property)
   {
-    trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.systemProp, JSON.stringify(property));
+    trigger_fish.rbTStore.set(trigger_fish.rbTStore.defaultKeys.systemProp, JSON.stringify(property));
   },
 
   setEJProp : function(json)

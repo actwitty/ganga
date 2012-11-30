@@ -30,12 +30,12 @@ trigger_fish.rbTActor = function() {
       retFromCookie : function()
       {
       	trigger_fish.rbTDebug.log("retrieveing data for actor from cookie");
-        if (trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorProp)) {
-          this.setProperties(trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorProp)); 
+        if (trigger_fish.rbTStore.get(trigger_fish.rbTStore.defaultKeys.actorProp)) {
+          this.setProperties(trigger_fish.rbTStore.get(trigger_fish.rbTStore.defaultKeys.actorProp)); 
           this.enable();
         }
-        if (trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID)) {
-          this.setID(trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID));
+        if (trigger_fish.rbTStore.get(trigger_fish.rbTStore.defaultKeys.actorID)) {
+          this.setID(trigger_fish.rbTStore.get(trigger_fish.rbTStore.defaultKeys.actorID));
         } else {
           this.createDummyActor();
         }
@@ -77,7 +77,7 @@ trigger_fish.rbTActor = function() {
       */
       setID : function(id)
       {
-        trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.actorID, id);
+        trigger_fish.rbTStore.set(trigger_fish.rbTStore.defaultKeys.actorID, id);
         __id = id;
       },
 
@@ -88,7 +88,7 @@ trigger_fish.rbTActor = function() {
       setProperties : function(prop)
       {
         __prop = prop;
-        trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.actorProp, JSON.stringify(prop));
+        trigger_fish.rbTStore.set(trigger_fish.rbTStore.defaultKeys.actorProp, prop);
         this.enable();
       },
 
@@ -100,8 +100,18 @@ trigger_fish.rbTActor = function() {
       {
         var a = JSON.stringify(__prop).replace(/(^{)|(}$)/g, "");
         var b = JSON.stringify(prop).replace(/(^{)|(}$)/g, "");
+        function sameObjs(o1, o2)
+        {
+          var k1 = Object.keys(o1).sort();
+          var k2 = Object.keys(o2).sort();
+          if (k1.length != k2.length) return false;
+            return k1.zip(k2, function(keyPair) {
+              return o1[keyPair[0]] == o2[keyPair[1]];
+            }).all();
+        }
         trigger_fish.rbTDebug.log({"stored" : a , "passed" : b, "message":"actor prop existence"});
-        return (a.indexOf(b) >= 0) ? true : false;
+        //return (a.indexOf(b) >= 0) ? true : false;
+        return (sameObjs(prop, __prop)) ? true : false;
       },
 
       /**
@@ -116,8 +126,8 @@ trigger_fish.rbTActor = function() {
                      "cb"       : { success: trigger_fish.rbTServerResponse.setActorID,
                                     error  : trigger_fish.rbTServerResponse.defaultError
                                   }
-                  };
-          trigger_fish.rbTServerChannel.makeServerRequest(obj);
+                    };
+          trigger_fish.rbTServerChannel.makeRequest(obj);
         }
       },
 
@@ -127,10 +137,10 @@ trigger_fish.rbTActor = function() {
       */
       requestActorDetails : function(data)
       {
-        var oldActorId = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID);
-        var actorProp = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorProp);
+        var oldActorId = trigger_fish.rbTStore.get(trigger_fish.rbTStore.defaultKeys.actorID);
+        var actorProp = trigger_fish.rbTStore.get(trigger_fish.rbTStore.defaultKeys.actorProp);
         if (!oldActorId || (oldActorId !== data.id) || !actorProp) {
-          trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.actorID, JSON.stringify(data.id));
+          trigger_fish.rbTStore.set(trigger_fish.rbTStore.defaultKeys.actorID, JSON.stringify(data.id));
           this.setID(data.id);
           trigger_fish.rbTServerChannel.actorDetails();
         }
