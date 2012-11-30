@@ -92,3 +92,50 @@ Handlebars.registerHelper "paramBind", (key, options) ->
                     bindVal: 'view.params.' + key_in                               
                   )
   ret
+
+
+
+# ---------------------------------------------------------------
+Handlebars.registerHelper "eachSortedParam", (type, api, obj, options) ->
+  ret = ""
+  context = (options.contexts and options.contexts[0]) or this
+  hash = Ember.Handlebars.getPath(context, obj, options)  
+  type_in = Ember.Handlebars.getPath(context, type, options)
+  api_in = Ember.Handlebars.getPath(context, api, options)  
+  template_id = type_in + '.' + api_in
+  targ = trigger_fish.rbT.templateArgs  
+
+  if targ.hasOwnProperty template_id    
+
+    arr = []
+
+    
+    compare= (in1,in2)->
+      a = in1.name.toLowerCase()
+      b = in2.name.toLowerCase()            
+      ((a < b) ? -1 : ((a > b) ? 1 : 0))  
+      
+      
+    
+
+    for prop of hash    
+      if hash.hasOwnProperty(prop)
+        key = targ[template_id][prop]['key']
+        namescopeArr = key.split('.')        
+        temp = 
+              id: prop
+              name: namescopeArr[App.templatesConstants.label].replace(/_/g, '')
+        arr.push(temp)
+
+    console.log arr
+    arr = arr.sort()
+    console.log arr
+  
+  
+    for temp in arr
+      ret = ret + options.fn(                              
+                                iter_key: temp.id
+                                iter_val: hash[temp.id]
+                              )
+    
+    ret  

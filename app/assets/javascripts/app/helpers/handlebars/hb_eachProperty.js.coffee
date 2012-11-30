@@ -1,3 +1,4 @@
+# ---------------------------------------------------------------
 Handlebars.registerHelper "eachProperty", (obj, options) ->
   ret = ""
   context = (options.contexts and options.contexts[0]) or this
@@ -10,5 +11,7 @@ Handlebars.registerHelper "eachProperty", (obj, options) ->
                             )
     
   ret
+
+
 
 

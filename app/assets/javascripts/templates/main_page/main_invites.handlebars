@@ -7,10 +7,11 @@
   {{#if view.stateIsSuccess}}
     <p class="success"> Thanks for signing up, we will keep you posted. </p>     
   {{else}}
-    <div class="input-prepend">   
-      <input id="account_email" name="account_email" placeholder="Your email address..." size="30" type="text" value="">
-    </div>
-    <input class='btn btn-primary' id="invitation_button" {{action "addInviteAccount" target="App.mainInviteView"}} value="Request for invite.">    
+    <div style="display:block;width:400px;margin-top:20px">
+      <input id="account_email" name="account_email" placeholder="Your email address..." size="50" type="text" value="" style='width:200px;font-size:16px;height:32px;float:left;'>
+    
+      <input class='btn btn-large btn-inverse' id="invitation_button" {{action "addInviteAccount" target="App.mainInviteView"}} value="Request invite" style='width:110px;float:left;margin-left:2px'>
+    </div>    
     
   {{/if}}
   

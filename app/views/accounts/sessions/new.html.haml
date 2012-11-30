@@ -1,28 +1,30 @@
-.main_nav
-  %ul
-    %li
-      %a.scroll{:href => "/"} Home
-    %li
-      %a.scroll{:href => "/accounts/sign_up"} Sign Up
-    %li
-      %a.scroll{:href => "/accounts/password/new"} Forgot Password
-    %li
-      %a.scroll{:href => "/accounts/confirmation/new"} Resend Confirmation
-    %li
-      %a.scroll{:href => "/accounts/unlock/new"} Unlock Account
-.main_padding      
-.row.equal-heights{:style => "text-align: center;"}
+.navbar.navbar-fixed-top
+  .navbar-inner
+    .container
+      %a.btn.btn-navbar{"data-target" => ".nav-collapse", "data-toggle" => "collapse"}
+        %span.icon-bar
+        %span.icon-bar
+        %span.icon-bar
+      
+      %a.brand{:href => "./"}
+        Rulebot
+      %div{:style => "float:right;margin-top:-8px;"}
+        %a.btn.btn-warning{:href => "/accounts/sign_up", :nav => "register", :style => "cursor:pointer;"} Not registered already
+
+= render 'layouts/messages'
+.row.equal-heights{:style => "text-align: center;margin-top:30px;height:400px;"}
   
-  = form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f|
-    = devise_error_messages!
+  = form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f|    
     %fieldset
       %legend Sign In using email
       %br/
-      .control-group
+      .control-group        
         .controls
+          .h5{:style => "display:inline-block; margin-right:10px;width:60px;text-align:left;"}Email:
           = f.email_field :email, placeholder: :email
-      .control-group
+      .control-group        
         .controls
+          .h5{:style => "display:inline-block; margin-right:10px;width:60px;text-align:left;"}Password:
           = f.password_field :password, placeholder: :password
       .control-group
         .controls
@@ -33,6 +35,13 @@
                 
       .control-group
         .controls
-          = f.submit "Sign in", :class => "btn btn-primary trigger_js_event", :btn_type => "session"
+          = f.submit "Sign in", :class => "btn btn-large btn-success trigger_js_event", :btn_type => "session"
+  %div{:style=>"display:block;"}
+    %a{:href => "/accounts/password/new"} Forgot your password ?
+  %div{:style=>"display:block;"}
+    %a{:href => "/accounts/confirmation/new"} Didn't receive confirmation email ?
+  %div{:style=>"display:block;"}
+    %a{:href => "/accounts/unlock/new"} Got your account locked ? 
 
-  
+%div{:id=>"extra"}
+  %div{:class=>"inner", :style=>"min-height:400px;"}

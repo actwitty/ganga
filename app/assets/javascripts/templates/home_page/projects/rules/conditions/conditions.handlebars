@@ -7,13 +7,13 @@
 <div class="rule_edit">
 
   <div class="name_box">
-    <h3> Rule Name </h3>
+    <h5> Rule Name </h5>
     {{view App.RequiredNameField  valueBinding="view.rules.selected.name" placeholder="Rule name" name="Rule Name"}}
   </div>
 
 
   <div class="event_box">
-    <h3> Trigger Event </h3>
+    <h5> Trigger Event </h5>
     <select class="select2Props evt_sel" {{action "changeRuleEvent" }}>
   
       {{#each event in view.rules.events}}    

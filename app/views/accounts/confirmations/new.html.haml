@@ -1,0 +1,34 @@
+.navbar.navbar-fixed-top
+  .navbar-inner
+    .container
+      %a.btn.btn-navbar{"data-target" => ".nav-collapse", "data-toggle" => "collapse"}
+        %span.icon-bar
+        %span.icon-bar
+        %span.icon-bar
+      
+      %a.brand{:href => "./"}
+        Rulebot
+
+    
+.row.equal-heights{:style => "text-align: center;margin-top:30px;height:400px;"}
+  
+  = form_for(resource, :as => resource_name, :url => confirmation_path(resource_name), :method => :post) do |f|    
+    %fieldset
+      %legend Resend confirmation instruction
+      %br/      
+      .control-group        
+        .controls
+          .h5{:style => "display:inline-block; margin-right:10px;width:60px;text-align:left;"}Email:
+          = f.email_field :email, placeholder: :email                    
+      %br/
+      %br/            
+      .control-group
+        .controls
+          = f.submit "Resend confirmation instruction", :class => "btn btn-large btn-success trigger_js_event", :btn_type => "session"
+  %div{:style=>"display:block;"}
+    %a{:href => "/accounts/sign_in"} Go to Sign in
+  %div{:style=>"display:block;"}
+    %a{:href => "/accounts/sign_up"} Go to Sign up  
+
+%div{:id=>"extra"}
+  %div{:class=>"inner", :style=>"min-height:400px;"}

@@ -3,14 +3,19 @@
   %head
     %title Rule Bot
     
-    = stylesheet_link_tag    "application", :media => "all"
-    = javascript_include_tag "application"
-    = csrf_meta_tags
-
-    %meta{'http-equiv' => 'X-UA-Compatible', :content => 'IE=edge,chrome=1'}
-    %meta{"http-equiv"=>"Content-Type", :content=>"text/html; charset=utf-8"}/    
     
 
+    %link{:href => "http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600", :rel => "stylesheet"}/
+    %meta{'http-equiv' => 'X-UA-Compatible', :content => 'IE=edge,chrome=1'}
+    %meta{"http-equiv"=>"Content-Type", :content=>"text/html; charset=utf-8"}/            
+    %meta{:content => "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no", :name => "viewport"}
+    %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}/
+    = csrf_meta_tags
+
+    
+    = stylesheet_link_tag    "application", :media => "all"
+    = javascript_include_tag "application"
+    
 
   /* Only in the production mode */
   -if  Rails.env.production?
@@ -20,7 +25,6 @@
 
 
   %body  
-    = render 'layouts/messages'
     #rulebotEmberBase
     -if !current_account.nil?
       :javascript

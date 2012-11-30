@@ -34,6 +34,7 @@ gem 'ember-rest-rails'
 gem 'twitter-bootstrap-rails'
 gem 'less-rails-bootstrap'
 gem 'highlight_js-rails'
+gem 'font-awesome-rails'
 
 #algorithms
 gem 'algorithms'

@@ -1,5 +1,5 @@
 {{view App.InlineAlertView }}
-{{#eachProperty view.params}}
+{{#eachSortedParam view.action.desc.type view.action.desc.api view.params}}
   
   {{#shouldShow view.action.desc.type view.action.desc.api iter_key}}    
     <!--TODO: This is inefficient to not have if else but its ok, will fix later -->
@@ -117,4 +117,4 @@
       </div>        
     {{/isWeight}}
   {{/shouldShow}}
-{{/eachProperty}}
+{{/eachSortedParam}}
