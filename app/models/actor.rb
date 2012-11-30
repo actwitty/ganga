@@ -8,8 +8,10 @@ class Actor
   belongs_to   :app, index: true
   belongs_to   :account, index: true
 
-  has_many     :events,   :dependent => :destroy
+  has_many     :events,       :dependent => :destroy
   has_many     :identifiers,  :dependent => :destroy
+  has_many     :conversions,  :dependent => :destroy
+  has_many     :errs,         :dependent => :destroy
 
   field :meta, type: Boolean,     default: false
 

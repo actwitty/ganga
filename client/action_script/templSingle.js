@@ -28,10 +28,6 @@ trigger_fish.rbT.templateLib = {
 				'generic.twittershare':'rbTemplTopbarGenericTwittershareHTML'
  
  	 	 	 },
-		'uservoice':{ 
-				'generic.normal':'rbTemplUservoiceGenericNormalHTML'
- 
- 	 	 	 },
 		'support':{ 
 				'olark.normal':'rbTemplSupportOlarkNormalHTML'
  
@@ -55,7 +51,6 @@ trigger_fish.rbT.templateLib = {
 	 			'topbar.generic.twitterfollow':'Top bar to Gather followers from twitter',
 	 			'bottombar.generic.twitterfollow':'Bottom bar to Gather followers from twitter',
 	 			'topbar.generic.fblike':'A top bar to influence visitors from Facebook',
-	 			'uservoice.generic.normal':'User Voice Feedback',
 	 			'bottombar.generic.twittershare':'Influence a Twitter user to share about your business',
 	 			'support.olark.normal':'Chat Window',
 	 			'modal.generic.normal':'A modal annonucement',
@@ -318,9 +313,6 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 				value :'Woo Facebook users coming to your page by writing something to make them like you.'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
-	 	  'uservoice.generic.normal':{
-
-	 	 	 	 	 },
 	 	  'bottombar.generic.twittershare':{
 
  	 	 	 	 	 	 '1' : {
@@ -390,7 +382,7 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 				value :'white'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.sg.e.cover_image',
+	 	 	 	 	 				key :'rb.t.imgl.e.cover_image',
 	 	 	 	 	 				value :'https://s3.amazonaws.com/actwitty_ganga/image/modal_demo.jpg'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
@@ -654,6 +646,13 @@ trigger_fish.rbT.rbTemplFeedbackUservoiceNormalHTML='<div id="rbUservoiceGeneric
 
 
 
+/****************************[[./templates/topbars/rbTemplModalGenericNormal.js]]*************************************/ 
+
+
+trigger_fish.rbT.rbTemplModalGenericNormalHTML='<!-- --><style>#rbModalGenericNormalTranblockContainer {      visibility: visible;     position: fixed;      left: 0px;      top: 0px;       width:100%;       height:100%;        z-index:{{1}};  opacity:0.6;  filter:alpha(opacity=60);  background-color:black; }#rbModalGenericNormalBaseContainer{      visibility: visible;     position: fixed;      left: 0px;      top: 0px;       width:100%;       height:100%;  z-index:{{2}}; }#rbModalGenericNormalSubsubContainer{      width:500px;   height: 400px;  background-color:{{3}};    border:8px solid rgba(0, 0, 0, .7);;  position: absolute;     top: 50% ;  left: 50% ;  margin-top: -220px ;   margin-left: -250px;  padding : 15px;  -webkit-border-radius: 5px;  -moz-border-radius: 5px;  border-radius: 5px;  }.rbModalContainer{      width: 500px;   height: 400px;    border:1px solid #a3a3a3;     position: fixed;  -webkit-border-radius: 5px;  -moz-border-radius: 5px;  border-radius: 5px;    }.rbModalCover{  position: absolute;  top: 0px;  left: 0px;  width: 500px;   height: 400px;    padding: 0px;  display: block;  background: #ffffff url(\'{{4}}\') no-repeat right top;             filter:alpha(opacity=60);  background-size:500px 400px;  background-repeat:no-repeat;  opacity:0.6;  -webkit-border-top-left-radius: 5px;  -webkit-border-top-right-radius: 5px;  -moz-border-radius-topleft: 5px;  -moz-border-radius-topright: 5px;  border-top-left-radius: 5px;  border-top-right-radius: 5px;  z-index: -1;  }.rbModalHead{  background-color:{{5}};      width: 100%;  height: 50px;      position: relative;  display: block;  -webkit-border-top-left-radius: 5px;  -webkit-border-top-right-radius: 5px;  -moz-border-radius-topleft: 5px;  -moz-border-radius-topright: 5px;  border-top-left-radius: 5px;  border-top-right-radius: 5px;  z-index: 1;   }  .rbModalHead .rbModalClose{    position: absolute;    top: 4px;    right: 4px;    display: inline-block;    font-size: 14px;    font-weight: normal;    color: white;    cursor: pointer;    z-index: 1;  }  .rbModalClose:hover{    color: #aaa;  }.rbModalHeader{  top:0;  left:0;  position: absolute;    white-space: nowrap;    overflow: hidden;   text-overflow: ellipsis;  color:{{6}};  width:80%;   height:30px;  font-size:{{7}}px;  font-family:{{8}};   overflow:hidden;  border-top-left-radius:5px;  border-top-right-radius:5px;  padding:5px;  padding-top: 10px;  text-shadow:1px 1px {{9}};}.rbOffer{  margin-top: 10px;  width: 100%;  height: 200px;  display: block;    z-index: 1;}.rbModalOffer{  overflow: hidden;   text-overflow: ellipsis;  font-size: {{10}}px;    line-height: {{11}}px;    color:{{12}};   background: rgba(255,255,255,0.1) }.rbModalButton{  bottom: 2%;  right: 2%;  position:absolute;  width: 160px;  height: 30px;  text-align: center;    border:4px solid {{13}};  background-color: {{14}};    color:{{15}};  font-size: {{16}}px;  border-radius:5px;  padding: 5px;    font-weight: normal;  display: block;  float: right;  margin-right: 10px;  cursor:pointer;}</style><div id="rbModalGenericNormalTranblockContainer"></div> <div id="rbModalGenericNormalBaseContainer">   <div id="rbModalGenericNormalSubContainer">      <div id="rbModalGenericNormalSubsubContainer">                  <div class="rbModalContainer" >          <div class="rbModalCover"></div>            <div class="rbModalHead">              <div class="rbModalHeader">                 {{17}}              </div>              <div id="rbModalGenericNormalCloseClick" class="rbModalClose  rbClickable" >                X              </div>                        </div>            <div class="rbOffer">              <p class="rbModalOffer">                 {{18}}              </p>            </div>                     <div  class="rbModalButton">               <div  id="rbModalGenericNormalRoiClickbutton" class="rbClickable" link= "{{19}}" class="rbClickable" >                {{20}}                             </div>             </div>                 </div></div>  </div></div>'
+
+
+
 /****************************[[helpers.js]]*************************************/ 
 
 
@@ -661,7 +660,7 @@ trigger_fish.rbT.rbTemplFeedbackUservoiceNormalHTML='<div id="rbUservoiceGeneric
 
 // Templ Sys , Actor and Event Varibales
 
-trigger_fish.rbT.currentSystemVar = {} //{'browser':{'name':'Chrome','version':'1.2','name2':{'myname':'Amartya'}}};
+trigger_fish.rbT.currentSystemVar ={};// {'browser':{'name':'Chrome','version':'1.2','name2':{'myname':'Amartya'}}};
 trigger_fish.rbT.currentActorVar = {};
 trigger_fish.rbT.currentEventVar = {};
 
@@ -673,6 +672,18 @@ trigger_fish.rbT.templTimers= {
  'templ.templduration':'100'
 
 };
+
+//Array of Global HTML
+trigger_fish.rbT.globalHTMLQ = new Array(10);
+
+//HTML for Appending to the page
+trigger_fish.rbT.htmlGlobalStruct ={
+
+ 'trigger_fish.rbT.html' : 'undefined' ,
+ 'trigger_fish.rbT.type' : 'undefined' ,
+ 'trigger_fish.rbT.roiServerMsg' : 'undefined',   
+};
+
 
 
 //templ delay Q
@@ -692,8 +703,7 @@ trigger_fish.rbT.templatesDisplayLockFlags = {
     'trigger_fish.rbT.modal.displayLock' :'false',
     'trigger_fish.rbT.chat.displayLock' :'false',
     'trigger_fish.rbT.uservoice.displayLock' :'false',
-
-
+    'trigger_fish.rbT.custom.displayLock' :'false',
 };
 
 //function to handle on timout for templ delay display
@@ -716,6 +726,22 @@ trigger_fish.rbT.handleTimeoutforTemplDelayedDisplay = function(timerIndexforDis
       trigger_fish.rbT.globalDelayQTimeVal[timerIndexforDisplayDelay] = undefined; 
     }    
 };
+
+// find the Blank Index in Global HTML Q
+trigger_fish.rbT.findEmptyIndexInGlobalHTMLQ = function()
+{
+   var i = 0;
+   for(i=0;i<trigger_fish.rbT.globalHTMLQ.length;i++)
+   {
+      if(trigger_fish.rbT.globalHTMLQ[i] == undefined)
+       {
+          break;
+       } 
+   }
+
+   return i;
+};
+
 
 
 //function for handling delay for templ display
@@ -809,6 +835,11 @@ trigger_fish.rbT.setTemplatesDisplayLockFlags=function(pos,value)
      trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.feedback.displayLock'] = value; 
    }
 
+   else if(pos == 'custom')
+   {
+      trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.custom.displayLock'] = value; 
+   } 
+
 }
 
 
@@ -868,9 +899,9 @@ trigger_fish.rbT.fillTheRuntimeValueForTemplArgs = function(tempMatch,actionparm
 
 // INTEGRATION_ENABLE                            
 
-                         //  trigger_fish.rbT.currentSystemVar = trigger_fish.rbTSystemVar.getProperty();
-                         //  trigger_fish.rbT.currentActorVar = trigger_fish.rbTActor.getProperties();
-                         //  trigger_fish.rbT.currentEventVar = trigger_fish.rbTAPP.getTransVar();
+                           trigger_fish.rbT.currentSystemVar = trigger_fish.rbTSystemVar.getProperty();
+                           trigger_fish.rbT.currentActorVar = trigger_fish.rbTActor.getProperties();
+                           trigger_fish.rbT.currentEventVar = trigger_fish.rbTAPP.getTransVar();
 
                              
                            for(var i=0 ; i<tempMatch.length ; i++)
@@ -960,40 +991,47 @@ trigger_fish.rbT.fillTheRuntimeValueForTemplArgs = function(tempMatch,actionparm
 //check for the if templ position is occupied
 trigger_fish.rbT.isTemplPosOccupied = function(pos){
    
-   var ret = false;
- 
+       var ret = false;
+     
 
-   if(pos === 'topbar' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.topbar.displayLock'] 
-    == true ) 
-   {
-     ret= true;
-      
-   }
-   else if(pos === 'bottombar' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.bottombar.displayLock'] 
-    == true ) 
-   {
-     ret= true;
-    }
-  else if(pos === 'modal' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.modal.displayLock'] 
-    == true )
-  {
-     //TODO
-  }
+      if(pos === 'topbar' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.topbar.displayLock'] 
+        == true ) 
+       {
+         ret= true;
+          
+       }
+      else if(pos === 'bottombar' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.bottombar.displayLock'] 
+        == true ) 
+       {
+         ret= true;
+        }
+      else if(pos === 'modal' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.modal.displayLock'] 
+        == true )
+      {
+         //TODO
+      }
 
- else if(pos === 'chat' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.chat.displayLock'] 
-    == true )
-  {
-     ret= true;
-  }
+     else if(pos === 'chat' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.chat.displayLock'] 
+        == true )
+      {
+         ret= true;
+      }
+
+      else if(pos === 'custom' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.custom.displayLock'] 
+        == true )
+      {
+         ret= true;
+      }
 
 
-  else if(pos === 'feedback')
-  {
-     //TODO
-  }
+      else if(pos === 'feedback')
+      {
+         ret= true;
+
+      }
 
 
- return ret;
+     return ret;
 };
 
 
@@ -1025,11 +1063,11 @@ trigger_fish.rbT.sendErrorToRBServer = function(string){
 
 // INTEGRATION_ENABLE  
    
-// trigger_fish.rbTAPP.log({"message": string,"log":true});
+trigger_fish.rbTAPP.log({"message": string,"log":true});
 
-// trigger_fish.rbTAPP.reportError({"message":string,"server":true});
+ trigger_fish.rbTAPP.reportError({"message":string,"server":true});
 
-console.log(string);
+//console.log(string);
 
 };
 
@@ -1297,10 +1335,6 @@ trigger_fish.rbT.init = function(){
 };
 
 
-
-
-
-
 //******************************************************************************************
 
 trigger_fish.rbT.getTemplateHTMLByNameInternal = function(type,api){
@@ -1367,17 +1401,24 @@ trigger_fish.rbT.isTemplateGoodToApplyInternal = function(html){
 
 //**************************************************************************************
 
-trigger_fish.rbT.applyHtmltoPageInternal = function(html){
+trigger_fish.rbT.applyHtmltoPageInternal = function(html,type){
 
-	if(html.length){
+  var isPosOccupied = trigger_fish.rbT.isTemplPosOccupied(type);
+   if(isPosOccupied)
+   {
+      trigger_fish.rbT.sendErrorToRBServer("Postion Occupied by Another Template");
+   }else{
+	
+      if(html.length){
 
-	 jQuery('body').append(html);
-	// document.body.innerHTML = document.body.innerHTML+html;
-	}else{
+    	 jQuery('body').append(html);
+    	// document.body.innerHTML = document.body.innerHTML+html;
+    	}else{
 
-         trigger_fish.rbT.sendErrorToRBServer("Bad variable array error for template");
-	 			 return "";
-	 }
+             trigger_fish.rbT.sendErrorToRBServer("Bad variable array error for template");
+    	 			 return "";
+    	 }
+  }
 };
 
 //***********************************************************************************
@@ -1391,6 +1432,24 @@ trigger_fish.rbT.enableTimeOutHadnlingInternal= function(templateName,timerValue
     trigger_fish.rbT.eventHandler.timeOutHandler(templateName,timerValue);
 };
 
+//***************************************************************************************
+trigger_fish.rbT.applyHtmlToPage= function(){
+   
+    var html = trigger_fish.rbT.htmlGlobalStruct['trigger_fish.rbT.html'];
+    var type = trigger_fish.rbT.htmlGlobalStruct['trigger_fish.rbT.type']; 
+    var servermsg = trigger_fish.rbT.htmlGlobalStruct['trigger_fish.rbT.roiServerMsg']; 
+
+    if (trigger_fish.rbT.isTemplateGoodToApply(html)){
+        trigger_fish.rbT.applyHtmltoPage(html);
+        trigger_fish.rbT.enableClickHandling();
+        // trigger_fish.rbT.enableTimeOutHadnling(templateName,trigger_fish.rbT.templTimers['templ.templduration']*1000);
+
+        params.display = servermsg + " " +"Display " + "Success";
+
+        //trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
+    }
+};
+
 //*************************************************************************************
 
 trigger_fish.rbT.invokeActionScriptInternal=function(action){
@@ -1401,104 +1460,109 @@ trigger_fish.rbT.invokeActionScriptInternal=function(action){
 
 */
 
+    if(1) // Check for Service Type Enhancement
+     {   
+     
+          params= {};  
+          
+          trigger_fish.rbT.init();
 
 
-
-if(1) // Check for Service Type Enhancement
- {   
- 
-      params= {};  
-      
-      trigger_fish.rbT.init();
+          //var delayVal = action.timers.delay;
 
 
-      //var delayVal = action.timers.delay;
-
-
-      if(1)//delayVal==0)  //check for delay value to display templates
-        {
-            var actionParams = action.params;
-             
-            var type=action.desc.type; 
-            var api = action.desc.api;
-            var servermsg = type + "."+api;
-            
-            var isPosOccupied = trigger_fish.rbT.isTemplPosOccupied(type);
-
-            if(isPosOccupied)
+          if(1)//delayVal==0)  //check for delay value to display templates
             {
+                var actionParams = action.params;
+                 
+                var type=action.desc.type; 
+                var api = action.desc.api;
+                var servermsg = type + "."+api;
+                var custom = undefined;
 
-                trigger_fish.rbT.sendErrorToRBServer("Postion Occupied by Another Template");
-            }
-            else
-            {
-                var html = trigger_fish.rbT.getTemplateHTMLByName(type,api);
+                var isPosOccupied = trigger_fish.rbT.isTemplPosOccupied(type);
 
-                
-                    for (var key in actionParams)
-                       {
-                        if(actionParams.hasOwnProperty(key))
+                if(isPosOccupied)
+                {
+
+                    trigger_fish.rbT.sendErrorToRBServer("Postion Occupied by Another Template");
+                }
+                else
+                {
+                        if(type != 'custom' && api != 'html')
+                    
                         {
-                           var keyVal = key;
-                             var value = actionParams[key];
-                             var tempMatch = ""
-                             var tempMatch = value.match(/\{\{[\w.\=\%\:\/\s\#\@\-\']*\}\}/g);
-                            
-                             if(tempMatch)
-                             {
-                             	  var tempActionKeyRetVal =""
-                             	  tempActionKeyRetVal=trigger_fish.rbT.fillTheRuntimeValueForTemplArgs(tempMatch,actionParams[key]);
-                                
+                          var html = trigger_fish.rbT.getTemplateHTMLByName(type,api);
+                     
+                        }
+                        else{
 
-                                if(tempActionKeyRetVal != undefined)
-                                {	
-                                   actionParams[key] = tempActionKeyRetVal;
-                                }   
+                          var html = undefined;    
+                        }
+                        for (var key in actionParams)
+                        {
+                            if(actionParams.hasOwnProperty(key))
+                            {
+                               var keyVal = key;
+                                 var value = actionParams[key];
+                                 var tempMatch = ""
+                                 var tempMatch = value.match(/\{\{[\w.\=\%\:\/\s\#\@\-\']*\}\}/g);
+                                 if(tempMatch)
+                                 {
+                                    var tempActionKeyRetVal =""
+                                    tempActionKeyRetVal=trigger_fish.rbT.fillTheRuntimeValueForTemplArgs(tempMatch,actionParams[key]);
+                                    
+
+                                    if(tempActionKeyRetVal != undefined)
+                                    { 
+                                       actionParams[key] = tempActionKeyRetVal;
+                                    }   
+                                 }
                              }
-                         }
 
-                       }      
+                        }      
 
-              //   for (var key in actionParams) {             
-              //     if(actionParams.hasOwnProperty(key)){	
-      			     //     if( 'Zindex' == actionParams[key] ) {               
-      				    //      actionParams[key] =  trigger_fish.rbT.findZIndex()+5;
-      			     //     }
-      			     //  }              
-      		      // } 
+                  //   for (var key in actionParams) {             
+                  //     if(actionParams.hasOwnProperty(key)){  
+                     //     if( 'Zindex' == actionParams[key] ) {               
+                      //      actionParams[key] =  trigger_fish.rbT.findZIndex()+5;
+                     //     }
+                     //  }              
+                    // } 
 
-      		
+                    if(type != 'custom' && api != 'html'){
+                       html = trigger_fish.rbT.getTemplateApplyVars(html, actionParams);
+                   
 
+                    }else
+                    {
+                       html = actionParams.html;
+                    }
+                    
+                    if (trigger_fish.rbT.isTemplateGoodToApply(html)){
+                      trigger_fish.rbT.applyHtmltoPage(html,type);
+                      trigger_fish.rbT.enableClickHandling();
+                     // trigger_fish.rbT.enableTimeOutHadnling(templateName,trigger_fish.rbT.templTimers['templ.templduration']*1000);
+                       
+                       trigger_fish.rbT.setTemplatesDisplayLockFlags(type,true);
 
+                       params.display = servermsg + " " +"Display " + "Success";
 
-                html = trigger_fish.rbT.getTemplateApplyVars(html, actionParams);
-                
+                       //trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
+                    }
+                }
+          }else{
 
-               if (trigger_fish.rbT.isTemplateGoodToApply(html)){
-                  trigger_fish.rbT.applyHtmltoPage(html);
-                  trigger_fish.rbT.enableClickHandling();
-                 // trigger_fish.rbT.enableTimeOutHadnling(templateName,trigger_fish.rbT.templTimers['templ.templduration']*1000);
-      		         trigger_fish.rbT.setTemplatesDisplayLockFlags(type,true);
+                    trigger_fish.rbT.handlingOfDelayForTemplDisplay(action);
 
-                   params.display = servermsg + " " +"Display " + "Success";
-
-                   //trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
-
-
-               }
-            }
+          }   
       }else{
 
-                trigger_fish.rbT.handlingOfDelayForTemplDisplay(action);
+         // Report to Server for If Service Type Wrong
 
-      } 	
-  }else{
+      }    
 
-  	 // Report to Server for If Service Type Wrong
-
-  }    
-
-};	 
+    };   
 
 
 /****************************[[interfaces.js]]*************************************/ 
@@ -1547,7 +1611,7 @@ trigger_fish.rbT.isTemplateGoodToApply = function(html){
 };
 
 //------------------------------------------
-trigger_fish.rbT.applyHtmltoPage = function(html){
+trigger_fish.rbT.applyHtmltoPage = function(html,type){
 	if (!trigger_fish.rbT.isInitialized()){
 		return "";
 	}
@@ -1555,7 +1619,7 @@ trigger_fish.rbT.applyHtmltoPage = function(html){
 		trigger_fish.rbT.sendErrorToRBServer("improper access of interface applyHtmltoPage");
 		return "";
 	}
-	return trigger_fish.rbT.applyHtmltoPageInternal(html);
+	return trigger_fish.rbT.applyHtmltoPageInternal(html,type);
 };
 
 

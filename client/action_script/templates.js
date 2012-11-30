@@ -13,10 +13,6 @@ trigger_fish.rbT.templateLib = {
 				'generic.twittershare':'rbTemplTopbarGenericTwittershareHTML'
  
  	 	 	 },
-		'uservoice':{ 
-				'generic.normal':'rbTemplUservoiceGenericNormalHTML'
- 
- 	 	 	 },
 		'support':{ 
 				'olark.normal':'rbTemplSupportOlarkNormalHTML'
  
@@ -40,7 +36,6 @@ trigger_fish.rbT.templateLib = {
 	 			'topbar.generic.twitterfollow':'Top bar to Gather followers from twitter',
 	 			'bottombar.generic.twitterfollow':'Bottom bar to Gather followers from twitter',
 	 			'topbar.generic.fblike':'A top bar to influence visitors from Facebook',
-	 			'uservoice.generic.normal':'User Voice Feedback',
 	 			'bottombar.generic.twittershare':'Influence a Twitter user to share about your business',
 	 			'support.olark.normal':'Chat Window',
 	 			'modal.generic.normal':'A modal annonucement',
@@ -303,9 +298,6 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 				value :'Woo Facebook users coming to your page by writing something to make them like you.'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
-	 	  'uservoice.generic.normal':{
-
-	 	 	 	 	 },
 	 	  'bottombar.generic.twittershare':{
 
  	 	 	 	 	 	 '1' : {
@@ -375,7 +367,7 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 				value :'white'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.sg.e.cover_image',
+	 	 	 	 	 				key :'rb.t.imgl.e.cover_image',
 	 	 	 	 	 				value :'https://s3.amazonaws.com/actwitty_ganga/image/modal_demo.jpg'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {

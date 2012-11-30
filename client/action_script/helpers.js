@@ -2,7 +2,7 @@
 
 // Templ Sys , Actor and Event Varibales
 
-trigger_fish.rbT.currentSystemVar = {} //{'browser':{'name':'Chrome','version':'1.2','name2':{'myname':'Amartya'}}};
+trigger_fish.rbT.currentSystemVar ={};// {'browser':{'name':'Chrome','version':'1.2','name2':{'myname':'Amartya'}}};
 trigger_fish.rbT.currentActorVar = {};
 trigger_fish.rbT.currentEventVar = {};
 
@@ -14,6 +14,18 @@ trigger_fish.rbT.templTimers= {
  'templ.templduration':'100'
 
 };
+
+//Array of Global HTML
+trigger_fish.rbT.globalHTMLQ = new Array(10);
+
+//HTML for Appending to the page
+trigger_fish.rbT.htmlGlobalStruct ={
+
+ 'trigger_fish.rbT.html' : 'undefined' ,
+ 'trigger_fish.rbT.type' : 'undefined' ,
+ 'trigger_fish.rbT.roiServerMsg' : 'undefined',   
+};
+
 
 
 //templ delay Q
@@ -33,8 +45,7 @@ trigger_fish.rbT.templatesDisplayLockFlags = {
     'trigger_fish.rbT.modal.displayLock' :'false',
     'trigger_fish.rbT.chat.displayLock' :'false',
     'trigger_fish.rbT.uservoice.displayLock' :'false',
-
-
+    'trigger_fish.rbT.custom.displayLock' :'false',
 };
 
 //function to handle on timout for templ delay display
@@ -57,6 +68,22 @@ trigger_fish.rbT.handleTimeoutforTemplDelayedDisplay = function(timerIndexforDis
       trigger_fish.rbT.globalDelayQTimeVal[timerIndexforDisplayDelay] = undefined; 
     }    
 };
+
+// find the Blank Index in Global HTML Q
+trigger_fish.rbT.findEmptyIndexInGlobalHTMLQ = function()
+{
+   var i = 0;
+   for(i=0;i<trigger_fish.rbT.globalHTMLQ.length;i++)
+   {
+      if(trigger_fish.rbT.globalHTMLQ[i] == undefined)
+       {
+          break;
+       } 
+   }
+
+   return i;
+};
+
 
 
 //function for handling delay for templ display
@@ -150,6 +177,11 @@ trigger_fish.rbT.setTemplatesDisplayLockFlags=function(pos,value)
      trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.feedback.displayLock'] = value; 
    }
 
+   else if(pos == 'custom')
+   {
+      trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.custom.displayLock'] = value; 
+   } 
+
 }
 
 
@@ -209,9 +241,9 @@ trigger_fish.rbT.fillTheRuntimeValueForTemplArgs = function(tempMatch,actionparm
 
 // INTEGRATION_ENABLE                            
 
-                         //  trigger_fish.rbT.currentSystemVar = trigger_fish.rbTSystemVar.getProperty();
-                         //  trigger_fish.rbT.currentActorVar = trigger_fish.rbTActor.getProperties();
-                         //  trigger_fish.rbT.currentEventVar = trigger_fish.rbTAPP.getTransVar();
+                           trigger_fish.rbT.currentSystemVar = trigger_fish.rbTSystemVar.getProperty();
+                           trigger_fish.rbT.currentActorVar = trigger_fish.rbTActor.getProperties();
+                           trigger_fish.rbT.currentEventVar = trigger_fish.rbTAPP.getTransVar();
 
                              
                            for(var i=0 ; i<tempMatch.length ; i++)
@@ -301,40 +333,47 @@ trigger_fish.rbT.fillTheRuntimeValueForTemplArgs = function(tempMatch,actionparm
 //check for the if templ position is occupied
 trigger_fish.rbT.isTemplPosOccupied = function(pos){
    
-   var ret = false;
- 
+       var ret = false;
+     
 
-   if(pos === 'topbar' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.topbar.displayLock'] 
-    == true ) 
-   {
-     ret= true;
-      
-   }
-   else if(pos === 'bottombar' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.bottombar.displayLock'] 
-    == true ) 
-   {
-     ret= true;
-    }
-  else if(pos === 'modal' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.modal.displayLock'] 
-    == true )
-  {
-     //TODO
-  }
+      if(pos === 'topbar' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.topbar.displayLock'] 
+        == true ) 
+       {
+         ret= true;
+          
+       }
+      else if(pos === 'bottombar' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.bottombar.displayLock'] 
+        == true ) 
+       {
+         ret= true;
+        }
+      else if(pos === 'modal' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.modal.displayLock'] 
+        == true )
+      {
+         //TODO
+      }
 
- else if(pos === 'chat' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.chat.displayLock'] 
-    == true )
-  {
-     ret= true;
-  }
+     else if(pos === 'chat' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.chat.displayLock'] 
+        == true )
+      {
+         ret= true;
+      }
+
+      else if(pos === 'custom' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.custom.displayLock'] 
+        == true )
+      {
+         ret= true;
+      }
 
 
-  else if(pos === 'feedback')
-  {
-     //TODO
-  }
+      else if(pos === 'feedback')
+      {
+         ret= true;
+
+      }
 
 
- return ret;
+     return ret;
 };
 
 
@@ -366,11 +405,11 @@ trigger_fish.rbT.sendErrorToRBServer = function(string){
 
 // INTEGRATION_ENABLE  
    
-// trigger_fish.rbTAPP.log({"message": string,"log":true});
+trigger_fish.rbTAPP.log({"message": string,"log":true});
 
-// trigger_fish.rbTAPP.reportError({"message":string,"server":true});
+ trigger_fish.rbTAPP.reportError({"message":string,"server":true});
 
-console.log(string);
+//console.log(string);
 
 };
 

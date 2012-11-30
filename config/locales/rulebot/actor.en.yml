@@ -15,3 +15,4 @@ en:
     invalid_actor_id: "Actor ID %{id} is not valid"
     create_failed_in_set_property: "Actor Create failed while updating property"
     invalid_app_id: "App not found.. Invalid app id %{id}" 
+    invalid_argument_in_delete: "Invalid argumnents in Delete Actor"

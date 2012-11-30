@@ -4,13 +4,17 @@ require 'authenticate/authenticate_origin'
 
 module Authenticate
   # builds a session temporarily for cross-origin access or api access
-  # INPUT - access_info object
-  def build_session(access)
+  # INPUT - object "app" or "account"
+  def build_session(object)
     Rails.logger.info("Enter  Session")
-    account=Account.find(access.account_id)
-    raise et("application.account_invalid") if account.blank? # This error should not happen
 
-    sign_in(account)
+    if object.class.to_s ==  "App"
+      object=Account.find(object.account_id)
+    end
+    
+    raise et("application.account_invalid") if object.blank? # This error should not happen
+
+    sign_in(object)
     self.instance_variable_set(:@tear_down, current_account )
 
     true

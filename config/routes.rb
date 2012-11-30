@@ -21,6 +21,7 @@ Ganga::Application.routes.draw do
  
   # Actor Api
   post  '/actor/create',      :to => 'actors#create'
+  post  '/actor/delete',      :to => "actors#delete"
   get   '/actor/read',        :to => 'actors#read'
   post  '/actor/identify',    :to => 'actors#identify'
   post  '/actor/set',         :to => 'actors#set'
