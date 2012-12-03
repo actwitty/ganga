@@ -116,12 +116,14 @@ RBT.prototype = {
   setUser : function(params)
   {
     "use strict";
+    var diff = {};
     if (!this.isEnabled())
       return;
-    if (trigger_fish.rbTActor.propExist(params))
+    diff = trigger_fish.rbTActor.propExist(params);
+    if (diff === undefined )
       return;
     var obj = {"url"      : trigger_fish.rbTServerChannel.url.setActor, 
-               "params"   : params,
+               "params"   : diff,
                "set_actor": true,
                "type"     : "POST",
                "cb"       : { success: trigger_fish.rbTServerResponse.setActorProperty,

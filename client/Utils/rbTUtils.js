@@ -96,6 +96,50 @@ trigger_fish.rbTUtils = {
         fn.apply(scope, arguments);
     };
   },
+  
+  /**
+  *
+  */
+  type : function(obj)
+  {
+    return Object.prototype.toString.call(obj).split("]")[0].split(" ")[1];
+  },
+
+  /**
+  *
+  */
+  isEmpty : function(o) 
+  {
+    if (!o) return true;
+    if (this.type(o) === "String" || this.type(o) === "Array") {
+      return o.length === 0;
+    }
+    for(var i in o) {
+      if (this.type(o[i]) === "Object") {
+        return this.isEmpty(o[i]);
+      } else if (this.type(o[i]) === "String" || this.type(o[i]) === "Array") {
+        if (o[i].length) { return false;}
+      }
+    }
+    return true;
+  },
+
+  /**
+  *
+  */
+  differ : function(first,second,r)
+  {
+    var i = 0;
+    for (i in first) {
+      if (this.type(first[i]) === "Object" && this.type(second[i]) === "Object") {
+        r[i] = differ(first[i], second[i], {});
+        if (!result[i]) delete result[i];
+      } else if ( this.type(second[i]) === "Array" && first[i] != second[i][second[i].length-1]) {
+        r[i] = first[i];
+      }
+    }
+    return this.isEmpty(r) ? undefined : r;
+  },
 
   /**
   *

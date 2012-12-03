@@ -1796,20 +1796,26 @@ trigger_fish.rbTActor = function() {
       */
       propExist : function(prop)
       {
-        var a = JSON.stringify(__prop).replace(/(^{)|(}$)/g, "");
-        var b = JSON.stringify(prop).replace(/(^{)|(}$)/g, "");
-        function sameObjs(o1, o2)
-        {
-          var k1 = Object.keys(o1).sort();
-          var k2 = Object.keys(o2).sort();
-          if (k1.length != k2.length) return false;
-            return k1.zip(k2, function(keyPair) {
-              return o1[keyPair[0]] == o2[keyPair[1]];
-            }).all();
+        /*
+        Object.prototype.isPartOf = function(o) {
+          function dataType(obj)
+          {
+            return Object.prototype.toString.call(obj).split("]")[0].split(" ")[1];
+          }
+          for(var k in this) {
+            if (!o[k]) return false;
+            if (dataType(o[k]) === "Array" && o[k][o[k].length-1] !== this[k]) return false;
+            if (dataType(this[k]) === "Object" && dataType(o[k]) === "Object") {
+              return this[k].isPartOf(o[k]);
+            }
+          }
+          return true;
         }
-        trigger_fish.rbTDebug.log({"stored" : a , "passed" : b, "message":"actor prop existence"});
-        //return (a.indexOf(b) >= 0) ? true : false;
-        return (sameObjs(prop, __prop)) ? true : false;
+        var exist = prop.isPartOf(__prop);
+        */
+        var diff = {};
+        diff = trigger_fish.rbTUtils.differ(prop,__prop, diff);
+        return diff;
       },
 
       /**
@@ -3546,6 +3552,50 @@ trigger_fish.rbTUtils = {
         fn.apply(scope, arguments);
     };
   },
+  
+  /**
+  *
+  */
+  type : function(obj)
+  {
+    return Object.prototype.toString.call(obj).split("]")[0].split(" ")[1];
+  },
+
+  /**
+  *
+  */
+  isEmpty : function(o) 
+  {
+    if (!o) return true;
+    if (this.type(o) === "String" || this.type(o) === "Array") {
+      return o.length === 0;
+    }
+    for(var i in o) {
+      if (this.type(o[i]) === "Object") {
+        return this.isEmpty(o[i]);
+      } else if (this.type(o[i]) === "String" || this.type(o[i]) === "Array") {
+        if (o[i].length) { return false;}
+      }
+    }
+    return true;
+  },
+
+  /**
+  *
+  */
+  differ : function(first,second,r)
+  {
+    var i = 0;
+    for (i in first) {
+      if (this.type(first[i]) === "Object" && this.type(second[i]) === "Object") {
+        r[i] = differ(first[i], second[i], {});
+        if (!result[i]) delete result[i];
+      } else if ( this.type(second[i]) === "Array" && first[i] != second[i][second[i].length-1]) {
+        r[i] = first[i];
+      }
+    }
+    return this.isEmpty(r) ? undefined : r;
+  },
 
   /**
   *
@@ -3891,12 +3941,14 @@ RBT.prototype = {
   setUser : function(params)
   {
     "use strict";
+    var diff = {};
     if (!this.isEnabled())
       return;
-    if (trigger_fish.rbTActor.propExist(params))
+    diff = trigger_fish.rbTActor.propExist(params);
+    if (diff === undefined )
       return;
     var obj = {"url"      : trigger_fish.rbTServerChannel.url.setActor, 
-               "params"   : params,
+               "params"   : diff,
                "set_actor": true,
                "type"     : "POST",
                "cb"       : { success: trigger_fish.rbTServerResponse.setActorProperty,

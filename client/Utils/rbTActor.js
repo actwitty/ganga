@@ -98,20 +98,26 @@ trigger_fish.rbTActor = function() {
       */
       propExist : function(prop)
       {
-        var a = JSON.stringify(__prop).replace(/(^{)|(}$)/g, "");
-        var b = JSON.stringify(prop).replace(/(^{)|(}$)/g, "");
-        function sameObjs(o1, o2)
-        {
-          var k1 = Object.keys(o1).sort();
-          var k2 = Object.keys(o2).sort();
-          if (k1.length != k2.length) return false;
-            return k1.zip(k2, function(keyPair) {
-              return o1[keyPair[0]] == o2[keyPair[1]];
-            }).all();
+        /*
+        Object.prototype.isPartOf = function(o) {
+          function dataType(obj)
+          {
+            return Object.prototype.toString.call(obj).split("]")[0].split(" ")[1];
+          }
+          for(var k in this) {
+            if (!o[k]) return false;
+            if (dataType(o[k]) === "Array" && o[k][o[k].length-1] !== this[k]) return false;
+            if (dataType(this[k]) === "Object" && dataType(o[k]) === "Object") {
+              return this[k].isPartOf(o[k]);
+            }
+          }
+          return true;
         }
-        trigger_fish.rbTDebug.log({"stored" : a , "passed" : b, "message":"actor prop existence"});
-        //return (a.indexOf(b) >= 0) ? true : false;
-        return (sameObjs(prop, __prop)) ? true : false;
+        var exist = prop.isPartOf(__prop);
+        */
+        var diff = {};
+        diff = trigger_fish.rbTUtils.differ(prop,__prop, diff);
+        return diff;
       },
 
       /**
