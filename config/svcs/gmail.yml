@@ -1,0 +1,17 @@
+svc:
+  gmail:
+    keys: 
+      api: 
+    triggers: 
+      [ 
+        { 
+          name: Send Email, 
+          endpoint: "TODO", 
+          params: {}
+        },
+        { 
+          name: Receive Email, 
+          endpoint: "TODO", 
+          params: {}
+        }
+      ]
