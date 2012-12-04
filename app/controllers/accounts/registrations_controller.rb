@@ -49,6 +49,7 @@ class Accounts::RegistrationsController < Devise::RegistrationsController
   def create
     build_resource
     resource.password_unset = 1
+    Rails.logger.info "REACHED HERE"
     if resource.save
       if resource.active_for_authentication?
         set_flash_message :notice, :signed_up if is_navigational_format?

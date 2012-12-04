@@ -1,37 +1,46 @@
-.main_nav
-  %ul
-    %li
-      %a.scroll{:href => "/"} Home
-    %li
-      %a.scroll{:href => "/accounts/sign_in"} Sign In
-    %li
-      %a.scroll{:href => "/accounts/password/new"} Forgot Password
-    %li
-      %a.scroll{:href => "/accounts/confirmation/new"} Resend Confirmation
-    %li
-      %a.scroll{:href => "/accounts/unlock/new"} Unlock Account
-    
-.main_padding
-.row.equal-heights{:style => "text-align: center;"}
-    
-  = form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f|
+.navbar.navbar-fixed-top
+  .navbar-inner
+    .container
+      %a.btn.btn-navbar{"data-target" => ".nav-collapse", "data-toggle" => "collapse"}
+        %span.icon-bar
+        %span.icon-bar
+        %span.icon-bar
+      
+      %a.brand{:href => "./"}
+        Rulebot
+= render 'layouts/messages'  
+.row.equal-heights{:style => "text-align: center;margin-top:30px;height:600px;"}
+  
+  = form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f|    
     %fieldset
       %legend Sign up
       %br/
       .control-group
-        .controls
+        .controls          
+          .h5{:style => "margin:auto;width:224px;text-align:left;"}Email:
           = f.email_field :email, placeholder: :email
       .control-group
         .controls
+          .h5{:style => "margin:auto;width:224px;text-align:left;"}Name:
           = f.text_field :name, placeholder: :name          
       .control-group
         .controls
+          .h5{:style => "margin:auto;width:224px;text-align:left;"}Password:
           = f.password_field :password, placeholder: :password
       .control-group
         .controls
+          .h5{:style => "margin:auto;width:224px;text-align:left;"}Confirm password:
           = f.password_field :password_confirmation, placeholder: "password confirmation"   
+
       .control-group
         .controls
-          = f.submit "Sign up", :class => "btn btn-primary trigger_js_event", :btn_type => "registration"
+          = f.submit "Sign up", :class => "btn btn-large btn-success trigger_js_event", :btn_type => "registration"
+  %div{:style=>"display:block;"}
+    %a{:href => "/accounts/sign_in"} Already registered ?
+  %div{:style=>"display:block;"}
+
+
+%div{:id=>"extra"}
+  %div{:class=>"inner", :style=>"min-height:400px;"}          
 
   

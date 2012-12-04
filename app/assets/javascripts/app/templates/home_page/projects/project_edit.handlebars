@@ -1,0 +1,65 @@
+{{view App.BusyView}}
+{{view App.BannerView }}
+{{view App.AlertView alertParamsBinding="view.alert"}}
+{{view App.InlineAlertView }}
+
+{{#if controller.isNew}}
+	<div/>
+{{else}}
+	<div class="del_btn_box">
+		<div class="del_btn">
+			<a class="btn btn-mini" {{action "deleteProject" }}>Delete</a>
+		</div>
+	</div>
+{{/if}}
+
+<div class="new_proj">
+	<div class="single">
+		<div class="label_div">
+			App Name:
+		</div>
+		<div class="input_div">
+			{{view App.RequiredNameField valueBinding="description.name" placeholder="App Name" name="App Name"}}
+		</div>
+	</div>
+
+	<div class="single">
+		<div class="label_div">
+			App Domain:
+		</div>
+		<div class="input_div">		
+			{{view App.RequiredUrlField valueBinding="description.domain" placeholder="App Domain" name="App Domain"}}
+		</div>
+	</div>
+
+
+	<div class="single">
+		<div class="label_div">
+			Alert Email:
+		</div>
+		<div class="input_div">				
+			{{view App.RequiredEmailField valueBinding="description.email" placeholder="Admin Email" name="App Admin Email"}}
+		</div>
+	</div>
+
+	<div class="single">
+		<div class="label_div">
+			Comment:
+		</div>
+		<div class="input_div">	
+			{{view App.NonRequiredTextField valueBinding="description.comment" placeholder="Comment" name="Comment"}}
+		</div>
+	</div>
+
+	<div class="single">
+		{{#if controller.isNew}}
+			<a class='btn btn-large btn-success edit_btns'  {{action "submitNewProject"}} > Create App</a>   
+		{{else}}
+			<a class='btn btn-large btn-success edit_btns'   {{action "updateProject"}} > Update App</a>  
+
+		{{/if}}
+
+		<a class='btn btn-large  edit_btns'  {{action "cancelProjectEdit" }} > Cancel </a>  		
+	</div>
+</div>
+

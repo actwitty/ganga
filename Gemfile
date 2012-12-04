@@ -5,6 +5,7 @@ gem 'rails', '3.2.9'
 
 gem 'heroku'
 gem 'rb-readline'
+
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
@@ -26,14 +27,12 @@ gem "select2-rails"
 gem 'jquery-datatables-rails'
 gem 'bootstrap-colorpicker-rails'
 gem 'bootstrap-datepicker-rails'
-gem 'jquery-tablesorter'
-gem 'handlebars_assets'
-gem 'ember-rails', :git => 'git://github.com/emberjs/ember-rails.git'
-gem 'ember-rest-rails'
+gem 'ember-rails'
+gem 'font-awesome-rails'
 gem 'twitter-bootstrap-rails'
 gem 'less-rails-bootstrap'
 gem 'google-code-prettify-rails'
-#gem 'highlight_js-rails'
+
 
 #algorithms
 gem 'algorithms'

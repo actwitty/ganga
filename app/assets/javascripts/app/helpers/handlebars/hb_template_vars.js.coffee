@@ -3,9 +3,9 @@
 # ---------------------------------------------------------
 App.testTemplateDataType= (obj, type, api, key, options, check) ->  
   context = (options.contexts and options.contexts[0]) or obj
-  type_in = Ember.Handlebars.getPath(context, type, options)
-  api_in  = Ember.Handlebars.getPath(context, api, options)
-  key_in  = Ember.Handlebars.getPath(context, key, options)
+  type_in = Ember.Handlebars.get(context, type, options)
+  api_in  = Ember.Handlebars.get(context, api, options)
+  key_in  = Ember.Handlebars.get(context, key, options)
   test_key = trigger_fish.rbT.templateArgs[ type_in + '.' + api_in][key_in]['key']
 
   namescopeArr = test_key.split('.')
@@ -47,26 +47,26 @@ Handlebars.registerHelper "isWeight", (type, api, key, options) ->
 Handlebars.registerHelper "getTemplateName", (type, api, options) ->
   
   context = (options.contexts and options.contexts[0]) or this  
-  type_in = Ember.Handlebars.getPath(context, type, options)      
-  api_in = Ember.Handlebars.getPath(context, api, options)      
+  type_in = Ember.Handlebars.get(context, type, options)      
+  api_in = Ember.Handlebars.get(context, api, options)      
   id = type_in + '.' + api_in  
   trigger_fish.rbT.templateName[id]
 
 # ---------------------------------------------------------
 Handlebars.registerHelper "getTemplatePlaceHolder", (type, api, key, options) ->
   context = (options.contexts and options.contexts[0]) or this
-  type_in = Ember.Handlebars.getPath(context, type, options)
-  api_in = Ember.Handlebars.getPath(context, api, options)
-  key_in = Ember.Handlebars.getPath(context, key, options)
+  type_in = Ember.Handlebars.get(context, type, options)
+  api_in = Ember.Handlebars.get(context, api, options)
+  key_in = Ember.Handlebars.get(context, key, options)
   test_key = trigger_fish.rbT.templateArgs[ type_in + '.' + api_in][key_in]['key']
   namescopeArr = test_key.split('.')
   namescopeArr[App.templatesConstants.label].replace(/_/g, ' ')
 # ---------------------------------------------------------
 Handlebars.registerHelper "shouldShow", (type, api, key, options) ->
   context = (options.contexts and options.contexts[0]) or this
-  type_in = Ember.Handlebars.getPath(context, type, options)
-  api_in = Ember.Handlebars.getPath(context, api, options)
-  key_in = Ember.Handlebars.getPath(context, key, options)
+  type_in = Ember.Handlebars.get(context, type, options)
+  api_in = Ember.Handlebars.get(context, api, options)
+  key_in = Ember.Handlebars.get(context, key, options)
   template_id = type_in + '.' + api_in
   targ = trigger_fish.rbT.templateArgs  
   if targ.hasOwnProperty template_id    
@@ -87,8 +87,55 @@ Handlebars.registerHelper "shouldShow", (type, api, key, options) ->
 Handlebars.registerHelper "paramBind", (key, options) ->
   ret = ""    
   context = (options.contexts and options.contexts[0]) or this
-  key_in = Ember.Handlebars.getPath(context, key, options)
+  key_in = Ember.Handlebars.get(context, key, options)
   ret = options.fn(                              
                     bindVal: 'view.params.' + key_in                               
                   )
   ret
+
+
+
+# ---------------------------------------------------------------
+Handlebars.registerHelper "eachSortedParam", (type, api, obj, options) ->
+  ret = ""
+  context = (options.contexts and options.contexts[0]) or this
+  hash = Ember.Handlebars.get(context, obj, options)  
+  type_in = Ember.Handlebars.get(context, type, options)
+  api_in = Ember.Handlebars.get(context, api, options)  
+  template_id = type_in + '.' + api_in
+  targ = trigger_fish.rbT.templateArgs  
+
+  if targ.hasOwnProperty template_id    
+
+    arr = []
+
+    
+    compare= (in1,in2)->
+      a = in1.name.toLowerCase()
+      b = in2.name.toLowerCase()            
+      ((a < b) ? -1 : ((a > b) ? 1 : 0))  
+      
+      
+    
+
+    for prop of hash    
+      if hash.hasOwnProperty(prop)
+        key = targ[template_id][prop]['key']
+        namescopeArr = key.split('.')        
+        temp = 
+              id: prop
+              name: namescopeArr[App.templatesConstants.label].replace(/_/g, '')
+        arr.push(temp)
+
+    console.log arr
+    arr = arr.sort()
+    console.log arr
+  
+  
+    for temp in arr
+      ret = ret + options.fn(                              
+                                iter_key: temp.id
+                                iter_val: hash[temp.id]
+                              )
+    
+    ret  

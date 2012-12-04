@@ -12,26 +12,29 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 //= require jquery
-//= require jquery_ujs
-//= require handlebars
+//= require_tree ./vendor
 //= require ember
-//= require ember-rest
+//= require jquery_ujs
 //= require twitter/bootstrap
 //= require select2
 //= require bootstrap-colorpicker	
 //= require bootstrap-datepicker/core
 //= require dataTables/jquery.dataTables
 //= require dataTables/jquery.dataTables.bootstrap
-//= require handlebars
-//= require jquery-tablesorter
+//= require google-code-prettify-rails/prettify
 //= require fancybox
 //= require_self
 //= require ember_app
-//= require google-code-prettify-rails/prettify
+
 
 
 
 App = Ember.Application.create( {
-								 rootElement: '#rulebotEmberBase'
+								 rootElement: '#rulebotEmberBase',
+								 autoinit: false
 							   });
+
+
+
+						
 

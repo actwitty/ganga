@@ -1,0 +1,120 @@
+{{view App.InlineAlertView }}
+{{#eachSortedParam view.action.desc.type view.action.desc.api view.params}}
+  
+  {{#shouldShow view.action.desc.type view.action.desc.api iter_key}}    
+    <!--TODO: This is inefficient to not have if else but its ok, will fix later -->
+    {{#isNumeric view.action.desc.type view.action.desc.api iter_key}}
+      <div class="entry">
+        <div class="key">
+          {{getTemplatePlaceHolder view.action.desc.type view.action.desc.api iter_key}}
+        </div>
+        <div class="value">          
+          {{#paramBind iter_key}}
+            {{view App.RequiredNumberOnly name="Numeric field" valueBinding=bindVal class="in" }}
+          {{/paramBind}}
+        </div>
+      </div>
+    {{/isNumeric}}
+
+    {{#isFont view.action.desc.type view.action.desc.api iter_key}}
+      <div class="entry">
+        <div class="key">
+          {{getTemplatePlaceHolder view.action.desc.type view.action.desc.api iter_key}}
+        </div>
+        <div class="value">      
+          {{#paramBind iter_key}}    
+            {{view Ember.Select
+              contentBinding="App.templatesFixedData.font"
+              selectionBinding=bindVal
+              class="select2Props in"}}
+          {{/paramBind}}
+        </div>
+      </div>
+    {{/isFont}}   
+
+    
+    {{#isAlign view.action.desc.type view.action.desc.api iter_key}}
+      <div class="entry">
+        <div class="key">
+          {{getTemplatePlaceHolder view.action.desc.type view.action.desc.api iter_key}}
+        </div>
+        <div class="value"> 
+          {{#paramBind iter_key}}              
+            {{view Ember.Select
+                contentBinding="App.templatesFixedData.align"
+                selectionBinding=bindVal
+                class="select2Props in"}}
+          {{/paramBind}}
+        </div>
+      </div>        
+    {{/isAlign}}
+
+    {{#isString  view.action.desc.type view.action.desc.api iter_key}}
+      <div class="entry">
+        <div class="key">
+          {{getTemplatePlaceHolder view.action.desc.type view.action.desc.api iter_key}}
+        </div>
+        <div class="value">
+          {{#paramBind iter_key}}    
+            {{view App.RequiredAFTextField valueBinding=bindVal class="in"}}
+          {{/paramBind}}
+        </div>
+      </div>        
+    {{/isString}}    
+
+    {{#isVString  view.action.desc.type view.action.desc.api iter_key}}
+      <div class="entry">
+        <div class="key">
+          {{getTemplatePlaceHolder view.action.desc.type view.action.desc.api iter_key}}
+        </div>
+        <div class="value">
+          {{#paramBind iter_key}}    
+            {{view App.RequiredAFTextField valueBinding=bindVal class="in"}}
+          {{/paramBind}}
+        </div>
+      </div>        
+    {{/isVString}}       
+
+    {{#isUrl view.action.desc.type view.action.desc.api iter_key}}
+      <div class="entry">
+        <div class="key">
+          {{getTemplatePlaceHolder view.action.desc.type view.action.desc.api iter_key}}
+        </div>
+        <div class="value">
+          {{#paramBind iter_key}}  
+            {{view App.RequiredUrlField name="URL " valueBinding=bindVal class="in"}}
+          {{/paramBind}}
+        </div>
+      </div>        
+    {{/isUrl}} 
+
+    {{#isColor view.action.desc.type view.action.desc.api iter_key}}
+      <div class="entry">
+        <div class="key">
+          {{getTemplatePlaceHolder view.action.desc.type view.action.desc.api iter_key}}
+        </div>
+        <div class="value">          
+          {{#paramBind iter_key}}
+            {{view App.RequiredAFTextField valueBinding=bindVal class="colorpickerProps in"}}
+          {{/paramBind}}
+        </div>
+      </div>
+    {{/isColor}}
+
+    {{#isWeight view.action.desc.type view.action.desc.api iter_key}}
+      <div class="entry">
+        <div class="key">
+          {{getTemplatePlaceHolder view.action.desc.type view.action.desc.api iter_key}}
+        </div>
+        <div class="value"> 
+          {{#paramBind iter_key}}              
+            {{view Ember.Select
+                contentBinding="App.templatesFixedData.weight"
+                selectionBinding=bindVal
+                class="select2Props in"}}
+          {{/paramBind}}
+        </div>
+      </div>        
+    {{/isWeight}}
+  {{/shouldShow}}
+{{/eachSortedParam}}

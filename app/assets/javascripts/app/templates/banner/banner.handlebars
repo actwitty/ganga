@@ -1,0 +1,14 @@
+<div  {{bindAttr class="view.showHideClass"}}>
+  <div class="message">
+    <a alt="close" class="close_button" {{action "hideInfo" target="App.bannerView"}}></a>
+
+    <div class="message_text_container">
+      <h3> {{view.msgContext.header}}} </h3>
+      {{view.msgContext.message}}
+    </div>
+
+    <a {{bindAttr href="view.href"}} class="info_btn_pos btn btn-info" target="_blank">
+      {{view.msgContext.buttonText}}  
+    </a>
+  </div>
+</div>

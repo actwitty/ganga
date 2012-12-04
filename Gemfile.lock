@@ -1,13 +1,3 @@
-GIT
-  remote: git://github.com/emberjs/ember-rails.git
-  revision: bc359f9625d5961d9cd809f8a0e916d1a25f5b56
-  specs:
-    ember-rails (0.8.0)
-      active_model_serializers
-      barber
-      execjs (>= 1.2)
-      railties (~> 3.1)
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -42,7 +32,7 @@ GEM
       multi_json (~> 1.0)
     addressable (2.3.2)
     algorithms (0.5.0)
-    amq-client (0.9.9)
+    amq-client (0.9.10)
       amq-protocol (>= 0.9.4)
       eventmachine
     amq-protocol (1.0.0)
@@ -52,8 +42,6 @@ GEM
       eventmachine
     app_constants (1.0.4)
     arel (3.0.2)
-    barber (0.1.2)
-      execjs
     bcrypt-ruby (3.0.1)
     bootstrap-colorpicker-rails (0.1)
       railties (>= 3.0)
@@ -105,14 +93,16 @@ GEM
     diff-lcs (1.1.3)
     domainatrix (0.0.11)
       addressable
-    ember-rest-rails (0.0.2)
-      railties (>= 3.1)
+    ember-rails (0.8.0)
+      active_model_serializers
+      execjs (>= 1.2)
+      railties (~> 3.1)
     erubis (2.7.0)
     eventmachine (1.0.0)
     excon (0.16.10)
     execjs (1.4.0)
       multi_json (~> 1.0)
-    facter (1.6.15)
+    facter (1.6.16)
     factory_girl (4.1.0)
       activesupport (>= 3.0.0)
     factory_girl_rails (4.1.0)
@@ -121,6 +111,8 @@ GEM
     fancybox-rails (0.1.4)
       railties (>= 3.1.0)
     ffi (1.2.0)
+    font-awesome-rails (0.4.1)
+      railties (~> 3.1)
     google-code-prettify-rails (1.1.0)
       railties (>= 3.2.0.beta, < 5.0)
       thor (~> 0.14)
@@ -130,10 +122,6 @@ GEM
       activesupport (>= 3.1, < 4.1)
       haml (~> 3.1)
       railties (>= 3.1, < 4.1)
-    handlebars_assets (0.7.0)
-      execjs (>= 1.2.9)
-      sprockets (>= 2.0.3)
-      tilt
     heroku (2.33.2)
       heroku-api (~> 0.3.7)
       launchy (>= 0.3.2)
@@ -152,8 +140,6 @@ GEM
     jquery-rails (2.1.4)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
-    jquery-tablesorter (1.1.0)
-      railties (~> 3.1)
     json (1.7.5)
     launchy (2.1.2)
       addressable (~> 2.3)
@@ -182,8 +168,8 @@ GEM
       mongoid (>= 3.0.1)
       rake
       rspec (>= 2.9)
-    moped (1.3.0)
-    multi_json (1.3.7)
+    moped (1.3.1)
+    multi_json (1.4.0)
     netrc (0.7.7)
     nokogiri (1.5.5)
     origin (1.0.11)
@@ -224,7 +210,7 @@ GEM
       rspec-core (~> 2.12.0)
       rspec-expectations (~> 2.12.0)
       rspec-mocks (~> 2.12.0)
-    rspec-core (2.12.0)
+    rspec-core (2.12.1)
     rspec-expectations (2.12.0)
       diff-lcs (~> 1.1.3)
     rspec-mocks (2.12.0)
@@ -310,18 +296,16 @@ DEPENDENCIES
   devise
   devise_invitable
   domainatrix
-  ember-rails!
-  ember-rest-rails
+  ember-rails
   factory_girl_rails
   fancybox-rails
+  font-awesome-rails
   google-code-prettify-rails
   haml-rails
-  handlebars_assets
   heroku
   hominid
   jquery-datatables-rails
   jquery-rails
-  jquery-tablesorter
   less-rails
   less-rails-bootstrap
   mongoid (~> 3.0.0)

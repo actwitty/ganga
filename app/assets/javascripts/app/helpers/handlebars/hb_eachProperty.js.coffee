@@ -1,7 +1,8 @@
+# ---------------------------------------------------------------
 Handlebars.registerHelper "eachProperty", (obj, options) ->
   ret = ""
   context = (options.contexts and options.contexts[0]) or this
-  hash = Ember.Handlebars.getPath(context, obj, options)
+  hash = Ember.Handlebars.get(context, obj, options)
   for prop of hash    
     if hash.hasOwnProperty(prop)
       ret = ret + options.fn(                              
@@ -10,5 +11,7 @@ Handlebars.registerHelper "eachProperty", (obj, options) ->
                             )
     
   ret
+
+
 
 
