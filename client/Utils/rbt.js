@@ -39,6 +39,7 @@ trigger_fish.rbTAPP = function() {
         initialize : function()
         {
           "use strict";
+          trigger_fish.rbTDebug.log("Initializing RBT APP");
           trigger_fish.rbTServerChannel.appDetails();
         },
 
@@ -203,8 +204,9 @@ trigger_fish.rbTAPP = function() {
         {
           try {
               this.log(params);
-              if (params.server) 
+              if (params.server) {
                 trigger_fish.rbTServerChannel.reportError(params);
+              }
           } catch(e) {
             // FIXME what to do?
           }
@@ -217,9 +219,11 @@ trigger_fish.rbTAPP = function() {
         */
         log : function(params)
         {
-          if(params && params.message)
+          if(params && params.message) {
             trigger_fish.rbTDebug.log(params.message);
-          trigger_fish.rbTDebug.log(params)
+          }
+          //trigger_fish.rbTDebug.log(params)
+          console.log(params);
         },
     };    
 }();
@@ -1727,14 +1731,17 @@ trigger_fish.rbTActor = function() {
       */
       retFromCookie : function()
       {
-      	trigger_fish.rbTDebug.log("retrieveing data for actor from cookie");
+      	trigger_fish.rbTDebug.log("Trying to retrieve data for actor from cookie");
         if (trigger_fish.rbTStore.get(trigger_fish.rbTStore.defaultKeys.actorProp)) {
+          trigger_fish.rbTDebug.log("Got Actor data in storage - enabling actor now!!");  
           this.setProperties(trigger_fish.rbTStore.get(trigger_fish.rbTStore.defaultKeys.actorProp)); 
           this.enable();
         }
         if (trigger_fish.rbTStore.get(trigger_fish.rbTStore.defaultKeys.actorID)) {
+          trigger_fish.rbTDebug.log("Got actor id in storage - setting actor id now!!");
           this.setID(trigger_fish.rbTStore.get(trigger_fish.rbTStore.defaultKeys.actorID));
         } else {
+          trigger_fish.rbTDebug.log("HAVE TO CREATE DUMMY ACTOR!!");
           this.createDummyActor();
         }
       },
@@ -1797,7 +1804,7 @@ trigger_fish.rbTActor = function() {
       propExist : function(prop)
       {
         var diff = {};
-        diff = trigger_fish.rbTUtils.differ(prop,__prop, diff);
+        diff = trigger_fish.rbTUtils.diff(prop,__prop, diff);
         return diff;
       },
 
@@ -1807,14 +1814,16 @@ trigger_fish.rbTActor = function() {
       */
       createDummyActor : function()
       {
+        trigger_fish.rbTAPP.log({"message":"Creating dummy actor"});
         if (!__id || !__prop) {
-          var obj = {"url"      : trigger_fish.rbTServerChannel.url.createActor,
-                     "app_read" : true, 
-                     "cb"       : { success: trigger_fish.rbTServerResponse.setActorID,
-                                    error  : trigger_fish.rbTServerResponse.defaultError
-                                  }
+          var obj = {"url"         : trigger_fish.rbTServerChannel.url.createActor,
+                     "actor_create": true, 
+                     "type"        : "POST",
+                     "cb"          : { success: trigger_fish.rbTServerResponse.setActorID,
+                                       error  : trigger_fish.rbTServerResponse.defaultError
+                                     }
                     };
-          trigger_fish.rbTServerChannel.makeRequest(obj);
+          trigger_fish.rbTServerChannel.makeServerRequest(obj);
         }
       },
 
@@ -2625,6 +2634,8 @@ trigger_fish.rbTServerChannel = {
       k["actor_id"] = trigger_fish.rbTActor.getID() || "";
     } else if (obj.app_read) {
       k["id"] = trigger_fish.rbTAPP.getAppID() || "";
+    } else if(obj.actor_create) {
+      k["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
     } else if (obj.set_actor) {
       k["properties"] = {"profile":obj.params ? obj.params:{}};
       k["id"] = trigger_fish.rbTActor.getID() || "";
@@ -2673,10 +2684,8 @@ trigger_fish.rbTServerChannel = {
     try {
       var reqServerData = this.extendRequestData(obj);
       var callback = this.extendCallbacks(obj.cb);
-      if (obj.async && obj.async === "noasync")
-        var asyncSt = false;
-      else 
-        var asyncSt = true;
+      if (obj.async && obj.async === "noasync") var asyncSt = false;
+      else var asyncSt = true;
       var that = obj;
       var url = (obj.event) ? trigger_fish.rbTServerChannel.url.fireEvent : obj.url;
       that.requestData = reqServerData;
@@ -2721,7 +2730,6 @@ trigger_fish.rbTServerChannel = {
                   trigger_fish.rbTServerChannel.actorDetails();
                 }
                 callback.error();
-                
             }
       });
     } catch(e) {
@@ -3469,7 +3477,7 @@ trigger_fish.rbTUtils = {
   {
     this.eJQ = data;
     trigger_fish.rbTStore.set("easy_jquery",data);
-    trigger_fish.rbTAPP.wakeUp(); 
+    trigger_fish.rbTAPP.initialize(); 
   },
 
   /**
@@ -3576,7 +3584,9 @@ trigger_fish.rbTUtils = {
   {
     var i = 0;
     for (i in first) {
-      if (this.type(first[i]) === "Object" && this.type(second[i]) === "Object") {
+      if (this.type(second[i]) === "Undefined")  {
+        r[i] = first[i];  
+      } else if (this.type(first[i]) === "Object" && this.type(second[i]) === "Object") {
         r[i] = diff(first[i], second[i], {});
         if (!result[i]) delete result[i];
       } else if ( this.type(second[i]) === "Array" && first[i] !== second[i][second[i].length-1]) {
@@ -3931,11 +3941,10 @@ RBT.prototype = {
   {
     "use strict";
     var diff = {};
-    if (!this.isEnabled())
-      return;
+    if (!this.isEnabled()) return;
     diff = trigger_fish.rbTActor.propExist(params);
-    if (diff === undefined )
-      return;
+    //params = (diff === undefined ) ? params : diff ;
+    if (!diff) return;  
     var obj = {"url"      : trigger_fish.rbTServerChannel.url.setActor, 
                "params"   : diff,
                "set_actor": true,

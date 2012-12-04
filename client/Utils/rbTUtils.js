@@ -30,7 +30,7 @@ trigger_fish.rbTUtils = {
   {
     this.eJQ = data;
     trigger_fish.rbTStore.set("easy_jquery",data);
-    trigger_fish.rbTAPP.wakeUp(); 
+    trigger_fish.rbTAPP.initialize(); 
   },
 
   /**
@@ -137,7 +137,9 @@ trigger_fish.rbTUtils = {
   {
     var i = 0;
     for (i in first) {
-      if (this.type(first[i]) === "Object" && this.type(second[i]) === "Object") {
+      if (this.type(second[i]) === "Undefined")  {
+        r[i] = first[i];  
+      } else if (this.type(first[i]) === "Object" && this.type(second[i]) === "Object") {
         r[i] = diff(first[i], second[i], {});
         if (!result[i]) delete result[i];
       } else if ( this.type(second[i]) === "Array" && first[i] !== second[i][second[i].length-1]) {

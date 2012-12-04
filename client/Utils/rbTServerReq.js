@@ -92,6 +92,8 @@ trigger_fish.rbTServerChannel = {
       k["actor_id"] = trigger_fish.rbTActor.getID() || "";
     } else if (obj.app_read) {
       k["id"] = trigger_fish.rbTAPP.getAppID() || "";
+    } else if(obj.actor_create) {
+      k["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
     } else if (obj.set_actor) {
       k["properties"] = {"profile":obj.params ? obj.params:{}};
       k["id"] = trigger_fish.rbTActor.getID() || "";
@@ -140,10 +142,8 @@ trigger_fish.rbTServerChannel = {
     try {
       var reqServerData = this.extendRequestData(obj);
       var callback = this.extendCallbacks(obj.cb);
-      if (obj.async && obj.async === "noasync")
-        var asyncSt = false;
-      else 
-        var asyncSt = true;
+      if (obj.async && obj.async === "noasync") var asyncSt = false;
+      else var asyncSt = true;
       var that = obj;
       var url = (obj.event) ? trigger_fish.rbTServerChannel.url.fireEvent : obj.url;
       that.requestData = reqServerData;
@@ -188,7 +188,6 @@ trigger_fish.rbTServerChannel = {
                   trigger_fish.rbTServerChannel.actorDetails();
                 }
                 callback.error();
-                
             }
       });
     } catch(e) {

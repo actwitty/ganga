@@ -33,6 +33,7 @@ trigger_fish.rbTAPP = function() {
         initialize : function()
         {
           "use strict";
+          trigger_fish.rbTDebug.log("Initializing RBT APP");
           trigger_fish.rbTServerChannel.appDetails();
         },
 
@@ -197,8 +198,9 @@ trigger_fish.rbTAPP = function() {
         {
           try {
               this.log(params);
-              if (params.server) 
+              if (params.server) {
                 trigger_fish.rbTServerChannel.reportError(params);
+              }
           } catch(e) {
             // FIXME what to do?
           }
@@ -211,9 +213,11 @@ trigger_fish.rbTAPP = function() {
         */
         log : function(params)
         {
-          if(params && params.message)
+          if(params && params.message) {
             trigger_fish.rbTDebug.log(params.message);
-          trigger_fish.rbTDebug.log(params)
+          }
+          //trigger_fish.rbTDebug.log(params)
+          console.log(params);
         },
     };    
 }();

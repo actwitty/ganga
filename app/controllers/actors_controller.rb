@@ -1,7 +1,7 @@
 require 'utility'
 class ActorsController < ApplicationController
   protect_from_forgery
-  authenticate_request( origin: { only: ["read","identify","set"] } )
+  authenticate_request( origin: { only: ["create","read","identify","set"] } )
 
   respond_to :json
 

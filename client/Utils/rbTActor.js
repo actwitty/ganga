@@ -29,14 +29,17 @@ trigger_fish.rbTActor = function() {
       */
       retFromCookie : function()
       {
-      	trigger_fish.rbTDebug.log("retrieveing data for actor from cookie");
+      	trigger_fish.rbTDebug.log("Trying to retrieve data for actor from cookie");
         if (trigger_fish.rbTStore.get(trigger_fish.rbTStore.defaultKeys.actorProp)) {
+          trigger_fish.rbTDebug.log("Got Actor data in storage - enabling actor now!!");  
           this.setProperties(trigger_fish.rbTStore.get(trigger_fish.rbTStore.defaultKeys.actorProp)); 
           this.enable();
         }
         if (trigger_fish.rbTStore.get(trigger_fish.rbTStore.defaultKeys.actorID)) {
+          trigger_fish.rbTDebug.log("Got actor id in storage - setting actor id now!!");
           this.setID(trigger_fish.rbTStore.get(trigger_fish.rbTStore.defaultKeys.actorID));
         } else {
+          trigger_fish.rbTDebug.log("HAVE TO CREATE DUMMY ACTOR!!");
           this.createDummyActor();
         }
       },
@@ -99,7 +102,7 @@ trigger_fish.rbTActor = function() {
       propExist : function(prop)
       {
         var diff = {};
-        diff = trigger_fish.rbTUtils.differ(prop,__prop, diff);
+        diff = trigger_fish.rbTUtils.diff(prop,__prop, diff);
         return diff;
       },
 
@@ -109,14 +112,16 @@ trigger_fish.rbTActor = function() {
       */
       createDummyActor : function()
       {
+        trigger_fish.rbTAPP.log({"message":"Creating dummy actor"});
         if (!__id || !__prop) {
-          var obj = {"url"      : trigger_fish.rbTServerChannel.url.createActor,
-                     "app_read" : true, 
-                     "cb"       : { success: trigger_fish.rbTServerResponse.setActorID,
-                                    error  : trigger_fish.rbTServerResponse.defaultError
-                                  }
+          var obj = {"url"         : trigger_fish.rbTServerChannel.url.createActor,
+                     "actor_create": true, 
+                     "type"        : "POST",
+                     "cb"          : { success: trigger_fish.rbTServerResponse.setActorID,
+                                       error  : trigger_fish.rbTServerResponse.defaultError
+                                     }
                     };
-          trigger_fish.rbTServerChannel.makeRequest(obj);
+          trigger_fish.rbTServerChannel.makeServerRequest(obj);
         }
       },
 

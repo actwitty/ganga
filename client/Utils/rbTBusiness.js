@@ -117,11 +117,10 @@ RBT.prototype = {
   {
     "use strict";
     var diff = {};
-    if (!this.isEnabled())
-      return;
+    if (!this.isEnabled()) return;
     diff = trigger_fish.rbTActor.propExist(params);
-    if (diff === undefined )
-      return;
+    //params = (diff === undefined ) ? params : diff ;
+    if (!diff) return;  
     var obj = {"url"      : trigger_fish.rbTServerChannel.url.setActor, 
                "params"   : diff,
                "set_actor": true,
