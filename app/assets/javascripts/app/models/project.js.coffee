@@ -6,7 +6,7 @@ App.Project = Ember.Object.extend
   description: 
               email: null
               comment: null
-              domain: 'http://'
+              origin: 'http://'
               name: null
               super_actor_id: null              
   hasManyRules: null

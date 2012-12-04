@@ -11,7 +11,7 @@ App.ProjectEditView = Ember.View.extend
       #HELP DOC LINK
       msgContext = 
                     header: "Register new application"
-                    message: "You can create an application id for a domain name of the form 'http://www.yourdomain.com'"
+                    message: "You can create an application id for a origin name of the form 'http://www.yourdomain.com'"
                     href: "/help#createNewApp"
                     buttonText: "Know More"                    
     else
