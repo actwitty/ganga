@@ -17,243 +17,203 @@
 
 var trigger_fish = {};
 
-trigger_fish.rbTAPP = {
-    /* Main configs will be holded here */
-    configs : {
+trigger_fish.rbTAPP = function() {
+    var version = "1.0.1";
+    var configs = {
       "status" : false,
       "transVar" : {}
-    },
-    el : {},
-    
-    /** 
-    *  Do following tasks on initialization of the app
-    *  1). include jQuery if need be
-    *  2). create session.
-    *  3). fetch configs.
-    *  4). check status of last event, if pending, execute it.
-    *  5). fetch system properties if cache miss
-    *  6). Allow Business to make calls
-    *  
-    *  @return void
-    */
-    initialize : function()
-    {
-      "use strict";
-      this.getAppData();
-      
+    }; 
 
-    },
+    return {    
+        /** 
+        *  Do following tasks on initialization of the app
+        *  Get app details
+        *  @return void
+        */
+        initialize : function()
+        {
+          "use strict";
+          trigger_fish.rbTServerChannel.appDetails();
+        },
 
-    /**
-    * Check status of RBT APP
-    *
-    * @param {function} callback Callback function if rbTAPP is alive.
-    * @param {object} args Arguments with which callback will be called.
-    * @return void   
-    */
-    isrbTAlive :  function()
-    {
-       return this.configs.status;
-    },  
+        /**
+        *
+        */ 
+        releasePreInitCalls : function(w)
+        {
+          var l = w.rb.q;
+          w.rb = new RBT();
+          if (l.length) {
+            for (var c in l) { var o = l[c]; rb[o.t](o.a,o.b,o.c); }    
+          }
+        },
 
-    /**
-    *
-    */
-    setrbTAlive : function()
-    {
-      this.configs.status = true;
-      //this.dispatchEL("isRbtAlive");
-      trigger_fish.rbTServerChannel.flushReqQueue();
-    },
+        /**
+        *
+        */
+        actOnJQInit : function()
+        {
+          this.enablePlugins();
+          trigger_fish.rbTActor.retFromCookie();
+          this.releasePreInitCalls(window);
+          trigger_fish.rbTUtils.invokeEasyJquery("trigger_fish.rbTUtils.keepEasyJQVars");
+        },
 
-    /**
-    * Set RBT APP Status to true to signal app is alive
-    */
-    wake_RBT_APP : function()
-    {
-      trigger_fish.rbTDebug.log("Initializing RBT APP");
-      trigger_fish.rbTAPP.initialize();
-    },
+        /**
+        * Enable plugins related to cors/storage. 
+        * Additional responsibilty of invoking Easy Jquery
+        */
+        enablePlugins : function()
+        {
+          trigger_fish.enableCORS(jQuery);
+          trigger_fish.initJStorage();
+        },
 
-    /** 
-    *  Set App Id
-    *  @param {string} id
-    *  @return void
-    */
-    setAppID: function(id)
-    {
-      this.configs.appID = id;
-    },
+        /**
+        * Check status of RBT APP
+        *
+        * @param {function} callback Callback function if rbTAPP is alive.
+        * @param {object} args Arguments with which callback will be called.
+        * @return void   
+        */
+        isAlive :  function()
+        {
+          return configs.status;
+        },  
 
-    /** 
-    *  Set Account ID
-    *  @param {string} id 
-    *  @return void
-    */
-    setAccountID : function(id)
-    {
-      this.configs.accountID = id;
-    },
+        /**
+        *
+        */
+        setrbTAlive : function()
+        {
+          configs.status = true;
+          trigger_fish.rbTServerChannel.flushReqQueue();
+        },
 
-    /** 
-    *  Set Session ID
-    *  @param {string} id 
-    *  @return void
-    */
-    setSessionID : function(id)
-    {
-      this.configs.sessionID = id;
-    },
+        /**
+        * Set RBT APP Status to true to signal app is alive
+        */
+        wakeUp : function()
+        {
+          trigger_fish.rbTDebug.log("Initializing RBT APP");
+          this.initialize();
+        },
 
-    /**
-    *
-    *
-    */   
-    setTransVar : function(event,data)
-    {
-      this.configs.transVar.event = data;
-    },
+        /** 
+        *  Set App Id
+        *  @param {string} id
+        *  @return void
+        */
+        setAppID: function(id)
+        {
+          configs.appID = id;
+        },
 
-    /**
-    *
-    */
-    setAppDetail : function(data)
-    {
-      this.configs.appData = data;
-    },
+        /** 
+        *  Set Account ID
+        *  @param {string} id 
+        *  @return void
+        */
+        setAccountID : function(id)
+        {
+          configs.accountID = id;
+        },
 
-    /**
-    *
-    */
-    addEL : function(event, cb, scope)
-    {
-      if (!this.el.event)
-        this.el.event = [];
-      var listenerObj = {"action":cb,"scope":scope};
-      if (this.el.event.indexOf(JSON.stringify(listenerObj)) === -1)
-        this.el.event.push(listenerObj);
-    },
+        /** 
+        *  Set Session ID
+        *  @param {string} id 
+        *  @return void
+        */
+        setSessionID : function(id)
+        {
+          configs.sessionID = id;
+        },
 
-    /**
-    *
-    */
-    dispatchEL : function(event)
-    {
-      if (!this.el.event)
-        return;
-      var wL = this.el.event.length;
-      for(var i = 0 ; i < wL ; ++i) {
-        var listener = this.el.event[i];
-        listener.action.apply(listener.scope);
-      }
-      this.el.event = [];
-    },  
+        /**
+        *
+        */   
+        setTransVar : function(event,data)
+        {
+          configs.transVar.event = data;
+        },
 
-    /** 
-    *  Get App ID
-    *  @return {string} id 
-    */
-    getAppID : function()
-    {
-      return this.configs.appID
-    },
+        /**
+        *
+        */
+        setAppDetail : function(data)
+        {
+          configs.appData = data;
+        },
 
-    /** 
-    *  Get Account ID
-    *  @return {string} id 
-    */  
-    getAccountID : function()
-    {
-      return this.configs.accountID;
-    },   
+        /** 
+        *  Get App ID
+        *  @return {string} id 
+        */
+        getAppID : function()
+        {
+          return configs.appID;
+        },
 
-    /** 
-    *  Get Session ID
-    *  @return {string} id 
-    */  
-    getSessionID : function()
-    {
-      return this.configs.sessionID;
-    },
+        /** 
+        *  Get Account ID
+        *  @return {string} id 
+        */  
+        getAccountID : function()
+        {
+          return configs.accountID;
+        },   
 
-    /**
-    *
-    */
-    getTransVar : function(event)
-    {
-      return this.configs.transVar.event;
-    },
+        /** 
+        *  Get Session ID
+        *  @return {string} id 
+        */  
+        getSessionID : function()
+        {
+          return configs.sessionID;
+        },
 
-    /**
-    *
-    */
-    getAppDetail : function()
-    {
-      return this.configs.appData;
-    },
+        /**
+        *
+        */
+        getTransVar : function(event)
+        {
+          return configs.transVar.event;
+        },
 
-    /** 
-    *  Get Application configs
-    *  @return {rbTAPP.configs} 
-    */ 
-    getConfigs : function()
-    {
-      "use strict";
-      var cnf = {"app_id"  : this.configs.appID,
-                 "account_id" : this.configs.accountID  
-                }; 
-      
-       var actor_id = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID);
-       if (actor_id)  {
-        cnf["actor_id"] = actor_id;
-       }
-      return cnf;
-    },  
+        /**
+        *
+        */
+        getAppDetail : function()
+        {
+          return configs.appData;
+        },
 
-   
-
-    /** 
-    *  Get Application based configs
-    *  FIXME : THIS NEEDS TO BE DISCUSSED AS WE ARE PLANNING TO HAVE A PROXY IN BETWEEN
-    *  @return {string} TBD 
-    */
-    getAppData : function()
-    {
-      trigger_fish.rbTServerChannel.makeServerRequest({"url"      : trigger_fish.rbTServerChannel.url.appDetails,
-                                                       "app_read" : true,
-                                                       "async"    : "noasync", 
-                                                       "cb"       : { success: trigger_fish.rbTServerResponse.setAppDetail,
-                                                                      error  : trigger_fish.rbTServerResponse.defaultError
-                                                                    }
-                                                      });
-    },  
-
-    /** 
-    *  report error to rbT server
-    *  @param {object} params Error log message 
-    *  @return void
-    */ 
-    reportError : function(params)
-    {
-      try {
-          //trigger_fish.rbTDebug.error(params);
-          if (params.server) 
-            trigger_fish.rbTServerChannel.reportError(params);
-      } catch(e) {
-        // FIXME what to do?
-      }
-    },
-    
-    /** 
-    *  log
-    *  @param {object} params Error log message 
-    *  @return void
-    */
-    log : function(params)
-    {
-      if(params && params.message)
-        trigger_fish.rbTDebug.log(params.message);
-      trigger_fish.rbTDebug.log(params)
-    },
-
-};
+        /** 
+        *  report error to rbT server
+        *  @param {object} params Error log message 
+        *  @return void
+        */ 
+        reportError : function(params)
+        {
+          try {
+              this.log(params);
+              if (params.server) 
+                trigger_fish.rbTServerChannel.reportError(params);
+          } catch(e) {
+            // FIXME what to do?
+          }
+        },
+        
+        /** 
+        *  log
+        *  @param {object} params Error log message 
+        *  @return void
+        */
+        log : function(params)
+        {
+          if(params && params.message)
+            trigger_fish.rbTDebug.log(params.message);
+          trigger_fish.rbTDebug.log(params)
+        },
+    };    
+}();

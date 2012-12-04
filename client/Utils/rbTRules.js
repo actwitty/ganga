@@ -91,15 +91,10 @@ trigger_fish.rbTRules = {
           });
           
     } catch (e) {
-      if (that.ruleTable[event])
-        var ruleStr = that.ruleTable[event].ruleString || "--";
-      else
-        var ruleStr = "Rule string cannot be formed!";  
-        trigger_fish.rbTAPP.reportError({"exception"  : e.message,
-                          "message"    : "rule execution on event failed" , 
-                          "event_name" : event,
-                          "rule_string": ruleStr
-                         });
+      trigger_fish.rbTAPP.reportError({"exception"  : e.message,
+                                       "message"    : "rule execution on event failed" , 
+                                       "event_name" : event,
+                                      });
     } 
   },
   
@@ -116,7 +111,7 @@ trigger_fish.rbTRules = {
   {
     "use strict";
     try {
-      var lastEvent = trigger_fish.rbTCookie.getCookie("lastevent");
+      var lastEvent = trigger_fish.rbTStore.get("lastevent");
       if (lastEvent) {
         this.executeRulesOnEvent(lastEvent);
       } else {
@@ -153,21 +148,8 @@ trigger_fish.rbTRules = {
   */  
   getDataType : function(event,ruleProp,scope,json)
   {
-    return json.type || undefined;
-    /* 
     // FIXME :: WE NEED TO CHANGE THIS TO GET IT FROM SCHEMA
-    //return Object.prototype.toString.call(a).split("]")[0].split(" ")[1];
-    var appSchema = trigger_fish.rbTAPP.getAppDetail().app.schema;
-
-    if (scope === "e") {
-      return appSchema.events[event][ruleProp];
-    } else if (scope === "s") {
-      return appSchema.system[ruleProp];
-    } else if (scope === "a") {
-      return appSchema.profile[ruleProp];
-    }
-    */
-
+    return json.type || undefined;
   },
 
   /**
@@ -264,18 +246,18 @@ trigger_fish.rbTRules = {
   {
     if (!ruleJson.property) 
       return false;
-    if (ruleJson.type ==="set") 
+    if (ruleJson.type === "set") 
       return true;
+
     var propVal = this.evalProperty(ruleJson);
     if (!propVal)
       return false;
+
     var propDT = this.getDataType(ruleJson.event, ruleJson.property, ruleJson.scope, ruleJson);
        
-
     var v1DT = Object.prototype.toString.call(ruleJson.value1).split("]")[0].split(" ")[1];
     if (ruleJson.value2)
       var v2DT = Object.prototype.toString.call(ruleJson.value2).split("]")[0].split(" ")[1];
-
     var v2DT = v2DT || v1DT;
 
     if (!this.permissions[propDT] || this.permissions[propDT].indexOf(ruleJson.operation) < 0)

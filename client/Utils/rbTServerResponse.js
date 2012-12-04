@@ -103,7 +103,7 @@ trigger_fish.rbTServerResponse = {
     trigger_fish.rbTAPP.log({"message": "Handling event with server resp","data":respData});
     try {
       if(respData && respData.actor) {
-        trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.actor, respData.actor);
+        trigger_fish.rbTStore.set(trigger_fish.rbTStore.defaultKeys.actor, respData.actor);
       } else {
         throw "there is no data";
       }
@@ -142,7 +142,14 @@ trigger_fish.rbTServerResponse = {
 
   /**
   * Set App Specific configs
+  * Once we get the App deatails, do the following
+  * 1). Set App details
+  * 2). Set rules table
+  * 3). Set system vars
+  * 4). Retrieve stored actor data.
+  * 5). Make rbt app alive for calls.
   * @param {object} respData Data in response to server.
+  *
   */
   setAppDetail : function(respData)
   {
@@ -150,8 +157,7 @@ trigger_fish.rbTServerResponse = {
     trigger_fish.rbTAPP.setAppDetail(respData);
     trigger_fish.rbTRules.setRulesTable(respData.app.rules || {});
     trigger_fish.rbTSystemVar.init(respData);
-    trigger_fish.rbTActor.retFromCookie();
+    //trigger_fish.rbTActor.retFromCookie();
     trigger_fish.rbTAPP.setrbTAlive();
   }
-
 };

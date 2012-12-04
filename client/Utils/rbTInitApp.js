@@ -21,16 +21,8 @@
 * @return void
 *
 */
-(function StartRBTApp(appid,accid){
+(function StartRBTApp(appid,accid,ver){
   trigger_fish.rbTAPP.log("Initializing RBT APP with AppID = " + appid + " Account ID = " + accid);
-  function releasePreInitCalls(w)
-  {
-    var l = w.rb.q;
-    w.rb = new RBT();
-    if (l.length) {
-      for (var c in l) { var o = l[c]; rb[o.t](o.a,o.b,o.c); }    
-    }
-  }
   try {
     if (!appid || !accid || appid == "" || accid == "") {
       throw new Error("App-id, Account-ID are not mentioned")
@@ -39,7 +31,6 @@
       trigger_fish.rbTAPP.setAppID(appid);
       trigger_fish.rbTAPP.setAccountID(accid);
       trigger_fish.rbTUtils.includeJQIfNeeded();
-      releasePreInitCalls(window);
     }
   } catch (e) {
     trigger_fish.rbTAPP.reportError({"exception": e.message, 
@@ -48,5 +39,5 @@
                                      "accid"    : accid || ""
                                     });
   }
-})(_rbTK[0][1], _rbTK[1][1]);
+})(_rbTK[0][1], _rbTK[1][1], _rbTK[2][1]);
 

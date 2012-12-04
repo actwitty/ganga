@@ -15,36 +15,22 @@
  * @memberOf jQuery
  */
 
-var backcode="1102012";
 function EasyjQuery_Cache_IP(fname,json) {
   trigger_fish.rbTAPP.log({"message":"easy jquery response","data":json});
   eval(fname + "(json);");
 }
-function EasyjQuery_Get_IP(fname,is_full) {
-  var full_version = "";
-  var easyJQData = trigger_fish.rbTCookie.getCookie("easy_jquery");
-  if (!easyJQData) {
-    trigger_fish.rbTAPP.log("Could not found easyJQData in cache, fetching it now!!!");
-    jQuery.getScript("https://api.easyjquery.com/ips/?callback=" + fname + full_version);
-  } else{
-    trigger_fish.rbTAPP.log("Found easyJQData in cache, setting it now!!!");
-    trigger_fish.rbTUtils.keepEasyJQVars(easyJQData);
-  }
-}
-
 trigger_fish.rbTUtils = {
 
   eJQ : {},
 
   /**
   *
-  *
   */
   keepEasyJQVars : function(data)
   {
     this.eJQ = data;
-    trigger_fish.rbTCookie.setCookie("easy_jquery",data);
-    trigger_fish.rbTAPP.wake_RBT_APP(); 
+    trigger_fish.rbTStore.set("easy_jquery",data);
+    trigger_fish.rbTAPP.wakeUp(); 
   },
 
   /**
@@ -57,14 +43,20 @@ trigger_fish.rbTUtils = {
 
   /**
   *
-  *
   */
-  invokeEasyJquery : function()
+  invokeEasyJquery : function(fname, is_full)
   {
-    trigger_fish.enableCORS(jQuery);
-    trigger_fish.initJStorage();
-    EasyjQuery_Get_IP("trigger_fish.rbTUtils.keepEasyJQVars");
+    var full_version = "";
+    var easyJQData = trigger_fish.rbTStore.get("easy_jquery");
+    if (!easyJQData) {
+      trigger_fish.rbTAPP.log("Could not found easyJQData in cache, fetching it now!!!");
+      jQuery.getScript("https://api.easyjquery.com/ips/?callback=" + fname + full_version);
+    } else{
+      trigger_fish.rbTAPP.log("Found easyJQData in cache, setting it now!!!");
+      this.keepEasyJQVars(easyJQData);
+    }
   },
+
 
   /** Initialize jquery if needed be
     *  @return void
@@ -74,7 +66,10 @@ trigger_fish.rbTUtils = {
   {
     function includeJQ()
     { 
-      this.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",trigger_fish.rbTUtils.invokeEasyJquery);
+      var rbTApp = trigger_fish.rbTAPP;
+      this.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",
+                        this.bindCB(rbTApp,rbTApp.actOnJQInit)
+                      );
     }
 
     if (typeof jQuery != 'undefined') {
@@ -85,13 +80,70 @@ trigger_fish.rbTUtils = {
             || /^1.3/.test(jQuery.fn.jquery)) {
             includeJQ.call(this);
         } else {
-          trigger_fish.rbTUtils.invokeEasyJquery();
+          trigger_fish.rbTAPP.actOnJQInit();
         }
     } else {
         includeJQ.call(this);
     }
   },
 
+  /**
+  *
+  */
+  bindCB : function(scope, fn) 
+  {
+    return function () {
+        fn.apply(scope, arguments);
+    };
+  },
+  
+  /**
+  *
+  */
+  type : function(obj)
+  {
+    return Object.prototype.toString.call(obj).split("]")[0].split(" ")[1];
+  },
+
+  /**
+  *
+  */
+  isEmpty : function(o) 
+  {
+    if (!o) return true;
+    if (this.type(o) === "String" || this.type(o) === "Array") {
+      return o.length === 0;
+    }
+    for(var i in o) {
+      if (this.type(o[i]) === "Object") {
+        return this.isEmpty(o[i]);
+      } else if (this.type(o[i]) === "String" || this.type(o[i]) === "Array") {
+        if (o[i].length) { return false;}
+      }
+    }
+    return true;
+  },
+
+  /**
+  *
+  */
+  differ : function(first,second,r)
+  {
+    var i = 0;
+    for (i in first) {
+      if (this.type(first[i]) === "Object" && this.type(second[i]) === "Object") {
+        r[i] = differ(first[i], second[i], {});
+        if (!result[i]) delete result[i];
+      } else if ( this.type(second[i]) === "Array" && first[i] != second[i][second[i].length-1]) {
+        r[i] = first[i];
+      }
+    }
+    return this.isEmpty(r) ? undefined : r;
+  },
+
+  /**
+  *
+  */ 
 	parseURL: function(urlStr)
 	{
       var a = document.createElement("a"), query = {};
