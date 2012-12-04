@@ -28,7 +28,7 @@ trigger_fish.rbTSystemVar = {
     "use strict";
     function isSystemVarDirty()
     {
-      var sysVarInCookie = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.systemProp);
+      var sysVarInCookie = trigger_fish.rbTStore.get(trigger_fish.rbTStore.defaultKeys.systemProp);
       
       if (!sysVarInCookie) {
         return true; 
@@ -76,25 +76,25 @@ trigger_fish.rbTSystemVar = {
 
 
   /** Get system variable property
-    'browser' : 'String'
+    'browser'         : 'String'
     'browser_version' : 'String'
     'operatingsystem' : 'String'
-    'referrer[host]' : 'String'
-    'referrer[path]' : 'String'
-    'referrer[name]' : 'String'
-    'device[type]' : 'String'
-    'device[name]' : 'String'
-    'screen[height]' : 'Number'
-    'screen[width]' :  'Number'
-    'viewport[height]' : 'Number'
+    'referrer[host]'  : 'String'
+    'referrer[path]'  : 'String'
+    'referrer[name]'  : 'String'
+    'device[type]'    : 'String'
+    'device[name]'    : 'String'
+    'screen[height]'  : 'Number'
+    'screen[width]'   : 'Number'
+    'viewport[height]': 'Number'
     'viewport[width]' : 'Number'
-    'search[engine]' : 'String'
-    'search[query]'  : 'String'
-    'country' : 'String'
-    'language' : 'String'
-    'plugins' : 'Array'
-    'timezone' : 'String'
-    'day_light_saving' : 'Boolean'
+    'search[engine]'  : 'String'
+    'search[query]'   : 'String'
+    'country'         : 'String'
+    'language'        : 'String'
+    'plugins'         : 'Array'
+    'timezone'        : 'String'
+    'day_light_saving': 'Boolean'
   */
   getProperty : function(propertyTypes)
   {
@@ -103,7 +103,7 @@ trigger_fish.rbTSystemVar = {
 
   setPropertyInCookie : function(property)
   {
-    trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.systemProp, JSON.stringify(property));
+    trigger_fish.rbTStore.set(trigger_fish.rbTStore.defaultKeys.systemProp, JSON.stringify(property));
   },
 
   setEJProp : function(json)
@@ -557,7 +557,7 @@ var session_fetch = (function(win, doc, nav)
       }
     }
   };
-
+  /*
   // JSON
   var JSON = {
     parse: (win.JSON && win.JSON.parse) || function(data){
@@ -581,7 +581,7 @@ var session_fetch = (function(win, doc, nav)
         }
         return (isArray ? "[" : "{") + json.join(",") + (isArray ? "]" : "}");
       } } };
-
+  */
   // Initialize SessionRunner
   SessionRunner();
 

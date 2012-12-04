@@ -1,0 +1,66 @@
+{{view App.BannerView }}
+{{view App.AlertView alertParamsBinding="view.alert"}}
+{{view App.InlineAlertView }}
+
+{{#if controller.content.length}}
+
+    <div class="rule_list">
+      <div class="add_rule_box">
+        <div class="btn_box">
+           <a class="btn btn-large btn-success" {{action createRule}}> Add a new rule </a>
+        </div>
+      </div>
+      <div class="label_box">
+        <h4> {{controller.content.length}} Rules are configured for the application </h4>
+      </div>
+      {{#each rule in controller.content}}   
+
+        
+        <div class="entry">
+          <div class="description" {{action "editRules" rule}}>
+
+            <div class='title'>
+
+              {{#if rule.name}}
+                {{rule.name}}
+              {{else}}
+                anonymous rule
+              {{/if}}              
+            </div>
+            <div class="sub">
+              <div class="small">
+                trigger:
+              </div>
+              <div class='action'>
+                {{rule.displayAction}}
+              </div>            
+              <div class="small">
+                on occurrence of:
+              </div>
+
+              <div class='event'>
+                {{rule.event}}
+              </div>   
+
+            </div>
+
+
+          </div>
+
+          <div class="delete" {{action "deleteRule" rule}}> delete this rule </div>
+
+        </div>
+      {{/each}}
+    
+    </div>
+
+
+{{else}}
+
+    <div class="bare_bone_box">
+        <div class="btn_box">
+            <a class="btn btn-large btn-success" {{action createRule}}> Create Rules </a>
+        </div>
+    </div>
+    
+{{/if}}

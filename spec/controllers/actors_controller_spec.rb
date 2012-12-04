@@ -1,5 +1,6 @@
 require 'spec_helper'
 
+
 describe ActorsController do
 
   before(:each) do
@@ -15,7 +16,6 @@ describe ActorsController do
   describe "create actor" do
     it "should create actor properly" do
       post 'create', { 
-                      callback: 'parseUser',
                       app_id: @app._id,
                       properties: { profile: 
                           {:email => "john.doe@example.com",
@@ -28,6 +28,36 @@ describe ActorsController do
       puts JSON.parse(response.body).inspect
       response.status.should eq(200)
       Actor.count.should eq(3)
+    end
+  end
+
+  describe "delete actor" do
+
+    before(:each) do
+      post 'create', { 
+                      app_id: @app._id,
+                      properties: { profile: 
+                          {:email => "john.doe@example.com",
+                          :customer => {:address => {:city => {:geo =>{:lat => 23, :long => 34}, :name => "bangalore"}, :place => ["hello"]}}
+                          }, 
+                        system: {browser: "chrome", os: "linux"}
+        }
+      }
+      
+      hash = Yajl::Parser.parse(response.body)
+      puts hash
+      @id  = Yajl::Parser.parse(response.body)["id"]
+      puts @id
+    end
+
+    it "should not delete an invalid app" do
+      post 'delete', { id: "3423424234" }
+      Actor.count.should eq(3)
+    end
+
+    it "should delete a valid app" do
+      post 'delete', { id: @id }
+      Actor.count.should eq(2)
     end
   end
 

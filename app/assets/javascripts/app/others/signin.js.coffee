@@ -11,9 +11,9 @@ $(".trigger_js_event").live "click", ->
 
   btn_type = $(this).attr("btn_type")
     
-  if btn_type is "registration"
-    App.mixpanel.trackSignUp email, name
+  # if btn_type is "registration"
+  #   App.mixpanel.trackSignUp email, name
 
-  else if btn_type is "session"
-  	App.mixpanel.trackSignIn email
+  # else if btn_type is "session"
+  # 	App.mixpanel.trackSignIn email
 

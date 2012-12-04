@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 ruby "1.9.3"
 
-gem 'rails', '3.2.8'
+gem 'rails', '3.2.9'
 
 gem 'heroku'
 gem 'rb-readline'
@@ -9,32 +9,30 @@ gem 'rb-readline'
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-  gem "bootstrap-sass", "~> 2.0.4.0"
-  gem 'sass-rails',   '~> 3.2.3'
-  gem 'coffee-rails', '~> 3.2.1'
+  gem "bootstrap-sass"
+  gem 'sass-rails'
+  gem 'coffee-rails'
   gem 'less-rails'
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-  # gem 'therubyracer'
+  gem 'therubyracer'
 
-  gem 'uglifier', '>= 1.0.3'
+  gem 'uglifier'
 end
 
 # Add Jquery source gems for asset pipline
-gem 'jquery-rails', "1.0.19"
+gem 'jquery-rails'
 gem 'fancybox-rails'
 gem "select2-rails"
 gem 'jquery-datatables-rails'
 gem 'bootstrap-colorpicker-rails'
 gem 'bootstrap-datepicker-rails'
-gem 'jquery-tablesorter'
-gem 'handlebars_assets'
-gem 'ember-rails', :git => 'git://github.com/emberjs/ember-rails.git'
-gem 'ember-rest-rails'
+gem 'ember-rails'
+gem 'font-awesome-rails'
 gem 'twitter-bootstrap-rails'
 gem 'less-rails-bootstrap'
 gem 'google-code-prettify-rails'
-#gem 'highlight_js-rails'
+
 
 #algorithms
 gem 'algorithms'

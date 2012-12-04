@@ -46,27 +46,6 @@
         /* jStorage version */
         JSTORAGE_VERSION = "0.3.0";
 
-        /* detect a dollar object or create one if not found */
-        //$ = window.jQuery || window.$ || (window.$ = {}),
-
-        /* check for a JSON handling support */
-        /*JSON = {
-            parse:
-                window.JSON && (window.JSON.parse || window.JSON.decode) ||
-                String.prototype.evalJSON && function(str){return String(str).evalJSON();} ||
-                $.parseJSON ||
-                $.evalJSON,
-            stringify:
-                Object.toJSON ||
-                window.JSON && (window.JSON.stringify || window.JSON.encode) ||
-                $.toJSON
-        };
-
-    // Break if no JSON support was found
-    if(!JSON.parse || !JSON.stringify){
-        throw new Error("No JSON support found, include //cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js to page");
-    }*/
-
     var
         /* This is the object, that holds the cached values */
         _storage = {},

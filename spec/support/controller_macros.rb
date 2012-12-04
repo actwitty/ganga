@@ -1,4 +1,3 @@
-require 'json'
 module ControllerMacros
   def login_account
     before(:each) do

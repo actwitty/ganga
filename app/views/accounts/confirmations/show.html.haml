@@ -1,35 +1,46 @@
-.main_nav
-  %ul
-    %li
-      %a.scroll{:href => "/"} Home        
-    %li
-      %a.scroll{:href => "/accounts/confirmation/new"} Resend Confirmation
-.main_padding
-.row.equal-heights{:style => "text-align: center;"}
+.navbar.navbar-fixed-top
+  .navbar-inner
+    .container
+      %a.btn.btn-navbar{"data-target" => ".nav-collapse", "data-toggle" => "collapse"}
+        %span.icon-bar
+        %span.icon-bar
+        %span.icon-bar
+      
+      %a.brand{:href => "/"}
+        Rulebot
+
+    
+.row.equal-heights{:style => "text-align: center;margin-top:30px;height:400px;"}
   
-  = form_for resource, :as => resource_name, :url => update_account_confirmation_path, :html => {:method => 'put'} do |f|
+  = form_for(resource, :as => resource_name, :url => update_account_confirmation_path(resource_name), :method => :put) do |f|    
     %fieldset
       %legend 
         Account Activation
         - if resource.email
           for #{resource.email}
-      - if @requires_password
-        .control-group
-          .controls
-            = f.label :name
-            = f.text_field :name, placeholder: :name          
-        .control-group
-          .controls
-            = f.label :password
-            = f.password_field :password, placeholder: :password
-        .control-group
-          .controls
-            = f.label :password_confirmation
-            = f.password_field :password_confirmation, placeholder: "password confirmation"   
-        = hidden_field_tag :confirmation_token, @confirmation_token
-        .control-group
-          .controls
-            = f.submit "Activate", :class => "btn btn-primary"
+      %br/      
+      .control-group
+        .controls
+          .h5{:style => "margin:auto;width:224px;text-align:left;"}Name:
+          = f.text_field :name, placeholder: :name          
+      .control-group
+        .controls
+          .h5{:style => "margin:auto;width:224px;text-align:left;"}Password:
+          = f.password_field :password, placeholder: :password
+      .control-group
+        .controls
+          .h5{:style => "margin:auto;width:224px;text-align:left;"}Confirm Password:
+          = f.password_field :password_confirmation, placeholder: "password confirmation"   
+        = hidden_field_tag :confirmation_token, @confirmation_token                    
+      %br/
+      %br/            
+      .control-group
+        .controls
+          = f.submit "Activate", :class => "btn btn-large btn-success"
+ 
 
-  
+%div{:id=>"extra"}
+  %div{:class=>"inner", :style=>"min-height:400px;"}
+
+
 

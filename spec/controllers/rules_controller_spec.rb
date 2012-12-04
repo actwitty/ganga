@@ -256,7 +256,7 @@ describe RulesController do
       @app.rules.count.should eq(2)
       response.status.should eq(200)
     end
-    it "should read all rules with valid event name" do
+    it "should delete all rules with valid event name" do
       post 'delete', {
         app_id: @app._id,
         event: "sign_up",
@@ -266,12 +266,12 @@ describe RulesController do
       response.status.should eq(200)
     end
 
-    it "should read all rules of an app" do
+    it "should never delete all rules of an app" do
       post 'delete', {
         app_id: @app._id,
       }
       @app.reload
-      @app.rules.count.should eq(0)
+      @app.rules.count.should eq(3)
       response.status.should eq(200)
     end
   end

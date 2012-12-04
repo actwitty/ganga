@@ -1,7 +1,7 @@
 
 
 
-/***********************[[2012-11-23 22:05:27 +0530]]*********************************/ 
+/***********************[[2012-12-04 18:59:24 +0530]]*********************************/ 
 
 
 
@@ -35,246 +35,210 @@
 
 var trigger_fish = {};
 
-trigger_fish.rbTAPP = {
-    /* Main configs will be holded here */
-    configs : {
+trigger_fish.rbTAPP = function() {
+    var version = "1.0.1";
+    var configs = {
       "status" : false,
       "transVar" : {}
-    },
-    el : {},
-    
-    /** 
-    *  Do following tasks on initialization of the app
-    *  1). include jQuery if need be
-    *  2). create session.
-    *  3). fetch configs.
-    *  4). check status of last event, if pending, execute it.
-    *  5). fetch system properties if cache miss
-    *  6). Allow Business to make calls
-    *  
-    *  @return void
-    */
-    initialize : function()
-    {
-      "use strict";
-      this.getAppData();
-      
+    }; 
 
-    },
+    return {    
+        /** 
+        *  Do following tasks on initialization of the app
+        *  Get app details
+        *  @return void
+        */
+        initialize : function()
+        {
+          "use strict";
+          trigger_fish.rbTDebug.log("Initializing RBT APP");
+          trigger_fish.rbTServerChannel.appDetails();
+        },
 
-    /**
-    * Check status of RBT APP
-    *
-    * @param {function} callback Callback function if rbTAPP is alive.
-    * @param {object} args Arguments with which callback will be called.
-    * @return void   
-    */
-    isrbTAlive :  function()
-    {
-       return this.configs.status;
-    },  
+        /**
+        *
+        */ 
+        releasePreInitCalls : function(w)
+        {
+          var l = w.rb.q;
+          w.rb = new RBT();
+          if (l.length) {
+            for (var c in l) { var o = l[c]; rb[o.t](o.a,o.b,o.c); }    
+          }
+        },
 
-    /**
-    *
-    */
-    setrbTAlive : function()
-    {
-      this.configs.status = true;
-      //this.dispatchEL("isRbtAlive");
-      trigger_fish.rbTServerChannel.flushReqQueue();
-    },
+        /**
+        *
+        */
+        actOnJQInit : function()
+        {
+          this.enablePlugins();
+          trigger_fish.rbTActor.retFromCookie();
+          this.releasePreInitCalls(window);
+          trigger_fish.rbTUtils.invokeEasyJquery("trigger_fish.rbTUtils.keepEasyJQVars");
+        },
 
-    /**
-    * Set RBT APP Status to true to signal app is alive
-    */
-    wake_RBT_APP : function()
-    {
-      trigger_fish.rbTDebug.log("Initializing RBT APP");
-      trigger_fish.rbTAPP.initialize();
-    },
+        /**
+        * Enable plugins related to cors/storage. 
+        * Additional responsibilty of invoking Easy Jquery
+        */
+        enablePlugins : function()
+        {
+          trigger_fish.enableCORS(jQuery);
+          trigger_fish.initJStorage();
+        },
 
-    /** 
-    *  Set App Id
-    *  @param {string} id
-    *  @return void
-    */
-    setAppID: function(id)
-    {
-      this.configs.appID = id;
-    },
+        /**
+        * Check status of RBT APP
+        *
+        * @param {function} callback Callback function if rbTAPP is alive.
+        * @param {object} args Arguments with which callback will be called.
+        * @return void   
+        */
+        isAlive :  function()
+        {
+          return configs.status;
+        },  
 
-    /** 
-    *  Set Account ID
-    *  @param {string} id 
-    *  @return void
-    */
-    setAccountID : function(id)
-    {
-      this.configs.accountID = id;
-    },
+        /**
+        *
+        */
+        setrbTAlive : function()
+        {
+          configs.status = true;
+          trigger_fish.rbTServerChannel.flushReqQueue();
+        },
 
-    /** 
-    *  Set Session ID
-    *  @param {string} id 
-    *  @return void
-    */
-    setSessionID : function(id)
-    {
-      this.configs.sessionID = id;
-    },
+        /**
+        * Set RBT APP Status to true to signal app is alive
+        */
+        wakeUp : function()
+        {
+          trigger_fish.rbTDebug.log("Initializing RBT APP");
+          this.initialize();
+        },
 
-    /**
-    *
-    *
-    */   
-    setTransVar : function(event,data)
-    {
-      this.configs.transVar.event = data;
-    },
+        /** 
+        *  Set App Id
+        *  @param {string} id
+        *  @return void
+        */
+        setAppID: function(id)
+        {
+          configs.appID = id;
+        },
 
-    /**
-    *
-    */
-    setAppDetail : function(data)
-    {
-      this.configs.appData = data;
-    },
+        /** 
+        *  Set Account ID
+        *  @param {string} id 
+        *  @return void
+        */
+        setAccountID : function(id)
+        {
+          configs.accountID = id;
+        },
 
-    /**
-    *
-    */
-    addEL : function(event, cb, scope)
-    {
-      if (!this.el.event)
-        this.el.event = [];
-      var listenerObj = {"action":cb,"scope":scope};
-      if (this.el.event.indexOf(JSON.stringify(listenerObj)) === -1)
-        this.el.event.push(listenerObj);
-    },
+        /** 
+        *  Set Session ID
+        *  @param {string} id 
+        *  @return void
+        */
+        setSessionID : function(id)
+        {
+          configs.sessionID = id;
+        },
 
-    /**
-    *
-    */
-    dispatchEL : function(event)
-    {
-      if (!this.el.event)
-        return;
-      var wL = this.el.event.length;
-      for(var i = 0 ; i < wL ; ++i) {
-        var listener = this.el.event[i];
-        listener.action.apply(listener.scope);
-      }
-      this.el.event = [];
-    },  
+        /**
+        *
+        */   
+        setTransVar : function(event,data)
+        {
+          configs.transVar.event = data;
+        },
 
-    /** 
-    *  Get App ID
-    *  @return {string} id 
-    */
-    getAppID : function()
-    {
-      return this.configs.appID
-    },
+        /**
+        *
+        */
+        setAppDetail : function(data)
+        {
+          configs.appData = data;
+        },
 
-    /** 
-    *  Get Account ID
-    *  @return {string} id 
-    */  
-    getAccountID : function()
-    {
-      return this.configs.accountID;
-    },   
+        /** 
+        *  Get App ID
+        *  @return {string} id 
+        */
+        getAppID : function()
+        {
+          return configs.appID;
+        },
 
-    /** 
-    *  Get Session ID
-    *  @return {string} id 
-    */  
-    getSessionID : function()
-    {
-      return this.configs.sessionID;
-    },
+        /** 
+        *  Get Account ID
+        *  @return {string} id 
+        */  
+        getAccountID : function()
+        {
+          return configs.accountID;
+        },   
 
-    /**
-    *
-    */
-    getTransVar : function(event)
-    {
-      return this.configs.transVar.event;
-    },
+        /** 
+        *  Get Session ID
+        *  @return {string} id 
+        */  
+        getSessionID : function()
+        {
+          return configs.sessionID;
+        },
 
-    /**
-    *
-    */
-    getAppDetail : function()
-    {
-      return this.configs.appData;
-    },
+        /**
+        *
+        */
+        getTransVar : function(event)
+        {
+          return configs.transVar.event;
+        },
 
-    /** 
-    *  Get Application configs
-    *  @return {rbTAPP.configs} 
-    */ 
-    getConfigs : function()
-    {
-      "use strict";
-      var cnf = {"app_id"  : this.configs.appID,
-                 "account_id" : this.configs.accountID  
-                }; 
-      
-       var actor_id = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID);
-       if (actor_id)  {
-        cnf["actor_id"] = actor_id;
-       }
-      return cnf;
-    },  
+        /**
+        *
+        */
+        getAppDetail : function()
+        {
+          return configs.appData;
+        },
 
-   
-
-    /** 
-    *  Get Application based configs
-    *  FIXME : THIS NEEDS TO BE DISCUSSED AS WE ARE PLANNING TO HAVE A PROXY IN BETWEEN
-    *  @return {string} TBD 
-    */
-    getAppData : function()
-    {
-      trigger_fish.rbTServerChannel.makeServerRequest({"url"      : trigger_fish.rbTServerChannel.url.appDetails,
-                                                       "app_read" : true,
-                                                       "async"    : "noasync", 
-                                                       "cb"       : { success: trigger_fish.rbTServerResponse.setAppDetail,
-                                                                      error  : trigger_fish.rbTServerResponse.defaultError
-                                                                    }
-                                                      });
-    },  
-
-    /** 
-    *  report error to rbT server
-    *  @param {object} params Error log message 
-    *  @return void
-    */ 
-    reportError : function(params)
-    {
-      try {
-          //trigger_fish.rbTDebug.error(params);
-          if (params.server) 
-            trigger_fish.rbTServerChannel.reportError(params);
-      } catch(e) {
-        // FIXME what to do?
-      }
-    },
-    
-    /** 
-    *  log
-    *  @param {object} params Error log message 
-    *  @return void
-    */
-    log : function(params)
-    {
-      if(params && params.message)
-        trigger_fish.rbTDebug.log(params.message);
-      trigger_fish.rbTDebug.log(params)
-    },
-
-};
+        /** 
+        *  report error to rbT server
+        *  @param {object} params Error log message 
+        *  @return void
+        */ 
+        reportError : function(params)
+        {
+          try {
+              this.log(params);
+              if (params.server) {
+                trigger_fish.rbTServerChannel.reportError(params);
+              }
+          } catch(e) {
+            // FIXME what to do?
+          }
+        },
+        
+        /** 
+        *  log
+        *  @param {object} params Error log message 
+        *  @return void
+        */
+        log : function(params)
+        {
+          if(params && params.message) {
+            trigger_fish.rbTDebug.log(params.message);
+          }
+          //trigger_fish.rbTDebug.log(params)
+          console.log(params);
+        },
+    };    
+}();
 
 
 
@@ -328,27 +292,6 @@ trigger_fish.rbTAPP = {
     var
         /* jStorage version */
         JSTORAGE_VERSION = "0.3.0";
-
-        /* detect a dollar object or create one if not found */
-        //$ = window.jQuery || window.$ || (window.$ = {}),
-
-        /* check for a JSON handling support */
-        /*JSON = {
-            parse:
-                window.JSON && (window.JSON.parse || window.JSON.decode) ||
-                String.prototype.evalJSON && function(str){return String(str).evalJSON();} ||
-                $.parseJSON ||
-                $.evalJSON,
-            stringify:
-                Object.toJSON ||
-                window.JSON && (window.JSON.stringify || window.JSON.encode) ||
-                $.toJSON
-        };
-
-    // Break if no JSON support was found
-    if(!JSON.parse || !JSON.stringify){
-        throw new Error("No JSON support found, include //cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js to page");
-    }*/
 
     var
         /* This is the object, that holds the cached values */
@@ -1800,14 +1743,17 @@ trigger_fish.rbTActor = function() {
       */
       retFromCookie : function()
       {
-      	trigger_fish.rbTDebug.log("retrieveing data for actor from cookie");
-        if (trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorProp)) {
-          this.setProperties(trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorProp)); 
+      	trigger_fish.rbTDebug.log("Trying to retrieve data for actor from cookie");
+        if (trigger_fish.rbTStore.get(trigger_fish.rbTStore.defaultKeys.actorProp)) {
+          trigger_fish.rbTDebug.log("Got Actor data in storage - enabling actor now!!");  
+          this.setProperties(trigger_fish.rbTStore.get(trigger_fish.rbTStore.defaultKeys.actorProp)); 
           this.enable();
         }
-        if (trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID)) {
-          this.setID(trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID));
+        if (trigger_fish.rbTStore.get(trigger_fish.rbTStore.defaultKeys.actorID)) {
+          trigger_fish.rbTDebug.log("Got actor id in storage - setting actor id now!!");
+          this.setID(trigger_fish.rbTStore.get(trigger_fish.rbTStore.defaultKeys.actorID));
         } else {
+          trigger_fish.rbTDebug.log("HAVE TO CREATE DUMMY ACTOR!!");
           this.createDummyActor();
         }
       },
@@ -1848,7 +1794,7 @@ trigger_fish.rbTActor = function() {
       */
       setID : function(id)
       {
-        trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.actorID, id);
+        trigger_fish.rbTStore.set(trigger_fish.rbTStore.defaultKeys.actorID, id);
         __id = id;
       },
 
@@ -1859,7 +1805,7 @@ trigger_fish.rbTActor = function() {
       setProperties : function(prop)
       {
         __prop = prop;
-        trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.actorProp, JSON.stringify(prop));
+        trigger_fish.rbTStore.set(trigger_fish.rbTStore.defaultKeys.actorProp, prop);
         this.enable();
       },
 
@@ -1869,10 +1815,9 @@ trigger_fish.rbTActor = function() {
       */
       propExist : function(prop)
       {
-        var a = JSON.stringify(__prop).replace(/(^{)|(}$)/g, "");
-        var b = JSON.stringify(prop).replace(/(^{)|(}$)/g, "");
-        trigger_fish.rbTDebug.log({"stored" : a , "passed" : b, "message":"actor prop existence"});
-        return (a.indexOf(b) >= 0) ? true : false;
+        var diff = {};
+        diff = trigger_fish.rbTUtils.diff(prop,__prop, diff);
+        return diff;
       },
 
       /**
@@ -1881,13 +1826,15 @@ trigger_fish.rbTActor = function() {
       */
       createDummyActor : function()
       {
+        trigger_fish.rbTAPP.log({"message":"Creating dummy actor"});
         if (!__id || !__prop) {
-          var obj = {"url"      : trigger_fish.rbTServerChannel.url.createActor,
-                     "app_read" : true, 
-                     "cb"       : { success: trigger_fish.rbTServerResponse.setActorID,
-                                    error  : trigger_fish.rbTServerResponse.defaultError
-                                  }
-                  };
+          var obj = {"url"         : trigger_fish.rbTServerChannel.url.createActor,
+                     "actor_create": true, 
+                     "type"        : "POST",
+                     "cb"          : { success: trigger_fish.rbTServerResponse.setActorID,
+                                       error  : trigger_fish.rbTServerResponse.defaultError
+                                     }
+                    };
           trigger_fish.rbTServerChannel.makeServerRequest(obj);
         }
       },
@@ -1898,10 +1845,10 @@ trigger_fish.rbTActor = function() {
       */
       requestActorDetails : function(data)
       {
-        var oldActorId = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID);
-        var actorProp = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorProp);
+        var oldActorId = trigger_fish.rbTStore.get(trigger_fish.rbTStore.defaultKeys.actorID);
+        var actorProp = trigger_fish.rbTStore.get(trigger_fish.rbTStore.defaultKeys.actorProp);
         if (!oldActorId || (oldActorId !== data.id) || !actorProp) {
-          trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.actorID, JSON.stringify(data.id));
+          trigger_fish.rbTStore.set(trigger_fish.rbTStore.defaultKeys.actorID, JSON.stringify(data.id));
           this.setID(data.id);
           trigger_fish.rbTServerChannel.actorDetails();
         }
@@ -2057,15 +2004,10 @@ trigger_fish.rbTRules = {
           });
           
     } catch (e) {
-      if (that.ruleTable[event])
-        var ruleStr = that.ruleTable[event].ruleString || "--";
-      else
-        var ruleStr = "Rule string cannot be formed!";  
-        trigger_fish.rbTAPP.reportError({"exception"  : e.message,
-                          "message"    : "rule execution on event failed" , 
-                          "event_name" : event,
-                          "rule_string": ruleStr
-                         });
+      trigger_fish.rbTAPP.reportError({"exception"  : e.message,
+                                       "message"    : "rule execution on event failed" , 
+                                       "event_name" : event,
+                                      });
     } 
   },
   
@@ -2082,7 +2024,7 @@ trigger_fish.rbTRules = {
   {
     "use strict";
     try {
-      var lastEvent = trigger_fish.rbTCookie.getCookie("lastevent");
+      var lastEvent = trigger_fish.rbTStore.get("lastevent");
       if (lastEvent) {
         this.executeRulesOnEvent(lastEvent);
       } else {
@@ -2119,21 +2061,8 @@ trigger_fish.rbTRules = {
   */  
   getDataType : function(event,ruleProp,scope,json)
   {
-    return json.type || undefined;
-    /* 
     // FIXME :: WE NEED TO CHANGE THIS TO GET IT FROM SCHEMA
-    //return Object.prototype.toString.call(a).split("]")[0].split(" ")[1];
-    var appSchema = trigger_fish.rbTAPP.getAppDetail().app.schema;
-
-    if (scope === "e") {
-      return appSchema.events[event][ruleProp];
-    } else if (scope === "s") {
-      return appSchema.system[ruleProp];
-    } else if (scope === "a") {
-      return appSchema.profile[ruleProp];
-    }
-    */
-
+    return json.type || undefined;
   },
 
   /**
@@ -2230,18 +2159,18 @@ trigger_fish.rbTRules = {
   {
     if (!ruleJson.property) 
       return false;
-    if (ruleJson.type ==="set") 
+    if (ruleJson.type === "set") 
       return true;
+
     var propVal = this.evalProperty(ruleJson);
     if (!propVal)
       return false;
+
     var propDT = this.getDataType(ruleJson.event, ruleJson.property, ruleJson.scope, ruleJson);
        
-
     var v1DT = Object.prototype.toString.call(ruleJson.value1).split("]")[0].split(" ")[1];
     if (ruleJson.value2)
       var v2DT = Object.prototype.toString.call(ruleJson.value2).split("]")[0].split(" ")[1];
-
     var v2DT = v2DT || v1DT;
 
     if (!this.permissions[propDT] || this.permissions[propDT].indexOf(ruleJson.operation) < 0)
@@ -2560,7 +2489,7 @@ trigger_fish.rbTServerResponse = {
     trigger_fish.rbTAPP.log({"message": "Handling event with server resp","data":respData});
     try {
       if(respData && respData.actor) {
-        trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.actor, respData.actor);
+        trigger_fish.rbTStore.set(trigger_fish.rbTStore.defaultKeys.actor, respData.actor);
       } else {
         throw "there is no data";
       }
@@ -2599,7 +2528,14 @@ trigger_fish.rbTServerResponse = {
 
   /**
   * Set App Specific configs
+  * Once we get the App deatails, do the following
+  * 1). Set App details
+  * 2). Set rules table
+  * 3). Set system vars
+  * 4). Retrieve stored actor data.
+  * 5). Make rbt app alive for calls.
   * @param {object} respData Data in response to server.
+  *
   */
   setAppDetail : function(respData)
   {
@@ -2607,10 +2543,9 @@ trigger_fish.rbTServerResponse = {
     trigger_fish.rbTAPP.setAppDetail(respData);
     trigger_fish.rbTRules.setRulesTable(respData.app.rules || {});
     trigger_fish.rbTSystemVar.init(respData);
-    trigger_fish.rbTActor.retFromCookie();
+    //trigger_fish.rbTActor.retFromCookie();
     trigger_fish.rbTAPP.setrbTAlive();
   }
-
 };
 
 
@@ -2711,6 +2646,8 @@ trigger_fish.rbTServerChannel = {
       k["actor_id"] = trigger_fish.rbTActor.getID() || "";
     } else if (obj.app_read) {
       k["id"] = trigger_fish.rbTAPP.getAppID() || "";
+    } else if(obj.actor_create) {
+      k["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
     } else if (obj.set_actor) {
       k["properties"] = {"profile":obj.params ? obj.params:{}};
       k["id"] = trigger_fish.rbTActor.getID() || "";
@@ -2759,10 +2696,8 @@ trigger_fish.rbTServerChannel = {
     try {
       var reqServerData = this.extendRequestData(obj);
       var callback = this.extendCallbacks(obj.cb);
-      if (obj.async && obj.async === "noasync")
-        var asyncSt = false;
-      else 
-        var asyncSt = true;
+      if (obj.async && obj.async === "noasync") var asyncSt = false;
+      else var asyncSt = true;
       var that = obj;
       var url = (obj.event) ? trigger_fish.rbTServerChannel.url.fireEvent : obj.url;
       that.requestData = reqServerData;
@@ -2770,7 +2705,6 @@ trigger_fish.rbTServerChannel = {
             url: getURL.call(this,obj.type,url),
             type: that.type || 'GET',
             async: asyncSt,
-            //dataType: 'json',
             contentType : getContentType(obj.type),
             data: reqServerData,
             crossDomain:true,
@@ -2778,7 +2712,7 @@ trigger_fish.rbTServerChannel = {
             xhrField : { withCredentials:true},
             beforeSend: function() {
                 if (that.event) {
-                  trigger_fish.rbTCookie.setCookie("lastevent", that.event);
+                  trigger_fish.rbTStore.set("lastevent", that.event);
                   trigger_fish.rbTAPP.setTransVar(that.event,that.params);
                 }
             },
@@ -2787,7 +2721,7 @@ trigger_fish.rbTServerChannel = {
                 trigger_fish.rbTAPP.log({"message":"server response success " + that.url,"data":respData});
 
                 if (that.event) {
-                  trigger_fish.rbTCookie.deleteCookie("lastevent");
+                  trigger_fish.rbTStore.deleteKey("lastevent");
                   trigger_fish.rbTRules.executeRulesOnEvent(that.event);
                   if (respData && respData.actor) { 
                     callback.success(respData);
@@ -2808,20 +2742,16 @@ trigger_fish.rbTServerChannel = {
                   trigger_fish.rbTServerChannel.actorDetails();
                 }
                 callback.error();
-                
             }
       });
     } catch(e) {
-      trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                          "message"   :"SERVER REQUEST FAILED" , 
+      trigger_fish.rbTAPP.reportError({ "exception" : e.message,
+                          "message"   : "SERVER REQUEST FAILED" , 
                           "obj"       : JSON.stringify(that),
                           "log"       : "error" 
                          }); 
     }
   },
-
-
-
 
   /**
   * Prepare Server request, queue req's if needed be.
@@ -2832,7 +2762,7 @@ trigger_fish.rbTServerChannel = {
     var that = obj;
     if (!obj)
       return;
-    if (!trigger_fish.rbTAPP.isrbTAlive()) {
+    if (!trigger_fish.rbTAPP.isAlive()) {
       if (obj.url)
         obj.async = obj.async || "async";
       this.queueReq(obj); 
@@ -2858,14 +2788,15 @@ trigger_fish.rbTServerChannel = {
   *  FIXME : IF THERE IS ANYTHING MISSING
   *  @return void
   */  
-  appDetails : function(params, callback)
+  appDetails : function()
   {
     "use strict";
-    var cb = this.extendCallbacks(callback);
-    this.makeServerRequest({"url": this.url.details,
-                      "params"     : params,
-                      "cb"         : cb
-                     });  
+    this.makeServerRequest({"url": this.url.appDetails,
+                            "app_read" : true,
+                            "cb"       : { success: trigger_fish.rbTServerResponse.setAppDetail,
+                                           error  : trigger_fish.rbTServerResponse.defaultError
+                                         }
+                           });  
   }, 
 
   /**
@@ -2961,7 +2892,7 @@ trigger_fish.rbTSystemVar = {
     "use strict";
     function isSystemVarDirty()
     {
-      var sysVarInCookie = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.systemProp);
+      var sysVarInCookie = trigger_fish.rbTStore.get(trigger_fish.rbTStore.defaultKeys.systemProp);
       
       if (!sysVarInCookie) {
         return true; 
@@ -3009,25 +2940,25 @@ trigger_fish.rbTSystemVar = {
 
 
   /** Get system variable property
-    'browser' : 'String'
+    'browser'         : 'String'
     'browser_version' : 'String'
     'operatingsystem' : 'String'
-    'referrer[host]' : 'String'
-    'referrer[path]' : 'String'
-    'referrer[name]' : 'String'
-    'device[type]' : 'String'
-    'device[name]' : 'String'
-    'screen[height]' : 'Number'
-    'screen[width]' :  'Number'
-    'viewport[height]' : 'Number'
+    'referrer[host]'  : 'String'
+    'referrer[path]'  : 'String'
+    'referrer[name]'  : 'String'
+    'device[type]'    : 'String'
+    'device[name]'    : 'String'
+    'screen[height]'  : 'Number'
+    'screen[width]'   : 'Number'
+    'viewport[height]': 'Number'
     'viewport[width]' : 'Number'
-    'search[engine]' : 'String'
-    'search[query]'  : 'String'
-    'country' : 'String'
-    'language' : 'String'
-    'plugins' : 'Array'
-    'timezone' : 'String'
-    'day_light_saving' : 'Boolean'
+    'search[engine]'  : 'String'
+    'search[query]'   : 'String'
+    'country'         : 'String'
+    'language'        : 'String'
+    'plugins'         : 'Array'
+    'timezone'        : 'String'
+    'day_light_saving': 'Boolean'
   */
   getProperty : function(propertyTypes)
   {
@@ -3036,7 +2967,7 @@ trigger_fish.rbTSystemVar = {
 
   setPropertyInCookie : function(property)
   {
-    trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.systemProp, JSON.stringify(property));
+    trigger_fish.rbTStore.set(trigger_fish.rbTStore.defaultKeys.systemProp, JSON.stringify(property));
   },
 
   setEJProp : function(json)
@@ -3490,7 +3421,7 @@ var session_fetch = (function(win, doc, nav)
       }
     }
   };
-
+  /*
   // JSON
   var JSON = {
     parse: (win.JSON && win.JSON.parse) || function(data){
@@ -3514,7 +3445,7 @@ var session_fetch = (function(win, doc, nav)
         }
         return (isArray ? "[" : "{") + json.join(",") + (isArray ? "]" : "}");
       } } };
-
+  */
   // Initialize SessionRunner
   SessionRunner();
 
@@ -3543,36 +3474,22 @@ var session_fetch = (function(win, doc, nav)
  * @memberOf jQuery
  */
 
-var backcode="1102012";
 function EasyjQuery_Cache_IP(fname,json) {
   trigger_fish.rbTAPP.log({"message":"easy jquery response","data":json});
   eval(fname + "(json);");
 }
-function EasyjQuery_Get_IP(fname,is_full) {
-  var full_version = "";
-  var easyJQData = trigger_fish.rbTCookie.getCookie("easy_jquery");
-  if (!easyJQData) {
-    trigger_fish.rbTAPP.log("Could not found easyJQData in cache, fetching it now!!!");
-    jQuery.getScript("https://api.easyjquery.com/ips/?callback=" + fname + full_version);
-  } else{
-    trigger_fish.rbTAPP.log("Found easyJQData in cache, setting it now!!!");
-    trigger_fish.rbTUtils.keepEasyJQVars(easyJQData);
-  }
-}
-
 trigger_fish.rbTUtils = {
 
   eJQ : {},
 
   /**
   *
-  *
   */
   keepEasyJQVars : function(data)
   {
     this.eJQ = data;
-    trigger_fish.rbTCookie.setCookie("easy_jquery",data);
-    trigger_fish.rbTAPP.wake_RBT_APP(); 
+    trigger_fish.rbTStore.set("easy_jquery",data);
+    trigger_fish.rbTAPP.initialize(); 
   },
 
   /**
@@ -3585,14 +3502,20 @@ trigger_fish.rbTUtils = {
 
   /**
   *
-  *
   */
-  invokeEasyJquery : function()
+  invokeEasyJquery : function(fname, is_full)
   {
-    trigger_fish.enableCORS(jQuery);
-    trigger_fish.initJStorage();
-    EasyjQuery_Get_IP("trigger_fish.rbTUtils.keepEasyJQVars");
+    var full_version = "";
+    var easyJQData = trigger_fish.rbTStore.get("easy_jquery");
+    if (!easyJQData) {
+      trigger_fish.rbTAPP.log("Could not found easyJQData in cache, fetching it now!!!");
+      jQuery.getScript("https://api.easyjquery.com/ips/?callback=" + fname + full_version);
+    } else{
+      trigger_fish.rbTAPP.log("Found easyJQData in cache, setting it now!!!");
+      this.keepEasyJQVars(easyJQData);
+    }
   },
+
 
   /** Initialize jquery if needed be
     *  @return void
@@ -3602,7 +3525,10 @@ trigger_fish.rbTUtils = {
   {
     function includeJQ()
     { 
-      this.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",trigger_fish.rbTUtils.invokeEasyJquery);
+      var rbTApp = trigger_fish.rbTAPP;
+      this.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",
+                        this.bindCB(rbTApp,rbTApp.actOnJQInit)
+                      );
     }
 
     if (typeof jQuery != 'undefined') {
@@ -3613,13 +3539,78 @@ trigger_fish.rbTUtils = {
             || /^1.3/.test(jQuery.fn.jquery)) {
             includeJQ.call(this);
         } else {
-          trigger_fish.rbTUtils.invokeEasyJquery();
+          trigger_fish.rbTAPP.actOnJQInit();
         }
     } else {
         includeJQ.call(this);
     }
   },
 
+  /**
+  *
+  */
+  bindCB : function(scope, fn) 
+  {
+    return function () {
+        fn.apply(scope, arguments);
+    };
+  },
+  
+  /**
+  * 
+  */
+  type : function(obj)
+  {
+    return Object.prototype.toString.call(obj).split("]")[0].split(" ")[1];
+  },
+
+  /**
+  * Check if object is empty. Find it recursively not only on keys but also on values.
+  * @param {object} o The object for which emptiness has to be checked.
+  * @return {boolean} 
+  */
+  isEmpty : function(o) 
+  {
+    if (!o) return true;
+    if (this.type(o) === "String" || this.type(o) === "Array") {
+      return o.length === 0;
+    } else if (this.type(o) === "Number") { return false;}
+    for(var i in o) {
+      if (this.type(o[i]) === "Object") {
+        return this.isEmpty(o[i]);
+      } else if (this.type(o[i]) === "String" || this.type(o[i]) === "Array") {
+        if (o[i].length) { return false;}
+      } else if (this.type(o[i]) === "Number") { return false;}
+    }
+    return true;
+  },
+
+  /**
+  * Specially curated to get difference from Rulebot server response.
+  * @param {object} first. The object for which difference has to be find out.
+  * @param {object} second. The object against which difference has to be find out.
+  * @param {object} r. The resultant object in which differential data will be stored.
+  * @return {object|undefined} If differential object, else undefined.
+  */ 
+  diff : function(first,second,r)
+  {
+    var i = 0;
+    for (i in first) {
+      if (this.type(second[i]) === "Undefined")  {
+        r[i] = first[i];  
+      } else if (this.type(first[i]) === "Object" && this.type(second[i]) === "Object") {
+        r[i] = diff(first[i], second[i], {});
+        if (!result[i]) delete result[i];
+      } else if ( this.type(second[i]) === "Array" && first[i] !== second[i][second[i].length-1]) {
+        r[i] = first[i];
+      }
+    }
+    return this.isEmpty(r) ? undefined : r;
+  },
+
+  /**
+  *
+  */ 
 	parseURL: function(urlStr)
 	{
       var a = document.createElement("a"), query = {};
@@ -3708,7 +3699,7 @@ trigger_fish.rbTUtils = {
 };
 
 
-/****************************[[rbTCookieHandler.js]]*************************************/ 
+/****************************[[rbTStore.js]]*************************************/ 
 
 
 /**
@@ -3727,174 +3718,111 @@ trigger_fish.rbTUtils = {
  * documents the function and classes that are added to jQuery by this plug-in.
  * @memberOf jQuery
  */
-trigger_fish.rbTCookie = {
+//trigger_fish.rbTKey = {
+trigger_fish.rbTStore = {  
 
   namePrefix : "RBT__",
+  defaultTTL:24 * 60 * 60 * 1000,  // in hours
 
-  // If we do not send following params while setting cookies, defaults will be used. 
-  defaultOptions : {
-    expire : 24 * 60 * 60 * 1000,  // in hours
-    path : "/",
-    domain : window.location.hostname,
-    secure: false
-  },
-
-  // Just harcode names for some of the default cookies which we will be using
-  defaultCookies : {
+  // Just harcode names for some of the default keys which we will be using
+  defaultKeys : {
     "actorID"    : "actor_id",
     "systemProp" : "system_prop",
     "actorProp"  : "actor_prop"
   },
 
-  /** Get RBT cookie string name.
-   *  @param {string} cookieName
+  /** Get RBT key string name.
+   *  @param {string} key
    *  @return string
    */
-  name : function(cookieName)
+  qualifiedName : function(key)
   {
-    return this.namePrefix + cookieName;
+    return this.namePrefix + key;
   },
 
-  /** Get cookie string.
-   *  @param {String} cookieName
+  /** Get key string.
+   *  @param {String} key
    *  @return string
    */
-  getCookie : function(cookieName)
+  get : function(key)
   {
-    "use strict";
-    //var results = document.cookie.match ( '(^|;) ?' + this.name(cookieName) + '=([^;]*)(;|$)' );
-    var value = trigger_fish.jStorage.get(this.name(cookieName));
-
-    if (value)
-        return value;
-    else
-        return undefined;
+    var value = trigger_fish.jStorage.get(this.qualifiedName(key));
+    return (value?value:undefined);
   },
 
-  /** Check cookie existence
-   *  @param {string} cookieName
+  /** Check key existence
+   *  @param {string} key
    *  @return boolean
    */
-  doesCookieExist : function(cookieName)
+  doesKeyExist : function(key)
   {
-    //if (document.cookie.indexOf(this.name(cookieName)) >= 0) {
-    if (this.getCookie(cookieName)) {
-        return true;
-    } else {
-        return false;
-    }
+    return (this.get(key)?true:false);
   }, 
 
-
-  /** Set cookie options.
+  /** Set key with options passed as key:value pair.
    * 
-   * @param {this.defaultOptions} [options] set options
+   * @param {string} key
+   * @param {string} keyValue
+   * @param {this.defaultTTL} [options] set options
    * @return string
    */
-  cookieOptions : function(options) {
-    "use strict";
-    var cOptions = {};
-
-    function getExpDate(hours)
-    {
-      var expiryDate = new Date();
-      expiryDate.setTime(expiryDate.getTime()+(30 * hours)); // default day is set to 30
-      return expiryDate.toGMTString();
-    }
-
-    if (!options) {
-      this.defaultOptions.expire = getExpDate(this.defaultOptions.expire);
-      return this.defaultOptions;
-    }
-      
-
-    // Set options if passed else use default options.
-    cOptions.expire = options.expire || this.defaultOptions.expire;
-    cOptions.path = options.path || this.defaultOptions.path;
-    cOptions.domain = options.domain || this.defaultOptions.domain;
-    cOptions.secure = options.secure || this.defaultOptions.secure;  
-
-    cOptions.expire = getExpDate(cOptions.expire);
-
-    return cOptions;
-
-  },
- 
-  /** Set cookie with options passed as key:value pair.
-   * 
-   * @param {string} cookieName
-   * @param {string} cookieValue
-   * @param {this.defaultOptions} [options] set options
-   * @return string
-   */
-  setCookie : function(cookieName, cookieValue, options)
+  set : function(key, keyValue, options)
   {
     "use strict";
     try {
-        
-        /*
-        var cookieString = this.name(cookieName) + "=" + escape(cookieValue);
-        var cookieOptions =  this.cookieOptions(options);
-        cookieString += "; expires=" + cookieOptions.expire;
-        cookieString += "; path=" + escape(cookieOptions.path);
-        cookieString += "; domain=" + escape(cookieOptions.domain);
-        if (cookieOptions.secure) cookieString += "; secure";
-        document.cookie = cookieString; 
-        */
-
-        trigger_fish.jStorage.set(this.name(cookieName), cookieValue, {TTL: this.defaultOptions.expire});
-
+      trigger_fish.jStorage.set(this.qualifiedName(key), 
+                                keyValue, 
+                                {TTL: this.defaultTTL});
     } catch(e) {
-      // FIXME  what to do?
       trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                          "message"   : "cookie set failed",
-                          "name"      : cookieName,
-                          "value"     : cookieValue,
+                          "message"   : "key set failed",
+                          "name"      : key,
+                          "value"     : keyValue,
                           "options"   : options,
                           "log"       : true 
                          });
     }
   },
 
-  /** Delete a cookie
+  /** Delete a key
    *
-   * @param {string} cookieName
+   * @param {string} key
    * @return void
    */
-  deleteCookie :  function(cookieName, options)
+  deleteKey :  function(key, options)
   {
     "use strict";
     try {
-        trigger_fish.jStorage.deleteKey(this.name(cookieName));                  
+        trigger_fish.jStorage.deleteKey(this.qualifiedName(key));                  
     } catch (e) {
       trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                          "message"   : "cookie delete failed",
-                          "name"      : cookieName,
+                          "message"   : "key delete failed",
+                          "name"      : key,
                           "log"       : true 
                          });
     }
   },
 
 
-  /** Flush all cookie
+  /** Flush all key
    *
    *  @return void
    */
-  flushAllCookie: function() 
+  flushAllKey: function() 
   {
     "use strict";
     try {
-      var cookies = trigger_fish.jStorage.index();
-      for (var i = 0; i < cookies.length; i++) {   
-          var cookie =  cookies[i]
-          if ((cookie.match("^"+this.namePrefix))) {
-            trigger_fish.jStorage.deleteKey(cookie);
+      var keys = trigger_fish.jStorage.index();
+      for (var i = 0; i < keys.length; i++) {   
+          var key =  keys[i]
+          if ((key.match("^"+this.namePrefix))) {
+            trigger_fish.jStorage.deleteKey(key);
           }
       }
     } catch(e) {
       // FIXME what to do?
       trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                          "message"   : "cookie flush all failed",
+                          "message"   : "key flush all failed",
                           "log"       : true 
                          });
     }
@@ -3926,100 +3854,131 @@ trigger_fish.rbTCookie = {
 var RBT = function() {
 	this._appID = trigger_fish.rbTAPP.getAppID();
 	this._accountID = trigger_fish.rbTAPP.getAccountID();
-	this._status = trigger_fish.rbTAPP.isrbTAlive();
+	this._status = trigger_fish.rbTAPP.isAlive();
+  this._state = true;
 };
 
 
-/** 
-* Tell whether RBT app is alive
-* 
-* @return {boolean} status
-*/
-RBT.prototype.isAlive = function()
-{
-	this._status = trigger_fish.rbTAPP.isrbTAlive();
-	return this._status;
-};
+RBT.prototype = {
+  /** 
+  * Tell whether RBT app is alive
+  * 
+  * @return {boolean} status
+  */
+  isAlive : function()
+  {
+    this._status = trigger_fish.rbTAPP.isAlive();
+    return this._status;
+  },
 
+  /**
+  * Enable rulebot api's
+  */
+  enable : function()
+  { 
+    this._state = true;
+  },
 
-/** 
-* Send event to RBT server 
-* 
-* @param {string} event
-* @param {object} [params]
-* @return void
-*/
-RBT.prototype.sendEvent = function(event, params)
-{
-  "use strict";
-  if (!event || typeof(event) != "string" || event === "" ) {
-    return;
-  }
-  var obj = {"event" : event, 
-             "params": params,
-             "type"  : "POST",
-             "cb"    : { success: trigger_fish.rbTServerResponse.handleEvent,
-                         error  : trigger_fish.rbTServerResponse.defaultError
-                       }
-            };
-  trigger_fish.rbTServerChannel.makeRequest(obj);
-};
+  /**
+  * Disable rulebot api's
+  */
+  disable : function()
+  {
+    this._state = false;
+  },
 
-/** 
-* Req RBT server to identify actor based on params
-* 
-* @param {object} params Option based on which actor will be identified
-* @return void
-*/
-RBT.prototype.identify = function(params)
-{
-  "use strict";
-  var obj = {"url"     : trigger_fish.rbTServerChannel.url.identify, 
-             "params"  : params,
-             "identify": true,
-             "type"    : "POST",
-             "cb"      : { success: trigger_fish.rbTServerResponse.setActorID,
+  /**
+  * Tell the status of rulebot.
+  * @param {boolean} state.
+  */
+  isEnabled : function()
+  {
+    return this._state;
+  },
+
+  /** 
+  * Send event to RBT server 
+  * 
+  * @param {string} event
+  * @param {object} [params]
+  * @return void
+  */
+  sendEvent : function(event, params)
+  {
+    "use strict";
+    if (!this.isEnabled())
+      return;  
+    if (!event || typeof(event) != "string" || event === "" ) {
+      return;
+    } 
+    var obj = {"event" : event, 
+               "params": params,
+               "type"  : "POST",
+               "cb"    : { success: trigger_fish.rbTServerResponse.handleEvent,
                            error  : trigger_fish.rbTServerResponse.defaultError
                          }
-            };
-  trigger_fish.rbTServerChannel.makeRequest(obj);
-};
+              };
+    trigger_fish.rbTServerChannel.makeRequest(obj);
+  },
 
+  /** 
+  * Req RBT server to identify actor based on params
+  * 
+  * @param {object} params Option based on which actor will be identified
+  * @return void
+  */
+  identify : function(params)
+  {
+    "use strict";
+    if (!this.isEnabled())
+      return;
+    var obj = {"url"     : trigger_fish.rbTServerChannel.url.identify, 
+               "params"  : params,
+               "identify": true,
+               "type"    : "POST",
+               "cb"      : { success: trigger_fish.rbTServerResponse.setActorID,
+                             error  : trigger_fish.rbTServerResponse.defaultError
+                           }
+              };
+    trigger_fish.rbTServerChannel.makeRequest(obj);
+  },
 
+  /** 
+  * Req RBT server to set current actor property
+  * 
+  * @param {object} params Option based on which actor property will be set
+  * @return void
+  */
+  setUser : function(params)
+  {
+    "use strict";
+    var diff = {};
+    if (!this.isEnabled()) return;
+    diff = trigger_fish.rbTActor.propExist(params);
+    //params = (diff === undefined ) ? params : diff ;
+    if (!diff) return;  
+    var obj = {"url"      : trigger_fish.rbTServerChannel.url.setActor, 
+               "params"   : diff,
+               "set_actor": true,
+               "type"     : "POST",
+               "cb"       : { success: trigger_fish.rbTServerResponse.setActorProperty,
+                              error  : trigger_fish.rbTServerResponse.defaultError
+                            }
+               };
+    trigger_fish.rbTServerChannel.makeRequest(obj);
+  },
+  /** 
+  * ALIAS
+  * 
+  * @param {object} params Option based on which system property will be set
+  * @return void
+  */
+  alias : function()
+  {
+    if (!this.isEnabled())
+      return;
+  }
 
-/** 
-* Req RBT server to set current actor property
-* 
-* @param {object} params Option based on which actor property will be set
-* @return void
-*/
-RBT.prototype.setActor = function(params)
-{
-  "use strict";
-  if (trigger_fish.rbTActor.propExist(params))
-    return;
-
-  var obj = {"url"      : trigger_fish.rbTServerChannel.url.setActor, 
-             "params"   : params,
-             "set_actor": true,
-             "type"    : "POST",
-             "cb"       : { success: trigger_fish.rbTServerResponse.setActorProperty,
-                            error  : trigger_fish.rbTServerResponse.defaultError
-                          }
-             };
-  trigger_fish.rbTServerChannel.makeRequest(obj);
-};
-
-
-/** 
-* ALIAS
-* 
-* @param {object} params Option based on which system property will be set
-* @return void
-*/
-RBT.prototype.alias = function(params)
-{
-    // FIXME : what to do?
 };
 
 
@@ -4050,16 +4009,8 @@ RBT.prototype.alias = function(params)
 * @return void
 *
 */
-(function StartRBTApp(appid,accid){
+(function StartRBTApp(appid,accid,ver){
   trigger_fish.rbTAPP.log("Initializing RBT APP with AppID = " + appid + " Account ID = " + accid);
-  function releasePreInitCalls(w)
-  {
-    var l = w.rb.q;
-    w.rb = new RBT();
-    if (l.length) {
-      for (var c in l) { var o = l[c]; rb[o.t](o.a,o.b,o.c); }    
-    }
-  }
   try {
     if (!appid || !accid || appid == "" || accid == "") {
       throw new Error("App-id, Account-ID are not mentioned")
@@ -4068,7 +4019,6 @@ RBT.prototype.alias = function(params)
       trigger_fish.rbTAPP.setAppID(appid);
       trigger_fish.rbTAPP.setAccountID(accid);
       trigger_fish.rbTUtils.includeJQIfNeeded();
-      releasePreInitCalls(window);
     }
   } catch (e) {
     trigger_fish.rbTAPP.reportError({"exception": e.message, 
@@ -4077,7 +4027,7 @@ RBT.prototype.alias = function(params)
                                      "accid"    : accid || ""
                                     });
   }
-})(_rbTK[0][1], _rbTK[1][1]);
+})(_rbTK[0][1], _rbTK[1][1], _rbTK[2][1]);
 
 
 
@@ -4101,46 +4051,34 @@ trigger_fish.rbT = { inited: false};
 
 
 trigger_fish.rbT.templateLib = {
-'topbar' :{ 
- 				'generic.normal':'rbTemplTopbarGenericNormalHTML',
-				'generic.twitterfollow':'rbTemplTopbarGenericTwitterfollowHTML',
-				'generic.fblike':'rbTemplTopbarGenericFblikeHTML',
-				'generic.twittershare':'rbTemplTopbarGenericTwittershareHTML'
- 
- 	 	 	 }, 
-
-
-
- 'bottombar' :{ 
- 				'generic.fblike':'rbTemplBottombarGenericFblikeHTML',
+		'bottombar':{ 
+				'generic.fblike':'rbTemplBottombarGenericFblikeHTML',
 				'generic.twitterfollow':'rbTemplBottombarGenericTwitterfollowHTML',
 				'generic.twittershare':'rbTemplBottombarGenericTwittershareHTML',
 				'generic.normal':'rbTemplBottombarGenericNormalHTML'
  
- 	 	 	 }, 
-
-
-
- 'modal' :{ 
- 				'generic.normal':'rbTemplModalGenericNormalHTML'
+ 	 	 	 },
+		'topbar':{ 
+				'generic.normal':'rbTemplTopbarGenericNormalHTML',
+				'generic.twitterfollow':'rbTemplTopbarGenericTwitterfollowHTML',
+				'generic.fblike':'rbTemplTopbarGenericFblikeHTML',
+				'generic.twittershare':'rbTemplTopbarGenericTwittershareHTML'
  
- 	 	 	 }, 
-
-
-
- 'support' :{ 
- 				'olark.normal':'rbTemplSupportOlarkNormalHTML'
+ 	 	 	 },
+		'support':{ 
+				'olark.normal':'rbTemplSupportOlarkNormalHTML'
  
- 	 	 	 }, 
-
-
-
- 'feedback' :{ 
- 				'uservoice.normal':'rbTemplFeedbackUservoiceNormalHTML'
+ 	 	 	 },
+		'modal':{ 
+				'generic.normal':'rbTemplModalGenericNormalHTML'
+ 
+ 	 	 	 },
+		'feedback':{ 
+				'uservoice.normal':'rbTemplFeedbackUservoiceNormalHTML'
  
  	 	 	 }
  
- 	 	 	 }; 
+ }; 
 
 
 
@@ -4150,7 +4088,6 @@ trigger_fish.rbT.templateLib = {
 	 			'topbar.generic.twitterfollow':'Top bar to Gather followers from twitter',
 	 			'bottombar.generic.twitterfollow':'Bottom bar to Gather followers from twitter',
 	 			'topbar.generic.fblike':'A top bar to influence visitors from Facebook',
-	 			'uservoice.generic.normal':'User Voice Feedback',
 	 			'bottombar.generic.twittershare':'Influence a Twitter user to share about your business',
 	 			'support.olark.normal':'Chat Window',
 	 			'modal.generic.normal':'A modal annonucement',
@@ -4165,391 +4102,388 @@ trigger_fish.rbT.templateLib = {
 	 	  'bottombar.generic.fblike':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.nr.base_zindex',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_zindex',
 	 	 	 	 	 				value :'10000'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.nr.font_size',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_font_size',
 	 	 	 	 	 				value :'14'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.ft.font',
+	 	 	 	 	 				key :'rb.t.ft.h.bar_font',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.cr.border_color',
+	 	 	 	 	 				key :'rb.t.cr.h.bar_border_color',
 	 	 	 	 	 				value :'#304A80'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.background_color',
+	 	 	 	 	 				key :'rb.t.cr.h.bar_background_color',
 	 	 	 	 	 				value :'#6087C6'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.show_width',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_width',
 	 	 	 	 	 				value :'900'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.nr.bar_height',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_height',
 	 	 	 	 	 				value :'40'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.ul.facebook_page',
+	 	 	 	 	 				key :'rb.t.ul.e.facebook_page',
 	 	 	 	 	 				value :'http://www.google.com'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' :{
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				key :'rb.t.vsg.e.text_left',
 	 	 	 	 	 				value :'Woo Facebook users coming to your page by writing something to make them like you.'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'topbar.generic.normal':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.nr.base_zindex',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_zindex',
 	 	 	 	 	 				value :'10000'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.cr.base_backgroundcolor',
+	 	 	 	 	 				key :'rb.t.cr.h.bar_background_color',
 	 	 	 	 	 				value :'#E24E35'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.nr.show_width',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_width',
 	 	 	 	 	 				value :'900'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.nr.base_height',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_height',
 	 	 	 	 	 				value :'40'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.text_color ',
+	 	 	 	 	 				key :'rb.t.cr.h.text_color ',
 	 	 	 	 	 				value :'#ffffff'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
+	 	 	 	 	 				key :'rb.t.nr.h.text_fontsize',
 	 	 	 	 	 				value :'14'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
+	 	 	 	 	 				key :'rb.t.ft.h.text_fontfamily',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
+	 	 	 	 	 				key :'rb.t.fw.h.text_fontweight',
 	 	 	 	 	 				value :'normal'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.cr.button_background',
+	 	 	 	 	 				key :'rb.t.cr.h.button_background_color',
 	 	 	 	 	 				value :'whiteSmoke'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.cr.button_color',
+	 	 	 	 	 				key :'rb.t.cr.h.button_color',
 	 	 	 	 	 				value :'#333'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.nr.button_fontSize',
+	 	 	 	 	 				key :'rb.t.nr.h.button_fontSize',
 	 	 	 	 	 				value :'16'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '12' : {
-	 	 	 	 	 				key :'rb.t.cr.button_background_on_focus',
+	 	 	 	 	 				key :'rb.t.cr.h.button_background_on_focus',
 	 	 	 	 	 				value :'#d9d9d9'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '13' : {
-	 	 	 	 	 				key :'rb.t.cr.button_color_on_focus',
+	 	 	 	 	 				key :'rb.t.cr.h.button_color_on_focus',
 	 	 	 	 	 				value :'#888'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '14' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				key :'rb.t.vsg.e.text_left',
 	 	 	 	 	 				value :'Please add the promotional left text here'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '15' : {
-	 	 	 	 	 				key :'rb.t.ul.button_link',
+	 	 	 	 	 				key :'rb.t.ul.e.button_link',
 	 	 	 	 	 				value :'http://www.google.com'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '16' : {
-	 	 	 	 	 				key :'rb.t.sg.button_label',
+	 	 	 	 	 				key :'rb.t.sg.e.button_label',
 	 	 	 	 	 				value :'Promo Link'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '17' :{
-	 	 	 	 	 				key :'rb.t.vsg.text_right',
+	 	 	 	 	 				key :'rb.t.vsg.e.text_right',
 	 	 	 	 	 				value :'Please add the promotional right text here'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'topbar.generic.twitterfollow':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.nr.base_zindex',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_zindex',
 	 	 	 	 	 				value :'10000'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.cr.base_background_color',
+	 	 	 	 	 				key :'rb.t.cr.h.bar_background_color',
 	 	 	 	 	 				value :'#377CA8'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.nr.show_width',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_width',
 	 	 	 	 	 				value :'900'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.nr.base_height',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_height',
 	 	 	 	 	 				value :'40'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.text_color ',
+	 	 	 	 	 				key :'rb.t.cr.h.text_color ',
 	 	 	 	 	 				value :'#ffffff'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
+	 	 	 	 	 				key :'rb.t.nr.h.text_fontsize',
 	 	 	 	 	 				value :'14'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
+	 	 	 	 	 				key :'rb.t.ft.h.text_fontfamily',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
+	 	 	 	 	 				key :'rb.t.fw.h.text_fontweight',
 	 	 	 	 	 				value :'normal'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.sg.twitter_account_link',
+	 	 	 	 	 				key :'rb.t.sg.e.twitter_account_link',
 	 	 	 	 	 				value :'@act_witty'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.sg.twitter_label',
+	 	 	 	 	 				key :'rb.t.sg.e.twitter_label',
 	 	 	 	 	 				value :'@act_witty'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				key :'rb.t.vsg.e.text_left',
 	 	 	 	 	 				value :'Increase your market reach by connecting to users'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '12' :{
-	 	 	 	 	 				key :'rb.t.vsg.text_right',
+	 	 	 	 	 				key :'rb.t.vsg.e.text_right',
 	 	 	 	 	 				value :'Gathering reach on twitter to increase business.'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'bottombar.generic.twitterfollow':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.nr.base_zindex',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_zindex',
 	 	 	 	 	 				value :'10000'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.cr.base_background_color',
+	 	 	 	 	 				key :'rb.t.cr.h.bar_background_color',
 	 	 	 	 	 				value :'#377CA8'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.nr.show_width',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_width',
 	 	 	 	 	 				value :'900'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.nr.base_height',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_height',
 	 	 	 	 	 				value :'40'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.text_color ',
+	 	 	 	 	 				key :'rb.t.cr.h.text_color ',
 	 	 	 	 	 				value :'#ffffff'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
+	 	 	 	 	 				key :'rb.t.nr.h.text_fontsize',
 	 	 	 	 	 				value :'14'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
+	 	 	 	 	 				key :'rb.t.ft.h.text_fontfamily',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
+	 	 	 	 	 				key :'rb.t.fw.h.text_fontweight',
 	 	 	 	 	 				value :'normal'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.sg.twitter_account_link',
+	 	 	 	 	 				key :'rb.t.sg.e.twitter_account_link',
 	 	 	 	 	 				value :'@act_witty'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.sg.twitter_label',
+	 	 	 	 	 				key :'rb.t.sg.e.twitter_label',
 	 	 	 	 	 				value :'@act_witty'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				key :'rb.t.vsg.e.text_left',
 	 	 	 	 	 				value :'Increase your market reach by connecting to users'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '12' :{
-	 	 	 	 	 				key :'rb.t.vsg.text_right',
+	 	 	 	 	 				key :'rb.t.vsg.e.text_right',
 	 	 	 	 	 				value :'Gathering reach on twitter to increase business.'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'topbar.generic.fblike':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.nr.base_zindex',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_zindex',
 	 	 	 	 	 				value :'10000'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.nr.font_size',
+	 	 	 	 	 				key :'rb.t.nr.h.bar.font_size',
 	 	 	 	 	 				value :'14'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.ft.font',
+	 	 	 	 	 				key :'rb.t.ft.h.bar_font',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.cr.border_color',
+	 	 	 	 	 				key :'rb.t.cr.h.bar_border_color',
 	 	 	 	 	 				value :'#304A80'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.background_color',
+	 	 	 	 	 				key :'rb.t.cr.h.bar_background_color',
 	 	 	 	 	 				value :'#6087C6'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.show_width',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_show_width',
 	 	 	 	 	 				value :'900'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.nr.bar_height',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_height',
 	 	 	 	 	 				value :'40'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.ul.facebook_page',
+	 	 	 	 	 				key :'rb.t.ul.e.facebook_page',
 	 	 	 	 	 				value :'http://www.google.com'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' :{
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				key :'rb.t.vsg.e.text_left',
 	 	 	 	 	 				value :'Woo Facebook users coming to your page by writing something to make them like you.'
 	 	 	 	 	 	  }
-	 	 	 	 	 },
-	 	  'uservoice.generic.normal':{
-
 	 	 	 	 	 },
 	 	  'bottombar.generic.twittershare':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.nr.base_zindex',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_zindex',
 	 	 	 	 	 				value :'10000'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.cr.base_background_color',
+	 	 	 	 	 				key :'rb.t.cr.h.bar_background_color',
 	 	 	 	 	 				value :'#377CA8'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.nr.show_width',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_width',
 	 	 	 	 	 				value :'900'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.nr.base_height',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_height',
 	 	 	 	 	 				value :'40'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.text_color ',
+	 	 	 	 	 				key :'rb.t.cr.h.text_color ',
 	 	 	 	 	 				value :'#ffffff'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
+	 	 	 	 	 				key :'rb.t.nr.h.text_fontsize',
 	 	 	 	 	 				value :'14'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
+	 	 	 	 	 				key :'rb.t.ft.h.text_fontfamily',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
+	 	 	 	 	 				key :'rb.t.fw.h.text_fontweight',
 	 	 	 	 	 				value :'normal'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.sg.twitter_share_text',
+	 	 	 	 	 				key :'rb.t.sg.e.twitter_share_text',
 	 	 	 	 	 				value :'make #twitter user to share about your blog at a sample url like http://www.rulebot.com'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				key :'rb.t.vsg.e.text_left',
 	 	 	 	 	 				value :'Ask here to twitter user to share your blog'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' :{
-	 	 	 	 	 				key :'rb.t.vsg.text_right',
+	 	 	 	 	 				key :'rb.t.vsg.e.text_right',
 	 	 	 	 	 				value :'Influence your visitors.'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'support.olark.normal':{
 
  	 	 	 	 	 	 '1' :{
-	 	 	 	 	 				key :'rb.t.sg.olarkIdentity',
+	 	 	 	 	 				key :'rb.t.sg.e.olarkIdentity',
 	 	 	 	 	 				value :'\'6679-845-10-6199\''
 	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'modal.generic.normal':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.f.nr.background_zindex',
+	 	 	 	 	 				key :'rb.f.nr.h.overlay_background_zindex',
 	 	 	 	 	 				value :'10000'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.f.nr.dialog_zindex',
+	 	 	 	 	 				key :'rb.f.nr.h.dialog_zindex',
 	 	 	 	 	 				value :'10001'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.cr.background_color',
+	 	 	 	 	 				key :'rb.t.cr.h.dialog_background_color',
 	 	 	 	 	 				value :'white'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.sg.modal_cover_image',
+	 	 	 	 	 				key :'rb.t.imgl.e.cover_image',
 	 	 	 	 	 				value :'https://s3.amazonaws.com/actwitty_ganga/image/modal_demo.jpg'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.heading_background_color',
+	 	 	 	 	 				key :'rb.t.cr.h.heading_background_color',
 	 	 	 	 	 				value :'#D44413'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.cr.heading_color',
+	 	 	 	 	 				key :'rb.t.cr.h.heading_color',
 	 	 	 	 	 				value :'#FFFFFF'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.nr.heading_font_size',
+	 	 	 	 	 				key :'rb.t.nr.h.heading_font_size',
 	 	 	 	 	 				value :'20'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.ft.heading_fontfamily',
+	 	 	 	 	 				key :'rb.t.ft.h.heading_fontfamily',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.cr.heading_text_shadow',
+	 	 	 	 	 				key :'rb.t.cr.h.heading_text_shadow',
 	 	 	 	 	 				value :'#97310E'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.nr.text_font_size',
+	 	 	 	 	 				key :'rb.t.nr.h.offer_text_font_size',
 	 	 	 	 	 				value :'20'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.nr.line-height',
+	 	 	 	 	 				key :'rb.t.nr.h.offer_line_height',
 	 	 	 	 	 				value :'24'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '12' : {
-	 	 	 	 	 				key :'rb.t.cr.text_color',
+	 	 	 	 	 				key :'rb.t.cr.h.offer_text_color',
 	 	 	 	 	 				value :'#000000'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '13' : {
-	 	 	 	 	 				key :'rb.t.cr.button_border',
+	 	 	 	 	 				key :'rb.t.cr.h.button_border',
 	 	 	 	 	 				value :'#f5881f'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '14' : {
-	 	 	 	 	 				key :'rb.t.cr.button_background',
+	 	 	 	 	 				key :'rb.t.cr.h.button_background_color',
 	 	 	 	 	 				value :'#f15c24'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '15' : {
-	 	 	 	 	 				key :'rb.t.cr.button_color',
+	 	 	 	 	 				key :'rb.t.cr.h.button_label_color',
 	 	 	 	 	 				value :'#fffffd'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '16' : {
-	 	 	 	 	 				key :'rb.t.nr.button_font_size',
+	 	 	 	 	 				key :'rb.t.nr.h.button_font_size',
 	 	 	 	 	 				value :'25'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '17' : {
-	 	 	 	 	 				key :'rb.t.vsg.heading_text',
+	 	 	 	 	 				key :'rb.t.vsg.e.heading_text',
 	 	 	 	 	 				value :'An announcement to catch attention'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '18' : {
-	 	 	 	 	 				key :'rb.t.vsg.offer_text',
+	 	 	 	 	 				key :'rb.t.vsg.e.offer_text',
 	 	 	 	 	 				value :'This is a way to connect to your customers to woo them to engage with your product.                We can help you to automate the offerings being presented by popping out such modals                when rules get hit. You can change this text.'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '19' : {
-	 	 	 	 	 				key :'rb.t.ul.modal_button_link',
+	 	 	 	 	 				key :'rb.t.ul.e.button_link',
 	 	 	 	 	 				value :'http://www.rulebot.com'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '20' :{
-	 	 	 	 	 				key :'rb.t.sg.modal_button_label',
+	 	 	 	 	 				key :'rb.t.sg.e.button_label',
 	 	 	 	 	 				value :'Order Now'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
@@ -4559,118 +4493,118 @@ trigger_fish.rbT.templateLib = {
 	 	  'bottombar.generic.normal':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.nr.base_zindex',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_zindex',
 	 	 	 	 	 				value :'10000'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.cr.base_backgroundcolor',
+	 	 	 	 	 				key :'rb.t.cr.h.bar_background_color',
 	 	 	 	 	 				value :'#181818'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.nr.show_width',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_width',
 	 	 	 	 	 				value :'900'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.nr.base_height',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_height',
 	 	 	 	 	 				value :'40'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.text_color ',
+	 	 	 	 	 				key :'rb.t.cr.h.text_color ',
 	 	 	 	 	 				value :'#ffffff'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
+	 	 	 	 	 				key :'rb.t.nr.h.text_fontsize',
 	 	 	 	 	 				value :'14'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
+	 	 	 	 	 				key :'rb.t.ft.h.text_fontfamily',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
+	 	 	 	 	 				key :'rb.t.fw.h.text_fontweight',
 	 	 	 	 	 				value :'normal'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.cr.button_background',
+	 	 	 	 	 				key :'rb.t.cr.h.button_background_color',
 	 	 	 	 	 				value :'#0e0c0b'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.cr.button_color',
+	 	 	 	 	 				key :'rb.t.cr.h.button_color',
 	 	 	 	 	 				value :'#BFBFBF'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.nr.button_fontSize',
+	 	 	 	 	 				key :'rb.t.nr.h.button_fontSize',
 	 	 	 	 	 				value :'14'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '12' : {
-	 	 	 	 	 				key :'rb.t.cr.button_background_on_focus',
+	 	 	 	 	 				key :'rb.t.cr.h.button_background_on_focus',
 	 	 	 	 	 				value :'#333'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '13' : {
-	 	 	 	 	 				key :'rb.t.cr.button_color_on_focus',
+	 	 	 	 	 				key :'rb.t.cr.h.button_color_on_focus',
 	 	 	 	 	 				value :'#FFFFFF'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '14' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				key :'rb.t.vsg.e.text_left',
 	 	 	 	 	 				value :'Please add the promotional left text here'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '15' : {
-	 	 	 	 	 				key :'rb.t.ul.button_link',
+	 	 	 	 	 				key :'rb.t.ul.e.button_link',
 	 	 	 	 	 				value :'http://www.google.com'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '16' : {
-	 	 	 	 	 				key :'rb.t.sg.button_label',
+	 	 	 	 	 				key :'rb.t.sg.e.button_label',
 	 	 	 	 	 				value :'Promo Link'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '17' :{
-	 	 	 	 	 				key :'rb.t.vsg.text_right',
+	 	 	 	 	 				key :'rb.t.vsg.e.text_right',
 	 	 	 	 	 				value :'Please add the promotional right text here'
 	 	 	 	 	 	  }
 	 	 	 	 	 },
 	 	  'topbar.generic.twittershare':{
 
  	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.nr.base_zindex',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_zindex',
 	 	 	 	 	 				value :'10000'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.cr.base_background_color',
+	 	 	 	 	 				key :'rb.t.cr.h.bar_background_color',
 	 	 	 	 	 				value :'#377CA8'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.nr.show_width',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_width',
 	 	 	 	 	 				value :'900'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.nr.base_height',
+	 	 	 	 	 				key :'rb.t.nr.h.bar_height',
 	 	 	 	 	 				value :'40'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.text_color ',
+	 	 	 	 	 				key :'rb.t.cr.h.text_color ',
 	 	 	 	 	 				value :'#ffffff'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
+	 	 	 	 	 				key :'rb.t.nr.h.text_fontsize',
 	 	 	 	 	 				value :'14'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
+	 	 	 	 	 				key :'rb.t.ft.h.text_fontfamily',
 	 	 	 	 	 				value :'Arial'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
+	 	 	 	 	 				key :'rb.t.fw.h.text_fontweight',
 	 	 	 	 	 				value :'normal'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.sg.twitter_share_text',
+	 	 	 	 	 				key :'rb.t.sg.e.twitter_share_text',
 	 	 	 	 	 				value :'make #twitter user to share about your blog at a sample url like http://www.rulebot.com'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
+	 	 	 	 	 				key :'rb.t.vsg.e.text_left',
 	 	 	 	 	 				value :'Ask here to twitter user to share your blog'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '11' :{
-	 	 	 	 	 				key :'rb.t.vsg.text_right',
+	 	 	 	 	 				key :'rb.t.vsg.e.text_right',
 	 	 	 	 	 				value :'Influence your visitors.'
 	 	 	 	 	 	  }
 	 	 	 	 	 }
@@ -4742,17 +4676,17 @@ trigger_fish.rbT.rbTemplSupportOlarkNormalHTML='<div id="rbChatGenericNormalBase
 
 
 
-/****************************[[./templates/topbars/rbTemplModalGenericNormal.js]]*************************************/ 
-
-
-trigger_fish.rbT.rbTemplModalGenericNormalHTML='<!-- --><style>#rbModalGenericNormalTranblockContainer {      visibility: visible;     position: fixed;      left: 0px;      top: 0px;       width:100%;       height:100%;        z-index:{{1}};  opacity:0.6;  filter:alpha(opacity=60);  background-color:black; }#rbModalGenericNormalBaseContainer{      visibility: visible;     position: fixed;      left: 0px;      top: 0px;       width:100%;       height:100%;  z-index:{{2}}; }#rbModalGenericNormalSubsubContainer{      width:500px;   height: 400px;  background-color:{{3}};    border:8px solid rgba(0, 0, 0, .7);;     position: fixed;  top : 25%;  left : 30%;  padding : 15px;  -webkit-border-radius: 5px;  -moz-border-radius: 5px;  border-radius: 5px;  }.rbModalContainer{      width: 500px;   height: 400px;    border:1px solid #a3a3a3;     position: fixed;  -webkit-border-radius: 5px;  -moz-border-radius: 5px;  border-radius: 5px;    }.rbModalCover{  position: absolute;  top: 0px;  left: 0px;  width: 500px;   height: 400px;    padding: 0px;  display: block;  background: #ffffff url(\'{{4}}\') no-repeat right top;             filter:alpha(opacity=60);  opacity:0.6;  -webkit-border-top-left-radius: 5px;  -webkit-border-top-right-radius: 5px;  -moz-border-radius-topleft: 5px;  -moz-border-radius-topright: 5px;  border-top-left-radius: 5px;  border-top-right-radius: 5px;  z-index: -1;  }.rbModalHead{  background-color:{{5}};      width: 100%;  height: 50px;      position: relative;  display: block;  -webkit-border-top-left-radius: 5px;  -webkit-border-top-right-radius: 5px;  -moz-border-radius-topleft: 5px;  -moz-border-radius-topright: 5px;  border-top-left-radius: 5px;  border-top-right-radius: 5px;  z-index: 1;   }  .rbModalHead .rbModalClose{    position: absolute;    top: 4px;    right: 4px;    display: inline-block;    font-size: 14px;    font-weight: normal;    color: white;    cursor: pointer;    z-index: 1;  }  .rbModalClose:hover{    color: #aaa;  }.rbModalHeader{  top:0;  left:0;  position: absolute;    white-space: nowrap;    overflow: hidden;   text-overflow: ellipsis;  color:{{6}};  width:80%;   height:30px;  font-size:{{7}}px;  font-family:{{8}};   overflow:hidden;  border-top-left-radius:5px;  border-top-right-radius:5px;  padding:5px;  padding-top: 10px;  text-shadow:1px 1px {{9}};}.rbOffer{  margin-top: 10px;  width: 100%;  height: 200px;  display: block;    z-index: 1;}.rbModalOffer{  overflow: hidden;   text-overflow: ellipsis;  font-size: {{10}}px;    line-height: {{11}}px;    color:{{12}};   background: rgba(255,255,255,0.1) }.rbModalButton{  bottom: 2%;  right: 2%;  position:absolute;  width: 160px;  height: 30px;  text-align: center;    border:4px solid {{13}};  background-color: {{14}};    color:{{15}};  font-size: {{16}}px;  border-radius:5px;  padding: 5px;    font-weight: normal;  display: block;  float: right;  margin-right: 10px;  cursor:pointer;}</style><div id="rbModalGenericNormalTranblockContainer"></div> <div id="rbModalGenericNormalBaseContainer">   <div id="rbModalGenericNormalSubContainer">      <div id="rbModalGenericNormalSubsubContainer">                  <div class="rbModalContainer" >          <div class="rbModalCover"></div>            <div class="rbModalHead">              <div class="rbModalHeader">                 {{17}}              </div>              <div id="rbModalGenericNormalCloseClick" class="rbModalClose  rbClickable" >                X              </div>                        </div>            <div class="rbOffer">              <p class="rbModalOffer">                 {{18}}              </p>            </div>                     <div  class="rbModalButton">               <div  id="rbModalGenericNormalRoiClickbutton" class="rbClickable" link= "{{19}}" class="rbClickable" >                {{20}}                             </div>             </div>                 </div></div>  </div></div>'
-
-
-
 /****************************[[./templates/topbars/rbTemplFeedbackUservoiceNormal.js]]*************************************/ 
 
 
 trigger_fish.rbT.rbTemplFeedbackUservoiceNormalHTML='<div id="rbUservoiceGenericNormalBaseContainer">		<!-- -->	<script>	  var uvOptions = {};	  (function() {	    var uv = document.createElement(\'script\'); uv.type = \'text/javascript\'; uv.async = true;	    uv.src = (\'https:\' == document.location.protocol ? \'https://\' : \'http://\') + \'widget.uservoice.com/QteXP0WAzCiaFH1O2obGg.js\';	    var s = document.getElementsByTagName(\'script\')[0]; s.parentNode.insertBefore(uv, s);	   })();	</script></div>'
+
+
+
+/****************************[[./templates/topbars/rbTemplModalGenericNormal.js]]*************************************/ 
+
+
+trigger_fish.rbT.rbTemplModalGenericNormalHTML='<!-- --><style>#rbModalGenericNormalTranblockContainer {      visibility: visible;     position: fixed;      left: 0px;      top: 0px;       width:100%;       height:100%;        z-index:{{1}};  opacity:0.6;  filter:alpha(opacity=60);  background-color:black; }#rbModalGenericNormalBaseContainer{      visibility: visible;     position: fixed;      left: 0px;      top: 0px;       width:100%;       height:100%;  z-index:{{2}}; }#rbModalGenericNormalSubsubContainer{      width:500px;   height: 400px;  background-color:{{3}};    border:8px solid rgba(0, 0, 0, .7);;  position: absolute;     top: 50% ;  left: 50% ;  margin-top: -220px ;   margin-left: -250px;  padding : 15px;  -webkit-border-radius: 5px;  -moz-border-radius: 5px;  border-radius: 5px;  }.rbModalContainer{      width: 500px;   height: 400px;    border:1px solid #a3a3a3;     position: fixed;  -webkit-border-radius: 5px;  -moz-border-radius: 5px;  border-radius: 5px;    }.rbModalCover{  position: absolute;  top: 0px;  left: 0px;  width: 500px;   height: 400px;    padding: 0px;  display: block;  background: #ffffff url(\'{{4}}\') no-repeat right top;             filter:alpha(opacity=60);  background-size:500px 400px;  background-repeat:no-repeat;  opacity:0.6;  -webkit-border-top-left-radius: 5px;  -webkit-border-top-right-radius: 5px;  -moz-border-radius-topleft: 5px;  -moz-border-radius-topright: 5px;  border-top-left-radius: 5px;  border-top-right-radius: 5px;  z-index: -1;  }.rbModalHead{  background-color:{{5}};      width: 100%;  height: 50px;      position: relative;  display: block;  -webkit-border-top-left-radius: 5px;  -webkit-border-top-right-radius: 5px;  -moz-border-radius-topleft: 5px;  -moz-border-radius-topright: 5px;  border-top-left-radius: 5px;  border-top-right-radius: 5px;  z-index: 1;   }  .rbModalHead .rbModalClose{    position: absolute;    top: 4px;    right: 4px;    display: inline-block;    font-size: 14px;    font-weight: normal;    color: white;    cursor: pointer;    z-index: 1;  }  .rbModalClose:hover{    color: #aaa;  }.rbModalHeader{  top:0;  left:0;  position: absolute;    white-space: nowrap;    overflow: hidden;   text-overflow: ellipsis;  color:{{6}};  width:80%;   height:30px;  font-size:{{7}}px;  font-family:{{8}};   overflow:hidden;  border-top-left-radius:5px;  border-top-right-radius:5px;  padding:5px;  padding-top: 10px;  text-shadow:1px 1px {{9}};}.rbOffer{  margin-top: 10px;  width: 100%;  height: 200px;  display: block;    z-index: 1;}.rbModalOffer{  overflow: hidden;   text-overflow: ellipsis;  font-size: {{10}}px;    line-height: {{11}}px;    color:{{12}};   background: rgba(255,255,255,0.1) }.rbModalButton{  bottom: 2%;  right: 2%;  position:absolute;  width: 160px;  height: 30px;  text-align: center;    border:4px solid {{13}};  background-color: {{14}};    color:{{15}};  font-size: {{16}}px;  border-radius:5px;  padding: 5px;    font-weight: normal;  display: block;  float: right;  margin-right: 10px;  cursor:pointer;}</style><div id="rbModalGenericNormalTranblockContainer"></div> <div id="rbModalGenericNormalBaseContainer">   <div id="rbModalGenericNormalSubContainer">      <div id="rbModalGenericNormalSubsubContainer">                  <div class="rbModalContainer" >          <div class="rbModalCover"></div>            <div class="rbModalHead">              <div class="rbModalHeader">                 {{17}}              </div>              <div id="rbModalGenericNormalCloseClick" class="rbModalClose  rbClickable" >                X              </div>                        </div>            <div class="rbOffer">              <p class="rbModalOffer">                 {{18}}              </p>            </div>                     <div  class="rbModalButton">               <div  id="rbModalGenericNormalRoiClickbutton" class="rbClickable" link= "{{19}}" class="rbClickable" >                {{20}}                             </div>             </div>                 </div></div>  </div></div>'
 
 
 
@@ -4763,7 +4697,7 @@ trigger_fish.rbT.rbTemplFeedbackUservoiceNormalHTML='<div id="rbUservoiceGeneric
 
 // Templ Sys , Actor and Event Varibales
 
-trigger_fish.rbT.currentSystemVar = {} //{'browser':{'name':'Chrome','version':'1.2','name2':{'myname':'Amartya'}}};
+trigger_fish.rbT.currentSystemVar ={};// {'browser':{'name':'Chrome','version':'1.2','name2':{'myname':'Amartya'}}};
 trigger_fish.rbT.currentActorVar = {};
 trigger_fish.rbT.currentEventVar = {};
 
@@ -4776,6 +4710,27 @@ trigger_fish.rbT.templTimers= {
 
 };
 
+//Array of Global HTML
+trigger_fish.rbT.globalHTMLQ = new Array(10);
+
+//HTML for Appending to the page
+trigger_fish.rbT.htmlGlobalStruct ={
+
+ 'trigger_fish.rbT.html' : 'undefined' ,
+ 'trigger_fish.rbT.type' : 'undefined' ,
+ 'trigger_fish.rbT.roiServerMsg' : 'undefined',   
+};
+
+
+
+//templ delay Q
+
+trigger_fish.rbT.minPipeSize = 10;
+trigger_fish.rbT.globalDelayQ = new Array(trigger_fish.rbT.minPipeSize);
+trigger_fish.rbT.globalDelayQTimeVal = new Array(trigger_fish.rbT.minPipeSize); 
+
+
+
 // display lock for templ positions
 
 trigger_fish.rbT.templatesDisplayLockFlags = {
@@ -4785,39 +4740,142 @@ trigger_fish.rbT.templatesDisplayLockFlags = {
     'trigger_fish.rbT.modal.displayLock' :'false',
     'trigger_fish.rbT.chat.displayLock' :'false',
     'trigger_fish.rbT.uservoice.displayLock' :'false',
-
-
+    'trigger_fish.rbT.custom.displayLock' :'false',
 };
 
-//function fir set the display lock for templ postions
+//function to handle on timout for templ delay display
+trigger_fish.rbT.handleTimeoutforTemplDelayedDisplay = function(timerIndexforDisplayDelay,actionIndexforDisplayDelay)
+{ 
+   if(trigger_fish.rbT.globalDelayQ[actionIndexforDisplayDelay] != undefined )
+   {
+      trigger_fish.rbT.globalDelayQ[actionIndexforDisplayDelay].timers.delay = 0;
+      
+      var tempStatus=trigger_fish.rbT.invokeActionScript(trigger_fish.rbT.globalDelayQ[actionIndexforDisplayDelay]);
+      
+      trigger_fish.rbT.globalDelayQ[actionIndexforDisplayDelay] = undefined;
+      
+    } 
+    
+    if(trigger_fish.rbT.globalDelayQTimeVal[timerIndexforDisplayDelay] != undefined)
+    {  
+      clearInterval(trigger_fish.rbT.globalDelayQTimeVal[timerIndexforDisplayDelay]);
+        
+      trigger_fish.rbT.globalDelayQTimeVal[timerIndexforDisplayDelay] = undefined; 
+    }    
+};
+
+// find the Blank Index in Global HTML Q
+trigger_fish.rbT.findEmptyIndexInGlobalHTMLQ = function()
+{
+   var i = 0;
+   for(i=0;i<trigger_fish.rbT.globalHTMLQ.length;i++)
+   {
+      if(trigger_fish.rbT.globalHTMLQ[i] == undefined)
+       {
+          break;
+       } 
+   }
+
+   return i;
+};
+
+
+
+//function for handling delay for templ display
+ trigger_fish.rbT.handlingOfDelayForTemplDisplay=function(action)
+ {
+
+    var i= 0;
+    var j = 0;
+    var foundTimerIndex = false;
+    var foundActionIndex = false;
+
+
+    var delay = action.timers.delay;
+
+    
+    for(i=0 ; i<trigger_fish.rbT.globalDelayQTimeVal.length;i++)
+    {
+      if(trigger_fish.rbT.globalDelayQTimeVal[i] == undefined)
+       { 
+         foundTimerIndex =true;
+          break;
+        } 
+
+    }
+    
+
+    for(j=0 ;j<trigger_fish.rbT.globalDelayQ.length;j++)
+    {
+      if(trigger_fish.rbT.globalDelayQ[j] === undefined)
+      {
+        foundActionIndex =true; 
+        break;
+       }  
+
+    }
+ 
+    if(foundActionIndex === true && foundTimerIndex === false)
+     {
+        trigger_fish.rbT.globalDelayQTimeVal.push('undefined');
+        i = i+1;
+     } 
+
+     else if(foundActionIndex === false && foundTimerIndex === true)
+     {
+        trigger_fish.rbT.globalDelayQ.push('undefined');
+        j = j+1;
+     } 
+
+      var timerIndexforDisplayDelay = i;
+      var actionIndexforDisplayDelay = j;
+      trigger_fish.rbT.globalDelayQ[j] = action; 
+      
+      trigger_fish.rbT.globalDelayQTimeVal[timerIndexforDisplayDelay] = setInterval(function(){trigger_fish.rbT.handleTimeoutforTemplDelayedDisplay(timerIndexforDisplayDelay,actionIndexforDisplayDelay)}
+          ,delay*1000); 
+
+
+
+ };
+
+
+
+
+
+//function for set the display lock for templ postions
 
 trigger_fish.rbT.setTemplatesDisplayLockFlags=function(pos,value)
 {
 
-   if(pos == 'topbar') 
+   if(pos === 'topbar') 
    {
      trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.topbar.displayLock'] = value; 
    }
 
-   else if(pos == 'bottombar') 
+   else if(pos === 'bottombar') 
    {
      trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.bottombar.displayLock'] = value; 
    }
 
-   else if(pos == 'modal') 
+   else if(pos === 'modal') 
    {
      trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.modal.displayLock'] = value; 
    }
 
-   else if(pos == 'chat') 
+   else if(pos === 'chat') 
    {
      trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.chat.displayLock'] = value; 
    }
 
-  else if(pos == 'feedback') 
+  else if(pos === 'feedback') 
    {
      trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.feedback.displayLock'] = value; 
    }
+
+   else if(pos == 'custom')
+   {
+      trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.custom.displayLock'] = value; 
+   } 
 
 }
 
@@ -4953,7 +5011,7 @@ trigger_fish.rbT.fillTheRuntimeValueForTemplArgs = function(tempMatch,actionparm
 
                                          actionparmaskey = actionparmaskey.replace(tempMatch[i],objNested);
                               } 
-                               return actionparmaskey;
+                              return actionparmaskey;
 
 
               
@@ -4970,40 +5028,47 @@ trigger_fish.rbT.fillTheRuntimeValueForTemplArgs = function(tempMatch,actionparm
 //check for the if templ position is occupied
 trigger_fish.rbT.isTemplPosOccupied = function(pos){
    
-   var ret = false;
- 
+       var ret = false;
+     
 
-   if(pos == 'topbar' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.topbar.displayLock'] 
-    == true ) 
-   {
-     ret= true;
-      
-   }
-   else if(pos == 'bottombar' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.bottombar.displayLock'] 
-    == true ) 
-   {
-     ret= true;
-    }
-  else if(pos == 'modal' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.modal.displayLock'] 
-    == true )
-  {
-     //TODO
-  }
+      if(pos === 'topbar' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.topbar.displayLock'] 
+        == true ) 
+       {
+         ret= true;
+          
+       }
+      else if(pos === 'bottombar' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.bottombar.displayLock'] 
+        == true ) 
+       {
+         ret= true;
+        }
+      else if(pos === 'modal' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.modal.displayLock'] 
+        == true )
+      {
+         //TODO
+      }
 
- else if(pos == 'chat' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.chat.displayLock'] 
-    == true )
-  {
-     ret= true;
-  }
+     else if(pos === 'chat' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.chat.displayLock'] 
+        == true )
+      {
+         ret= true;
+      }
+
+      else if(pos === 'custom' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.custom.displayLock'] 
+        == true )
+      {
+         ret= true;
+      }
 
 
-  else if(pos == 'feedback')
-  {
-     //TODO
-  }
+      else if(pos === 'feedback')
+      {
+         ret= true;
+
+      }
 
 
- return ret;
+     return ret;
 };
 
 
@@ -5035,9 +5100,11 @@ trigger_fish.rbT.sendErrorToRBServer = function(string){
 
 // INTEGRATION_ENABLE  
    
- trigger_fish.rbTAPP.log({"message": string,"log":true});
+trigger_fish.rbTAPP.log({"message": string,"log":true});
 
  trigger_fish.rbTAPP.reportError({"message":string,"server":true});
+
+//console.log(string);
 
 };
 
@@ -5113,12 +5180,12 @@ trigger_fish.rbT.eventHandler = {
 
    if (idMatch[3])
    {
-     if ( idMatch[3] == 'Close')
+     if ( idMatch[3] === 'Close')
      {
         trigger_fish.rbT.eventHandler.closeTempl(idMatch);
      }
   
-    else if ( idMatch[3] == 'Roi' )
+    else if ( idMatch[3] === 'Roi' )
     {
          trigger_fish.rbT.eventHandler.roiFromTemplClick(idMatch,evt);
 
@@ -5167,7 +5234,7 @@ trigger_fish.rbT.eventHandler = {
        }     
 
 
-     else if(tempMatch[0] == 'modal')
+     else if(tempMatch[0] === 'modal')
      {
 
          var id = "rb" + trigger_fish.rbT.makeFirstLetterCapital(tempMatch[0])+trigger_fish.rbT.makeFirstLetterCapital(tempMatch[2])+trigger_fish.rbT.makeFirstLetterCapital(tempMatch[4])+"BaseContainer";
@@ -5208,7 +5275,7 @@ trigger_fish.rbT.eventHandler = {
           clearInterval(trigger_fish.rbT.templTimers['templ.displaytimer']);
 
       }
-      if(idMatch[0] == 'Topbar' || idMatch[0] == 'Bottombar' )
+      if(idMatch[0] === 'Topbar' || idMatch[0] === 'Bottombar' )
 
      {   
 
@@ -5217,7 +5284,7 @@ trigger_fish.rbT.eventHandler = {
 
      }
 
-     else if(idMatch[0] == 'Modal')
+     else if(idMatch[0] === 'Modal')
      {
 
          var id = "rb" + idMatch[0]+idMatch[1]+idMatch[2]+"BaseContainer";
@@ -5298,14 +5365,11 @@ trigger_fish.rbT.eventHandler = {
 
 trigger_fish.rbT.init = function(){
 	trigger_fish.rbT.keyPrefix = "{{";
-	trigger_fish.rbT.keySuffix = "}}";
-	trigger_fish.rbT.inited = true;
+	trigger_fish.rbT.keySuffix = "}}";  
+  trigger_fish.rbT.inited = true;
+
 
 };
-
-
-
-
 
 
 //******************************************************************************************
@@ -5374,17 +5438,24 @@ trigger_fish.rbT.isTemplateGoodToApplyInternal = function(html){
 
 //**************************************************************************************
 
-trigger_fish.rbT.applyHtmltoPageInternal = function(html){
+trigger_fish.rbT.applyHtmltoPageInternal = function(html,type){
 
-	if(html.length){
+  var isPosOccupied = trigger_fish.rbT.isTemplPosOccupied(type);
+   if(isPosOccupied)
+   {
+      trigger_fish.rbT.sendErrorToRBServer("Postion Occupied by Another Template");
+   }else{
+	
+      if(html.length){
 
-	 jQuery('body').append(html);
-	// document.body.innerHTML = document.body.innerHTML+html;
-	}else{
+    	 jQuery('body').append(html);
+    	// document.body.innerHTML = document.body.innerHTML+html;
+    	}else{
 
-         trigger_fish.rbT.sendErrorToRBServer("Bad variable array error for template");
-	 			 return "";
-	 }
+             trigger_fish.rbT.sendErrorToRBServer("Bad variable array error for template");
+    	 			 return "";
+    	 }
+  }
 };
 
 //***********************************************************************************
@@ -5398,7 +5469,26 @@ trigger_fish.rbT.enableTimeOutHadnlingInternal= function(templateName,timerValue
     trigger_fish.rbT.eventHandler.timeOutHandler(templateName,timerValue);
 };
 
+//***************************************************************************************
+trigger_fish.rbT.applyHtmlToPage= function(){
+   
+    var html = trigger_fish.rbT.htmlGlobalStruct['trigger_fish.rbT.html'];
+    var type = trigger_fish.rbT.htmlGlobalStruct['trigger_fish.rbT.type']; 
+    var servermsg = trigger_fish.rbT.htmlGlobalStruct['trigger_fish.rbT.roiServerMsg']; 
+
+    if (trigger_fish.rbT.isTemplateGoodToApply(html)){
+        trigger_fish.rbT.applyHtmltoPage(html);
+        trigger_fish.rbT.enableClickHandling();
+        // trigger_fish.rbT.enableTimeOutHadnling(templateName,trigger_fish.rbT.templTimers['templ.templduration']*1000);
+
+        params.display = servermsg + " " +"Display " + "Success";
+
+        //trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
+    }
+};
+
 //*************************************************************************************
+
 trigger_fish.rbT.invokeActionScriptInternal=function(action){
 
 /*
@@ -5407,90 +5497,109 @@ trigger_fish.rbT.invokeActionScriptInternal=function(action){
 
 */
 
-if(1) // Check for Service Type Enhancement
- {   
- 
-      params= {};  
-      
-      trigger_fish.rbT.init();
-      
-      var actionParams = action.params;
-       
-      var type=action.desc.type; 
-      var api = action.desc.api;
-      var servermsg = type + "."+api;
-      
-      var isPosOccupied = trigger_fish.rbT.isTemplPosOccupied(type);
-
-      if(isPosOccupied)
-      {
-
-          trigger_fish.rbT.sendErrorToRBServer("Postion Occupied by Another Template");
-      }
-      else
-      {
-          var html = trigger_fish.rbT.getTemplateHTMLByName(type,api);
-
+    if(1) // Check for Service Type Enhancement
+     {   
+     
+          params= {};  
           
-              for (var key in actionParams)
-                 {
-                  if(actionParams.hasOwnProperty(key))
-                  {
-                     var keyVal = key;
-                       var value = actionParams[key];
-                       var tempMatch = ""
-                       var tempMatch = value.match(/\{\{[\w.\=\%\:\/\s\#\@\-\']*\}\}/g);
-                      
-                       if(tempMatch)
-                       {
-                       	  var tempActionKeyRetVal =""
-                       	  tempActionKeyRetVal=trigger_fish.rbT.fillTheRuntimeValueForTemplArgs(tempMatch,actionParams[key]);
-                          
-
-                          if(tempActionKeyRetVal != undefined)
-                          {	
-                             actionParams[key] = tempActionKeyRetVal;
-                          }   
-                       }
-                   }
-
-                 }      
-
-        //   for (var key in actionParams) {             
-        //     if(actionParams.hasOwnProperty(key)){	
-			     //     if( 'Zindex' == actionParams[key] ) {               
-				    //      actionParams[key] =  trigger_fish.rbT.findZIndex()+5;
-			     //     }
-			     //  }              
-		      // } 
-
-		
+          trigger_fish.rbT.init();
 
 
-
-          html = trigger_fish.rbT.getTemplateApplyVars(html, actionParams);
-          
-
-         if (trigger_fish.rbT.isTemplateGoodToApply(html)){
-            trigger_fish.rbT.applyHtmltoPage(html);
-            trigger_fish.rbT.enableClickHandling();
-           // trigger_fish.rbT.enableTimeOutHadnling(templateName,trigger_fish.rbT.templTimers['templ.templduration']*1000);
-		         trigger_fish.rbT.setTemplatesDisplayLockFlags(type,true);
-
-             params.display = servermsg + " " +"Display " + "Success";
-
-             //trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
+          //var delayVal = action.timers.delay;
 
 
-         }
-      }	
-  }else{
+          if(1)//delayVal==0)  //check for delay value to display templates
+            {
+                var actionParams = action.params;
+                 
+                var type=action.desc.type; 
+                var api = action.desc.api;
+                var servermsg = type + "."+api;
+                var custom = undefined;
 
-  	 // Report to Server for If Service Type Wrong
+                var isPosOccupied = trigger_fish.rbT.isTemplPosOccupied(type);
 
-  }    
+                if(isPosOccupied)
+                {
 
-};	 
+                    trigger_fish.rbT.sendErrorToRBServer("Postion Occupied by Another Template");
+                }
+                else
+                {
+                        if(type != 'custom' && api != 'html')
+                    
+                        {
+                          var html = trigger_fish.rbT.getTemplateHTMLByName(type,api);
+                     
+                        }
+                        else{
+
+                          var html = undefined;    
+                        }
+                        for (var key in actionParams)
+                        {
+                            if(actionParams.hasOwnProperty(key))
+                            {
+                               var keyVal = key;
+                                 var value = actionParams[key];
+                                 var tempMatch = ""
+                                 var tempMatch = value.match(/\{\{[\w.\=\%\:\/\s\#\@\-\']*\}\}/g);
+                                 if(tempMatch)
+                                 {
+                                    var tempActionKeyRetVal =""
+                                    tempActionKeyRetVal=trigger_fish.rbT.fillTheRuntimeValueForTemplArgs(tempMatch,actionParams[key]);
+                                    
+
+                                    if(tempActionKeyRetVal != undefined)
+                                    { 
+                                       actionParams[key] = tempActionKeyRetVal;
+                                    }   
+                                 }
+                             }
+
+                        }      
+
+                  //   for (var key in actionParams) {             
+                  //     if(actionParams.hasOwnProperty(key)){  
+                     //     if( 'Zindex' == actionParams[key] ) {               
+                      //      actionParams[key] =  trigger_fish.rbT.findZIndex()+5;
+                     //     }
+                     //  }              
+                    // } 
+
+                    if(type != 'custom' && api != 'html'){
+                       html = trigger_fish.rbT.getTemplateApplyVars(html, actionParams);
+                   
+
+                    }else
+                    {
+                       html = actionParams.html;
+                    }
+                    
+                    if (trigger_fish.rbT.isTemplateGoodToApply(html)){
+                      trigger_fish.rbT.applyHtmltoPage(html,type);
+                      trigger_fish.rbT.enableClickHandling();
+                     // trigger_fish.rbT.enableTimeOutHadnling(templateName,trigger_fish.rbT.templTimers['templ.templduration']*1000);
+                       
+                       trigger_fish.rbT.setTemplatesDisplayLockFlags(type,true);
+
+                       params.display = servermsg + " " +"Display " + "Success";
+
+                       //trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
+                    }
+                }
+          }else{
+
+                    trigger_fish.rbT.handlingOfDelayForTemplDisplay(action);
+
+          }   
+      }else{
+
+         // Report to Server for If Service Type Wrong
+
+      }    
+
+    };   
 
 
 /****************************[[interfaces.js]]*************************************/ 
@@ -5539,7 +5648,7 @@ trigger_fish.rbT.isTemplateGoodToApply = function(html){
 };
 
 //------------------------------------------
-trigger_fish.rbT.applyHtmltoPage = function(html){
+trigger_fish.rbT.applyHtmltoPage = function(html,type){
 	if (!trigger_fish.rbT.isInitialized()){
 		return "";
 	}
@@ -5547,7 +5656,7 @@ trigger_fish.rbT.applyHtmltoPage = function(html){
 		trigger_fish.rbT.sendErrorToRBServer("improper access of interface applyHtmltoPage");
 		return "";
 	}
-	return trigger_fish.rbT.applyHtmltoPageInternal(html);
+	return trigger_fish.rbT.applyHtmltoPageInternal(html,type);
 };
 
 

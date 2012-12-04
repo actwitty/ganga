@@ -4,7 +4,7 @@
 //= require_tree ./app/views
 //= require_tree ./app/others
 //= require_tree ./app/library
-//= require_tree ./templates
+//= require_tree ./app/templates
 //= require_tree ./app/routes
 //= require_tree ./action_script
 //= require_self
@@ -53,7 +53,7 @@ debugRouter = function(state) {
 
 /************************** Ember Init ****************************/
 $(document).ready(function(){
-  
+
   App.AUTH_TOKEN = encodeURIComponent($('meta[name=csrf-token]').attr('content'));
   App.isLoggedIn = false;
   App.AccountID = null;
@@ -65,7 +65,7 @@ $(document).ready(function(){
     App.AccountID = loggedInAccountID;
     App.isLoggedIn = true; 
   }
-  App.initialize();
+  App.initialize(App.router);
   App.get("router").send("initDone");
   /* For debugging */
   App.router.get("childStates").forEach(function(state) {
@@ -75,5 +75,3 @@ $(document).ready(function(){
 });
 /*******************************************************************/
 
-
-/*******************************************************************/

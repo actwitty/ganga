@@ -26,10 +26,11 @@ module Authenticate
 
       app = App.where("access_info.origin_base" => origin_base).first
       
+      # TODO : 
       # if app id is not matching with requests app id return unauthorised 
-      if !params[:id].blank? and (params[:id] != app._id.to_s)
-        raise et("application.unauthorized")
-      end
+      # if !params[:id].blank? and (params[:id] != app._id.to_s)
+      #   raise et("application.unauthorized")
+      # end
 
       if !app.blank?
         headers['Access-Control-Allow-Origin'] = origin

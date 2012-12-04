@@ -51,10 +51,11 @@ module Authenticate
     elsif token[0] == AppConstants.app_token_prefix
       obj = App.where("access_info.token" => token).first
 
+      # TODO :
       # if app id is not matching with requests app id return unauthorised 
-      if !params[:id].blank? and (params[:id] != obj._id.to_s)
-        raise et("application.unauthorized")
-      end
+      # if !params[:id].blank? and (params[:id] != obj._id.to_s)
+      #   raise et("application.unauthorized")
+      # end
     else
       raise et("application.invalid_token")
     end

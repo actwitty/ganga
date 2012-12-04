@@ -23,7 +23,6 @@ class AccessInfo
   # Index
 
   # Functions
- 
 
   # Refresh Token at the expiry.. Also updates App or Account based on Scope with token
   def refresh_token

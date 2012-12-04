@@ -4,10 +4,12 @@ class Account
 
 
   # Relations
-  has_many :apps, :dependent => :destroy
-  has_many :actors
-  has_many :events
-  has_many :identifiers
+  has_many    :apps, :dependent => :destroy
+  has_many    :actors
+  has_many    :events
+  has_many    :identifiers
+  has_many    :conversions
+  has_many    :errs,    :dependent => :destroy # errs can exist only in account scope, independent of actor and app
 
   # Attributes
   ## Include default devise modules. Others available are:

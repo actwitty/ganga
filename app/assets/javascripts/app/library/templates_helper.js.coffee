@@ -12,7 +12,13 @@ App.templatesLibraryVars =
 App.templatesConstants = 
                           'show'  : 1
                           'varType'  : 2
-                          'label' : 3
+                          'level': 3
+                          'label' : 4
+App.labelConstants = 
+                      'category' : 1
+                      'name' : 2
+
+
 
 App.templatesFixedData = {
                           'font'  : [

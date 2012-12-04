@@ -92,6 +92,8 @@ trigger_fish.rbTServerChannel = {
       k["actor_id"] = trigger_fish.rbTActor.getID() || "";
     } else if (obj.app_read) {
       k["id"] = trigger_fish.rbTAPP.getAppID() || "";
+    } else if(obj.actor_create) {
+      k["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
     } else if (obj.set_actor) {
       k["properties"] = {"profile":obj.params ? obj.params:{}};
       k["id"] = trigger_fish.rbTActor.getID() || "";
@@ -140,10 +142,8 @@ trigger_fish.rbTServerChannel = {
     try {
       var reqServerData = this.extendRequestData(obj);
       var callback = this.extendCallbacks(obj.cb);
-      if (obj.async && obj.async === "noasync")
-        var asyncSt = false;
-      else 
-        var asyncSt = true;
+      if (obj.async && obj.async === "noasync") var asyncSt = false;
+      else var asyncSt = true;
       var that = obj;
       var url = (obj.event) ? trigger_fish.rbTServerChannel.url.fireEvent : obj.url;
       that.requestData = reqServerData;
@@ -151,7 +151,6 @@ trigger_fish.rbTServerChannel = {
             url: getURL.call(this,obj.type,url),
             type: that.type || 'GET',
             async: asyncSt,
-            //dataType: 'json',
             contentType : getContentType(obj.type),
             data: reqServerData,
             crossDomain:true,
@@ -159,7 +158,7 @@ trigger_fish.rbTServerChannel = {
             xhrField : { withCredentials:true},
             beforeSend: function() {
                 if (that.event) {
-                  trigger_fish.rbTCookie.setCookie("lastevent", that.event);
+                  trigger_fish.rbTStore.set("lastevent", that.event);
                   trigger_fish.rbTAPP.setTransVar(that.event,that.params);
                 }
             },
@@ -168,7 +167,7 @@ trigger_fish.rbTServerChannel = {
                 trigger_fish.rbTAPP.log({"message":"server response success " + that.url,"data":respData});
 
                 if (that.event) {
-                  trigger_fish.rbTCookie.deleteCookie("lastevent");
+                  trigger_fish.rbTStore.deleteKey("lastevent");
                   trigger_fish.rbTRules.executeRulesOnEvent(that.event);
                   if (respData && respData.actor) { 
                     callback.success(respData);
@@ -189,20 +188,16 @@ trigger_fish.rbTServerChannel = {
                   trigger_fish.rbTServerChannel.actorDetails();
                 }
                 callback.error();
-                
             }
       });
     } catch(e) {
-      trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                          "message"   :"SERVER REQUEST FAILED" , 
+      trigger_fish.rbTAPP.reportError({ "exception" : e.message,
+                          "message"   : "SERVER REQUEST FAILED" , 
                           "obj"       : JSON.stringify(that),
                           "log"       : "error" 
                          }); 
     }
   },
-
-
-
 
   /**
   * Prepare Server request, queue req's if needed be.
@@ -213,7 +208,7 @@ trigger_fish.rbTServerChannel = {
     var that = obj;
     if (!obj)
       return;
-    if (!trigger_fish.rbTAPP.isrbTAlive()) {
+    if (!trigger_fish.rbTAPP.isAlive()) {
       if (obj.url)
         obj.async = obj.async || "async";
       this.queueReq(obj); 
@@ -239,14 +234,15 @@ trigger_fish.rbTServerChannel = {
   *  FIXME : IF THERE IS ANYTHING MISSING
   *  @return void
   */  
-  appDetails : function(params, callback)
+  appDetails : function()
   {
     "use strict";
-    var cb = this.extendCallbacks(callback);
-    this.makeServerRequest({"url": this.url.details,
-                      "params"     : params,
-                      "cb"         : cb
-                     });  
+    this.makeServerRequest({"url": this.url.appDetails,
+                            "app_read" : true,
+                            "cb"       : { success: trigger_fish.rbTServerResponse.setAppDetail,
+                                           error  : trigger_fish.rbTServerResponse.defaultError
+                                         }
+                           });  
   }, 
 
   /**

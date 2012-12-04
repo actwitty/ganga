@@ -1,0 +1,18 @@
+svc:
+  full_contact:
+    keys: 
+      api: 85fd2e47682cf8d7
+    triggers: 
+      [ 
+        { 
+          name: Search by Email, 
+          endpoint: "https://api.fullcontact.com/v2/person.json", 
+          params: {}
+        },
+        { 
+          name: Search By Facebook ID, 
+          endpoint: "https://api.fullcontact.com/v2/person.json", 
+          params: {}
+        }
+      ]
+

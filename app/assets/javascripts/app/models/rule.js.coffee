@@ -17,12 +17,36 @@ App.Rule = Ember.Object.extend
   hasManyConditions: []
   actionParamArr: []
 
-  setActionParam: (type, api)->
+
+  
+  init: ->
+    
+    @_super()
+
+    hasManyConditions = []
+    conditions = @get 'conditions'        
+    if conditions isnt null
+
+      for k,condition of conditions          
+        newCondition = App.Condition.create(condition)      
+        hasManyConditions.pushObject(newCondition)        
+      @set 'hasManyConditions', hasManyConditions 
+    else      
+      @set 'hasManyConditions', [App.Condition.create()]    
+    @setAction() 
+
+
+    
+  setActionParam: (type, api)->    
+          
     params = {}
     params_key = type + '.' + api
     for param of  trigger_fish.rbT.templateArgs[params_key]  
       params[param] = trigger_fish.rbT.templateArgs[params_key][param]['value']      
-    return params
+
+
+
+    params
 
   setAction: ->
     action = @get 'action'
@@ -48,25 +72,6 @@ App.Rule = Ember.Object.extend
 
       newAction.params = @setActionParam(type, api)
       @set 'action', newAction
-
-      
-  init: ->
-    
-    @_super()
-
-    hasManyConditions = []
-    conditions = @get 'conditions'        
-    if conditions isnt null
-
-      for k,condition of conditions          
-        newCondition = App.Condition.create(condition)      
-        hasManyConditions.pushObject(newCondition)        
-      @set 'hasManyConditions', hasManyConditions 
-    else      
-      @set 'hasManyConditions', [App.Condition.create()]    
-    @setAction() 
-    
-    
 
 
   serializeAction: ->
