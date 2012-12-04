@@ -3,9 +3,9 @@
 # ---------------------------------------------------------
 App.testTemplateDataType= (obj, type, api, key, options, check) ->  
   context = (options.contexts and options.contexts[0]) or obj
-  type_in = Ember.Handlebars.getPath(context, type, options)
-  api_in  = Ember.Handlebars.getPath(context, api, options)
-  key_in  = Ember.Handlebars.getPath(context, key, options)
+  type_in = Ember.Handlebars.get(context, type, options)
+  api_in  = Ember.Handlebars.get(context, api, options)
+  key_in  = Ember.Handlebars.get(context, key, options)
   test_key = trigger_fish.rbT.templateArgs[ type_in + '.' + api_in][key_in]['key']
 
   namescopeArr = test_key.split('.')
@@ -47,26 +47,26 @@ Handlebars.registerHelper "isWeight", (type, api, key, options) ->
 Handlebars.registerHelper "getTemplateName", (type, api, options) ->
   
   context = (options.contexts and options.contexts[0]) or this  
-  type_in = Ember.Handlebars.getPath(context, type, options)      
-  api_in = Ember.Handlebars.getPath(context, api, options)      
+  type_in = Ember.Handlebars.get(context, type, options)      
+  api_in = Ember.Handlebars.get(context, api, options)      
   id = type_in + '.' + api_in  
   trigger_fish.rbT.templateName[id]
 
 # ---------------------------------------------------------
 Handlebars.registerHelper "getTemplatePlaceHolder", (type, api, key, options) ->
   context = (options.contexts and options.contexts[0]) or this
-  type_in = Ember.Handlebars.getPath(context, type, options)
-  api_in = Ember.Handlebars.getPath(context, api, options)
-  key_in = Ember.Handlebars.getPath(context, key, options)
+  type_in = Ember.Handlebars.get(context, type, options)
+  api_in = Ember.Handlebars.get(context, api, options)
+  key_in = Ember.Handlebars.get(context, key, options)
   test_key = trigger_fish.rbT.templateArgs[ type_in + '.' + api_in][key_in]['key']
   namescopeArr = test_key.split('.')
   namescopeArr[App.templatesConstants.label].replace(/_/g, ' ')
 # ---------------------------------------------------------
 Handlebars.registerHelper "shouldShow", (type, api, key, options) ->
   context = (options.contexts and options.contexts[0]) or this
-  type_in = Ember.Handlebars.getPath(context, type, options)
-  api_in = Ember.Handlebars.getPath(context, api, options)
-  key_in = Ember.Handlebars.getPath(context, key, options)
+  type_in = Ember.Handlebars.get(context, type, options)
+  api_in = Ember.Handlebars.get(context, api, options)
+  key_in = Ember.Handlebars.get(context, key, options)
   template_id = type_in + '.' + api_in
   targ = trigger_fish.rbT.templateArgs  
   if targ.hasOwnProperty template_id    
@@ -87,7 +87,7 @@ Handlebars.registerHelper "shouldShow", (type, api, key, options) ->
 Handlebars.registerHelper "paramBind", (key, options) ->
   ret = ""    
   context = (options.contexts and options.contexts[0]) or this
-  key_in = Ember.Handlebars.getPath(context, key, options)
+  key_in = Ember.Handlebars.get(context, key, options)
   ret = options.fn(                              
                     bindVal: 'view.params.' + key_in                               
                   )
@@ -99,9 +99,9 @@ Handlebars.registerHelper "paramBind", (key, options) ->
 Handlebars.registerHelper "eachSortedParam", (type, api, obj, options) ->
   ret = ""
   context = (options.contexts and options.contexts[0]) or this
-  hash = Ember.Handlebars.getPath(context, obj, options)  
-  type_in = Ember.Handlebars.getPath(context, type, options)
-  api_in = Ember.Handlebars.getPath(context, api, options)  
+  hash = Ember.Handlebars.get(context, obj, options)  
+  type_in = Ember.Handlebars.get(context, type, options)
+  api_in = Ember.Handlebars.get(context, api, options)  
   template_id = type_in + '.' + api_in
   targ = trigger_fish.rbT.templateArgs  
 

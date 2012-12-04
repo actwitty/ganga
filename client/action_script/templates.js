@@ -1,44 +1,32 @@
 trigger_fish.rbT.templateLib = {
-'topbar' :{ 
- 				'generic.normal':'rbTemplTopbarGenericNormalHTML',
-				'generic.twitterfollow':'rbTemplTopbarGenericTwitterfollowHTML',
-				'generic.fblike':'rbTemplTopbarGenericFblikeHTML',
-				'generic.twittershare':'rbTemplTopbarGenericTwittershareHTML'
- 
- 	 	 	 }, 
-
-
-
- 'bottombar' :{ 
- 				'generic.fblike':'rbTemplBottombarGenericFblikeHTML',
+		'bottombar':{ 
+				'generic.fblike':'rbTemplBottombarGenericFblikeHTML',
 				'generic.twitterfollow':'rbTemplBottombarGenericTwitterfollowHTML',
 				'generic.twittershare':'rbTemplBottombarGenericTwittershareHTML',
 				'generic.normal':'rbTemplBottombarGenericNormalHTML'
  
- 	 	 	 }, 
-
-
-
- 'modal' :{ 
- 				'generic.normal':'rbTemplModalGenericNormalHTML'
+ 	 	 	 },
+		'topbar':{ 
+				'generic.normal':'rbTemplTopbarGenericNormalHTML',
+				'generic.twitterfollow':'rbTemplTopbarGenericTwitterfollowHTML',
+				'generic.fblike':'rbTemplTopbarGenericFblikeHTML',
+				'generic.twittershare':'rbTemplTopbarGenericTwittershareHTML'
  
- 	 	 	 }, 
-
-
-
- 'support' :{ 
- 				'olark.normal':'rbTemplSupportOlarkNormalHTML'
+ 	 	 	 },
+		'support':{ 
+				'olark.normal':'rbTemplSupportOlarkNormalHTML'
  
- 	 	 	 }, 
-
-
-
- 'feedback' :{ 
- 				'uservoice.normal':'rbTemplFeedbackUservoiceNormalHTML'
+ 	 	 	 },
+		'modal':{ 
+				'generic.normal':'rbTemplModalGenericNormalHTML'
+ 
+ 	 	 	 },
+		'feedback':{ 
+				'uservoice.normal':'rbTemplFeedbackUservoiceNormalHTML'
  
  	 	 	 }
  
- 	 	 	 }; 
+ }; 
 
 
 
@@ -379,7 +367,7 @@ trigger_fish.rbT.templateLib = {
 	 	 	 	 	 				value :'white'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.sg.e.cover_image',
+	 	 	 	 	 				key :'rb.t.imgl.e.cover_image',
 	 	 	 	 	 				value :'https://s3.amazonaws.com/actwitty_ganga/image/modal_demo.jpg'
 	 	 	 	 	 	  },
  	 	 	 	 	 	 '5' : {

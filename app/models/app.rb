@@ -1,5 +1,6 @@
-
+require 'url'
 require 'utility'
+require 'generate_token'
 
 class App
   include Mongoid::Document
@@ -10,8 +11,12 @@ class App
 
   has_many    :actors,  :dependent => :destroy
   has_many    :events
+  has_many    :identifiers
+  has_many    :conversions
+  has_many    :errs,    :dependent => :destroy # errs can exist only app scope, independent of actor
 
   embeds_many :rules
+  embeds_one  :access_info
 
   # Attributes
  
@@ -43,14 +48,21 @@ class App
 
   ## {
   ##     "name" => "my app",
-  ##     "domain" => "http://myapp.com"
+  ##     "origin" => "http://myapp.com"
   ## }
   field       :description, type:    Hash,      :default => {}
+
+  # VALIDATIONS
   validates_presence_of :description
 
+
+  # INDEX
   index({"description.name" => 1, :account_id =>  1 })
   index({account_id: 1, _id: 1})
   index({"rules.event" => 1})
+  index({"access_info.origin_base" => 1})
+  index({"access_info.token" => 1})
+
   # Function
   
   # NOTE
@@ -61,7 +73,7 @@ class App
   ##    :account_id => "2334534534"           [MANDATORY] 
   ##    :description => {                     [MANDATORY]
   ##      :name => "App Name 1"               [MANDATORY] # must be unique in account
-  ##      :domain => "http://www.rulebot.com" [OPTIONAL]  # can be used from API
+  ##      :origin => "http://www.rulebot.com" [OPTIONAL]  # can be used from API
   ##      :email => "john.doe@example.com",
   ##      :address => {:city => "Bangalore"}
   ##    }
@@ -80,16 +92,24 @@ class App
     app = App.where( "description.name" => params[:description]["name"], account_id: params[:account_id]).first
     raise et("app.app_name_already_exist") if !app.blank?
 
-    obj = App.create!(account_id: params[:account_id], description: params[:description])
+    # verify valid domain
+    if !params[:description]["origin"].blank?
+      origin_base = Url.base(params[:description]["origin"])
+      raise et("app.invalid_origin", url: params[:description]["origin"]) if origin_base.blank? 
+    end
+      
+    obj = App.new(account_id: params[:account_id], description: params[:description])
 
     # create the super actor of app. it will be meta actor
     actor = Actor.create!(account_id: params[:account_id], app_id: obj._id, meta: true)
     raise et("app.actor_create_failed") if actor.blank?
+    
     obj.description[AppConstants.super_actor] = actor._id 
-
-    ret = AccessInfo.add!(app_id: obj._id, account_id: params[:account_id], origin: params[:description][:domain], scope: "app" )
-    raise et("app.access_create_failed") if !ret[:error].blank?
-    obj.description[AppConstants.token] = ret[:return].token
+    
+    # create access info
+    token = AppConstants.app_token_prefix + GenerateToken.unique_token
+    access_info = obj.create_access_info(origin_base: origin_base, token: token, role: {})
+    raise et("app.access_create_failed") if access_info.blank?
 
     obj.save!
     raise et("app.create_failed") if obj.blank?
@@ -127,10 +147,14 @@ class App
     desc = Utility.serialize_to(hash: params[:description], serialize_to: "value")
 
     desc.each do |k,v|
-      if (k == AppConstants.domain) and (app.description[k] != v)
-        a = AccessInfo.where(app_id: app._id).first
-        a.update_attribute(:origin, v)
+
+      # update origin in AccessInfo if origin is updated
+      if (k == "origin") 
+        origin_base = Url.base(v)
+        raise et("app.invalid_origin", url: v) if origin_base.blank?
+        app.access_info.update_attribute(:origin_base, origin_base)
       end
+      
       app.description[k] = v if k != AppConstants.super_actor and k != AppConstants.token
     end
 
@@ -159,7 +183,7 @@ class App
   ##
   ##            app: {
   ##                   id: "4545554654645", 
-  ##                   description: {"super_app_id": "23131313", "name": "my app", "domain": "http://myapp.com"}, 
+  ##                   description: {"super_app_id": "23131313", "name": "my app", "origin": "http://myapp.com"}, 
   ##                   schema: {
   ##                             properties: {
   ##                                           'customer[email]' => {  
@@ -338,6 +362,7 @@ class App
 
   def format_app
     self.description["super_actor_id"] = self.description["super_actor_id"].to_s
+    
     array = []
     self.rules.each {|rule| array << rule.format_rule}
 

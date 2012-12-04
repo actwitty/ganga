@@ -6,7 +6,7 @@ _rbTK.push(['_setAccount', '509cfa0e56b26aa55c000001']);
 (function(d,id) {
   if (d.getElementById(id)) {return;}
   var rj = d.createElement('script'); rj.type = 'text/javascript'; rj.async = true;
-  rj.src = 'https://s3.amazonaws.com/actwitty_ganga/rbt_merge'+(tfGzip?'.js.jgz':'.min.js');
+  rj.src = 'https://s3.amazonaws.com/actwitty-rbt/rbt_merge'+(tfGzip?'.js.jgz':'.min.js');
   rj.id = id;
   d.getElementsByTagName("head")[0].appendChild(rj);
   (function(w,e){
@@ -18,6 +18,6 @@ _rbTK.push(['_setAccount', '509cfa0e56b26aa55c000001']);
       }
     }
     for (k = 0; k < j; k++) q(e[k]);
-  })(window,["identify","sendEvent","setActor","alias"]);
+  })(window,["identify","sendEvent","setUser","alias"]);
 })(document,"trigger-fish-pdk");
 </script>

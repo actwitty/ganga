@@ -77,6 +77,8 @@ module Ganga
 
 
     config.ember.variant = Rails.env.to_sym
-  
+    
+    config.handlebars.templates_root = 'app/templates'
+    config.handlebars.templates_path_separator = '/'
   end
 end

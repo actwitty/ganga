@@ -14,7 +14,7 @@ class AppsController < ApplicationController
   ## {  
   ##  	:description => {							        [MANDATORY]
   ##      :name => "App Name 1"               [MANDATORY] # must be unique in account
-  ##      :domain => "http://www.rulebot.com" [OPTIONAL]  # can be used from API
+  ##      :origin => "http://www.rulebot.com" [OPTIONAL]  # can be used from API
   ##      :email => "john.doe@example.com",
   ##      :address => {:city => "Bangalore"}
   ##    }
@@ -27,7 +27,7 @@ class AppsController < ApplicationController
   ##
   ##             "time"=>"2012-10-09T12:10:24Z",
   ##
-  ##            "description"=>{"email"=>"john.doe@example.com", "customer"=>{"address"=>{"city"=>"Bangalore"}}, "domain"=>"http://example.com"}, 
+  ##            "description"=>{"email"=>"john.doe@example.com", "customer"=>{"address"=>{"city"=>"Bangalore"}}, "origin"=>"http://example.com"}, 
   ##
   ##            "schema" => {
   ##                             properties: {
@@ -128,7 +128,7 @@ class AppsController < ApplicationController
   ##
   ##						"account_id"=>"5074143063fe853420000001", 
   ##
-  ##            "description"=>{"email"=>"john.doe@example.com", "customer"=>{"address"=>{"city"=>"Bangalore"}}, "domain"=>"http://example.com"}, 
+  ##            "description"=>{"email"=>"john.doe@example.com", "customer"=>{"address"=>{"city"=>"Bangalore"}}, "origin"=>"http://example.com"}, 
   ##
   ##            "schema" => {
   ##                             properties: {
@@ -198,7 +198,7 @@ class AppsController < ApplicationController
   ##
   ##            app: {
   ##                   id: "4545554654645", 
-  ##                   description: {"super_app_id": "23131313", "name": "my app", "domain": "http://myapp.com"}, 
+  ##                   description: {"super_app_id": "23131313", "name": "my app", "origin": "http://myapp.com"}, 
   ##                   schema: {
   ##                             properties: {
   ##                                           'customer[email]' => {  

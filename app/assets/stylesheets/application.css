@@ -11,16 +11,14 @@
  *= require twitter/bootstrap 
  *= require_tree .
  *= require select2
- *= require jquery-tablesorter/blue
  *= require bootstrap-datepicker
+ *= require bootstrap-colorpicker
  *= require dataTables/jquery.dataTables
  *= require dataTables/jquery.dataTables.bootstrap
  *= require fancybox
- *= require highlight_js/sunburst
+ *= require google-code-prettify-rails/prettify
  *= require bootstrap_and_overrides 
  *= require 'font-awesome'
 
-
 */
-
 

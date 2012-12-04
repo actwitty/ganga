@@ -26,8 +26,10 @@ var trigger_fish = {};
 trigger_fish.rbTAPP = {
     /* Main configs will be holded here */
     configs : {
-      "status" : false
+      "status" : false,
+      "transVar" : {}
     },
+    el : {},
     
     /** 
     *  Do following tasks on initialization of the app
@@ -43,11 +45,8 @@ trigger_fish.rbTAPP = {
     initialize : function()
     {
       "use strict";
-      trigger_fish.enableCORS(jQuery);
-      trigger_fish.initJStorage();
       this.getAppData();
-      //this.createDummyActor();
-      trigger_fish.rbTActor.retFromCookie();
+      
 
     },
 
@@ -62,6 +61,16 @@ trigger_fish.rbTAPP = {
     {
        return this.configs.status;
     },  
+
+    /**
+    *
+    */
+    setrbTAlive : function()
+    {
+      this.configs.status = true;
+      //this.dispatchEL("isRbtAlive");
+      trigger_fish.rbTServerChannel.flushReqQueue();
+    },
 
     /**
     * Set RBT APP Status to true to signal app is alive
@@ -106,9 +115,9 @@ trigger_fish.rbTAPP = {
     *
     *
     */   
-    setTransVar : function(data)
+    setTransVar : function(event,data)
     {
-      this.configs.transVar = data;
+      this.configs.transVar.event = data;
     },
 
     /**
@@ -118,6 +127,33 @@ trigger_fish.rbTAPP = {
     {
       this.configs.appData = data;
     },
+
+    /**
+    *
+    */
+    addEL : function(event, cb, scope)
+    {
+      if (!this.el.event)
+        this.el.event = [];
+      var listenerObj = {"action":cb,"scope":scope};
+      if (this.el.event.indexOf(JSON.stringify(listenerObj)) === -1)
+        this.el.event.push(listenerObj);
+    },
+
+    /**
+    *
+    */
+    dispatchEL : function(event)
+    {
+      if (!this.el.event)
+        return;
+      var wL = this.el.event.length;
+      for(var i = 0 ; i < wL ; ++i) {
+        var listener = this.el.event[i];
+        listener.action.apply(listener.scope);
+      }
+      this.el.event = [];
+    },  
 
     /** 
     *  Get App ID
@@ -149,9 +185,9 @@ trigger_fish.rbTAPP = {
     /**
     *
     */
-    getTransVar : function()
+    getTransVar : function(event)
     {
-      return this.configs.transVar;
+      return this.configs.transVar.event;
     },
 
     /**
@@ -1742,6 +1778,7 @@ trigger_fish.rbTActor = function() {
   var __id = "";
   var __prop = {};
   var __state = false;
+  var __eventRQ = [];
 
   return {
 
@@ -1756,8 +1793,11 @@ trigger_fish.rbTActor = function() {
           this.setProperties(trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorProp)); 
           this.enable();
         }
-        if (trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID))
+        if (trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID)) {
           this.setID(trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID));
+        } else {
+          this.createDummyActor();
+        }
       },
 
       isReady : function()
@@ -1787,8 +1827,7 @@ trigger_fish.rbTActor = function() {
       enable : function()
       {
         __state = true;
-        // FIXME :: CHECK FOR RIGHT LOCATION OF THIS
-        trigger_fish.rbTServerChannel.flushReqWaitingForActor();
+        this.flushEvRQ();
       },  
       /** 
       *  Set Actor ID
@@ -1833,7 +1872,7 @@ trigger_fish.rbTActor = function() {
         if (!__id || !__prop) {
           var obj = {"url"      : trigger_fish.rbTServerChannel.url.createActor,
                      "app_read" : true, 
-                     "cb"       : { success: trigger_fish.rbTServerResponse.setAppDetail,
+                     "cb"       : { success: trigger_fish.rbTServerResponse.setActorID,
                                     error  : trigger_fish.rbTServerResponse.defaultError
                                   }
                   };
@@ -1854,8 +1893,23 @@ trigger_fish.rbTActor = function() {
           this.setID(data.id);
           trigger_fish.rbTServerChannel.actorDetails();
         }
-      }
+      },
 
+      bufferEvRQ : function(obj)
+      {
+        __eventRQ.push(obj);
+      },
+
+      flushEvRQ : function()
+      {
+        if (!__eventRQ.length)
+          return;
+        for (var req in __eventRQ) {
+          var r = __eventRQ[req];
+          trigger_fish.rbTServerChannel.makeServerRequest(r);
+        }
+        __eventRQ = [];
+      }
   };
 
 }();
@@ -1920,19 +1974,6 @@ trigger_fish.rbTRules = {
 
   ruleTable : {},
 
-  operations : { 
-                  'gtn': 'greater than',
-                  'ltn': 'lesser than',
-                  'eql': 'equal to',
-                  'swh': 'starts with',
-                  'ewh': 'ends with',
-                  'cns': 'contains',
-                  'btn': 'between',
-                  'rgx': 'regex',
-                  'dag': 'days ago',
-                  'drg': 'date range',
-                  'set': 'set'
-  },
   "permissions" : {
           'String': [ 'eql', 'swh','ewh','cns','rgx','set' ],
           'Date': [ 'gtn','ltn','eql','dag','drg','set' ],  
@@ -1946,43 +1987,19 @@ trigger_fish.rbTRules = {
   setRulesTable : function(rules)
   {
     "use strict";
-    //rules = this.sample_json;
-    var ruleString = "";
-
-
-    function ruleConnect(rule)
-    {
-      if (rule.connect) {
-        if (rule.connect === "and")
-          return "&& ";
-        else if (rule.connect === "or")
-          return " || ";
-        else 
-          return " ";
-      } else 
-        return " ";
-    }
-    function ruleParams(rule,event)
-    {
-      //return "('"+JSON.stringify(rule)+",'"+event+"')";
-      rule.event = event;
-      return "('"+JSON.stringify(rule)+"')";
-    }
-
     try {
         jQuery.each(rules, function(index, ruleList) {
           if (!trigger_fish.rbTRules.ruleTable[ruleList.event])
             trigger_fish.rbTRules.ruleTable[ruleList.event] = [];
-          ruleString = " ";
+          var conditions = [];
           for (var rule in ruleList.conditions) {
-            ruleString = ruleString + "trigger_fish.rbTRules.evalRule" + 
-                         ruleParams(ruleList.conditions[rule],ruleList.event) + 
-                         ruleConnect(ruleList.conditions[rule]);
+            ruleList.conditions[rule].event = ruleList.event; // FIXME ::
+            conditions.push(ruleList.conditions[rule]);
           }
           trigger_fish.rbTRules.ruleTable[ruleList.event].push({ "name"         : ruleList.name,
-                                                                 "ruleString"   : ruleString,
                                                                  "action"       : ruleList.action,
-                                                                 "action_param" : ruleList.action_param
+                                                                 "action_param" : ruleList.action_param,
+                                                                 "conditions"   : conditions
                                                                });                                                  
 
         });
@@ -2002,22 +2019,23 @@ trigger_fish.rbTRules = {
   */
   executeRulesOnEvent : function(event)
   {
-    function prepareFunctionCode(ruleString) 
-    {
-      $("#rulestring").append('<h3>'+ruleString+'</h3>');
-      return 'if (' + ruleString + ') { return true; } else { return false;}';
-    }
     // Client will not execute any rules if there is no schema set. 
     var appData = trigger_fish.rbTAPP.getAppDetail();
+    var that=this;
     if (!appData.app.schema) {
       trigger_fish.rbTDebug.log({"message":"There is no schema set for app, cannot execute rules"});
       return;
     }
     try {
-          var that=this;
           jQuery.each(this.ruleTable[event], function(index, rule) {
-            var functionCode = prepareFunctionCode(rule.ruleString);
-            var isRuleValid = new Function(functionCode)();
+            var conditionCount = rule.conditions.length;
+            var isRuleValid = true;
+            for(var i = 0; i < conditionCount ; i++) {
+              if (!that.evalRule(rule.conditions[i])) {
+                isRuleValid = false;
+                break;
+              }
+            } 
             if (isRuleValid) {
               trigger_fish.rbTAPP.log({"message":"++ALL CONDITIONS PASSED++","rule":rule});
               that.invokeAction(rule);
@@ -2027,8 +2045,8 @@ trigger_fish.rbTRules = {
           });
           
     } catch (e) {
-      if (this.ruleTable[event])
-        var ruleStr = this.ruleTable[event].ruleString || "--";
+      if (that.ruleTable[event])
+        var ruleStr = that.ruleTable[event].ruleString || "--";
       else
         var ruleStr = "Rule string cannot be formed!";  
         trigger_fish.rbTAPP.reportError({"exception"  : e.message,
@@ -2081,16 +2099,6 @@ trigger_fish.rbTRules = {
                          });
     }
   },
- 
-  /**
-  * Check the negate status
-  * @param {string} negation status
-  * @return boolean !negate status
-  */
-  isNegate :  function(x)
-  {
-    return (x === "true") ? true : false; 
-  },
 
   /**
   * Check the data type of object
@@ -2132,21 +2140,28 @@ trigger_fish.rbTRules = {
  
     var p = ruleJson.property.replace(/]/g,"").replace(/\[/g,".");
     var value = null;
+    var validProp = true;
 
-    var validProp = 1;
+    function findprop(obj,path) {
+      var args=path.split('.'), l=args.length;
+      for (var i=0;i<l;i++) {
+        if (!obj.hasOwnProperty(args[i]) )
+            return undefined;
+        obj=obj[ args[i] ];
+      }
+      return obj; 
+    }
+
     try {
       if (ruleJson.scope === "a") {
-        var actorProp = trigger_fish.rbTActor.getProperties();
-        value = eval("actorProp."+p+".slice(-1)[0]");
+        value = findprop(trigger_fish.rbTActor.getProperties(),p).slice(-1)[0];
       } else if (ruleJson.scope === "s") {
-        var systemVars = trigger_fish.rbTSystemVar.getProperty();
-        value = eval("systemVars."+p);
+        value = findprop(trigger_fish.rbTSystemVar.getProperty(),p);
       } else if (ruleJson.scope === "e") {
-        var transVar = trigger_fish.rbTAPP.getTransVar(); 
-        value = eval("transVar."+p); 
+        value = findprop(trigger_fish.rbTAPP.getTransVar(ruleJson.event),p);
       }
     } catch (e) {
-      validProp = 0;
+      validProp = false;
     } 
 
     if (!validProp || !value) {
@@ -2157,13 +2172,9 @@ trigger_fish.rbTRules = {
     var type = this.getDataType(ruleJson.event, ruleJson.property, ruleJson.scope, ruleJson);
     if (!type)
         return value;
-    if (type === "String")
-        return value.toString(); 
-    else if (type === "Date")
-        return new Date(value);
-    else if (type === "Number")
-        return parseFloat(value);
-    
+
+    return this.valueDataType(ruleJson.property, value, type);
+
   },
 
   /**
@@ -2209,7 +2220,6 @@ trigger_fish.rbTRules = {
       return false;
     if (ruleJson.type ==="set") 
       return true;
-    //var propVal = this.evalProperty(ruleJson.property,ruleJson.type,ruleJson.scope);
     var propVal = this.evalProperty(ruleJson);
     if (!propVal)
       return false;
@@ -2249,61 +2259,30 @@ trigger_fish.rbTRules = {
   */
   evalRule : function(rule)
   {
-    var ruleJson = JSON.parse(rule);
+    var ruleJson = typeof rule === "object" ? rule :ruleJSON.parse(rule);
     try {
       
       trigger_fish.rbTAPP.log({"message":"for rule condition","rule":ruleJson}); 
-
-      if (!trigger_fish.rbTRules.isValidRule(ruleJson))
-          return false;
       var res = false;
-      var propDT = this.getDataType(ruleJson.event, ruleJson.property, ruleJson.scope, ruleJson);
-      var p = trigger_fish.rbTRules.evalProperty(ruleJson),
-          a = trigger_fish.rbTRules.valueDataType(ruleJson.property, ruleJson.value1, propDT),
-          b = trigger_fish.rbTRules.valueDataType(ruleJson.property, ruleJson.value2, propDT);
 
-      // FIXME :: we can coalesce this but will we lost datatype?
-      switch(ruleJson.operation) {
-      case "ltn":
-          res = this.rule.ltn(p,a);
-          break;
-      case "gtn":
-          res = this.rule.gtn(p,a);
-          break;
-      case "eql":
-          res = this.rule.eql(p,a);
-          break;
-      case "cns":
-          res = this.rule.cns(p,a);
-          break;
-      case "swh":
-          res = this.rule.swh(p,a);
-          break;
-      case "ewh":
-          res = this.rule.ewh(p,a);
-          break;
-      case "btn":
-          res = this.rule.btn(p,a,b);
-          break;
-      case "rgx":
-          res = this.rule.rgx(p,a);
-          break;
-      case "drg":
-          res = this.rule.drg(p,a,b);
-          break;
-      case "dag":
-          res = this.rule.dag(p,a);
-          break;
-      case "set":
-          res = this.rule.set(p,a);
-          break;
-      }
+      if (!this.isValidRule(ruleJson) || !this.rule.hasOwnProperty(ruleJson.operation))
+          return res;
+
+      var propDT = this.getDataType(ruleJson.event, ruleJson.property, ruleJson.scope, ruleJson),f
+          p = this.evalProperty(ruleJson),
+          a = this.valueDataType(ruleJson.property, ruleJson.value1, propDT),
+          b = this.valueDataType(ruleJson.property, ruleJson.value2, propDT);
+
+      res = this.rule[ruleJson.operation](p,a,b);
+      
       return (ruleJson.negation === "true") ? !res : res;
+
     } catch (e) {
       trigger_fish.rbTAPP.reportError({"exception" : e.message,
                                        "message"   :"rule evaluation on"+ ruleJson.operation +" failed" , 
                                        "rule"      : ruleJson,
                                       });
+      return false;
     }
   },
 
@@ -2516,6 +2495,7 @@ trigger_fish.rbTServerResponse = {
     trigger_fish.rbTAPP.log({"message": "Setting actor ID with server resp","data":respData});
     try {
       if (respData && respData.id) {
+        trigger_fish.rbTActor.setID(respData.id);
         trigger_fish.rbTActor.requestActorDetails(respData);
       } else {
         throw new Error("there is no server resp data");
@@ -2615,7 +2595,8 @@ trigger_fish.rbTServerResponse = {
     trigger_fish.rbTAPP.setAppDetail(respData);
     trigger_fish.rbTRules.setRulesTable(respData.app.rules || {});
     trigger_fish.rbTSystemVar.init(respData);
-    trigger_fish.rbTAPP.configs.status = true;
+    trigger_fish.rbTActor.retFromCookie();
+    trigger_fish.rbTAPP.setrbTAlive();
   }
 
 };
@@ -2642,7 +2623,8 @@ trigger_fish.rbTServerResponse = {
  */
 trigger_fish.rbTServerChannel = {
   
-  rbt_url : 0===0 ? "http://localhost:3000/" : "http://rulebot.com/",
+  rbt_url : (document.location.hostname==="localhost" || document.location.hostname==="127.0.1.1") ? 
+            "http://localhost:3000/" : "http://rulebot.com/",
 
   
   /* All server url routes to be mapped here */
@@ -2667,14 +2649,6 @@ trigger_fish.rbTServerChannel = {
     "error_callback"   : trigger_fish.rbTServerResponse.defaultErrorCallback
   },
 
-  /**
-  *
-  */
-  serverUrl : function(type, url)
-  {
-    var u = this.rbt_url + url + (type === "POST" ? "" : ".json"); 
-    return u;
-  }, 
 
   /**
   * Queue server requests.
@@ -2698,52 +2672,13 @@ trigger_fish.rbTServerChannel = {
     for (var req in this.queue) {
       var r = this.queue[req];
       if (r.event && !trigger_fish.rbTActor.isReady()) {
-        this.waitForActor(r);
+        trigger_fish.rbTActor.bufferEvRQ(r);
       } else {
         this.makeServerRequest(r);
       }
     }
     this.queue = [];
   },
-
-
-  /**
-  *
-  *
-  */
-  /* <<<<<<<<<<<<<<<<<<<<< FIXME :: COAELECE THIS >>>>>>>>>>>> */
-  waitForActor : function(obj)
-  {
-    this.actorRQ.push(obj);
-  },
-
-  flushReqWaitingForActor : function()
-  {
-    if (!this.actorRQ.length)
-      return;
-    for (var req in this.actorRQ) {
-      var r = this.actorRQ[req];
-      this.makeServerRequest(r);
-    }
-    this.actorRQ = [];
-  },
-
-  /**
-  * Check for App status, if alive , flush all req queue and clear interval.
-  *
-  */
-  reqQFlushInterval : function()
-  {
-    if (this.queue.length > 1)
-      return;
-    var interval = setInterval(function() {
-      if (trigger_fish.rbTAPP.isrbTAlive()) {
-        clearInterval(interval);
-        trigger_fish.rbTServerChannel.flushReqQueue();
-      }
-    }, 2000);
-  },
-
 
   /** 
   *  Set Request data for all server interactions
@@ -2802,7 +2737,13 @@ trigger_fish.rbTServerChannel = {
       return this.rbt_url + url + (type === "POST" ? "" : ".json"); 
     }
 
+    function resetEventVar(e)
+    {
+      trigger_fish.rbTAPP.setTransVar(e,{});
+    }
+
     var that = obj;
+    trigger_fish.rbTAPP.log("Making rulebot server call for " + obj.url);
     try {
       var reqServerData = this.extendRequestData(obj);
       var callback = this.extendCallbacks(obj.cb);
@@ -2812,6 +2753,7 @@ trigger_fish.rbTServerChannel = {
         var asyncSt = true;
       var that = obj;
       var url = (obj.event) ? trigger_fish.rbTServerChannel.url.fireEvent : obj.url;
+      that.requestData = reqServerData;
       jQuery.ajax({
             url: getURL.call(this,obj.type,url),
             type: that.type || 'GET',
@@ -2820,18 +2762,17 @@ trigger_fish.rbTServerChannel = {
             contentType : getContentType(obj.type),
             data: reqServerData,
             crossDomain:true,
-            //timeout : 10000,
-            cache:false,
+            cache:true,
             xhrField : { withCredentials:true},
             beforeSend: function() {
                 if (that.event) {
                   trigger_fish.rbTCookie.setCookie("lastevent", that.event);
-                  trigger_fish.rbTAPP.setTransVar(that.params);
+                  trigger_fish.rbTAPP.setTransVar(that.event,that.params);
                 }
             },
             success: function ( respData ) {
                 if (typeof respData === "string") respData = JSON.parse(respData);
-                trigger_fish.rbTAPP.log({"message":"server response success","data":respData});
+                trigger_fish.rbTAPP.log({"message":"server response success " + that.url,"data":respData});
 
                 if (that.event) {
                   trigger_fish.rbTCookie.deleteCookie("lastevent");
@@ -2839,7 +2780,7 @@ trigger_fish.rbTServerChannel = {
                   if (respData && respData.actor) { 
                     callback.success(respData);
                   }
-                  trigger_fish.rbTAPP.setTransVar({});
+                  resetEventVar(that.event);
                 } else {
                   respData.url = that.url;
                   if (that.set_actor) respData.actor = respData;
@@ -2847,10 +2788,11 @@ trigger_fish.rbTServerChannel = {
                 }
             },
             error:function(XMLHttpRequest,textStatus, errorThrown){ 
-                trigger_fish.rbTAPP.log({"message":"server response error","data_closure":that,"textStatus":textStatus});
+                trigger_fish.rbTAPP.log({"message":"server response error " + that.url,"data_closure":that,"textStatus":textStatus});
                 if (that.event) {
-                  trigger_fish.rbTAPP.setTransVar({}); 
+                  resetEventVar(that.event); 
                 } else if (that.identify && XMLHttpRequest.responseText.indexOf("is already in use")) {
+                  trigger_fish.rbTAPP.log("Actor is already in use ::" + that.requestData.uid);
                   trigger_fish.rbTServerChannel.actorDetails();
                 }
                 callback.error();
@@ -2881,9 +2823,8 @@ trigger_fish.rbTServerChannel = {
     if (!trigger_fish.rbTAPP.isrbTAlive()) {
       if (obj.url)
         obj.async = obj.async || "async";
-      this.queueReq(obj);  
-      this.reqQFlushInterval();
-      return;
+      this.queueReq(obj); 
+      return; 
     } else {
       this.flushReqQueue();
     }
@@ -3597,7 +3538,14 @@ function EasyjQuery_Cache_IP(fname,json) {
 }
 function EasyjQuery_Get_IP(fname,is_full) {
   var full_version = "";
-  jQuery.getScript("https://api.easyjquery.com/ips/?callback=" + fname + full_version);
+  var easyJQData = trigger_fish.rbTCookie.getCookie("easy_jquery");
+  if (!easyJQData) {
+    trigger_fish.rbTAPP.log("Could not found easyJQData in cache, fetching it now!!!");
+    jQuery.getScript("https://api.easyjquery.com/ips/?callback=" + fname + full_version);
+  } else{
+    trigger_fish.rbTAPP.log("Found easyJQData in cache, setting it now!!!");
+    trigger_fish.rbTUtils.keepEasyJQVars(easyJQData);
+  }
 }
 
 trigger_fish.rbTUtils = {
@@ -3611,6 +3559,7 @@ trigger_fish.rbTUtils = {
   keepEasyJQVars : function(data)
   {
     this.eJQ = data;
+    trigger_fish.rbTCookie.setCookie("easy_jquery",data);
     trigger_fish.rbTAPP.wake_RBT_APP(); 
   },
 
@@ -3628,6 +3577,8 @@ trigger_fish.rbTUtils = {
   */
   invokeEasyJquery : function()
   {
+    trigger_fish.enableCORS(jQuery);
+    trigger_fish.initJStorage();
     EasyjQuery_Get_IP("trigger_fish.rbTUtils.keepEasyJQVars");
   },
 
@@ -3803,7 +3754,7 @@ trigger_fish.rbTCookie = {
     var value = trigger_fish.jStorage.get(this.name(cookieName));
 
     if (value)
-        return (unescape(value));
+        return value;
     else
         return undefined;
   },
@@ -4091,13 +4042,10 @@ RBT.prototype.alias = function(params)
   trigger_fish.rbTAPP.log("Initializing RBT APP with AppID = " + appid + " Account ID = " + accid);
   function releasePreInitCalls(w)
   {
-    if (w.rb && w.rb.q.length) {
-      var l = w.rb.q;
-      w.rb = new RBT();
-      for (var c in l) {
-        var o = l[c];
-        rb[o.t](o.a,o.b,o.c);
-      }    
+    var l = w.rb.q;
+    w.rb = new RBT();
+    if (l.length) {
+      for (var c in l) { var o = l[c]; rb[o.t](o.a,o.b,o.c); }    
     }
   }
   try {

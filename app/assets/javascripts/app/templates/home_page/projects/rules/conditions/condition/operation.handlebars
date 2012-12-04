@@ -1,0 +1,9 @@
+<select class='select2Props operation_sel' {{action "changedOperation" condition }}>
+  {{#eachProperty view.operationList}}    
+    {{#ifequal iter_key view.condition.operation}}
+      <option  value="{{getvalue iter_key}}" selected >{{iter_val}}</option>
+    {{else}}
+      <option  value="{{getvalue iter_key}}" >{{iter_val}}</option>
+    {{/ifequal}}
+  {{/eachProperty}}
+</select>

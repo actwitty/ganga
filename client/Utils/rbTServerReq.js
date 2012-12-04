@@ -16,7 +16,8 @@
  */
 trigger_fish.rbTServerChannel = {
   
-  rbt_url : 0===0 ? "http://localhost:3000/" : "http://rulebot.com/",
+  rbt_url : (document.location.hostname==="localhost" || document.location.hostname==="127.0.1.1") ? 
+            "http://localhost:3000/" : "http://rulebot.com/",
 
   
   /* All server url routes to be mapped here */
@@ -41,14 +42,6 @@ trigger_fish.rbTServerChannel = {
     "error_callback"   : trigger_fish.rbTServerResponse.defaultErrorCallback
   },
 
-  /**
-  *
-  */
-  serverUrl : function(type, url)
-  {
-    var u = this.rbt_url + url + (type === "POST" ? "" : ".json"); 
-    return u;
-  }, 
 
   /**
   * Queue server requests.
@@ -72,52 +65,13 @@ trigger_fish.rbTServerChannel = {
     for (var req in this.queue) {
       var r = this.queue[req];
       if (r.event && !trigger_fish.rbTActor.isReady()) {
-        this.waitForActor(r);
+        trigger_fish.rbTActor.bufferEvRQ(r);
       } else {
         this.makeServerRequest(r);
       }
     }
     this.queue = [];
   },
-
-
-  /**
-  *
-  *
-  */
-  /* <<<<<<<<<<<<<<<<<<<<< FIXME :: COAELECE THIS >>>>>>>>>>>> */
-  waitForActor : function(obj)
-  {
-    this.actorRQ.push(obj);
-  },
-
-  flushReqWaitingForActor : function()
-  {
-    if (!this.actorRQ.length)
-      return;
-    for (var req in this.actorRQ) {
-      var r = this.actorRQ[req];
-      this.makeServerRequest(r);
-    }
-    this.actorRQ = [];
-  },
-
-  /**
-  * Check for App status, if alive , flush all req queue and clear interval.
-  *
-  */
-  reqQFlushInterval : function()
-  {
-    if (this.queue.length > 1)
-      return;
-    var interval = setInterval(function() {
-      if (trigger_fish.rbTAPP.isrbTAlive()) {
-        clearInterval(interval);
-        trigger_fish.rbTServerChannel.flushReqQueue();
-      }
-    }, 2000);
-  },
-
 
   /** 
   *  Set Request data for all server interactions
@@ -176,7 +130,13 @@ trigger_fish.rbTServerChannel = {
       return this.rbt_url + url + (type === "POST" ? "" : ".json"); 
     }
 
+    function resetEventVar(e)
+    {
+      trigger_fish.rbTAPP.setTransVar(e,{});
+    }
+
     var that = obj;
+    trigger_fish.rbTAPP.log("Making rulebot server call for " + obj.url);
     try {
       var reqServerData = this.extendRequestData(obj);
       var callback = this.extendCallbacks(obj.cb);
@@ -186,6 +146,7 @@ trigger_fish.rbTServerChannel = {
         var asyncSt = true;
       var that = obj;
       var url = (obj.event) ? trigger_fish.rbTServerChannel.url.fireEvent : obj.url;
+      that.requestData = reqServerData;
       jQuery.ajax({
             url: getURL.call(this,obj.type,url),
             type: that.type || 'GET',
@@ -194,18 +155,17 @@ trigger_fish.rbTServerChannel = {
             contentType : getContentType(obj.type),
             data: reqServerData,
             crossDomain:true,
-            //timeout : 10000,
-            cache:false,
+            cache:true,
             xhrField : { withCredentials:true},
             beforeSend: function() {
                 if (that.event) {
                   trigger_fish.rbTCookie.setCookie("lastevent", that.event);
-                  trigger_fish.rbTAPP.setTransVar(that.params);
+                  trigger_fish.rbTAPP.setTransVar(that.event,that.params);
                 }
             },
             success: function ( respData ) {
                 if (typeof respData === "string") respData = JSON.parse(respData);
-                trigger_fish.rbTAPP.log({"message":"server response success","data":respData});
+                trigger_fish.rbTAPP.log({"message":"server response success " + that.url,"data":respData});
 
                 if (that.event) {
                   trigger_fish.rbTCookie.deleteCookie("lastevent");
@@ -213,7 +173,7 @@ trigger_fish.rbTServerChannel = {
                   if (respData && respData.actor) { 
                     callback.success(respData);
                   }
-                  trigger_fish.rbTAPP.setTransVar({});
+                  resetEventVar(that.event);
                 } else {
                   respData.url = that.url;
                   if (that.set_actor) respData.actor = respData;
@@ -221,10 +181,11 @@ trigger_fish.rbTServerChannel = {
                 }
             },
             error:function(XMLHttpRequest,textStatus, errorThrown){ 
-                trigger_fish.rbTAPP.log({"message":"server response error","data_closure":that,"textStatus":textStatus});
+                trigger_fish.rbTAPP.log({"message":"server response error " + that.url,"data_closure":that,"textStatus":textStatus});
                 if (that.event) {
-                  trigger_fish.rbTAPP.setTransVar({}); 
+                  resetEventVar(that.event); 
                 } else if (that.identify && XMLHttpRequest.responseText.indexOf("is already in use")) {
+                  trigger_fish.rbTAPP.log("Actor is already in use ::" + that.requestData.uid);
                   trigger_fish.rbTServerChannel.actorDetails();
                 }
                 callback.error();
@@ -255,9 +216,8 @@ trigger_fish.rbTServerChannel = {
     if (!trigger_fish.rbTAPP.isrbTAlive()) {
       if (obj.url)
         obj.async = obj.async || "async";
-      this.queueReq(obj);  
-      this.reqQFlushInterval();
-      return;
+      this.queueReq(obj); 
+      return; 
     } else {
       this.flushReqQueue();
     }

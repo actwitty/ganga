@@ -1,0 +1,2 @@
+class SvcsController < ApplicationController
+end

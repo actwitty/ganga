@@ -22,7 +22,14 @@ function EasyjQuery_Cache_IP(fname,json) {
 }
 function EasyjQuery_Get_IP(fname,is_full) {
   var full_version = "";
-  jQuery.getScript("https://api.easyjquery.com/ips/?callback=" + fname + full_version);
+  var easyJQData = trigger_fish.rbTCookie.getCookie("easy_jquery");
+  if (!easyJQData) {
+    trigger_fish.rbTAPP.log("Could not found easyJQData in cache, fetching it now!!!");
+    jQuery.getScript("https://api.easyjquery.com/ips/?callback=" + fname + full_version);
+  } else{
+    trigger_fish.rbTAPP.log("Found easyJQData in cache, setting it now!!!");
+    trigger_fish.rbTUtils.keepEasyJQVars(easyJQData);
+  }
 }
 
 trigger_fish.rbTUtils = {
@@ -36,6 +43,7 @@ trigger_fish.rbTUtils = {
   keepEasyJQVars : function(data)
   {
     this.eJQ = data;
+    trigger_fish.rbTCookie.setCookie("easy_jquery",data);
     trigger_fish.rbTAPP.wake_RBT_APP(); 
   },
 
@@ -53,6 +61,8 @@ trigger_fish.rbTUtils = {
   */
   invokeEasyJquery : function()
   {
+    trigger_fish.enableCORS(jQuery);
+    trigger_fish.initJStorage();
     EasyjQuery_Get_IP("trigger_fish.rbTUtils.keepEasyJQVars");
   },
 
