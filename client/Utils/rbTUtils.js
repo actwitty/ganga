@@ -98,7 +98,7 @@ trigger_fish.rbTUtils = {
   },
   
   /**
-  *
+  * 
   */
   type : function(obj)
   {
@@ -106,35 +106,41 @@ trigger_fish.rbTUtils = {
   },
 
   /**
-  *
+  * Check if object is empty. Find it recursively not only on keys but also on values.
+  * @param {object} o The object for which emptiness has to be checked.
+  * @return {boolean} 
   */
   isEmpty : function(o) 
   {
     if (!o) return true;
     if (this.type(o) === "String" || this.type(o) === "Array") {
       return o.length === 0;
-    }
+    } else if (this.type(o) === "Number") { return false;}
     for(var i in o) {
       if (this.type(o[i]) === "Object") {
         return this.isEmpty(o[i]);
       } else if (this.type(o[i]) === "String" || this.type(o[i]) === "Array") {
         if (o[i].length) { return false;}
-      }
+      } else if (this.type(o[i]) === "Number") { return false;}
     }
     return true;
   },
 
   /**
-  *
-  */
-  differ : function(first,second,r)
+  * Specially curated to get difference from Rulebot server response.
+  * @param {object} first. The object for which difference has to be find out.
+  * @param {object} second. The object against which difference has to be find out.
+  * @param {object} r. The resultant object in which differential data will be stored.
+  * @return {object|undefined} If differential object, else undefined.
+  */ 
+  diff : function(first,second,r)
   {
     var i = 0;
     for (i in first) {
       if (this.type(first[i]) === "Object" && this.type(second[i]) === "Object") {
-        r[i] = differ(first[i], second[i], {});
+        r[i] = diff(first[i], second[i], {});
         if (!result[i]) delete result[i];
-      } else if ( this.type(second[i]) === "Array" && first[i] != second[i][second[i].length-1]) {
+      } else if ( this.type(second[i]) === "Array" && first[i] !== second[i][second[i].length-1]) {
         r[i] = first[i];
       }
     }

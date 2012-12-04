@@ -98,23 +98,6 @@ trigger_fish.rbTActor = function() {
       */
       propExist : function(prop)
       {
-        /*
-        Object.prototype.isPartOf = function(o) {
-          function dataType(obj)
-          {
-            return Object.prototype.toString.call(obj).split("]")[0].split(" ")[1];
-          }
-          for(var k in this) {
-            if (!o[k]) return false;
-            if (dataType(o[k]) === "Array" && o[k][o[k].length-1] !== this[k]) return false;
-            if (dataType(this[k]) === "Object" && dataType(o[k]) === "Object") {
-              return this[k].isPartOf(o[k]);
-            }
-          }
-          return true;
-        }
-        var exist = prop.isPartOf(__prop);
-        */
         var diff = {};
         diff = trigger_fish.rbTUtils.differ(prop,__prop, diff);
         return diff;
