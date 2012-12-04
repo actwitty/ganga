@@ -403,13 +403,13 @@ trigger_fish.rbT.findZIndex = function(){
 
 trigger_fish.rbT.sendErrorToRBServer = function(string){
 
-// INTEGRATION_ENABLE  
-   
-trigger_fish.rbTAPP.log({"message": string,"log":true});
+  // INTEGRATION_ENABLE  
+     
+  trigger_fish.rbTAPP.log({"message": string,"log":true});
 
- trigger_fish.rbTAPP.reportError({"message":string,"server":true});
+  trigger_fish.rbTAPP.reportError({"message":string,"server":true});
 
-//console.log(string);
+  //console.log(string);
 
 };
 
