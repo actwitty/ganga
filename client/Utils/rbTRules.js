@@ -35,18 +35,18 @@ trigger_fish.rbTRules = {
     "use strict";
     try {
         jQuery.each(rules, function(index, ruleList) {
-          if (!trigger_fish.rbTRules.ruleTable[ruleList.event])
-            trigger_fish.rbTRules.ruleTable[ruleList.event] = [];
+          if (!this.ruleTable[ruleList.event])
+            this.ruleTable[ruleList.event] = [];
           var conditions = [];
           for (var rule in ruleList.conditions) {
             ruleList.conditions[rule].event = ruleList.event; // FIXME ::
             conditions.push(ruleList.conditions[rule]);
           }
-          trigger_fish.rbTRules.ruleTable[ruleList.event].push({ "name"         : ruleList.name,
-                                                                 "action"       : ruleList.action,
-                                                                 "action_param" : ruleList.action_param,
-                                                                 "conditions"   : conditions
-                                                               });                                                  
+          this.ruleTable[ruleList.event].push({ "name"  : ruleList.name,
+                                                "action"       : ruleList.action,
+                                                "action_param" : ruleList.action_param,
+                                                "conditions"   : conditions
+                                              });                                                  
 
         });
     } catch (e) {

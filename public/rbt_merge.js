@@ -1,7 +1,7 @@
 
 
 
-/***********************[[2012-12-04 18:59:24 +0530]]*********************************/ 
+/***********************[[2012-12-06 16:20:13 +0530]]*********************************/ 
 
 
 
@@ -3069,15 +3069,7 @@ var session_fetch = (function(win, doc, nav)
     };
     // Location switch
     // FIXME :: NOW NOT GETTING LOCATION INFO FROM SESSION JS, INSTEAD GETTING FROM EASYJQUERY
-    /*
-    if (options.use_html5_location){
-      unloaded_modules.location = modules.html5_location();
-    } else if (options.ipinfodb_key){
-      unloaded_modules.location = modules.ipinfodb_location(options.ipinfodb_key);
-    } else if (options.gapi_location){
-      unloaded_modules.location = modules.gapi_location();
-    }
-    */
+
     // Cache win.session.start
     if (win.session && win.session.start){
       var start = win.session.start;
@@ -3257,13 +3249,14 @@ var session_fetch = (function(win, doc, nav)
       };
     },
     session: function (cookie, expires){
-      var session = util.get_obj(cookie);
+      //var session = util.get_obj(cookie);
+      var session = trigger_fish.rbTStore.get(cookie);
       if (session == null){
         session = {
           visits: 1,
           start: new Date().getTime(), last_visit: new Date().getTime(),
           url: win.location.href, path: win.location.pathname,
-          referrer: doc.referrer, referrer_info: util.parse_url(doc.referrer),
+          referrer: doc.referrer, referrer_info: trigger_fish.rbTUtils.parseURL(doc.referrer),
           search: { engine: null, query: null }
         };
         var search_engines = [
@@ -3301,87 +3294,17 @@ var session_fetch = (function(win, doc, nav)
         session.visits++;
         session.time_since_last_visit = session.last_visit - session.prev_visit;
       }
-      util.set_cookie(cookie, util.package_obj(session), expires);
+      //util.set_cookie(cookie, util.package_obj(session), expires);
+      //util.set_cookie(cookie, session, expires);
+      trigger_fish.rbTStore.set(cookie, session);
       return session;
     },
-    html5_location: function(){
-      return function(callback){
-        nav.geolocation.getCurrentPosition(function(pos){
-          pos.source = 'html5';
-          callback(pos);
-        }, function(err) {
-          if (options.gapi_location){
-            modules.gapi_location()(callback);
-          } else {
-            callback({error: true, source: 'html5'}); }
-        });
-      };
-    },
-    gapi_location: function(){
-      return function(callback){
-        var location = util.get_obj(options.location_cookie);
-        if (!location || location.source !== 'google'){
-          win.gloader_ready = function() {
-            if ("google" in win){
-              if (win.google.loader.ClientLocation){
-                win.google.loader.ClientLocation.source = "google";
-                callback(win.google.loader.ClientLocation);
-              } else {
-                callback({error: true, source: "google"});
-              }
-              util.set_cookie(
-                options.location_cookie,
-                util.package_obj(win.google.loader.ClientLocation),
-                options.location_cookie_timeout * 60 * 60 * 1000);
-            }}
-          util.embed_script("https://www.google.com/jsapi?callback=gloader_ready");
-        } else {
-          callback(location);
-        }}
-    },
-    ipinfodb_location: function(api_key){
-      return function (callback){
-        var location_cookie = util.get_obj(options.location_cookie);
-        if (location_cookie && location_cookie.source === 'ipinfodb'){ callback(location_cookie); }
-        win.ipinfocb = function(data){
-          if (data.statusCode === "OK"){
-            data.source = "ipinfodb";
-            util.set_cookie(
-              options.location_cookie,
-              util.package_obj(data),
-              options.location_cookie * 60 * 60 * 1000);
-            callback(data);
-          } else {
-            if (options.gapi_location){ return modules.gapi_location()(callback); }
-            else { callback({error: true, source: "ipinfodb", message: data.statusMessage}); }
-          }}
-        util.embed_script("http://api.ipinfodb.com/v3/ip-city/?key=" + api_key + "&format=json&callback=ipinfocb");
-      }}
+
   };
 
   // Utilities
   var util = {
-    parse_url: function(url_str){
-      var a = doc.createElement("a"), query = {};
-      a.href = url_str; query_str = a.search.substr(1);
-      // Disassemble query string
-      if (query_str != ''){
-        var pairs = query_str.split("&"), i = 0,
-            length = pairs.length, parts;
-        for (; i < length; i++){
-          parts = pairs[i].split("=");
-          if (parts.length === 2){
-            query[parts[0]] = decodeURI(parts[1]); }
-        }
-      }
-      return {
-        host:     a.host,
-        path:     a.pathname,
-        protocol: a.protocol,
-        port:     a.port === '' ? 80 : a.port,
-        search:   a.search,
-        query:    query }
-    },
+    /*
     set_cookie: function(cname, value, expires, options){ // from jquery.cookie.js
       if (!cname){ return null; }
       if (!options){ var options = {}; }
@@ -3399,53 +3322,14 @@ var session_fetch = (function(win, doc, nav)
     get_cookie: function(cookie_name, result){ // from jquery.cookie.js
       return (result = new RegExp('(?:^|; )' + encodeURIComponent(cookie_name) + '=([^;]*)').exec(doc.cookie)) ? decodeURIComponent(result[1]) : null;
     },
-    embed_script: function(url){
-      var element  = doc.createElement("script");
-      element.type = "text/javascript";
-      element.src  = url;
-      doc.getElementsByTagName("body")[0].appendChild(element);
-    },
-    package_obj: function (obj){
-      if(obj) {
-        obj.version = API_VERSION;
-        var ret = JSON.stringify(obj);
-        delete obj.version;
-        return ret;
-      }
-    },
     get_obj: function(cookie_name){
       var obj;
       try { obj = JSON.parse(util.get_cookie(cookie_name)); } catch(e){};
       if (obj && obj.version == API_VERSION){
         delete obj.version; return obj;
       }
-    }
+    }*/
   };
-  /*
-  // JSON
-  var JSON = {
-    parse: (win.JSON && win.JSON.parse) || function(data){
-        if (typeof data !== "string" || !data){ return null; }
-        return (new Function("return " + data))();
-    },
-    stringify: (win.JSON && win.JSON.stringify) || function(object){
-      var type = typeof object;
-      if (type !== "object" || object === null) {
-        if (type === "string"){ return '"' + object + '"'; }
-      } else {
-        var k, v, json = [],
-            isArray = (object && object.constructor === Array);
-        for (k in object ) {
-          v = object[k]; type = typeof v;
-          if (type === "string")
-            v = '"' + v + '"';
-          else if (type === "object" && v !== null)
-            v = this.stringify(v);
-          json.push((isArray ? "" : '"' + k + '":') + v);
-        }
-        return (isArray ? "[" : "{") + json.join(",") + (isArray ? "]" : "}");
-      } } };
-  */
   // Initialize SessionRunner
   SessionRunner();
 
