@@ -366,7 +366,7 @@ trigger_fish.rbT.isTemplPosOccupied = function(pos){
       }
 
 
-      else if(pos === 'feedback')
+      else if(pos === 'feedback' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.feedback.displayLock'])
       {
          ret= true;
 
@@ -405,6 +405,7 @@ trigger_fish.rbT.sendErrorToRBServer = function(string){
 
   // INTEGRATION_ENABLE  
      
+  console.log(string);
   trigger_fish.rbTAPP.log({"message": string,"log":true});
 
   trigger_fish.rbTAPP.reportError({"message":string,"server":true});

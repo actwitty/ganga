@@ -84,9 +84,10 @@ trigger_fish.rbT.isTemplateGoodToApplyInternal = function(html){
 trigger_fish.rbT.applyHtmltoPageInternal = function(html,type){
 
   var isPosOccupied = trigger_fish.rbT.isTemplPosOccupied(type);
+   
    if(isPosOccupied)
    {
-      trigger_fish.rbT.sendErrorToRBServer("Postion Occupied by Another Template");
+      trigger_fish.rbT.sendErrorToRBServer("+++Postion Occupied by Another Template");
    }else{
 	
       if(html.length){
@@ -165,7 +166,7 @@ trigger_fish.rbT.invokeActionScriptInternal=function(action){
                 if(isPosOccupied)
                 {
 
-                    trigger_fish.rbT.sendErrorToRBServer("Postion Occupied by Another Template");
+                    trigger_fish.rbT.sendErrorToRBServer("----Postion Occupied by Another Template");
                 }
                 else
                 {

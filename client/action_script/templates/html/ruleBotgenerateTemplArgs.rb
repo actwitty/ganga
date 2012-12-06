@@ -72,6 +72,8 @@ end
 #function for writing the final string to file
 def rbWriteStringToFile(fileName,finalstr)  
     #writing final string to js file
+    fileName = '../js/'+fileName
+    
     File.open(fileName, 'w') do |f2|  
 
       f2.puts finalstr
@@ -95,8 +97,7 @@ end
 # function for replacing templ args by 1,2,3 ..
 def rbReplaceTemplArgsByNumericVals(tempStrLibClientJs)
   counterReplace = 1
-  tempStrLibClientJs.gsub(/\{\{[\w.\=\%\:\/\s\#\@\-\']*\}\}/) do |digits|
-      
+  tempStrLibClientJs.gsub(/\{\{[\w.\=\%\:\/\s\#\@\-\'\{\}]*\}\}/) do |digits|
     replacer = "{{"+ "#{counterReplace}"+"}}"
 
     tempStrLibClientJs=tempStrLibClientJs.sub(/\{\{[^\d][\w.\=\%\:\/\s\#\@\-\'\{\}]*\}\}/,"{{"+"#{counterReplace}"+"}}")
@@ -260,17 +261,23 @@ Dir.glob('*.html').each  do|fileName|
 
       strfinalforJs= strfinalforJsWoNewLine.gsub(/\{\{[\w.\=\%\:\/\s\#\@\-\']*\}\}/, "") 
 
-      strfinalforJs = strfinalforJsWoNewLine.gsub(/'/, "\\\\\'") 
+      #strfinalforJs = strfinalforJsWoNewLine.gsub(/'/, "\\\\\'") 
       
       # putting string @end of the string for JS file
-      strfinalforJs = strfinalforJs.concat("'")
+      #strfinalforJs = strfinalforJs.concat("'")
 
-      tempStrLibClientJs = tempStrLibClientJs + strfinalforJs
+      #tempStrLibClientJs = tempStrLibClientJs + strfinalforJs
 
 
       #loop for making templs fill in args  to 1,2,3 ....
-      tempStrLibClientJs = rbReplaceTemplArgsByNumericVals(tempStrLibClientJs)
-    
+      strfinalforJs = rbReplaceTemplArgsByNumericVals(strfinalforJs)
+       
+      strfinalforJs = strfinalforJs.gsub(/'/, "\\\\\'")
+      strfinalforJs = strfinalforJs.concat("'")
+      tempStrLibClientJs = tempStrLibClientJs + strfinalforJs
+
+ 
+
       # calling function to write the final string from HTML file to Js file
       rbWriteStringToFile(destFileName,tempStrLibClientJs)
 
@@ -362,7 +369,13 @@ $tempArgsStr = $tempArgsStr.chop.chop + "\n \t\ \t \t \t }; \n "
 
 $templFinalStr = $templLibStr + $templNameStr + $tempArgsStr
 
-File.open('../../templates.js' , "w") do|f|
+File.open('../../templatesLibForClient.js' , "w") do|f|
+    
+ f.puts   $templLibStr 
+
+end
+
+File.open('../../templatesArgsForDashBoard.js' , "w") do|f|
     
  f.puts   $templFinalStr 
 
