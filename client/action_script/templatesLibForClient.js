@@ -1,28 +1,28 @@
 trigger_fish.rbT.templateLib = {
-		'bottombar':{ 
-				'generic.fblike':'rbTemplBottombarGenericFblikeHTML',
-				'generic.twitterfollow':'rbTemplBottombarGenericTwitterfollowHTML',
-				'generic.twittershare':'rbTemplBottombarGenericTwittershareHTML',
-				'generic.normal':'rbTemplBottombarGenericNormalHTML'
- 
- 	 	 	 },
-		'topbar':{ 
-				'generic.normal':'rbTemplTopbarGenericNormalHTML',
-				'generic.twitterfollow':'rbTemplTopbarGenericTwitterfollowHTML',
-				'generic.fblike':'rbTemplTopbarGenericFblikeHTML',
-				'generic.twittershare':'rbTemplTopbarGenericTwittershareHTML'
- 
- 	 	 	 },
-		'support':{ 
-				'olark.normal':'rbTemplSupportOlarkNormalHTML'
- 
- 	 	 	 },
 		'modal':{ 
 				'generic.normal':'rbTemplModalGenericNormalHTML'
  
  	 	 	 },
 		'feedback':{ 
 				'uservoice.normal':'rbTemplFeedbackUservoiceNormalHTML'
+ 
+ 	 	 	 },
+		'bottombar':{ 
+				'generic.fblike':'rbTemplBottombarGenericFblikeHTML',
+				'generic.twittershare':'rbTemplBottombarGenericTwittershareHTML',
+				'generic.twitterfollow':'rbTemplBottombarGenericTwitterfollowHTML',
+				'generic.normal':'rbTemplBottombarGenericNormalHTML'
+ 
+ 	 	 	 },
+		'topbar':{ 
+				'generic.normal':'rbTemplTopbarGenericNormalHTML',
+				'generic.fblike':'rbTemplTopbarGenericFblikeHTML',
+				'generic.twitterfollow':'rbTemplTopbarGenericTwitterfollowHTML',
+				'generic.twittershare':'rbTemplTopbarGenericTwittershareHTML'
+ 
+ 	 	 	 },
+		'support':{ 
+				'olark.normal':'rbTemplSupportOlarkNormalHTML'
  
  	 	 	 }
  
