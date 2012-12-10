@@ -14,8 +14,10 @@
  * documents the function and classes that are added to jQuery by this plug-in.
  * @memberOf jQuery
  */
-//trigger_fish.rbTKey = {
-trigger_fish.rbTStore = {  
+//rbTKey = {
+//rbTStore = {  
+var rbTStore = {  
+
 
   namePrefix : "RBT__",
   defaultTTL:24 * 60 * 60 * 1000,  // in hours
@@ -42,7 +44,7 @@ trigger_fish.rbTStore = {
    */
   get : function(key)
   {
-    var value = trigger_fish.jStorage.get(this.qualifiedName(key));
+    var value = jStorage.get(this.qualifiedName(key));
     return (value?value:undefined);
   },
 
@@ -66,11 +68,11 @@ trigger_fish.rbTStore = {
   {
     "use strict";
     try {
-      trigger_fish.jStorage.set(this.qualifiedName(key), 
+      jStorage.set(this.qualifiedName(key), 
                                 keyValue, 
                                 {TTL: this.defaultTTL});
     } catch(e) {
-      trigger_fish.rbTAPP.reportError({"exception" : e.message,
+      rbTAPP.reportError({"exception" : e.message,
                           "message"   : "key set failed",
                           "name"      : key,
                           "value"     : keyValue,
@@ -89,9 +91,9 @@ trigger_fish.rbTStore = {
   {
     "use strict";
     try {
-        trigger_fish.jStorage.deleteKey(this.qualifiedName(key));                  
+        jStorage.deleteKey(this.qualifiedName(key));                  
     } catch (e) {
-      trigger_fish.rbTAPP.reportError({"exception" : e.message,
+      rbTAPP.reportError({"exception" : e.message,
                           "message"   : "key delete failed",
                           "name"      : key,
                           "log"       : true 
@@ -108,16 +110,16 @@ trigger_fish.rbTStore = {
   {
     "use strict";
     try {
-      var keys = trigger_fish.jStorage.index();
+      var keys = jStorage.index();
       for (var i = 0; i < keys.length; i++) {   
           var key =  keys[i]
           if ((key.match("^"+this.namePrefix))) {
-            trigger_fish.jStorage.deleteKey(key);
+            jStorage.deleteKey(key);
           }
       }
     } catch(e) {
       // FIXME what to do?
-      trigger_fish.rbTAPP.reportError({"exception" : e.message,
+      rbTAPP.reportError({"exception" : e.message,
                           "message"   : "key flush all failed",
                           "log"       : true 
                          });

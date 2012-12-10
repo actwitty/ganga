@@ -15,7 +15,8 @@
  * @memberOf jQuery
  */
 /* Rule Bot scope to handle systems variables */
-trigger_fish.rbTSystemVar = {
+//rbTSystemVar = {
+var rbTSystemVar = {
 
   // All properties will be set here
   properties : {},
@@ -28,7 +29,7 @@ trigger_fish.rbTSystemVar = {
     "use strict";
     function isSystemVarDirty()
     {
-      var sysVarInCookie = trigger_fish.rbTStore.get(trigger_fish.rbTStore.defaultKeys.systemProp);
+      var sysVarInCookie = rbTStore.get(rbTStore.defaultKeys.systemProp);
       
       if (!sysVarInCookie) {
         return true; 
@@ -61,7 +62,7 @@ trigger_fish.rbTSystemVar = {
   */
   notifyServerOfChange : function(systemVarsDesired)
   {
-    trigger_fish.rbTAPP.log({"message":"System variables desired from dashboard","variables":systemVarsDesired});
+    rbTAPP.log({"message":"System variables desired from dashboard","variables":systemVarsDesired});
   },
 
   /** Set system variable property
@@ -103,7 +104,7 @@ trigger_fish.rbTSystemVar = {
 
   setPropertyInCookie : function(property)
   {
-    trigger_fish.rbTStore.set(trigger_fish.rbTStore.defaultKeys.systemProp, JSON.stringify(property));
+    rbTStore.set(rbTStore.defaultKeys.systemProp, JSON.stringify(property));
   },
 
   setEJProp : function(json)
@@ -115,7 +116,7 @@ trigger_fish.rbTSystemVar = {
 
   setSessionJSProp : function(json)
   {
-    trigger_fish.rbTAPP.log({"message":"System Properties got through Session JS","data":json});
+    rbTAPP.log({"message":"System Properties got through Session JS","data":json});
     this.setProperty("browser",json.browser.browser);
     this.setProperty("browser_version",json.browser.version);
     this.setProperty("operatingsystem",json.browser.os);
@@ -247,9 +248,9 @@ var session_fetch = (function(win, doc, nav)
         //rbTSystemVar.setProperty(property, unloaded_modules[property] );
         sessionJSProp[property] = unloaded_modules[property];
       }
-      trigger_fish.rbTSystemVar.setSessionJSProp(sessionJSProp);
+      rbTSystemVar.setSessionJSProp(sessionJSProp);
     })();
-    trigger_fish.rbTSystemVar.setEJProp(trigger_fish.rbTUtils.easyJQVars());
+    rbTSystemVar.setEJProp(rbTUtils.easyJQVars());
   };
   // Browser (and OS) detection
   var browser = {
@@ -378,13 +379,13 @@ var session_fetch = (function(win, doc, nav)
       };
     },
     session: function (cookie, expires){
-      var session = trigger_fish.rbTStore.get(cookie);
+      var session = rbTStore.get(cookie);
       if (session == null){
         session = {
           visits: 1,
           start: new Date().getTime(), last_visit: new Date().getTime(),
           url: win.location.href, path: win.location.pathname,
-          referrer: doc.referrer, referrer_info: trigger_fish.rbTUtils.parseURL(doc.referrer),
+          referrer: doc.referrer, referrer_info: rbTUtils.parseURL(doc.referrer),
           search: { engine: null, query: null }
         };
         var search_engines = [
@@ -422,7 +423,7 @@ var session_fetch = (function(win, doc, nav)
         session.visits++;
         session.time_since_last_visit = session.last_visit - session.prev_visit;
       }
-      trigger_fish.rbTStore.set(cookie, session);
+      rbTStore.set(cookie, session);
       return session;
     },
 

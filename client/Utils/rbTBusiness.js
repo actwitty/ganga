@@ -16,9 +16,9 @@
  */
 /* MAIN BUSINESS SPECIFIC CALLS */
 var RBT = function() {
-	this._appID = trigger_fish.rbTAPP.getAppID();
-	this._accountID = trigger_fish.rbTAPP.getAccountID();
-	this._status = trigger_fish.rbTAPP.isAlive();
+	this._appID = rbTAPP.getAppID();
+	this._accountID = rbTAPP.getAccountID();
+	this._status = rbTAPP.isAlive();
   this._state = true;
 };
 
@@ -31,7 +31,7 @@ RBT.prototype = {
   */
   isAlive : function()
   {
-    this._status = trigger_fish.rbTAPP.isAlive();
+    this._status = rbTAPP.isAlive();
     return this._status;
   },
 
@@ -60,6 +60,15 @@ RBT.prototype = {
     return this._state;
   },
 
+  /**
+  * Set easy jquery callback data coming from global Callback of EasyJquery
+  * @param {Object} data. EasyJQuery data
+  */
+  setSysVars : function(data)
+  {
+    rbTUtils.keepEasyJQVars(data);
+  },
+
   /** 
   * Send event to RBT server 
   * 
@@ -78,11 +87,11 @@ RBT.prototype = {
     var obj = {"event" : event, 
                "params": params,
                "type"  : "POST",
-               "cb"    : { success: trigger_fish.rbTServerResponse.handleEvent,
-                           error  : trigger_fish.rbTServerResponse.defaultError
+               "cb"    : { success: rbTServerResponse.handleEvent,
+                           error  : rbTServerResponse.defaultError
                          }
               };
-    trigger_fish.rbTServerChannel.makeRequest(obj);
+    rbTServerChannel.makeRequest(obj);
   },
 
   /** 
@@ -96,15 +105,15 @@ RBT.prototype = {
     "use strict";
     if (!this.isEnabled())
       return;
-    var obj = {"url"     : trigger_fish.rbTServerChannel.url.identify, 
+    var obj = {"url"     : rbTServerChannel.url.identify, 
                "params"  : params,
                "identify": true,
                "type"    : "POST",
-               "cb"      : { success: trigger_fish.rbTServerResponse.setActorID,
-                             error  : trigger_fish.rbTServerResponse.defaultError
+               "cb"      : { success: rbTServerResponse.setActorID,
+                             error  : rbTServerResponse.defaultError
                            }
               };
-    trigger_fish.rbTServerChannel.makeRequest(obj);
+    rbTServerChannel.makeRequest(obj);
   },
 
   /** 
@@ -118,18 +127,18 @@ RBT.prototype = {
     "use strict";
     var diff = {};
     if (!this.isEnabled()) return;
-    diff = trigger_fish.rbTActor.propExist(params);
+    diff = rbTActor.propExist(params);
     //params = (diff === undefined ) ? params : diff ;
     if (!diff) return;  
-    var obj = {"url"      : trigger_fish.rbTServerChannel.url.setActor, 
+    var obj = {"url"      : rbTServerChannel.url.setActor, 
                "params"   : diff,
                "set_actor": true,
                "type"     : "POST",
-               "cb"       : { success: trigger_fish.rbTServerResponse.setActorProperty,
-                              error  : trigger_fish.rbTServerResponse.defaultError
+               "cb"       : { success: rbTServerResponse.setActorProperty,
+                              error  : rbTServerResponse.defaultError
                             }
                };
-    trigger_fish.rbTServerChannel.makeRequest(obj);
+    rbTServerChannel.makeRequest(obj);
   },
   /** 
   * ALIAS
