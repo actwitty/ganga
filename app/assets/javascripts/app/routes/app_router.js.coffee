@@ -208,7 +208,7 @@ App.Router = Ember.Router.extend
           router.get('homeSideController').set 'selectedMenu', 'appList'   
           projectController = router.get('projectsController')       
           if projectController.selected is null
-            if projectController.get 'content' isnt null and projectController.get('content').length isnt 0
+            if projectController.get('content') isnt null and projectController.get('content').length isnt 0
               projectController.set 'selected', projectController.get('content')[0]
           homeController.connectOutlet({name: 'projects', outletName: 'homeContentOutlet'} )
 

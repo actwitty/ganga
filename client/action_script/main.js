@@ -147,11 +147,16 @@ trigger_fish.rbT.invokeActionScriptInternal=function(action){
           
           trigger_fish.rbT.init();
 
+          var delayVal = 0;
+          
+          if (action.hasOwnProperty(timer) 
+              && action.timer.hasOwnProperty(delay) 
+                && typeof action.timer.delay === 'number'){
+            delayVal = action.timer.delay;
+          }
 
-          //var delayVal = action.timers.delay;
 
-
-          if(1)//delayVal==0)  //check for delay value to display templates
+          if(delayVal==0)  //check for delay value to display templates
             {
                 var actionParams = action.params;
                  

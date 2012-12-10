@@ -115,7 +115,7 @@
       display: block
     .decker
 
-      .template_config_box
+      .action_config_box
         margin: 10px
         margin-bottom: 0px
         padding-top: 30px
@@ -126,16 +126,48 @@
         display: block
         height: auto    
 
+        .coalese
+          border: 1px solid #ccc
+          padding: 5px
+          display: block
+          margin: 5px 25px 5px 25px
+          position: relative
+          .head
+            color: #5C617B
+            font-size: 16px
+            font-weight: bold
+            text-transform: capitalize
+            display: block
+            padding-left: 10px
+            padding-top: 2px
+          .more
+            position: absolute
+            bottom: 0px
+            right: 5px
+            color: #5C617B
+            font-size: 12px
+            cursor: pointer
+            padding-top: 4px            
+            &:hover
+              color: #333
+          .more_hide
+            display: none
+          .more_show
+            display: block
+        .hard
+          display: none
+        .easy
+          display: block
         .entry
           width: 710px  
           clear: both
-          height: 40px
-          display: block
+          min-height: 54px          
           margin-top: 3px
           position: relative
+        
           .key
             display: inline-block
-            color: #333
+            color: #5C617B
             font-size: 14px
             width: 180px
             float: left

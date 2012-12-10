@@ -1,12 +1,13 @@
 App.ActionView = Ember.View.extend
   templateName: 'home_page/projects/rules/actions/action' 
   apiChoices : null
-  templateChoices: null
+  typeChoices: null
   minimizedState: true
   # -----------------------------------------------------
   init: ->
     @_super()
-    @set 'templateChoices', trigger_fish       
+    service = @get 'rule.action.service.name'
+    @set 'typeChoices', App.actions.getTypeChoices(service)
     @setApiChoices()
     Ember.run.next( this, 'applyJqueryConstructs')
   
@@ -19,50 +20,47 @@ App.ActionView = Ember.View.extend
     $(".colorpickerProps").colorpicker()  
 
   # -----------------------------------------------------
-  setApiChoices: ->
-    @set 'apiChoices', trigger_fish
+  setApiChoices: ->    
     rule = @get 'rule'
-    template = rule.get 'action.desc.type'         
-    @set 'apiChoices', trigger_fish.rbT.templateLib[template]
-    
-    api = rule.get 'action.desc.api'
+    service = rule.get 'action.service.name'
+    type = rule.get 'action.desc.type'
+    @set 'apiChoices', App.actions.getApiChoices(service, type)    
+    api = rule.get 'action.desc.api'    
     if api is null or api.length is 0
-      for api_name of trigger_fish.rbT.templateLib[template]
-        api = api_name
-        break
-      rule.set 'action.desc.api', api
+      rule.set 'action.desc.api', App.actions.getDefaultApi(service, type)
       
 
   # -----------------------------------------------------
-  selectTemplateName: (event) ->
+  selectActionType: (event) ->
     rule = event.context
     target = $(event.target)    
-    val = target.select2('val')
-    rule.set 'action.desc.type', val
+    type = target.select2('val')
+    rule.set 'action.desc.type', type
     rule.set 'action.desc.api', null
     @setApiChoices()
     api = rule.get 'action.desc.api'
-    rule.set 'action.params',rule.setActionParam(val, api)
+    rule.set 'action.params',App.actions.getParamList(service, type, api)
     @rerender()
-    Ember.run.next( this, 'applyJqueryConstructs')
-    # rule.loadParam(trigger_fish.rbT.templateArgs[val])
+    Ember.run.next( this, 'applyJqueryConstructs')    
     event.preventDefault()
 
 # -------------------------------------------------------
-  selectTemplateApi: (event) ->
+  selectActionApi: (event) ->
     rule = event.context
     target = $(event.target)    
-    val = target.select2('val')
+    api = target.select2('val')
+    service = rule.get 'action.service.name'
     type =  rule.get 'action.desc.type'
-    rule.set 'action.desc.api', val  
-    rule.set 'action.params',rule.setActionParam(type, val)
+    rule.set 'action.desc.api', api  
+    rule.set 'action.params',App.actions.getParamList(service, type, api)
     @rerender()
     Ember.run.next( this, 'applyJqueryConstructs')
     event.preventDefault()
   # -----------------------------------------------------
-  showTemplatePreview: (event) ->   
-    rule = event.context            
-    trigger_fish.rbT.invokeActionScript(rule.serializeAction())
+  showActionPreview: (event) ->   
+    rule = event.context   
+    service = rule.get 'action.service.name'         
+    App.actions.preview(service, rule.serializeAction())
     event.preventDefault()
   # -----------------------------------------------------
   manageDeckerMinimize: (event) ->    
@@ -74,7 +72,7 @@ App.ActionView = Ember.View.extend
     event.preventDefault()
 
   # -----------------------------------------------------
-  showTemplateDecker: (->
+  showParamDecker: (->
     state = @get "minimizedState"
     if state is true
       return 'decker decker_hide'
@@ -93,6 +91,14 @@ App.ActionView = Ember.View.extend
   ).property("minimizedState")
 
 
+#-------------------------------------------------------------------
+Handlebars.registerHelper "getApiName", (name, type, api, options) ->  
+  context = (options.contexts and options.contexts[0]) or this  
 
-
-
+  service_in = Ember.Handlebars.get(context, name, options) 
+  type_in = Ember.Handlebars.get(context, type, options)  
+  api_in = Ember.Handlebars.get(context, api, options) 
+  console.log App.actions.getApiName(service_in, type_in, api_in)
+  
+  App.actions.getApiName(service_in, type_in, api_in)
+  

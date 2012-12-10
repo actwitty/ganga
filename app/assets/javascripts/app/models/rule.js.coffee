@@ -10,23 +10,18 @@ App.Rule = Ember.Object.extend
                 type: null
                 api: null
           params: null
-  
+          timer:
+                delay: 0
   conditions: null
 
-
   hasManyConditions: []
-  actionParamArr: []
-
-
+  
   
   init: ->
-    
     @_super()
-
     hasManyConditions = []
     conditions = @get 'conditions'        
     if conditions isnt null
-
       for k,condition of conditions          
         newCondition = App.Condition.create(condition)      
         hasManyConditions.pushObject(newCondition)        
@@ -37,15 +32,12 @@ App.Rule = Ember.Object.extend
 
 
     
-  setActionParam: (type, api)->    
-          
-    params = {}
-    params_key = type + '.' + api
-    for param of  trigger_fish.rbT.templateArgs[params_key]  
-      params[param] = trigger_fish.rbT.templateArgs[params_key][param]['value']      
+  setActionParam: (service, type, api)->          
+    params = {}    
+    paramList = App.actions.getParamList(service, type, api)
 
-
-
+    for param of paramList 
+      params[param] = paramList[param]['value']      
     params
 
   setAction: ->
@@ -55,22 +47,14 @@ App.Rule = Ember.Object.extend
                   service: {}
                   desc: {}
                   params: {}
-
-      newAction['service']['name'] = 'rb_template_lib'
-
-      type = ''
-      api = ''
-      for key of trigger_fish.rbT.templateLib
-        type = key
-        for api_name of trigger_fish.rbT.templateLib[key]
-          api = api_name
-          break
-        break
-      
+                  timer: {delay:0}
+      service = App.actions.getDefaultService()      
+      newAction['service']['name'] = service
+      type = App.actions.getDefaultType(service)
       newAction['desc']['type'] = type
+      api = App.actions.getDefaultApi(service, type)      
       newAction['desc']['api'] = api
-
-      newAction.params = @setActionParam(type, api)
+      newAction.params = @setActionParam(service, type, api)
       @set 'action', newAction
 
 
@@ -92,10 +76,16 @@ App.Rule = Ember.Object.extend
     paramsS = {}
     for key of params
       paramsS[key] = params[key]
+    timer = @get 'action.timer'
+    timerS = {}
+    for key of timer
+      timerS[key] = timer[key]
 
     actionS.service = serviceS
     actionS.desc = descS
-    actionS.params = paramsS    
+    actionS.params = paramsS 
+    actionS.timer = timerS
+
     actionS
 
 
@@ -113,13 +103,11 @@ App.Rule = Ember.Object.extend
     }
 
 
-
-
   displayAction: (->
     type = @get 'action.desc.type'
-    api = @get 'action.desc.api'
-    key = type + '.' + api
-    trigger_fish.rbT.templateName[key]
+    api = @get  'action.desc.api'
+    name = @get 'action.service.name'
+    App.actions.getDisplayName(name, type, api)
   ).property('action.desc.type', 'action.desc.api')
 
   

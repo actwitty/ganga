@@ -1,15 +1,21 @@
 {{view App.InlineAlertView }}
-{{#eachSortedParam view.action.desc.type view.action.desc.api view.params}}
+
+{{#eachSortedParam view.action.desc.type view.action.desc.api view.params}}  
   
-  {{#shouldShow view.action.desc.type view.action.desc.api iter_key}}    
+
+    {{#if iter_val.new_head}}
+      <div class="coalese">
+        <div class="head">{{iter_val.head}}</div>
+    {{/if}}
+
     <!--TODO: This is inefficient to not have if else but its ok, will fix later -->
-    {{#isNumeric view.action.desc.type view.action.desc.api iter_key}}
-      <div class="entry">
+    {{#isNumeric view.action.desc.type  view.action.desc.api iter_key}}
+      <div class="entry {{getvalue iter_val.class}}">
         <div class="key">
           {{getTemplatePlaceHolder view.action.desc.type view.action.desc.api iter_key}}
         </div>
         <div class="value">          
-          {{#paramBind iter_key}}
+          {{#paramBind iter_key}}            
             {{view App.RequiredNumberOnly name="Numeric field" valueBinding=bindVal class="in" }}
           {{/paramBind}}
         </div>
@@ -17,14 +23,14 @@
     {{/isNumeric}}
 
     {{#isFont view.action.desc.type view.action.desc.api iter_key}}
-      <div class="entry">
+      <div class="entry {{getvalue iter_val.class}}">
         <div class="key">
           {{getTemplatePlaceHolder view.action.desc.type view.action.desc.api iter_key}}
         </div>
         <div class="value">      
           {{#paramBind iter_key}}    
             {{view Ember.Select
-              contentBinding="App.templatesFixedData.font"
+              contentBinding="App.templateConstants.fixedVals.font"
               selectionBinding=bindVal
               class="select2Props in"}}
           {{/paramBind}}
@@ -34,14 +40,14 @@
 
     
     {{#isAlign view.action.desc.type view.action.desc.api iter_key}}
-      <div class="entry">
+      <div class="entry {{getvalue iter_val.class}}">
         <div class="key">
           {{getTemplatePlaceHolder view.action.desc.type view.action.desc.api iter_key}}
         </div>
         <div class="value"> 
           {{#paramBind iter_key}}              
             {{view Ember.Select
-                contentBinding="App.templatesFixedData.align"
+                contentBinding="App.templateConstants.fixedVals.align"
                 selectionBinding=bindVal
                 class="select2Props in"}}
           {{/paramBind}}
@@ -50,7 +56,7 @@
     {{/isAlign}}
 
     {{#isString  view.action.desc.type view.action.desc.api iter_key}}
-      <div class="entry">
+      <div class="entry {{getvalue iter_val.class}}">
         <div class="key">
           {{getTemplatePlaceHolder view.action.desc.type view.action.desc.api iter_key}}
         </div>
@@ -63,20 +69,20 @@
     {{/isString}}    
 
     {{#isVString  view.action.desc.type view.action.desc.api iter_key}}
-      <div class="entry">
+      <div class="entry {{getvalue iter_val.class}}">
         <div class="key">
           {{getTemplatePlaceHolder view.action.desc.type view.action.desc.api iter_key}}
         </div>
         <div class="value">
-          {{#paramBind iter_key}}    
-            {{view App.RequiredAFTextField valueBinding=bindVal class="in"}}
+          {{#paramBind iter_key}}              
+            {{view Ember.TextArea valueBinding=bindVal class="in" }}
           {{/paramBind}}
         </div>
       </div>        
     {{/isVString}}       
 
     {{#isUrl view.action.desc.type view.action.desc.api iter_key}}
-      <div class="entry">
+      <div class="entry {{getvalue iter_val.class}}">
         <div class="key">
           {{getTemplatePlaceHolder view.action.desc.type view.action.desc.api iter_key}}
         </div>
@@ -86,10 +92,23 @@
           {{/paramBind}}
         </div>
       </div>        
-    {{/isUrl}} 
+    {{/isUrl}}
+
+    {{#isImg view.action.desc.type view.action.desc.api iter_key}}
+      <div class="entry {{getvalue iter_val.class}}">
+        <div class="key">
+          {{getTemplatePlaceHolder view.action.desc.type view.action.desc.api iter_key}}
+        </div>
+        <div class="value">
+          {{#paramBind iter_key}}  
+            {{view App.RequiredUrlField name="URL " valueBinding=bindVal class="in"}}
+          {{/paramBind}}
+        </div>
+      </div>        
+    {{/isImg}}
 
     {{#isColor view.action.desc.type view.action.desc.api iter_key}}
-      <div class="entry">
+      <div class="entry {{getvalue iter_val.class}}">
         <div class="key">
           {{getTemplatePlaceHolder view.action.desc.type view.action.desc.api iter_key}}
         </div>
@@ -102,19 +121,32 @@
     {{/isColor}}
 
     {{#isWeight view.action.desc.type view.action.desc.api iter_key}}
-      <div class="entry">
+      <div class="entry {{getvalue iter_val.class}}">
         <div class="key">
           {{getTemplatePlaceHolder view.action.desc.type view.action.desc.api iter_key}}
         </div>
         <div class="value"> 
           {{#paramBind iter_key}}              
             {{view Ember.Select
-                contentBinding="App.templatesFixedData.weight"
+                contentBinding="App.templateConstants.fixedVals.weight"
                 selectionBinding=bindVal
                 class="select2Props in"}}
           {{/paramBind}}
         </div>
       </div>        
     {{/isWeight}}
-  {{/shouldShow}}
+
+  {{#if iter_val.last_tail}}
+      {{#if iter_val.show_all}}
+        <div class="more show" {{action "showHards" view.rule target="App.actionView"}}>Edit the settings for {{iter_val.head}}</div>  
+        {{else}}
+          {{#if iter_val.show_more}}
+            <div class="more show" {{action "showHards" view.rule target="App.actionView"}}>More settings for {{iter_val.head}}</div>
+          {{/if}}
+      {{/if}}
+      
+    </div>
+  {{/if}}  
+
+  
 {{/eachSortedParam}}
