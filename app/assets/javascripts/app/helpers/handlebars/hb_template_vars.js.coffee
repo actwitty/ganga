@@ -72,8 +72,7 @@ Handlebars.registerHelper "getTemplatePlaceHolder", (type, api, key, options) ->
 Handlebars.registerHelper "paramBind", (key, options) ->
   ret = ""    
   context = (options.contexts and options.contexts[0]) or this
-  key_in = Ember.Handlebars.get(context, key, options)
-  console.log key_in
+  key_in = Ember.Handlebars.get(context, key, options)  
   ret = options.fn(                              
                     bindVal: 'view.params.' + key_in                               
                   )

@@ -48,9 +48,6 @@ App.ActionTemplateHelper = Ember.Object.extend
       vstring : 'vsg'
       image : 'imgl'
 
-
-
-
   params : null
 
   apis : null

@@ -40,7 +40,8 @@
  *
  */
 //(function ($) {
-trigger_fish.enableCORS = function($) {
+//enableCORS = function($) {
+var enableCORS = function($) {
     var _this;
     if (!('__jquery_xdomain__' in $)
         && $.browser.msie // must be IE

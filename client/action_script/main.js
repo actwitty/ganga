@@ -139,21 +139,32 @@ trigger_fish.rbT.invokeActionScriptInternal=function(action){
       //TODO get the OS version here based on that action display
 
 */
+    try 
+    {
+        if(1) // Check for Service Type Enhancement
+         {   
+         
+              params= {};  
+              var delayVal=0;
+              trigger_fish.rbT.init();
 
-    if(1) // Check for Service Type Enhancement
-     {   
-     
-          params= {};  
-          
-          trigger_fish.rbT.init();
+              if(action.hasOwnProperty('timers'))
+               { 
+                  if (action.timers.hasOwnProperty('delay'))
+                  {
+                      delayVal = action.timers.delay;
+                  }
+                  else
+                  {
+                     delayVal = 0 ;
+                  } 
+               }
+               else
+               {
+                    delayVal = 0 ;
+               } 
 
-          var delayVal = 0;
-          
-          if (action.hasOwnProperty(timer) 
-              && action.timer.hasOwnProperty(delay) 
-                && typeof action.timer.delay === 'number'){
-            delayVal = action.timer.delay;
-          }
+
 
 
           if(delayVal==0)  //check for delay value to display templates

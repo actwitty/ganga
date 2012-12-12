@@ -7,8 +7,8 @@
       <!-- Header Bar Project Menu -->
       <div class="proj_menu">   
         {{#if view.project}}      
-          <div class="btn-group" style='width: 140px'>
-            <button style='width: 120px'  class="btn">{{view.project.description.name}}</button>
+          <div class="btn-group" style='width: 160px'>
+            <button style='width: 150px'  class="btn">{{view.project.description.name}}</button>
             <button class="btn dropdown-toggle" data-toggle="dropdown"> 
               <span class="caret"></span></button>
               <ul class="dropdown-menu">
@@ -16,11 +16,11 @@
                   <li><a {{action "showProjectRules" project}}>{{project.description.name}}</a></li>
                 {{/each}}                
                 <li class="divider"></li>
-                <li><a {{action "newProject"}}>Create New Application</a></li>
+                <li><a {{action "newProject"}}>Create New</a></li>
               </ul>
           </div>
         {{else}}
-          <div class="btn" style='width: 120px' {{action "newProject"}}>Create New</div>
+          <div class="btn" style='width: 150px' {{action "newProject"}}>Create New</div>
         {{/if}}
       </div>
 

@@ -22,6 +22,7 @@ end
 
 # Add Jquery source gems for asset pipline
 gem 'jquery-rails'
+gem 'jquery-ui-rails'
 gem 'fancybox-rails'
 gem "select2-rails"
 gem 'jquery-datatables-rails'

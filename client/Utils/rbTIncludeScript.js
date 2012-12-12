@@ -21,4 +21,4 @@ _rbTK.push(['_setVer', '1.0.1']);
     for (k = 0; k < j; k++) q(e[k]);
   })(window,["identify","sendEvent","setUser","alias"]);
 })(document,"trigger-fish-pdk");
-</script>
+</script>.

@@ -41,7 +41,8 @@
  */
 
  //(function(){
- trigger_fish.initJStorage = function() {   
+ //initJStorage = function() {   
+ var initJStorage = function() {   
     var
         /* jStorage version */
         JSTORAGE_VERSION = "0.3.0";
@@ -116,8 +117,8 @@
          * XML nodes are encoded and decoded if the node is the value to be saved
          * but not if it's as a property of another object
          * Eg. -
-         *   trigger_fish.jStorage.set("key", xmlNode);        // IS OK
-         *   trigger_fish.jStorage.set("key", {xml: xmlNode}); // NOT OK
+         *   jStorage.set("key", xmlNode);        // IS OK
+         *   jStorage.set("key", {xml: xmlNode}); // NOT OK
          */
         _XMLService = {
 
@@ -365,7 +366,7 @@
             if(type == "session"){
                 return storage_source[key];
             }
-            return trigger_fish.jStorage.get(key);
+            return jStorage.get(key);
         }
 
         /**
@@ -388,7 +389,7 @@
          */
         storage.removeItem = function(key){
             if(type == "local"){
-                return trigger_fish.jStorage.deleteKey(key);
+                return jStorage.deleteKey(key);
             }
 
             storage[key] = undefined;
@@ -409,7 +410,7 @@
                 _createPolyfillStorage("session", true);
                 return;
             }
-            trigger_fish.jStorage.flush();
+            jStorage.flush();
         }
 
         if(type == "local"){
@@ -483,7 +484,7 @@
                 return;
             }
 
-            trigger_fish.jStorage.set(e.propertyName, storage[e.propertyName]);
+            jStorage.set(e.propertyName, storage[e.propertyName]);
             storage.length = _length;
         });
 
@@ -840,8 +841,8 @@
 
     ////////////////////////// PUBLIC INTERFACE /////////////////////////
 
-    //trigger_fish.jStorage = {
-    trigger_fish.jStorage = {
+    //jStorage = {
+    jStorage = {
         /* Version number */
         version: JSTORAGE_VERSION,
 

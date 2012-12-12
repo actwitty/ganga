@@ -63,8 +63,8 @@ App.Router = Ember.Router.extend
         route: '/home'
       pricing: Ember.Route.extend 
         route: '/pricing'
-      faq: Ember.Route.extend 
-        route: '/faq'
+      howitworks: Ember.Route.extend 
+        route: '/howitworks'
       features: Ember.Route.extend 
         route: '/features'
       contactus: Ember.Route.extend 

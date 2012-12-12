@@ -151,6 +151,8 @@ class Actor
      ( params[:properties][:profile].blank? and params[:properties][:system].blank? )
       raise et("actor.invalid_argument_in_set") 
     end
+    
+    Rails.logger.info("*******TESTING Enter Actor Set")
 
     app = App.where(account_id: params[:account_id], _id: params[:app_id] ).first
     raise et("actor.invalid_app_id", id: params[:app_id]) if app.blank?
