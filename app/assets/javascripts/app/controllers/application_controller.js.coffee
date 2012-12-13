@@ -1,7 +1,8 @@
 App.ApplicationController = Ember.ObjectController.extend
   transaction: null
   content: []
-
+  init: ->    
+    App.actions = App.ActionHelper.create()
   #------------------------------------------
   errorMessage: {}
   setInlineAlert: (classIn,headerIn,messageIn) ->    

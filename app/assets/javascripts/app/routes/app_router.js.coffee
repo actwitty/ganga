@@ -63,8 +63,8 @@ App.Router = Ember.Router.extend
         route: '/home'
       pricing: Ember.Route.extend 
         route: '/pricing'
-      faq: Ember.Route.extend 
-        route: '/faq'
+      howitworks: Ember.Route.extend 
+        route: '/howitworks'
       features: Ember.Route.extend 
         route: '/features'
       contactus: Ember.Route.extend 
@@ -208,7 +208,7 @@ App.Router = Ember.Router.extend
           router.get('homeSideController').set 'selectedMenu', 'appList'   
           projectController = router.get('projectsController')       
           if projectController.selected is null
-            if projectController.get 'content' isnt null and projectController.get('content').length isnt 0
+            if projectController.get('content') isnt null and projectController.get('content').length isnt 0
               projectController.set 'selected', projectController.get('content')[0]
           homeController.connectOutlet({name: 'projects', outletName: 'homeContentOutlet'} )
 

@@ -1,9 +1,9 @@
   <div class="action_box"><!-- Template config main box starts --> 
     <div class="event_selector">      
-      <h5> Select action template</h5>
-      <select class="select2Props action_sel" {{action "selectTemplateName" view.rule target="App.actionView"}}>
+      <h5> Select action</h5>
+      <select class="select2Props action_sel" {{action "selectActionType" view.rule target="App.actionView"}}>
         
-        {{#eachProperty view.templateChoices.rbT.templateLib}}    
+        {{#eachProperty view.typeChoices}}    
 
           {{#ifequal view.rule.action.desc.type iter_key}}
             <option  value="{{getvalue iter_key}}" selected >{{getvalue iter_key}}</option>
@@ -16,39 +16,43 @@
 
 
     <div class="event_selector">
-      <h5> Select  template type</h5>      
-      
-      <select class="select2Props action_sel" {{action "selectTemplateApi" view.rule target="App.actionView"}}>
+      <h5> Select action type</h5>            
+      <select class="select2Props action_sel" {{action "selectActionApi" view.rule target="App.actionView"}}>
         
         {{#eachProperty view.apiChoices}}              
           
           {{#ifequal view.rule.action.desc.api iter_key}}            
             <option  value="{{getvalue iter_key}}" selected >
-              {{getTemplateName view.rule.action.desc.type iter_key}}
+              {{getApiName view.rule.action.service.name view.rule.action.desc.type view.rule.action.desc.api}}
             </option>
           {{else}}
             <option value="{{getvalue iter_key}}" >
-              {{getTemplateName view.rule.action.desc.type iter_key}}
+              {{getApiName view.rule.action.service.name view.rule.action.desc.type view.rule.action.desc.api}}
             </option>
           {{/ifequal}}
         {{/eachProperty}}
       </select>
     </div>
 
+     <div class="event_selector">     
+      <h5>  <i class="icon-time"></i> Set delay in seconds</h5>      
+       {{view App.RequiredNumberOnly name="Delay field" valueBinding="view.rule.action.timer.delay" class="in" }}
+    </div>
 
 
-    <h5>Template Configuration</h5>
+
+    <h5>Action Configuration</h5>
     <div class="preview" >
-      <div class='btn btn-large btn-inverse' {{action "showTemplatePreview" view.rule target="App.actionView"}}> 
+      <div class='btn btn-large btn-inverse' {{action "showActionPreview" view.rule target="App.actionView"}}> 
         Preview
       </div>
     </div>
 
-    <div {{bindAttr class="view.showTemplateDecker"}}>  
+    <div {{bindAttr class="view.showParamDecker"}}>  
 
 
-      <div class='template_config_box'>
-        {{view App.ActionParamsView actionBinding="view.rule.action" paramsBinding="view.rule.action.params"}}
+      <div class='action_config_box'>
+        {{view App.TemplateActionParamsView actionBinding="view.rule.action" paramsBinding="view.rule.action.params"}}
 
       </div> <!-- Template vars config list ends -->
     </div> <!-- Decker ends -->

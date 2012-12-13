@@ -2,7 +2,7 @@ App.MainView = Ember.View.extend
   templateLib:
           home : 'main_page/index'
           pricing : 'main_page/pricing'
-          faq : 'main_page/faq'
+          howitworks : 'main_page/howitworks'
           features : 'main_page/features'
           contactus : 'main_page/contactus'
           aboutus : 'main_page/aboutus'
