@@ -15,6 +15,11 @@
  * @memberOf jQuery
  */
 /* MAIN BUSINESS SPECIFIC CALLS */
+
+
+/**
+* Rule bot specific functions to be available for business.
+*/
 var RBT = function() {
 	this._appID = rbTAPP.getAppID();
 	this._accountID = rbTAPP.getAccountID();
@@ -49,6 +54,14 @@ RBT.prototype = {
   disable : function()
   {
     this._state = false;
+  },
+
+  /**
+  *
+  */
+  logger : function(cmd)
+  {
+    rbTDebug.setLevel(rbTDebug.INFO);
   },
 
   /**

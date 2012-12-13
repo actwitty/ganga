@@ -23,13 +23,19 @@
 
 var version = "1.0.1";
 
+/**
+* Main app specific holder managing all id's and initialization of plugins.
+* @return {Object} series of managing functions for application.
+*/
 var rbTAPP = function() {
   var configs = {
                  "status"   : false,
                  "transVar" : {}
-                }; 
+                };
+  var _p = "RulebotClient-"; 
 
-  return {    
+  return { 
+
       /** 
       *  Do following tasks on initialization of the app
       *  Get app details
@@ -37,7 +43,7 @@ var rbTAPP = function() {
       */
       initialize : function()
       {
-        rbTDebug.log("Initializing RBT APP");
+        rbTAPP.log("Initializing RBT APP");
         rbTServerChannel.appDetails();
       },
 
@@ -100,7 +106,7 @@ var rbTAPP = function() {
       */
       wakeUp : function()
       {
-        rbTDebug.log("Initializing RBT APP");
+        rbTAPP.log("Initializing RBT APP");
         this.initialize();
       },
 
@@ -200,13 +206,10 @@ var rbTAPP = function() {
       */ 
       reportError : function(params)
       {
-        try {
-            this.log(params);
-            if (params.server) {
-              rbTServerChannel.reportError(params);
-            }
-        } catch(e) {
-          // FIXME what to do?
+        params.scope = params.scope || _p + "==ERROR=="; 
+        rbTDebug.error(params);
+        if (params.server) {
+          rbTServerChannel.reportError(params);
         }
       },
       
@@ -217,11 +220,14 @@ var rbTAPP = function() {
       */
       log : function(params)
       {
-        if(params && params.message) {
-          rbTDebug.log(params.message);
+        if (typeof(params) === "string") {
+          params = _p + params;
+        } else if(params && params.message) {
+          params.scope = params.scope || _p; 
+          rbTAPP.log(_p + params.message);
         }
-        //rbTDebug.log(params)
-        console.log(params);
+        rbTDebug.log(params)
+        //console.log(params);
       },
   };    
 }();
@@ -1716,6 +1722,11 @@ var enableCORS = function($) {
  * documents the function and classes that are added to jQuery by this plug-in.
  * @memberOf jQuery
  */
+
+ /**
+ * Actor specific stuffings to be manager.
+ * @return {Object} series of managing functions for actors.
+ */
 var rbTActor = function() {
 
   var __id = "";
@@ -1731,19 +1742,23 @@ var rbTActor = function() {
       */
       retFromCookie : function()
       {
-      	rbTDebug.log("Trying to retrieve data for actor from cookie");
-        if (rbTStore.get(rbTStore.defaultKeys.actorProp)) {
-          rbTDebug.log("Got Actor data in storage - enabling actor now!!");  
-          this.setProperties(rbTStore.get(rbTStore.defaultKeys.actorProp)); 
-          this.enable();
-        }
+      	rbTAPP.log("Trying to retrieve data for actor from cookie");
+
         if (rbTStore.get(rbTStore.defaultKeys.actorID)) {
-          rbTDebug.log("Got actor id in storage - setting actor id now!!");
+          rbTAPP.log("Got actor id in storage - setting actor id now!!");
           this.setID(rbTStore.get(rbTStore.defaultKeys.actorID));
+          if (rbTStore.get(rbTStore.defaultKeys.actorProp)) {
+            rbTAPP.log("Got Actor data in storage - enabling actor now!!");  
+            this.setProperties(rbTStore.get(rbTStore.defaultKeys.actorProp)); 
+            this.enable();
+          } else {
+            this.requestActorDetails({"id": this.getID()}); 
+          }
         } else {
-          rbTDebug.log("HAVE TO CREATE DUMMY ACTOR!!");
+          rbTAPP.log("HAVE TO CREATE DUMMY ACTOR!!");
           this.createDummyActor();
         }
+
       },
 
       isReady : function()
@@ -1772,8 +1787,10 @@ var rbTActor = function() {
 
       enable : function()
       {
-        __state = true;
-        this.flushEvRQ();
+        if(!__state) {
+          __state = true;
+          this.flushEvRQ();
+        }
       },  
       /** 
       *  Set Actor ID
@@ -1893,8 +1910,9 @@ var rbTActor = function() {
  * With lots of help from Paul Irish!
  * http://paulirish.com/
  */
-//trigger_fish.rbTDebug=(function(){var i=this,b=Array.prototype.slice,d=i.console,h={},f,g,m=9,c=["error","warn","info","debug","log"],l="assert clear count dir dirxml exception group groupCollapsed groupEnd profile profileEnd table time timeEnd trace".split(" "),j=l.length,a=[];while(--j>=0){(function(n){h[n]=function(){m!==0&&d&&d[n]&&d[n].apply(d,arguments)}})(l[j])}j=c.length;while(--j>=0){(function(n,o){h[o]=function(){var q=b.call(arguments),p=[o].concat(q);a.push(p);e(p);if(!d||!k(n)){return}d.firebug?d[o].apply(i,q):d[o]?d[o](q):d.log(q)}})(j,c[j])}function e(n){if(f&&(g||!d||!d.log)){f.apply(i,n)}}h.setLevel=function(n){m=typeof n==="number"?n:9};function k(n){return m>0?m>n:c.length+m<=n}h.setCallback=function(){var o=b.call(arguments),n=a.length,p=n;f=o.shift()||null;g=typeof o[0]==="boolean"?o.shift():false;p-=typeof o[0]==="number"?o.shift():n;while(p<n){e(a[p++])}};return h})();
-var rbTDebug=(function(){var i=this,b=Array.prototype.slice,d=i.console,h={},f,g,m=9,c=["error","warn","info","debug","log"],l="assert clear count dir dirxml exception group groupCollapsed groupEnd profile profileEnd table time timeEnd trace".split(" "),j=l.length,a=[];while(--j>=0){(function(n){h[n]=function(){m!==0&&d&&d[n]&&d[n].apply(d,arguments)}})(l[j])}j=c.length;while(--j>=0){(function(n,o){h[o]=function(){var q=b.call(arguments),p=[o].concat(q);a.push(p);e(p);if(!d||!k(n)){return}d.firebug?d[o].apply(i,q):d[o]?d[o](q):d.log(q)}})(j,c[j])}function e(n){if(f&&(g||!d||!d.log)){f.apply(i,n)}}h.setLevel=function(n){m=typeof n==="number"?n:9};function k(n){return m>0?m>n:c.length+m<=n}h.setCallback=function(){var o=b.call(arguments),n=a.length,p=n;f=o.shift()||null;g=typeof o[0]==="boolean"?o.shift():false;p-=typeof o[0]==="number"?o.shift():n;while(p<n){e(a[p++])}};return h})();
+//var rbTDebug=(function(){var i=this,b=Array.prototype.slice,d=i.console,h={},f,g,m=9,c=["error","warn","info","debug","log"],l="assert clear count dir dirxml exception group groupCollapsed groupEnd profile profileEnd table time timeEnd trace".split(" "),j=l.length,a=[];while(--j>=0){(function(n){h[n]=function(){m!==0&&d&&d[n]&&d[n].apply(d,arguments)}})(l[j])}j=c.length;while(--j>=0){(function(n,o){h[o]=function(){var q=b.call(arguments),p=[o].concat(q);a.push(p);e(p);if(!d||!k(n)){return}d.firebug?d[o].apply(i,q):d[o]?d[o](q):d.log(q)}})(j,c[j])}function e(n){if(f&&(g||!d||!d.log)){f.apply(i,n)}}h.setLevel=function(n){m=typeof n==="number"?n:9};function k(n){return m>0?m>n:c.length+m<=n}h.setCallback=function(){var o=b.call(arguments),n=a.length,p=n;f=o.shift()||null;g=typeof o[0]==="boolean"?o.shift():false;p-=typeof o[0]==="number"?o.shift():n;while(p<n){e(a[p++])}};return h})();
+(function(a){"use strict";var b={};b.VERSION="0.9.2";var c;var d={};var e=function(a,b){return function(){return b.apply(a,arguments)}};var f=function(){var a=arguments,b=a[0],c,d;for(d=1;d<a.length;d++){for(c in a[d]){if(!(c in b)&&a[d].hasOwnProperty(c)){b[c]=a[d][c]}}}return b};var g=function(a,b){return{value:a,name:b}};b.DEBUG=g(1,"DEBUG");b.INFO=g(2,"INFO");b.WARN=g(4,"WARN");b.ERROR=g(8,"ERROR");b.OFF=g(99,"OFF");var h=function(a){this.context=a;this.setLevel(a.filterLevel);this.log=this.info};h.prototype={setLevel:function(a){if(a&&"value"in a){this.context.filterLevel=a}},enabledFor:function(a){var b=this.context.filterLevel;return a.value>=b.value},debug:function(){this.invoke(b.DEBUG,arguments)},info:function(){this.invoke(b.INFO,arguments)},warn:function(){this.invoke(b.WARN,arguments)},error:function(){this.invoke(b.ERROR,arguments)},invoke:function(a,b){if(c&&this.enabledFor(a)){c(b,f({level:a},this.context))}}};var i=new h({filterLevel:b.OFF});(function(){var a=b;a.enabledFor=e(i,i.enabledFor);a.debug=e(i,i.debug);a.info=e(i,i.info);a.warn=e(i,i.warn);a.error=e(i,i.error);a.log=a.info})();b.setHandler=function(a){c=a};b.setLevel=function(a){i.setLevel(a);for(var b in d){if(d.hasOwnProperty(b)){d[b].setLevel(a)}}};b.get=function(a){return d[a]||(d[a]=new h(f({name:a},i.context)))};b.useDefaults=function(c){if(!("console"in a)){return}b.setLevel(c||b.DEBUG);b.setHandler(function(c,d){var e=a.console;var f=e.log;if(d.name){c[0]="["+d.name+"] "+c[0]}if(d.level===b.WARN&&e.warn){f=e.warn}else if(d.level===b.ERROR&&e.error){f=e.error}f.apply(e,c)})};if(typeof define==="function"&&define.amd){define(b)}else if(typeof module!=="undefined"&&module.exports){module.exports=b}else{a["Logger"]=b}})(window);
+var rbTDebug = Logger;
 
 
 /****************************[[rbTRules.js]]*************************************/ 
@@ -1917,7 +1935,10 @@ var rbTDebug=(function(){var i=this,b=Array.prototype.slice,d=i.console,h={},f,g
  * @memberOf jQuery
  */
 
-
+/**
+* Rule manager for application.
+* @return {Object} series of managing functions for rules.
+*/
 var rbTRules = function ()
 {
   var __ruleTable   = {},
@@ -2043,7 +2064,7 @@ var rbTRules = function ()
     {
       try {
         // Hand over action to templating engine for processing event action.
-        trigger_fish.rbT.invokeActionScript(rule.action);
+        rbT.invokeActionScript(rule.action);
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message": "action could not be invoked" , 
@@ -2226,7 +2247,9 @@ var rbTRules = function ()
       }
     },
 
-    /* RULE FUNCTIONS */
+    /**
+     * Hold all rule functions 
+     */
     rule : 
     {
       /**
@@ -2379,7 +2402,10 @@ var rbTRules = function ()
  * documents the function and classes that are added to jQuery by this plug-in.
  * @memberOf jQuery
  */
-//rbTServerResponse = {
+
+/**
+ * Server responses manager for the application.
+ */
 var rbTServerResponse = {  
 
   /** 
@@ -2443,7 +2469,7 @@ var rbTServerResponse = {
     try {
       if (respData && respData.actor.description.profile) {
         rbTActor.setProperties(respData.actor.description.profile);
-
+        rbTActor.enable();
       } else {
         throw new Error("there is no data for setting actor property");
       }
@@ -2547,7 +2573,10 @@ var rbTServerResponse = {
  * documents the function and classes that are added to jQuery by this plug-in.
  * @memberOf jQuery
  */
-//rbTServerChannel = {
+
+/**
+* Server request interaction manager for the application.
+*/
 var rbTServerChannel = {
   
   rbt_url : (document.location.hostname==="localhost" || document.location.hostname==="127.0.1.1") ? 
@@ -2673,19 +2702,18 @@ var rbTServerChannel = {
       rbTAPP.setTransVar(e,{});
     }
 
-    var that = obj;
     rbTAPP.log("Making rulebot server call for " + obj.url);
     try {
       var reqServerData = this.extendRequestData(obj);
       var callback = this.extendCallbacks(obj.cb);
       if (obj.async && obj.async === "noasync") var asyncSt = false;
       else var asyncSt = true;
-      var that = obj;
+      var __this = obj;
       var url = (obj.event) ? rbTServerChannel.url.fireEvent : obj.url;
-      that.requestData = reqServerData;
+      __this.requestData = reqServerData;
       jQuery.ajax({
             url: getURL.call(this,obj.type,url),
-            type: that.type || 'GET',
+            type: __this.type || 'GET',
             async: asyncSt,
             contentType : getContentType(obj.type),
             data: reqServerData,
@@ -2693,34 +2721,34 @@ var rbTServerChannel = {
             cache:true,
             xhrField : { withCredentials:true},
             beforeSend: function() {
-                if (that.event) {
-                  rbTStore.set("lastevent", that.event);
-                  rbTAPP.setTransVar(that.event,that.params);
+                if (__this.event) {
+                  rbTStore.set("lastevent", __this.event);
+                  rbTAPP.setTransVar(__this.event,__this.params);
                 }
             },
             success: function ( respData ) {
                 if (typeof respData === "string") respData = JSON.parse(respData);
-                rbTAPP.log({"message":"server response success " + that.url,"data":respData});
+                rbTAPP.log({"message":"server response success " + __this.url,"data":respData});
 
-                if (that.event) {
+                if (__this.event) {
                   rbTStore.deleteKey("lastevent");
-                  rbTRules.executeRulesOnEvent(that.event);
+                  rbTRules.executeRulesOnEvent(__this.event);
                   if (respData && respData.actor) { 
-                    callback.success(respData);
+                    callback.success(respData, __this);
                   }
-                  resetEventVar(that.event);
+                  resetEventVar(__this.event);
                 } else {
-                  respData.url = that.url;
-                  if (that.set_actor) respData.actor = respData;
-                  callback.success(respData);
+                  respData.url = __this.url;
+                  if (__this.set_actor) respData.actor = respData;
+                  callback.success(respData, __this);
                 }
             },
             error:function(XMLHttpRequest,textStatus, errorThrown){ 
-                rbTAPP.log({"message":"server response error " + that.url,"data_closure":that,"textStatus":textStatus});
-                if (that.event) {
-                  resetEventVar(that.event); 
-                } else if (that.identify && XMLHttpRequest.responseText.indexOf("is already in use")) {
-                  rbTAPP.log("Actor is already in use ::" + that.requestData.uid);
+                rbTAPP.log({"message":"server response error " + __this.url,"data_closure":__this,"textStatus":textStatus});
+                if (__this.event) {
+                  resetEventVar(__this.event); 
+                } else if (__this.identify && XMLHttpRequest.responseText.indexOf("is already in use")) {
+                  rbTAPP.log("Actor is already in use ::" + __this.requestData.uid);
                   rbTServerChannel.actorDetails();
                 }
                 callback.error();
@@ -2729,7 +2757,7 @@ var rbTServerChannel = {
     } catch(e) {
       rbTAPP.reportError({ "exception": e.message,
                           "message"   : "SERVER REQUEST FAILED" , 
-                          "obj"       : JSON.stringify(that),
+                          "obj"       : JSON.stringify(__this),
                           "log"       : "error" 
                          }); 
     }
@@ -2867,7 +2895,11 @@ var rbTServerChannel = {
  * @memberOf jQuery
  */
 /* Rule Bot scope to handle systems variables */
-//rbTSystemVar = {
+
+
+/**
+ * Manager for all systems specific variables.
+ */
 var rbTSystemVar = {
 
   // All properties will be set here
@@ -3308,6 +3340,9 @@ var session_fetch = (function(win, doc, nav)
  */
 
 
+/**
+ * Manager for all utilities function for the application.
+ */ 
 var rbTUtils = {
 
   eJQ : {},
@@ -3349,16 +3384,14 @@ var rbTUtils = {
 
 
   /** Initialize jquery if needed be
-    *  @return void
-    *
-    */
+   *  @return void
+   */
   includeJQIfNeeded : function() 
   {
     function includeJQ()
     { 
-      var rbTApp = rbTAPP;
       this.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",
-                        this.bindCB(rbTApp,rbTApp.actOnJQInit)
+                        this.bindCB(rbTAPP,rbTAPP.actOnJQInit)
                       );
     }
 
@@ -3484,7 +3517,7 @@ var rbTUtils = {
         if(!this.readyState ||
             this.readyState == "loaded" || 
             this.readyState == "complete") {
-            rbTDebug.log("Script "+ url +"loaded successfully");
+            rbTAPP.log("Script "+ url +"loaded successfully");
             if (callback) {
               if (params)
                 callback(params);
@@ -3493,42 +3526,6 @@ var rbTUtils = {
         }
       }
   },
-  /*
-  // JSON
-  JSON : {
-      parse: (window.JSON && window.JSON.parse) || function(data)
-      {
-        if (typeof data !== "string" || !data) { 
-          return null; 
-        }
-        return (new Function("return " + data))();
-      },
-    
-      stringify: (window.JSON && window.JSON.stringify) || function(object) 
-      {
-        var type = typeof object;
-        if (type !== "object" || object === null) {
-          if (type === "string") {
-            return '"' + object + '"'; 
-          }
-        } else {
-          var k, v, json = [],
-          isArray = (object && object.constructor === Array);
-          for (k in object ) {
-            v = object[k]; type = typeof v;
-            if (type === "string")
-              v = '"' + v + '"';
-            else if (type === "object" && v !== null)
-              v = this.stringify(v);
-            json.push((isArray ? "" : '"' + k + '":') + v);
-          }
-          return (isArray ? "[" : "{") + json.join(",") + (isArray ? "]" : "}");
-        } 
-      } 
-    }
-    */
-
-    
 };
 
 
@@ -3551,8 +3548,10 @@ var rbTUtils = {
  * documents the function and classes that are added to jQuery by this plug-in.
  * @memberOf jQuery
  */
-//rbTKey = {
-//rbTStore = {  
+
+/**
+ * Data storage manager for the application.
+ */
 var rbTStore = {  
 
 
@@ -3686,6 +3685,11 @@ var rbTStore = {
  * @memberOf jQuery
  */
 /* MAIN BUSINESS SPECIFIC CALLS */
+
+
+/**
+* Rule bot specific functions to be available for business.
+*/
 var RBT = function() {
 	this._appID = rbTAPP.getAppID();
 	this._accountID = rbTAPP.getAccountID();
@@ -3720,6 +3724,14 @@ RBT.prototype = {
   disable : function()
   {
     this._state = false;
+  },
+
+  /**
+  *
+  */
+  logger : function(cmd)
+  {
+    rbTDebug.setLevel(rbTDebug.INFO);
   },
 
   /**
@@ -3860,6 +3872,7 @@ RBT.prototype = {
       throw new Error("App-id, Account-ID are not mentioned")
     } else {
       // if everything seems fine, then set app/acc id and initialize rbTAPP.
+      rbTDebug.useDefaults();
       rbTAPP.setAppID(appid);
       rbTAPP.setAccountID(accid);
       rbTUtils.includeJQIfNeeded();
@@ -3871,5 +3884,5 @@ RBT.prototype = {
                                      "accid"    : accid || ""
                                     });
   }
-})(_rbTK[0][1], _rbTK[1][1], _rbTK[2][1]);
+})(_rbTK.appID, _rbTK.accountID, _rbTK.version);
 
