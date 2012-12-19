@@ -19,6 +19,7 @@ _rbTK.version =  '1.0.1';
       }
     }
     for (k = 0; k < j; k++) q(e[k]);
-  })(window,["identify","sendEvent","setUser","alias"]);
+  //})(window,["identify","sendEvent","setUser","alias"]);
+  })(window,["identify","track"]);
 })(document,"trigger-fish-pdk");
 </script>.
