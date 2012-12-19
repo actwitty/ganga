@@ -61,6 +61,7 @@ App.ActionTemplateHelper = Ember.Object.extend
     @set 'params', trigger_fish.rbT.templateArgs
     @set 'displayNames', trigger_fish.rbT.templateName
     @set 'choices', trigger_fish.rbT.templateLib
+    @set 'base', trigger_fish.rbT
     @set 'default', 'topbar'
 
   getKey: (type, api)->
@@ -101,4 +102,8 @@ App.ActionTemplateHelper = Ember.Object.extend
     key = @getKey(type, api)    
     names = @get 'displayNames'
     names[key]
+
+  preview: (params) ->
+    base = @get 'base'
+    base.invokeActionScript(params)
 
