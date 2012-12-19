@@ -60,52 +60,52 @@ class Actor
   def self.identify(params)
     Rails.logger.info("Enter Actor Identify #{params.inspect}")
 
-    if params[:app_id].blank? or params[:account_id].blank? or params[:uid].blank? 
+    if params["app_id"].blank? or params["account_id"].blank? or params["uid"].blank? 
       raise et("actor.invalid_argument_in_identify") 
     end
 
-    app = App.where(account_id: params[:account_id], _id: params[:app_id] ).first
-    raise et("actor.invalid_app_id", id: params[:app_id]) if app.blank?
+    app = App.where(account_id: params["account_id"], _id: params["app_id"] ).first
+    raise et("actor.invalid_app_id", id: params["app_id"]) if app.blank?
 
     actor_id = nil
 
     # check if this user exists already
-    identifier = Identifier.where(app_id: params[:app_id], uid: params[:uid]).first
+    identifier = Identifier.where(app_id: params["app_id"], uid: params["uid"]).first
 
     # its a case when identity is called more than once in a session
     # we should treat it as different person because in this case identify should be called with actor_id nil as  
     # actor_id is identified with other uid earlier.. This will be tracked by cookie on client
-    if params[:id].blank?
+    if params["id"].blank?
       # if this is new actor
       if identifier.blank?
-        actor = Actor.create!(account_id: params[:account_id], app_id: params[:app_id])
-        Identifier.create!(actor_id: actor._id, account_id: params[:account_id], app_id: params[:app_id], uid: params[:uid])
-        Rails.logger.info("creating new actor and new identifier for #{params[:uid]}")
+        actor = Actor.create!(account_id: params["account_id"], app_id: params["app_id"])
+        Identifier.create!(actor_id: actor._id, account_id: params["account_id"], app_id: params["app_id"], uid: params["uid"])
+        Rails.logger.info("creating new actor and new identifier for #{params["uid"]}")
       
       else
-        actor = Actor.where(app_id: params[:app_id], _id: identifier.actor_id).first 
+        actor = Actor.where(app_id: params["app_id"], _id: identifier.actor_id).first 
         raise et("actor.invalid_actor_id", id: "") if actor.blank?   #dont leak out identifier.actor_id
 
-        Rails.logger.info("Identifier #{params[:uid]} exists so returning the associated actor")
+        Rails.logger.info("Identifier #{params["uid"]} exists so returning the associated actor")
       end
       actor_id = actor._id
     else
-      actor = Actor.where(app_id: params[:app_id], _id: params[:id]).first 
-      raise et("actor.invalid_actor_id", id: params[:id]) if actor.blank?
+      actor = Actor.where(app_id: params["app_id"], _id: params["id"]).first 
+      raise et("actor.invalid_actor_id", id: params["id"]) if actor.blank?
 
       # create Identifier for the actor
       if identifier.blank?
-        identifier = Identifier.create!(account_id: params[:account_id], app_id: params[:app_id], actor_id: params[:id], uid: params[:uid], type: params[:type])
-        Rails.logger.info("Creating Identifier #{params[:uid]} for actor #{params[:id]}")
+        identifier = Identifier.create!(account_id: params["account_id"], app_id: params["app_id"], actor_id: params["id"], uid: params["uid"], type: params["type"])
+        Rails.logger.info("Creating Identifier #{params["uid"]} for actor #{params["id"]}")
       else    
         
-        if identifier.actor_id != params[:id]
+        if identifier.actor_id != params["id"]
           if actor.identifiers.blank?
-            Rails.logger.info("Identifier already exists..Re-mapping anonymous actor to Identifier #{params[:uid]}")
+            Rails.logger.info("Identifier already exists..Re-mapping anonymous actor to Identifier #{params["uid"]}")
                 
             raise et("actor.remap_failed") if !actor.remap_to(identifier.actor_id)[:error].blank?
           else
-            raise et("actor.already_in_use", uid: params[:uid] ) 
+            raise et("actor.already_in_use", uid: params["uid"] ) 
           end
         end        
       end
@@ -147,19 +147,19 @@ class Actor
   def self.set(params)
     Rails.logger.info("Enter Actor Set")
 
-    if params[:account_id].blank? or params[:app_id].blank? or  params[:id].blank? or
+    if params["account_id"].blank? or params["app_id"].blank? or  params["id"].blank? or
      ( params[:properties][:profile].blank? and params[:properties][:system].blank? )
       raise et("actor.invalid_argument_in_set") 
     end
 
-    app = App.where(account_id: params[:account_id], _id: params[:app_id] ).first
-    raise et("actor.invalid_app_id", id: params[:app_id]) if app.blank?
+    app = App.where(account_id: params["account_id"], _id: params["app_id"] ).first
+    raise et("actor.invalid_app_id", id: params["app_id"]) if app.blank?
     
     params[:meta] =  true
 
     # First get the actor
-    actor = Actor.where(app_id: params[:app_id], _id: params[:id]).first 
-    raise et("actor.invalid_actor_id", id: params[:id]) if actor.blank?
+    actor = Actor.where(app_id: params["app_id"], _id: params["id"]).first 
+    raise et("actor.invalid_actor_id", id: params["id"]) if actor.blank?
 
     properties = params[:properties]
     params.delete(:properties)
@@ -210,26 +210,26 @@ class Actor
   def self.alias(params)
     Rails.logger.info("Enter Actor Alias")
 
-    if params[:account_id].blank? or params[:app_id].blank? or 
-       params[:uid].blank? or params[:new_uid].blank?
+    if params["account_id"].blank? or params["app_id"].blank? or 
+       params["uid"].blank? or params["new_uid"].blank?
       raise et("actor.invalid_argument_in_alias")
     end
 
-    app = App.where(account_id: params[:account_id], _id: params[:app_id] ).first
-    raise et("actor.invalid_app_id", id: params[:app_id]) if app.blank?
+    app = App.where(account_id: params["account_id"], _id: params["app_id"] ).first
+    raise et("actor.invalid_app_id", id: params["app_id"]) if app.blank?
 
     # check if this user exists already
-    uid = Identifier.where(app_id: params[:app_id], uid: params[:uid] ).first
-    raise et("actor.no_uid", uid: params[:uid], app_id: params[:app_id]) if uid.blank? 
+    uid = Identifier.where(app_id: params["app_id"], uid: params["uid"] ).first
+    raise et("actor.no_uid", uid: params["uid"], app_id: params["app_id"]) if uid.blank? 
 
     # check if Identifier is already exists
-    a = Identifier.where(app_id: params[:app_id], uid: params[:new_uid]).first
+    a = Identifier.where(app_id: params["app_id"], uid: params["new_uid"]).first
     
     if a.blank?   
-      Identifier.create!(account_id: params[:account_id], app_id: params[:app_id], actor_id: uid.actor_id, uid: params[:new_uid], type: params[:type] )
+      Identifier.create!(account_id: params["account_id"], app_id: params["app_id"], actor_id: uid.actor_id, uid: params["new_uid"], type: params["type"] )
     else
-      raise et("actor.identifier_already_exist", identifier: params[:new_uid], actor_id: a.actor_id) if uid.actor_id != a.actor_id
-      Rails.logger.info("#{params[:uid]} and #{params[:new_uid]} already aliased")
+      raise et("actor.identifier_already_exist", identifier: params["new_uid"], actor_id: a.actor_id) if uid.actor_id != a.actor_id
+      Rails.logger.info("#{params["uid"]} and #{params["new_uid"]} already aliased")
     end
 
     {:return => true, :error => nil}
@@ -296,26 +296,26 @@ class Actor
     actor_id = nil
     actor = nil
 
-    if params[:account_id].blank? or params[:app_id].blank? or 
-      (params[:id].blank? and params[:uid].blank?)
+    if params["account_id"].blank? or params["app_id"].blank? or 
+      (params["id"].blank? and params["uid"].blank?)
       raise et("actor.invalid_argument_in_read")
     end
 
-    app = App.where(account_id: params[:account_id], _id: params[:app_id] ).first
-    raise et("actor.invalid_app_id", id: params[:app_id]) if app.blank?
+    app = App.where(account_id: params["account_id"], _id: params["app_id"] ).first
+    raise et("actor.invalid_app_id", id: params["app_id"]) if app.blank?
     
-    if params[:id].blank? 
-      identifier = Identifier.where(app_id: params[:app_id], uid: params[:uid]).first
+    if params["id"].blank? 
+      identifier = Identifier.where(app_id: params["app_id"], uid: params["uid"]).first
       actor_id = identifier.actor_id if !identifier.blank?
     else
       # get the actor
-      actor = Actor.where(app_id: params[:app_id], id: params[:id]).first   
+      actor = Actor.where(app_id: params["app_id"], id: params["id"]).first   
       actor_id = actor._id if !actor.blank?
     end
     
     raise et("actor.no_actor") if actor_id.blank?  
 
-    actor = Actor.where(app_id: params[:app_id], _id: actor_id).first if actor.blank?
+    actor = Actor.where(app_id: params["app_id"], _id: actor_id).first if actor.blank?
     raise et("actor.invalid_actor_id", id: actor_id) if actor.blank?
 
     hash[:account] = {id: actor.account_id.to_s}
@@ -324,25 +324,25 @@ class Actor
 
     #BLOCKED FOR TIMEBEING
     # if params[:identifiers] == true
-    #   ids = Identifier.where(actor_id: actor_id, app_id: params[:app_id]).all
+    #   ids = Identifier.where(actor_id: actor_id, app_id: params["app_id"]).all
     #   ids.each {|attr| hash[:identifiers] << attr.format_identifier}
     #   Rails.logger.info("Adding Identifiers")
     # end
     
-    if params[:events] == true
-      events = Event.where(actor_id: actor_id, app_id: params[:app_id], meta: false).limit(AppConstants.limit_events).desc(:_id)
+    if params["events"] == true
+      events = Event.where(actor_id: actor_id, app_id: params["app_id"], meta: false).limit(AppConstants.limit_events).desc(:_id)
       events.each {|attr| hash[:events] << attr.format_event}
       Rails.logger.info("Adding Events")
     end
 
-    if params[:conversions] == true
-      conversions = Conversion.where(actor_id: actor_id, app_id: params[:app_id]).limit(AppConstants.limit_conversions).desc(:_id)
+    if params["conversions"] == true
+      conversions = Conversion.where(actor_id: actor_id, app_id: params["app_id"]).limit(AppConstants.limit_conversions).desc(:_id)
       conversions.each {|attr| hash[:conversions] << attr.format_conversion}
       Rails.logger.info("Adding Conversions")
     end
 
-    if params[:errors] == true
-      errors = Err.where(actor_id: actor_id, app_id: params[:app_id]).limit(AppConstants.limit_errors).desc(:_id)
+    if params["errors"] == true
+      errors = Err.where(actor_id: actor_id, app_id: params["app_id"]).limit(AppConstants.limit_errors).desc(:_id)
       errors.each {|attr| hash[:errors] << attr.format_err}
       Rails.logger.info("Adding Errors")
     end

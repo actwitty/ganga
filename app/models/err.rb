@@ -41,27 +41,27 @@ class Err
   def self.add!(params)
     Rails.logger.info("Enter Errors Add")
     
-    if params[:account_id].blank? or  params[:properties].blank?
+    if params["account_id"].blank? or  params["properties"].blank?
       raise et("err.invalid_argument_in_error") 
     end
 
     #check if app object is valid
-    if !params[:app_id].blank?
-      app = App.where(account_id: params[:account_id], _id: params[:app_id] ).first
+    if !params["app_id"].blank?
+      app = App.where(account_id: params["account_id"], _id: params["app_id"] ).first
       raise et("err.invalid_app_id") if app.blank?
     end
 
     # check if actor object is valid
-    if !params[:actor_id].blank?
-      actor = Actor.where(app_id: params[:app_id], _id: params[:actor_id]).first
+    if !params["actor_id"].blank?
+      actor = Actor.where(app_id: params["app_id"], _id: params["actor_id"]).first
       raise et("err.invalid_actor_id") if actor.blank?
     end    
 
     # Build error 
-    err = new(account_id: params[:account_id], app_id: params[:app_id], actor_id: params[:actor_id])
+    err = new(account_id: params["account_id"], app_id: params["app_id"], actor_id: params["actor_id"])
    
     # serialize errors
-    serialized = Utility.serialize_to(hash: params[:properties], serialize_to: "value")   
+    serialized = Utility.serialize_to(hash: params["properties"], serialize_to: "value")   
     raise et("err.property_not_serialized") if serialized.blank?
 
     # add it to error object

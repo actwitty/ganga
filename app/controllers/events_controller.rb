@@ -42,12 +42,16 @@ class EventsController < ApplicationController
   def create
     Rails.logger.info("Enter Event Create #{params.inspect}")
 
-    params[:account_id] = current_account._id 
+    params[:account_id] = current_account.id.to_s
+    
+    # params[:method] = "create"
+    # EventsWorker.perform_async(params)
     ret = Event.add!(params)
 
     raise ret[:error] if !ret[:error].blank?
 
     respond_with(ret[:return].format_event, status: 200, location:  "nil")
+    head :ok
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
     respond_with({errors: e.message}, status: 422, location: "nil")

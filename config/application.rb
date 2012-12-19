@@ -76,6 +76,6 @@ module Ganga
 
 
     config.ember.variant = Rails.env.to_sym
-  
+ 
   end
 end

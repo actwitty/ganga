@@ -47,31 +47,31 @@ class Event
 
   # OUTPUT => {:return => true, :error => nil}
   def self.add!(params)
-    Rails.logger.info("Enter Event Add")
+    puts("Enter Event Add #{params.inspect}")
     
-    if params[:account_id].blank? or params[:app_id].blank? or params[:name].blank? or params[:properties].blank?
+    if params["account_id"].blank? or params["app_id"].blank? or params["name"].blank? or params["properties"].blank?
       raise et("event.invalid_argument_in_event") 
     end
 
     #get app object
-    app = App.where(account_id: params[:account_id], _id: params[:app_id] ).first
+    app = App.where(account_id: params["account_id"], _id: params["app_id"] ).first
     raise et("event.invalid_app_id") if app.blank?
 
     # create anonymous actor if actor is blank
-    if params[:actor_id].blank?
-      actor = Actor.create!(account_id: params[:account_id], app_id: params[:app_id])
-      params[:actor_id] = actor._id 
-      Rails.logger.info("creating anonymous actor")
+    if params["actor_id"].blank?
+      actor = Actor.create!(account_id: params["account_id"], app_id: params["app_id"])
+      params["actor_id"] = actor._id 
+      puts("creating anonymous actor")
     else
-      actor = Actor.where(app_id: params[:app_id], _id: params[:actor_id]).first
+      actor = Actor.where(app_id: params["app_id"], _id: params["actor_id"]).first
       raise et("event.invalid_actor_id") if actor.blank?
     end    
 
     # Build event 
-    ev = new(account_id: params[:account_id], app_id: params[:app_id], actor_id: params[:actor_id], name: params[:name])
+    ev = new(account_id: params["account_id"], app_id: params["app_id"], actor_id: params["actor_id"], name: params["name"])
    
     # create properties of event
-    serialized = Utility.serialize_to(hash: params[:properties], serialize_to: "value")   
+    serialized = Utility.serialize_to(hash: params["properties"], serialize_to: "value")   
     raise et("event.property_not_serialized") if serialized.blank?
 
     # add it to events object
@@ -80,18 +80,18 @@ class Event
       ev.properties << {k: k, v: v}
     end
 
-    ev.meta = true if params[:meta] == true
+    ev.meta = true if params["meta"] == true
 
     # save event object
     ev.save!
 
-    ret = app.update_schema(event: params[:name], properties: params[:properties], property_type: params[:property_type])
+    ret = app.update_schema(event: params["name"], properties: params["properties"], property_type: params["property_type"])
      
     raise et("event.create_failed") unless ret[:error].blank?
 
     {:return => ev, :error => nil}  
   rescue => e
-    Rails.logger.error("**** ERROR **** #{er(e)}")
+    puts("**** ERROR **** #{er(e)}")
     {:return => nil, :error => e}
   end
 

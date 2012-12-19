@@ -56,6 +56,7 @@ describe EventsController do
                     }
       puts JSON.parse(response.body).inspect
       response.status.should eq(200)
+      
       Event.count.should eq(1)
     end
   end

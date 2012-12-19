@@ -34,7 +34,7 @@ class ActorsController < ApplicationController
     Rails.logger.info("Enter Create Actor")
 
     # Create Anonymous actor
-    params[:account_id] = current_account._id 
+    params[:account_id] = current_account._id.to_s 
 
     obj = Actor.create!(app_id: params[:app_id], account_id: params[:account_id])
 

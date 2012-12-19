@@ -85,23 +85,23 @@ class App
   def self.add!(params)
     Rails.logger.info("Enter App Add")
 
-    if params[:account_id].blank? or params[:description].blank? or params[:description]["name"].blank?
+    if params["account_id"].blank? or params["description"].blank? or params["description"]["name"].blank?
       raise et("app.invalid_argument_in_create") 
     end
     
-    app = App.where( "description.name" => params[:description]["name"], account_id: params[:account_id]).first
+    app = App.where( "description.name" => params["description"]["name"], account_id: params["account_id"]).first
     raise et("app.app_name_already_exist") if !app.blank?
 
     # verify valid domain
-    if !params[:description]["origin"].blank?
-      origin_base = Url.base(params[:description]["origin"])
-      raise et("app.invalid_origin", url: params[:description]["origin"]) if origin_base.blank? 
+    if !params["description"]["origin"].blank?
+      origin_base = Url.base(params["description"]["origin"])
+      raise et("app.invalid_origin", url: params["description"]["origin"]) if origin_base.blank? 
     end
       
-    obj = App.new(account_id: params[:account_id], description: params[:description])
+    obj = App.new(account_id: params["account_id"], description: params["description"])
 
     # create the super actor of app. it will be meta actor
-    actor = Actor.create!(account_id: params[:account_id], app_id: obj._id, meta: true)
+    actor = Actor.create!(account_id: params["account_id"], app_id: obj._id, meta: true)
     raise et("app.actor_create_failed") if actor.blank?
     
     obj.description[AppConstants.super_actor] = actor._id 
@@ -136,15 +136,15 @@ class App
   def self.update(params)
     Rails.logger.info("Enter Update App Description")
 
-    if params[:id].blank? or params[:account_id].blank? or params[:description].blank?
+    if params["id"].blank? or params["account_id"].blank? or params["description"].blank?
       raise et("app.invalid_argument_in_update") 
     end
     
-    app = App.where(account_id: params[:account_id], _id: params[:id] ).first
+    app = App.where(account_id: params["account_id"], _id: params["id"] ).first
 
-    raise et("app.invalid_app_id", id: params[:id]) if app.blank?
+    raise et("app.invalid_app_id", id: params["id"]) if app.blank?
 
-    desc = Utility.serialize_to(hash: params[:description], serialize_to: "value")
+    desc = Utility.serialize_to(hash: params["description"], serialize_to: "value")
 
     desc.each do |k,v|
 
@@ -261,36 +261,36 @@ class App
     Rails.logger.info("Enter App Read #{params.inspect}")
     hash = {events: [], actors: [], conversions: [], errors: []}
 
-    if params[:account_id].blank? or params[:id].blank?
+    if params["account_id"].blank? or params["id"].blank?
       raise et("app.invalid_argument_in_read")
     end
-    app = App.where(account_id: params[:account_id], _id: params[:id] ).first
+    app = App.where(account_id: params["account_id"], _id: params["id"] ).first
 
-    raise et("app.invalid_app_id", id: params[:id]) if app.blank?
+    raise et("app.invalid_app_id", id: params["id"]) if app.blank?
 
     hash[:account] = {id: app.account_id.to_s}
     
     hash[:app] = app.format_app
     
-    if params[:events] == true
-      events = Event.where( app_id: params[:id], meta: false ).limit(AppConstants.limit_events).desc(:_id)
+    if params["events"] == true
+      events = Event.where( app_id: params["id"], meta: false ).limit(AppConstants.limit_events).desc(:_id)
       events.each {|attr| hash[:events] << attr.format_event }
       Rails.logger.info("Adding Events")
     end
 
-    if params[:conversions] == true
+    if params["conversions"] == true
       conversions = Conversion.where(app_id: app._id).limit(AppConstants.limit_conversions).desc(:_id)
       conversions.each {|attr| hash[:conversions] << attr.format_conversion}
       Rails.logger.info("Adding Conversions")
     end
 
-    if params[:errors] == true
+    if params["errors"] == true
       errors = Err.where(app_id: app._id).limit(AppConstants.limit_errors).desc(:_id)
       errors.each {|attr| hash[:errors] << attr.format_err}
       Rails.logger.info("Adding Errors")
     end
 
-    if params[:actors] == true
+    if params["actors"] == true
       actors = Actor.where(app_id: app._id).limit(AppConstants.limit_actors).desc(:_id)
       actors.each { |attr| hash[:actors] << attr.format_actor  if attr.meta == false }
       Rails.logger.info("Adding Actors")

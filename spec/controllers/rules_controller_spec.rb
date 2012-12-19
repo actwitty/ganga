@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe RulesController do
+
   before(:each) do
     @account = FactoryGirl.create(:account)
     @account.confirm!
@@ -61,7 +62,7 @@ describe RulesController do
       @app.reload
       @app.rules.count.should eq(1)
 
-      a = App.read(account_id: @account._id, id: @app._id, event: false)
+      a = App.read("account_id" => @account._id, "id" => @app._id, "event" => false)
       puts a.inspect
       puts a[:return][:app][:rules][0]["id"].inspect
     end

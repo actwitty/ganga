@@ -1,7 +1,9 @@
+require 'sample/actions'
+require 'sample/triggers'
 # NOTE - A Template SVC
 
 module Svc
-	class Sample
+	module Sample
 
     # NOTE: method_missing helps if due to some  reason config is 
     # not loaded...push.  it will defin config and config= and 

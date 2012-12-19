@@ -58,16 +58,16 @@ class Rule
   def self.add!(params)
   	Rails.logger.info("Enter Rule Add")
 
-  	if params[:account_id].blank? or params[:app_id].blank? or params[:rule].blank?
+  	if params["account_id"].blank? or params["app_id"].blank? or params["rule"].blank?
   		raise et("rule.invalid_argument_in_create") 
   	end
 
-    app = App.where(account_id: params[:account_id], _id: params[:app_id] ).first
-    raise et("rule.invalid_app_id", id: params[:app_id]) if app.blank?
+    app = App.where(account_id: params["account_id"], _id: params["app_id"] ).first
+    raise et("rule.invalid_app_id", id: params["app_id"]) if app.blank?
     
-    rule = app.rules.create!(params[:rule])
+    rule = app.rules.create!(params["rule"])
 
-  	{:return => rule._id, :error => nil}
+  	{:return => rule._id.to_s, :error => nil}
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
     {:return => nil, :error => e}
@@ -124,17 +124,17 @@ class Rule
   def self.update(params)
     Rails.logger.info("Enter Rule Update")
 
-    if params[:account_id].blank? or params[:app_id].blank? or params[:id].blank? or params[:rule].blank?
+    if params["account_id"].blank? or params["app_id"].blank? or params["id"].blank? or params["rule"].blank?
       raise et("rule.invalid_argument_in_update") 
     end
 
-    app = App.where(account_id: params[:account_id], _id: params[:app_id] ).first
-    raise et("rule.invalid_app_id", id: params[:app_id]) if app.blank?
+    app = App.where(account_id: params["account_id"], _id: params["app_id"] ).first
+    raise et("rule.invalid_app_id", id: params["app_id"]) if app.blank?
     
-    rule = app.rules.where(_id: params[:id]).first
+    rule = app.rules.where(_id: params["id"]).first
     raise et("rule.invalid_rule_id") if rule.blank?
 
-    rule.update_attributes(params[:rule])
+    rule.update_attributes(params["rule"])
 
     {:return => true, :error => nil}
   rescue => e
@@ -168,16 +168,16 @@ class Rule
 
     array = []
 
-    if params[:account_id].blank? or params[:app_id].blank? 
+    if params["account_id"].blank? or params["app_id"].blank? 
       raise et("rule.invalid_argument_in_read") 
     end
 
-    app = App.where(account_id: params[:account_id], _id: params[:app_id] ).first
-    raise et("rule.invalid_app_id", id: params[:app_id]) if app.blank?
+    app = App.where(account_id: params["account_id"], _id: params["app_id"] ).first
+    raise et("rule.invalid_app_id", id: params["app_id"]) if app.blank?
 
     # one rule with _id params[:rule_id]
-    if !params[:id].blank?
-      rule = app.rules.where(_id: params[:id]).first
+    if !params["id"].blank?
+      rule = app.rules.where(_id: params["id"]).first
       raise et("rule.invalid_rule_id") if rule.blank?
 
       array << rule.format_rule
@@ -219,16 +219,16 @@ class Rule
   def self.delete(params)
     Rails.logger.info("Enter Rule Delete")
 
-    if params[:account_id].blank? or params[:app_id].blank? 
+    if params["account_id"].blank? or params["app_id"].blank? 
       raise et("rule.invalid_argument_in_delete") 
     end
 
-    app = App.where(account_id: params[:account_id], _id: params[:app_id] ).first
-    raise et("rule.invalid_app_id", id: params[:app_id]) if app.blank?
+    app = App.where(account_id: params["account_id"], _id: params["app_id"] ).first
+    raise et("rule.invalid_app_id", id: params["app_id"]) if app.blank?
 
     # destroy one rule with _id params[:rule_id]
-    if !params[:id].blank?
-      rule = app.rules.where(_id: params[:id]).destroy_all
+    if !params["id"].blank?
+      rule = app.rules.where(_id: params["id"]).destroy_all
     
     # destroy rules for an event
     elsif !params[:event].blank?

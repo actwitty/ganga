@@ -70,7 +70,6 @@ def base(url)
 u = "apu.actwitty.com/dcsd?23432&fjwe"
 #parse(u)
 base(u)
-=end
 
 require 'yaml'
 require 'pp'
@@ -96,13 +95,26 @@ class Rails
 end
 
 module Svc
-  class FullContact
-  
+  module FullContact
+    HELLO = "hell"
+    class Actions
+    end
+    class Triggers
+    end
   end
-  class Gmail
-  
+  module Gmail
+    class Actions
+    end
+    class Triggers
+    end
+    class PreHooks
+    end
   end
-  class MailChimp
+  module Sample
+    class PreHooks
+    end
+  end
+  module MailChimp
     def self.method_missing(name, *args, &block)
 
       if name.to_s == "config"
@@ -120,6 +132,8 @@ module Svc
         self.send("config=", thing["svc"][key])
       end
     end
+    class Triggers
+    end
   end
   
   def self.load
@@ -128,6 +142,20 @@ module Svc
       key = thing["svc"].keys[0]
 
       klass = Object.const_get("#{self.name}").const_get(key.camelize)
+      
+      puts klass
+      puts klass.constants
+      puts "================"
+      klass.constants.each do |konst|
+        # like Svc::FullContact::Actions
+       # sub_klass = "#{klass}::#{konst}".constantize 
+
+        # verify if it is a class or normal constant
+        #if "#{klass}::#{konst}".constantize.is_a?(Class)
+          # add hash key like "actions" .. { svc: Svc::FullContact, actions: Svc::FullContact::Actions..}
+         # @@svc_classes[key][konst.to_s.underscore] = sub_klass
+       # end
+      end
 
       klass.instance_eval %Q?
         def config=(val)
@@ -147,3 +175,32 @@ Svc.load
 # pp Svc::FullContact.config
 pp Svc::MailChimp.config
 pp Svc::MailChimp.config
+Svc::FullContact.constants.each {|type| puts "Svc::FullContact::#{type}"}
+=end
+require "em-synchrony"
+require "net/http"
+require "em-synchrony/em-http"
+f =  Fiber.current
+      f1 = nil
+      EM.synchrony do
+        TCPSocket = EventMachine::Synchrony::TCPSocket
+
+        resp = Net::HTTP.get("github.com", "/index.html")
+        
+        #Actor.create!(account_id: "sdfsdfsdfsd", app_id: "sfsssss")
+        
+        puts resp
+
+        multi = EventMachine::Synchrony::Multi.new
+        multi.add :a, EventMachine::HttpRequest.new("http://www.postrank.com").aget
+        multi.add :b, EventMachine::HttpRequest.new("http://www.postrank.com").apost
+        res = multi.perform
+
+        p "Look ma, no callbacks, and parallel HTTP requests!"
+        p res
+
+        EM.stop
+      end
+
+      puts Fiber.current
+      puts "hello"

@@ -67,6 +67,7 @@ class AppsController < ApplicationController
 	def create
 		Rails.logger.info("Enter App Create")
 		
+
     # Create Anonymous actor
     params[:account_id] = current_account._id 
 

@@ -59,13 +59,13 @@ gem 'app_constants'
 
 
 #for http client Adaptor 
-#gem 'faraday'
-#gem 'faraday_middleware'
+gem 'faraday'
+gem 'faraday_middleware'
 #gem 'faraday_middleware-parse_oj' #to register Oj json parser in faraday middleware
 
 #for asynchronous web-socket
-#gem 'em-http-request'
-#gem 'em-synchrony'
+gem 'em-http-request'
+gem 'em-synchrony'
 
 
 #thin Webserver
@@ -94,7 +94,7 @@ gem 'redis'
 gem 'sidekiq'
 
 #mongo db
-gem "mongoid", "~> 3.0.0"
+gem "mongoid"
 
 gem 'colorize'
 
@@ -103,9 +103,16 @@ gem 'yajl-ruby'
 # domain parser
 gem 'domainatrix'
 
+# for v8 update
+gem 'libv8'
+
+# deployment capistrano 
+gem 'capistrano'
+
 group :test, :development  do
   gem 'rspec-rails'
   gem 'factory_girl_rails'
+
 end
 
 group :test  do

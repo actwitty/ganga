@@ -1,0 +1,6 @@
+en:
+  lib:
+    svc:
+      invalid_parameters_in_execute: "Invalid Parameters in Execute"
+      mandatory_params_not_present: "Mandatory Parameters are not present"
+      invalid_method_nameu: "Method name is not valid"
