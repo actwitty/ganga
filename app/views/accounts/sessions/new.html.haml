@@ -7,7 +7,7 @@
         %span.icon-bar
       
       %a.brand{:href => "./"}
-      -if Rails.env == 'production'
+      -if Rails.env != 'production'
         %div{:style => "float:right;margin-top:-8px;"}
           %a.btn.btn-warning{:href => "/accounts/sign_up", :nav => "register", :style => "cursor:pointer;"} Not registered ? Sign up
 
