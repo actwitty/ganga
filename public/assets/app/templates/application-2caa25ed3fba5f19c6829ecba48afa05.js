@@ -1,0 +1,1 @@
+Ember.TEMPLATES.application=Ember.Handlebars.template(function(t,n,r,i,s){r=r||Ember.Handlebars.helpers;var o="",u,a=this.escapeExpression;return u=r._triageMustache.call(n,"outlet",{hash:{},contexts:[n],data:s}),s.buffer.push(a(u)+"\n"),o});
