@@ -15,7 +15,10 @@
  * documents the function and classes that are added to jQuery by this plug-in.
  * @memberOf jQuery
  */
-//rbTServerResponse = {
+
+/**
+ * Server responses manager for the application.
+ */
 var rbTServerResponse = {  
 
   /** 
@@ -79,7 +82,7 @@ var rbTServerResponse = {
     try {
       if (respData && respData.actor.description.profile) {
         rbTActor.setProperties(respData.actor.description.profile);
-
+        rbTActor.enable();
       } else {
         throw new Error("there is no data for setting actor property");
       }

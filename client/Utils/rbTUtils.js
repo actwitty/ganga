@@ -16,6 +16,9 @@
  */
 
 
+/**
+ * Manager for all utilities function for the application.
+ */ 
 var rbTUtils = {
 
   eJQ : {},
@@ -57,16 +60,14 @@ var rbTUtils = {
 
 
   /** Initialize jquery if needed be
-    *  @return void
-    *
-    */
+   *  @return void
+   */
   includeJQIfNeeded : function() 
   {
     function includeJQ()
     { 
-      var rbTApp = rbTAPP;
       this.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",
-                        this.bindCB(rbTApp,rbTApp.actOnJQInit)
+                        this.bindCB(rbTAPP,rbTAPP.actOnJQInit)
                       );
     }
 
@@ -192,7 +193,7 @@ var rbTUtils = {
         if(!this.readyState ||
             this.readyState == "loaded" || 
             this.readyState == "complete") {
-            rbTDebug.log("Script "+ url +"loaded successfully");
+            rbTAPP.log("Script "+ url +"loaded successfully");
             if (callback) {
               if (params)
                 callback(params);
@@ -201,40 +202,4 @@ var rbTUtils = {
         }
       }
   },
-  /*
-  // JSON
-  JSON : {
-      parse: (window.JSON && window.JSON.parse) || function(data)
-      {
-        if (typeof data !== "string" || !data) { 
-          return null; 
-        }
-        return (new Function("return " + data))();
-      },
-    
-      stringify: (window.JSON && window.JSON.stringify) || function(object) 
-      {
-        var type = typeof object;
-        if (type !== "object" || object === null) {
-          if (type === "string") {
-            return '"' + object + '"'; 
-          }
-        } else {
-          var k, v, json = [],
-          isArray = (object && object.constructor === Array);
-          for (k in object ) {
-            v = object[k]; type = typeof v;
-            if (type === "string")
-              v = '"' + v + '"';
-            else if (type === "object" && v !== null)
-              v = this.stringify(v);
-            json.push((isArray ? "" : '"' + k + '":') + v);
-          }
-          return (isArray ? "[" : "{") + json.join(",") + (isArray ? "]" : "}");
-        } 
-      } 
-    }
-    */
-
-    
 };
