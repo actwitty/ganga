@@ -1,7 +1,7 @@
 !!!
 %html
   %head
-    %title Rule Bot
+    %title Trigmatic
     
     
 
@@ -13,9 +13,9 @@
     = csrf_meta_tags
 
     -if @internalPage == true
-      = stylesheet_link_tag    "internal", :media => "all"
+      = stylesheet_link_tag    "application-internal", :media => "all"
     -else
-      = stylesheet_link_tag    "landing", :media => "all"
+      = stylesheet_link_tag    "application-landing", :media => "all"
     = javascript_include_tag "application"
     
 
@@ -27,7 +27,7 @@
 
 
   %body  
-    #rulebotEmberBase
+    #trigmaticEmberBase
     -if !current_account.nil?
       :javascript
         var loggedInAccountID = '#{current_account.id}';

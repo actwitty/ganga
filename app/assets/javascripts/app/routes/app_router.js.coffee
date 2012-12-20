@@ -6,18 +6,18 @@ App.Router = Ember.Router.extend
     
     #SETUP
     #EVENTS
-      initDone: (router, event) ->
-        if App.inDevise is true
-          router.transitionTo('deviseState')
+    initDone: (router, event) ->
+      if App.inDevise is true
+        router.transitionTo('deviseState')
+      else
+        if App.isLoggedIn is true
+          router.get('accountController').load()            
         else
-          if App.isLoggedIn is true
-            router.get('accountController').load()            
-          else
-            router.transitionTo('landingState.home')
-      credentialGetDone: (router, event) ->        
-        router.transitionTo('loggedInState.index')
-      credentialGetFailed:(router, event) ->
-        router.transitionTo('landingState.home')
+          router.transitionTo('landingState.home')
+    credentialGetDone: (router, event) ->        
+      router.transitionTo('loggedInState.index')
+    credentialGetFailed:(router, event) ->
+      router.transitionTo('landingState.home')
 
     #STATES
     index: Ember.Route.extend
