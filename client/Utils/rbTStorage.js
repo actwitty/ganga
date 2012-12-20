@@ -41,31 +41,11 @@
  */
 
  //(function(){
- trigger_fish.initJStorage = function() {   
+ //initJStorage = function() {   
+ var initJStorage = function() {   
     var
         /* jStorage version */
         JSTORAGE_VERSION = "0.3.0";
-
-        /* detect a dollar object or create one if not found */
-        //$ = window.jQuery || window.$ || (window.$ = {}),
-
-        /* check for a JSON handling support */
-        /*JSON = {
-            parse:
-                window.JSON && (window.JSON.parse || window.JSON.decode) ||
-                String.prototype.evalJSON && function(str){return String(str).evalJSON();} ||
-                $.parseJSON ||
-                $.evalJSON,
-            stringify:
-                Object.toJSON ||
-                window.JSON && (window.JSON.stringify || window.JSON.encode) ||
-                $.toJSON
-        };
-
-    // Break if no JSON support was found
-    if(!JSON.parse || !JSON.stringify){
-        throw new Error("No JSON support found, include //cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js to page");
-    }*/
 
     var
         /* This is the object, that holds the cached values */
@@ -137,8 +117,8 @@
          * XML nodes are encoded and decoded if the node is the value to be saved
          * but not if it's as a property of another object
          * Eg. -
-         *   trigger_fish.jStorage.set("key", xmlNode);        // IS OK
-         *   trigger_fish.jStorage.set("key", {xml: xmlNode}); // NOT OK
+         *   jStorage.set("key", xmlNode);        // IS OK
+         *   jStorage.set("key", {xml: xmlNode}); // NOT OK
          */
         _XMLService = {
 
@@ -386,7 +366,7 @@
             if(type == "session"){
                 return storage_source[key];
             }
-            return trigger_fish.jStorage.get(key);
+            return jStorage.get(key);
         }
 
         /**
@@ -409,7 +389,7 @@
          */
         storage.removeItem = function(key){
             if(type == "local"){
-                return trigger_fish.jStorage.deleteKey(key);
+                return jStorage.deleteKey(key);
             }
 
             storage[key] = undefined;
@@ -430,7 +410,7 @@
                 _createPolyfillStorage("session", true);
                 return;
             }
-            trigger_fish.jStorage.flush();
+            jStorage.flush();
         }
 
         if(type == "local"){
@@ -504,7 +484,7 @@
                 return;
             }
 
-            trigger_fish.jStorage.set(e.propertyName, storage[e.propertyName]);
+            jStorage.set(e.propertyName, storage[e.propertyName]);
             storage.length = _length;
         });
 
@@ -861,8 +841,8 @@
 
     ////////////////////////// PUBLIC INTERFACE /////////////////////////
 
-    //trigger_fish.jStorage = {
-    trigger_fish.jStorage = {
+    //jStorage = {
+    jStorage = {
         /* Version number */
         version: JSTORAGE_VERSION,
 

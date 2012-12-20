@@ -9,8 +9,11 @@ class BaseController < ApplicationController
   def index
     Rails.logger.debug("#{__method__}: Enter: URL#{request.env['PATH_INFO']} params:#{params}")
  	if current_account
- 		@account = current_account 		
+ 		@account = current_account
+    @internalPage = true
  		Rails.logger.debug("#{__method__}: User logged in as :#{@account}")
+  else
+    @internalPage = false
  	end
  	Rails.logger.debug("#{__method__}: Exit: URL#{request.env['PATH_INFO']} params:#{params}")   
   end

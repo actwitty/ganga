@@ -16,100 +16,140 @@
  */
 /* MAIN BUSINESS SPECIFIC CALLS */
 var RBT = function() {
-	this._appID = trigger_fish.rbTAPP.getAppID();
-	this._accountID = trigger_fish.rbTAPP.getAccountID();
-	this._status = trigger_fish.rbTAPP.isrbTAlive();
+	this._appID = rbTAPP.getAppID();
+	this._accountID = rbTAPP.getAccountID();
+	this._status = rbTAPP.isAlive();
+  this._state = true;
 };
 
 
-/** 
-* Tell whether RBT app is alive
-* 
-* @return {boolean} status
-*/
-RBT.prototype.isAlive = function()
-{
-	this._status = trigger_fish.rbTAPP.isrbTAlive();
-	return this._status;
-};
+RBT.prototype = {
+  /** 
+  * Tell whether RBT app is alive
+  * 
+  * @return {boolean} status
+  */
+  isAlive : function()
+  {
+    this._status = rbTAPP.isAlive();
+    return this._status;
+  },
 
+  /**
+  * Enable rulebot api's
+  */
+  enable : function()
+  { 
+    this._state = true;
+  },
 
-/** 
-* Send event to RBT server 
-* 
-* @param {string} event
-* @param {object} [params]
-* @return void
-*/
-RBT.prototype.sendEvent = function(event, params)
-{
-  "use strict";
-  if (!event || typeof(event) != "string" || event === "" ) {
-    return;
-  }
-  var obj = {"event" : event, 
-             "params": params,
-             "type"  : "POST",
-             "cb"    : { success: trigger_fish.rbTServerResponse.handleEvent,
-                         error  : trigger_fish.rbTServerResponse.defaultError
-                       }
-            };
-  trigger_fish.rbTServerChannel.makeRequest(obj);
-};
+  /**
+  * Disable rulebot api's
+  */
+  disable : function()
+  {
+    this._state = false;
+  },
 
-/** 
-* Req RBT server to identify actor based on params
-* 
-* @param {object} params Option based on which actor will be identified
-* @return void
-*/
-RBT.prototype.identify = function(params)
-{
-  "use strict";
-  var obj = {"url"     : trigger_fish.rbTServerChannel.url.identify, 
-             "params"  : params,
-             "identify": true,
-             "type"    : "POST",
-             "cb"      : { success: trigger_fish.rbTServerResponse.setActorID,
-                           error  : trigger_fish.rbTServerResponse.defaultError
+  /**
+  * Tell the status of rulebot.
+  * @param {boolean} state.
+  */
+  isEnabled : function()
+  {
+    return this._state;
+  },
+
+  /**
+  * Set easy jquery callback data coming from global Callback of EasyJquery
+  * @param {Object} data. EasyJQuery data
+  */
+  setSysVars : function(data)
+  {
+    rbTUtils.keepEasyJQVars(data);
+  },
+
+  /** 
+  * Send event to RBT server 
+  * 
+  * @param {string} event
+  * @param {object} [params]
+  * @return void
+  */
+  sendEvent : function(event, params)
+  {
+    "use strict";
+    if (!this.isEnabled())
+      return;  
+    if (!event || typeof(event) != "string" || event === "" ) {
+      return;
+    } 
+    var obj = {"event" : event, 
+               "params": params,
+               "type"  : "POST",
+               "cb"    : { success: rbTServerResponse.handleEvent,
+                           error  : rbTServerResponse.defaultError
                          }
-            };
-  trigger_fish.rbTServerChannel.makeRequest(obj);
-};
+              };
+    rbTServerChannel.makeRequest(obj);
+  },
 
+  /** 
+  * Req RBT server to identify actor based on params
+  * 
+  * @param {object} params Option based on which actor will be identified
+  * @return void
+  */
+  identify : function(params)
+  {
+    "use strict";
+    if (!this.isEnabled())
+      return;
+    var obj = {"url"     : rbTServerChannel.url.identify, 
+               "params"  : params,
+               "identify": true,
+               "type"    : "POST",
+               "cb"      : { success: rbTServerResponse.setActorID,
+                             error  : rbTServerResponse.defaultError
+                           }
+              };
+    rbTServerChannel.makeRequest(obj);
+  },
 
+  /** 
+  * Req RBT server to set current actor property
+  * 
+  * @param {object} params Option based on which actor property will be set
+  * @return void
+  */
+  setUser : function(params)
+  {
+    "use strict";
+    var diff = {};
+    if (!this.isEnabled()) return;
+    diff = rbTActor.propExist(params);
+    //params = (diff === undefined ) ? params : diff ;
+    if (!diff) return;  
+    var obj = {"url"      : rbTServerChannel.url.setActor, 
+               "params"   : diff,
+               "set_actor": true,
+               "type"     : "POST",
+               "cb"       : { success: rbTServerResponse.setActorProperty,
+                              error  : rbTServerResponse.defaultError
+                            }
+               };
+    rbTServerChannel.makeRequest(obj);
+  },
+  /** 
+  * ALIAS
+  * 
+  * @param {object} params Option based on which system property will be set
+  * @return void
+  */
+  alias : function()
+  {
+    if (!this.isEnabled())
+      return;
+  }
 
-/** 
-* Req RBT server to set current actor property
-* 
-* @param {object} params Option based on which actor property will be set
-* @return void
-*/
-RBT.prototype.setUser = function(params)
-{
-  "use strict";
-  if (trigger_fish.rbTActor.propExist(params))
-    return;
-
-  var obj = {"url"      : trigger_fish.rbTServerChannel.url.setActor, 
-             "params"   : params,
-             "set_actor": true,
-             "type"    : "POST",
-             "cb"       : { success: trigger_fish.rbTServerResponse.setActorProperty,
-                            error  : trigger_fish.rbTServerResponse.defaultError
-                          }
-             };
-  trigger_fish.rbTServerChannel.makeRequest(obj);
-};
-
-
-/** 
-* ALIAS
-* 
-* @param {object} params Option based on which system property will be set
-* @return void
-*/
-RBT.prototype.alias = function(params)
-{
-    // FIXME : what to do?
 };

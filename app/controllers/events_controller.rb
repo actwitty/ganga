@@ -44,13 +44,13 @@ class EventsController < ApplicationController
 
     params[:account_id] = current_account.id.to_s
     
-    # params[:method] = "create"
-    # EventsWorker.perform_async(params)
-    ret = Event.add!(params)
+    params[:method] = "create"
+    EventsWorker.perform_async(params)
+    # ret = Event.add!(params)
 
-    raise ret[:error] if !ret[:error].blank?
+    # raise ret[:error] if !ret[:error].blank?
 
-    respond_with(ret[:return].format_event, status: 200, location:  "nil")
+    # respond_with(ret[:return].format_event, status: 200, location:  "nil")
     head :ok
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")

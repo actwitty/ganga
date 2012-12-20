@@ -15,7 +15,8 @@
  * @memberOf jQuery
  */
 
-trigger_fish.rbJSON = {
+//rbJSON = {
+var rbJSON = {
 
   "rb" : {},
   "header" : "rbJSON.rb",

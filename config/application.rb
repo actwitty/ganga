@@ -64,6 +64,7 @@ module Ganga
 
     # Enable the asset pipeline
     config.assets.enabled = true
+    config.assets.paths << "#{Rails.root}/app/assets/fonts"
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
@@ -76,6 +77,8 @@ module Ganga
 
 
     config.ember.variant = Rails.env.to_sym
- 
+    
+    config.handlebars.templates_root = 'app/templates'
+    config.handlebars.templates_path_separator = '/'
   end
 end

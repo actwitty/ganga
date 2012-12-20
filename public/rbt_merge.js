@@ -1,9 +1,15 @@
 
 
 
-/***********************[[2012-11-23 22:05:27 +0530]]*********************************/ 
+/***********************[[2012-12-10 11:42:56 +0530]]*********************************/ 
 
 
+function EasyjQuery_Cache_IP(fname,json) { 
+
+                 rb.setSysVars(json);
+
+               }
+(function() {
 
 
 
@@ -33,248 +39,210 @@
  * @memberOf jQuery
  */
 
-var trigger_fish = {};
+var version = "1.0.1";
 
-trigger_fish.rbTAPP = {
-    /* Main configs will be holded here */
-    configs : {
-      "status" : false,
-      "transVar" : {}
-    },
-    el : {},
-    
-    /** 
-    *  Do following tasks on initialization of the app
-    *  1). include jQuery if need be
-    *  2). create session.
-    *  3). fetch configs.
-    *  4). check status of last event, if pending, execute it.
-    *  5). fetch system properties if cache miss
-    *  6). Allow Business to make calls
-    *  
-    *  @return void
-    */
-    initialize : function()
-    {
-      "use strict";
-      this.getAppData();
-      
-
-    },
-
-    /**
-    * Check status of RBT APP
-    *
-    * @param {function} callback Callback function if rbTAPP is alive.
-    * @param {object} args Arguments with which callback will be called.
-    * @return void   
-    */
-    isrbTAlive :  function()
-    {
-       return this.configs.status;
-    },  
-
-    /**
-    *
-    */
-    setrbTAlive : function()
-    {
-      this.configs.status = true;
-      //this.dispatchEL("isRbtAlive");
-      trigger_fish.rbTServerChannel.flushReqQueue();
-    },
-
-    /**
-    * Set RBT APP Status to true to signal app is alive
-    */
-    wake_RBT_APP : function()
-    {
-      trigger_fish.rbTDebug.log("Initializing RBT APP");
-      trigger_fish.rbTAPP.initialize();
-    },
-
-    /** 
-    *  Set App Id
-    *  @param {string} id
-    *  @return void
-    */
-    setAppID: function(id)
-    {
-      this.configs.appID = id;
-    },
-
-    /** 
-    *  Set Account ID
-    *  @param {string} id 
-    *  @return void
-    */
-    setAccountID : function(id)
-    {
-      this.configs.accountID = id;
-    },
-
-    /** 
-    *  Set Session ID
-    *  @param {string} id 
-    *  @return void
-    */
-    setSessionID : function(id)
-    {
-      this.configs.sessionID = id;
-    },
-
-    /**
-    *
-    *
-    */   
-    setTransVar : function(event,data)
-    {
-      this.configs.transVar.event = data;
-    },
-
-    /**
-    *
-    */
-    setAppDetail : function(data)
-    {
-      this.configs.appData = data;
-    },
-
-    /**
-    *
-    */
-    addEL : function(event, cb, scope)
-    {
-      if (!this.el.event)
-        this.el.event = [];
-      var listenerObj = {"action":cb,"scope":scope};
-      if (this.el.event.indexOf(JSON.stringify(listenerObj)) === -1)
-        this.el.event.push(listenerObj);
-    },
-
-    /**
-    *
-    */
-    dispatchEL : function(event)
-    {
-      if (!this.el.event)
-        return;
-      var wL = this.el.event.length;
-      for(var i = 0 ; i < wL ; ++i) {
-        var listener = this.el.event[i];
-        listener.action.apply(listener.scope);
-      }
-      this.el.event = [];
-    },  
-
-    /** 
-    *  Get App ID
-    *  @return {string} id 
-    */
-    getAppID : function()
-    {
-      return this.configs.appID
-    },
-
-    /** 
-    *  Get Account ID
-    *  @return {string} id 
-    */  
-    getAccountID : function()
-    {
-      return this.configs.accountID;
-    },   
-
-    /** 
-    *  Get Session ID
-    *  @return {string} id 
-    */  
-    getSessionID : function()
-    {
-      return this.configs.sessionID;
-    },
-
-    /**
-    *
-    */
-    getTransVar : function(event)
-    {
-      return this.configs.transVar.event;
-    },
-
-    /**
-    *
-    */
-    getAppDetail : function()
-    {
-      return this.configs.appData;
-    },
-
-    /** 
-    *  Get Application configs
-    *  @return {rbTAPP.configs} 
-    */ 
-    getConfigs : function()
-    {
-      "use strict";
-      var cnf = {"app_id"  : this.configs.appID,
-                 "account_id" : this.configs.accountID  
+var rbTAPP = function() {
+  var configs = {
+                 "status"   : false,
+                 "transVar" : {}
                 }; 
+
+  return {    
+      /** 
+      *  Do following tasks on initialization of the app
+      *  Get app details
+      *  @return void
+      */
+      initialize : function()
+      {
+        rbTDebug.log("Initializing RBT APP");
+        rbTServerChannel.appDetails();
+      },
+
+      /**
+      *
+      */ 
+      releasePreInitCalls : function(w)
+      {
+        var l = w.rb.q;
+        w.rb = new RBT();
+        if (l.length) {
+          for (var c in l) { var o = l[c]; rb[o.t](o.a,o.b,o.c); }    
+        }
+      },
+
+      /**
+      *
+      */
+      actOnJQInit : function()
+      {
+        this.enablePlugins();
+        rbTActor.retFromCookie();
+        this.releasePreInitCalls(window);
+        rbTUtils.invokeEasyJquery("rbTUtils.keepEasyJQVars");
+      },
+
+      /**
+      * Enable plugins related to cors/storage. 
+      * Additional responsibilty of invoking Easy Jquery
+      */
+      enablePlugins : function()
+      {
+        enableCORS(jQuery);
+        initJStorage();
+      },
+
+      /**
+      * Check status of RBT APP
+      *
+      * @param {function} callback Callback function if rbTAPP is alive.
+      * @param {object} args Arguments with which callback will be called.
+      * @return void   
+      */
+      isAlive :  function()
+      {
+        return configs.status;
+      },  
+
+      /**
+      *
+      */
+      setrbTAlive : function()
+      {
+        configs.status = true;
+        rbTServerChannel.flushReqQueue();
+      },
+
+      /**
+      * Set RBT APP Status to true to signal app is alive
+      */
+      wakeUp : function()
+      {
+        rbTDebug.log("Initializing RBT APP");
+        this.initialize();
+      },
+
+      /** 
+      *  Set App Id
+      *  @param {string} id
+      *  @return void
+      */
+      setAppID: function(id)
+      {
+        configs.appID = id;
+      },
+
+      /** 
+      *  Set Account ID
+      *  @param {string} id 
+      *  @return void
+      */
+      setAccountID : function(id)
+      {
+        configs.accountID = id;
+      },
+
+      /** 
+      *  Set Session ID
+      *  @param {string} id 
+      *  @return void
+      */
+      setSessionID : function(id)
+      {
+        configs.sessionID = id;
+      },
+
+      /**
+      *
+      */   
+      setTransVar : function(event,data)
+      {
+        configs.transVar.event = data;
+      },
+
+      /**
+      *
+      */
+      setAppDetail : function(data)
+      {
+        configs.appData = data;
+      },
+
+      /** 
+      *  Get App ID
+      *  @return {string} id 
+      */
+      getAppID : function()
+      {
+        return configs.appID;
+      },
+
+      /** 
+      *  Get Account ID
+      *  @return {string} id 
+      */  
+      getAccountID : function()
+      {
+        return configs.accountID;
+      },   
+
+      /** 
+      *  Get Session ID
+      *  @return {string} id 
+      */  
+      getSessionID : function()
+      {
+        return configs.sessionID;
+      },
+
+      /**
+      *
+      */
+      getTransVar : function(event)
+      {
+        return configs.transVar.event;
+      },
+
+      /**
+      *
+      */
+      getAppDetail : function()
+      {
+        return configs.appData;
+      },
+
+      /** 
+      *  report error to rbT server
+      *  @param {object} params Error log message 
+      *  @return void
+      */ 
+      reportError : function(params)
+      {
+        try {
+            this.log(params);
+            if (params.server) {
+              rbTServerChannel.reportError(params);
+            }
+        } catch(e) {
+          // FIXME what to do?
+        }
+      },
       
-       var actor_id = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID);
-       if (actor_id)  {
-        cnf["actor_id"] = actor_id;
-       }
-      return cnf;
-    },  
-
-   
-
-    /** 
-    *  Get Application based configs
-    *  FIXME : THIS NEEDS TO BE DISCUSSED AS WE ARE PLANNING TO HAVE A PROXY IN BETWEEN
-    *  @return {string} TBD 
-    */
-    getAppData : function()
-    {
-      trigger_fish.rbTServerChannel.makeServerRequest({"url"      : trigger_fish.rbTServerChannel.url.appDetails,
-                                                       "app_read" : true,
-                                                       "async"    : "noasync", 
-                                                       "cb"       : { success: trigger_fish.rbTServerResponse.setAppDetail,
-                                                                      error  : trigger_fish.rbTServerResponse.defaultError
-                                                                    }
-                                                      });
-    },  
-
-    /** 
-    *  report error to rbT server
-    *  @param {object} params Error log message 
-    *  @return void
-    */ 
-    reportError : function(params)
-    {
-      try {
-          //trigger_fish.rbTDebug.error(params);
-          if (params.server) 
-            trigger_fish.rbTServerChannel.reportError(params);
-      } catch(e) {
-        // FIXME what to do?
-      }
-    },
-    
-    /** 
-    *  log
-    *  @param {object} params Error log message 
-    *  @return void
-    */
-    log : function(params)
-    {
-      if(params && params.message)
-        trigger_fish.rbTDebug.log(params.message);
-      trigger_fish.rbTDebug.log(params)
-    },
-
-};
+      /** 
+      *  log
+      *  @param {object} params Error log message 
+      *  @return void
+      */
+      log : function(params)
+      {
+        if(params && params.message) {
+          rbTDebug.log(params.message);
+        }
+        //rbTDebug.log(params)
+        console.log(params);
+      },
+  };    
+}();
 
 
 
@@ -324,31 +292,11 @@ trigger_fish.rbTAPP = {
  */
 
  //(function(){
- trigger_fish.initJStorage = function() {   
+ //initJStorage = function() {   
+ var initJStorage = function() {   
     var
         /* jStorage version */
         JSTORAGE_VERSION = "0.3.0";
-
-        /* detect a dollar object or create one if not found */
-        //$ = window.jQuery || window.$ || (window.$ = {}),
-
-        /* check for a JSON handling support */
-        /*JSON = {
-            parse:
-                window.JSON && (window.JSON.parse || window.JSON.decode) ||
-                String.prototype.evalJSON && function(str){return String(str).evalJSON();} ||
-                $.parseJSON ||
-                $.evalJSON,
-            stringify:
-                Object.toJSON ||
-                window.JSON && (window.JSON.stringify || window.JSON.encode) ||
-                $.toJSON
-        };
-
-    // Break if no JSON support was found
-    if(!JSON.parse || !JSON.stringify){
-        throw new Error("No JSON support found, include //cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js to page");
-    }*/
 
     var
         /* This is the object, that holds the cached values */
@@ -420,8 +368,8 @@ trigger_fish.rbTAPP = {
          * XML nodes are encoded and decoded if the node is the value to be saved
          * but not if it's as a property of another object
          * Eg. -
-         *   trigger_fish.jStorage.set("key", xmlNode);        // IS OK
-         *   trigger_fish.jStorage.set("key", {xml: xmlNode}); // NOT OK
+         *   jStorage.set("key", xmlNode);        // IS OK
+         *   jStorage.set("key", {xml: xmlNode}); // NOT OK
          */
         _XMLService = {
 
@@ -669,7 +617,7 @@ trigger_fish.rbTAPP = {
             if(type == "session"){
                 return storage_source[key];
             }
-            return trigger_fish.jStorage.get(key);
+            return jStorage.get(key);
         }
 
         /**
@@ -692,7 +640,7 @@ trigger_fish.rbTAPP = {
          */
         storage.removeItem = function(key){
             if(type == "local"){
-                return trigger_fish.jStorage.deleteKey(key);
+                return jStorage.deleteKey(key);
             }
 
             storage[key] = undefined;
@@ -713,7 +661,7 @@ trigger_fish.rbTAPP = {
                 _createPolyfillStorage("session", true);
                 return;
             }
-            trigger_fish.jStorage.flush();
+            jStorage.flush();
         }
 
         if(type == "local"){
@@ -787,7 +735,7 @@ trigger_fish.rbTAPP = {
                 return;
             }
 
-            trigger_fish.jStorage.set(e.propertyName, storage[e.propertyName]);
+            jStorage.set(e.propertyName, storage[e.propertyName]);
             storage.length = _length;
         });
 
@@ -1144,8 +1092,8 @@ trigger_fish.rbTAPP = {
 
     ////////////////////////// PUBLIC INTERFACE /////////////////////////
 
-    //trigger_fish.jStorage = {
-    trigger_fish.jStorage = {
+    //jStorage = {
+    jStorage = {
         /* Version number */
         version: JSTORAGE_VERSION,
 
@@ -1490,7 +1438,8 @@ trigger_fish.rbTAPP = {
  *
  */
 //(function ($) {
-trigger_fish.enableCORS = function($) {
+//enableCORS = function($) {
+var enableCORS = function($) {
     var _this;
     if (!('__jquery_xdomain__' in $)
         && $.browser.msie // must be IE
@@ -1785,7 +1734,7 @@ trigger_fish.enableCORS = function($) {
  * documents the function and classes that are added to jQuery by this plug-in.
  * @memberOf jQuery
  */
-trigger_fish.rbTActor = function() {
+var rbTActor = function() {
 
   var __id = "";
   var __prop = {};
@@ -1800,14 +1749,17 @@ trigger_fish.rbTActor = function() {
       */
       retFromCookie : function()
       {
-      	trigger_fish.rbTDebug.log("retrieveing data for actor from cookie");
-        if (trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorProp)) {
-          this.setProperties(trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorProp)); 
+      	rbTDebug.log("Trying to retrieve data for actor from cookie");
+        if (rbTStore.get(rbTStore.defaultKeys.actorProp)) {
+          rbTDebug.log("Got Actor data in storage - enabling actor now!!");  
+          this.setProperties(rbTStore.get(rbTStore.defaultKeys.actorProp)); 
           this.enable();
         }
-        if (trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID)) {
-          this.setID(trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID));
+        if (rbTStore.get(rbTStore.defaultKeys.actorID)) {
+          rbTDebug.log("Got actor id in storage - setting actor id now!!");
+          this.setID(rbTStore.get(rbTStore.defaultKeys.actorID));
         } else {
+          rbTDebug.log("HAVE TO CREATE DUMMY ACTOR!!");
           this.createDummyActor();
         }
       },
@@ -1848,7 +1800,7 @@ trigger_fish.rbTActor = function() {
       */
       setID : function(id)
       {
-        trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.actorID, id);
+        rbTStore.set(rbTStore.defaultKeys.actorID, id);
         __id = id;
       },
 
@@ -1859,7 +1811,7 @@ trigger_fish.rbTActor = function() {
       setProperties : function(prop)
       {
         __prop = prop;
-        trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.actorProp, JSON.stringify(prop));
+        rbTStore.set(rbTStore.defaultKeys.actorProp, prop);
         this.enable();
       },
 
@@ -1869,10 +1821,9 @@ trigger_fish.rbTActor = function() {
       */
       propExist : function(prop)
       {
-        var a = JSON.stringify(__prop).replace(/(^{)|(}$)/g, "");
-        var b = JSON.stringify(prop).replace(/(^{)|(}$)/g, "");
-        trigger_fish.rbTDebug.log({"stored" : a , "passed" : b, "message":"actor prop existence"});
-        return (a.indexOf(b) >= 0) ? true : false;
+        var diff = {};
+        diff = rbTUtils.diff(prop,__prop, diff);
+        return diff;
       },
 
       /**
@@ -1881,14 +1832,16 @@ trigger_fish.rbTActor = function() {
       */
       createDummyActor : function()
       {
+        rbTAPP.log({"message":"Creating dummy actor"});
         if (!__id || !__prop) {
-          var obj = {"url"      : trigger_fish.rbTServerChannel.url.createActor,
-                     "app_read" : true, 
-                     "cb"       : { success: trigger_fish.rbTServerResponse.setActorID,
-                                    error  : trigger_fish.rbTServerResponse.defaultError
-                                  }
-                  };
-          trigger_fish.rbTServerChannel.makeServerRequest(obj);
+          var obj = {"url"         : rbTServerChannel.url.createActor,
+                     "actor_create": true, 
+                     "type"        : "POST",
+                     "cb"          : { success: rbTServerResponse.setActorID,
+                                       error  : rbTServerResponse.defaultError
+                                     }
+                    };
+          rbTServerChannel.makeServerRequest(obj);
         }
       },
 
@@ -1898,12 +1851,12 @@ trigger_fish.rbTActor = function() {
       */
       requestActorDetails : function(data)
       {
-        var oldActorId = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID);
-        var actorProp = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorProp);
+        var oldActorId = rbTStore.get(rbTStore.defaultKeys.actorID);
+        var actorProp = rbTStore.get(rbTStore.defaultKeys.actorProp);
         if (!oldActorId || (oldActorId !== data.id) || !actorProp) {
-          trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.actorID, JSON.stringify(data.id));
+          rbTStore.set(rbTStore.defaultKeys.actorID, JSON.stringify(data.id));
           this.setID(data.id);
-          trigger_fish.rbTServerChannel.actorDetails();
+          rbTServerChannel.actorDetails();
         }
       },
 
@@ -1918,7 +1871,7 @@ trigger_fish.rbTActor = function() {
           return;
         for (var req in __eventRQ) {
           var r = __eventRQ[req];
-          trigger_fish.rbTServerChannel.makeServerRequest(r);
+          rbTServerChannel.makeServerRequest(r);
         }
         __eventRQ = [];
       }
@@ -1958,7 +1911,8 @@ trigger_fish.rbTActor = function() {
  * With lots of help from Paul Irish!
  * http://paulirish.com/
  */
-trigger_fish.rbTDebug=(function(){var i=this,b=Array.prototype.slice,d=i.console,h={},f,g,m=9,c=["error","warn","info","debug","log"],l="assert clear count dir dirxml exception group groupCollapsed groupEnd profile profileEnd table time timeEnd trace".split(" "),j=l.length,a=[];while(--j>=0){(function(n){h[n]=function(){m!==0&&d&&d[n]&&d[n].apply(d,arguments)}})(l[j])}j=c.length;while(--j>=0){(function(n,o){h[o]=function(){var q=b.call(arguments),p=[o].concat(q);a.push(p);e(p);if(!d||!k(n)){return}d.firebug?d[o].apply(i,q):d[o]?d[o](q):d.log(q)}})(j,c[j])}function e(n){if(f&&(g||!d||!d.log)){f.apply(i,n)}}h.setLevel=function(n){m=typeof n==="number"?n:9};function k(n){return m>0?m>n:c.length+m<=n}h.setCallback=function(){var o=b.call(arguments),n=a.length,p=n;f=o.shift()||null;g=typeof o[0]==="boolean"?o.shift():false;p-=typeof o[0]==="number"?o.shift():n;while(p<n){e(a[p++])}};return h})();
+//trigger_fish.rbTDebug=(function(){var i=this,b=Array.prototype.slice,d=i.console,h={},f,g,m=9,c=["error","warn","info","debug","log"],l="assert clear count dir dirxml exception group groupCollapsed groupEnd profile profileEnd table time timeEnd trace".split(" "),j=l.length,a=[];while(--j>=0){(function(n){h[n]=function(){m!==0&&d&&d[n]&&d[n].apply(d,arguments)}})(l[j])}j=c.length;while(--j>=0){(function(n,o){h[o]=function(){var q=b.call(arguments),p=[o].concat(q);a.push(p);e(p);if(!d||!k(n)){return}d.firebug?d[o].apply(i,q):d[o]?d[o](q):d.log(q)}})(j,c[j])}function e(n){if(f&&(g||!d||!d.log)){f.apply(i,n)}}h.setLevel=function(n){m=typeof n==="number"?n:9};function k(n){return m>0?m>n:c.length+m<=n}h.setCallback=function(){var o=b.call(arguments),n=a.length,p=n;f=o.shift()||null;g=typeof o[0]==="boolean"?o.shift():false;p-=typeof o[0]==="number"?o.shift():n;while(p<n){e(a[p++])}};return h})();
+var rbTDebug=(function(){var i=this,b=Array.prototype.slice,d=i.console,h={},f,g,m=9,c=["error","warn","info","debug","log"],l="assert clear count dir dirxml exception group groupCollapsed groupEnd profile profileEnd table time timeEnd trace".split(" "),j=l.length,a=[];while(--j>=0){(function(n){h[n]=function(){m!==0&&d&&d[n]&&d[n].apply(d,arguments)}})(l[j])}j=c.length;while(--j>=0){(function(n,o){h[o]=function(){var q=b.call(arguments),p=[o].concat(q);a.push(p);e(p);if(!d||!k(n)){return}d.firebug?d[o].apply(i,q):d[o]?d[o](q):d.log(q)}})(j,c[j])}function e(n){if(f&&(g||!d||!d.log)){f.apply(i,n)}}h.setLevel=function(n){m=typeof n==="number"?n:9};function k(n){return m>0?m>n:c.length+m<=n}h.setCallback=function(){var o=b.call(arguments),n=a.length,p=n;f=o.shift()||null;g=typeof o[0]==="boolean"?o.shift():false;p-=typeof o[0]==="number"?o.shift():n;while(p<n){e(a[p++])}};return h})();
 
 
 /****************************[[rbTRules.js]]*************************************/ 
@@ -1982,474 +1936,445 @@ trigger_fish.rbTDebug=(function(){var i=this,b=Array.prototype.slice,d=i.console
  */
 
 
-trigger_fish.rbTRules = {
+var rbTRules = function ()
+{
+  var __ruleTable   = {},
+      __permissions = {
+                      'String': [ 'eql', 'swh','ewh','cns','rgx','set' ],
+                      'Date'  : [ 'gtn','ltn','eql','dag','drg','set' ],  
+                      'Number': [ 'gtn','ltn','eql','btn','set'] 
+                     };
 
-  ruleTable : {},
+  return {
+    /**
+    * Set rules table for business
+    * @return void
+    */
+    setRulesTable : function(rules)
+    {
+      "use strict";
+      if (rbTUtils.type(rules) !== "Array")
+        return;
+      var ruleCount = rules.length;
+      var _this = this;
+      var conditions = [];
+      try {
+          for (var i = 0 ; i < ruleCount ; ++i) {
+            if (!__ruleTable[rules[i].event]) {
+              __ruleTable[rules[i].event] = [];
+            }
+            conditions = [];
+            for (var rule in rules[i].conditions) {
+              rules[i].conditions[rule].event = rules[i].event; // FIXME ::
+              conditions.push(rules[i].conditions[rule]);
+            }
+            __ruleTable[rules[i].event].push({ "name"        : rules[i].name,
+                                              "action"      : rules[i].action,
+                                              "action_param": rules[i].action_param,
+                                              "conditions"  : conditions
+                                            });                                                  
 
-  "permissions" : {
-          'String': [ 'eql', 'swh','ewh','cns','rgx','set' ],
-          'Date': [ 'gtn','ltn','eql','dag','drg','set' ],  
-          'Number': [ 'gtn','ltn','eql','btn','set'] 
-  },
-
-  /**
-  * Set rules table for business
-  * @return void
-  */
-  setRulesTable : function(rules)
-  {
-    "use strict";
-    try {
-        jQuery.each(rules, function(index, ruleList) {
-          if (!trigger_fish.rbTRules.ruleTable[ruleList.event])
-            trigger_fish.rbTRules.ruleTable[ruleList.event] = [];
-          var conditions = [];
-          for (var rule in ruleList.conditions) {
-            ruleList.conditions[rule].event = ruleList.event; // FIXME ::
-            conditions.push(ruleList.conditions[rule]);
           }
-          trigger_fish.rbTRules.ruleTable[ruleList.event].push({ "name"         : ruleList.name,
-                                                                 "action"       : ruleList.action,
-                                                                 "action_param" : ruleList.action_param,
-                                                                 "conditions"   : conditions
-                                                               });                                                  
-
-        });
-    } catch (e) {
-      trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                                       "message"   : "rule table setting failed",
-                                       "rules"     : rules
-                                      });
-    }
-
-  },
-
-  /**
-  * Execute rules table for particular events
-  * @param {string} event The event for which we need to check rules.
-  * @return void
-  */
-  executeRulesOnEvent : function(event)
-  {
-    // Client will not execute any rules if there is no schema set. 
-    var appData = trigger_fish.rbTAPP.getAppDetail();
-    var that=this;
-    if (!appData.app.schema) {
-      trigger_fish.rbTDebug.log({"message":"There is no schema set for app, cannot execute rules"});
-      return;
-    }
-    try {
-          jQuery.each(this.ruleTable[event], function(index, rule) {
-            var conditionCount = rule.conditions.length;
-            var isRuleValid = true;
-            for(var i = 0; i < conditionCount ; i++) {
-              if (!that.evalRule(rule.conditions[i])) {
-                isRuleValid = false;
-                break;
-              }
-            } 
-            if (isRuleValid) {
-              trigger_fish.rbTAPP.log({"message":"++ALL CONDITIONS PASSED++","rule":rule});
-              that.invokeAction(rule);
-            } else {
-              trigger_fish.rbTAPP.log({"message":"**ALL CONDITIONS FAILED**","rule":rule});
-            }  
-          });
-          
-    } catch (e) {
-      if (that.ruleTable[event])
-        var ruleStr = that.ruleTable[event].ruleString || "--";
-      else
-        var ruleStr = "Rule string cannot be formed!";  
-        trigger_fish.rbTAPP.reportError({"exception"  : e.message,
-                          "message"    : "rule execution on event failed" , 
-                          "event_name" : event,
-                          "rule_string": ruleStr
-                         });
-    } 
-  },
-  
-
-  
-
-  /**
-  * FIXME : check if this needs to be invoked in getRulesTable's server response
-  * Evaluate property value to a suitable sys or user property
-  * 
-  * @return {string} status Status of the event execution (no-pending, executed, error)
-  */
-  executeLastPendingEvent : function()
-  {
-    "use strict";
-    try {
-      var lastEvent = trigger_fish.rbTCookie.getCookie("lastevent");
-      if (lastEvent) {
-        this.executeRulesOnEvent(lastEvent);
-      } else {
-        throw "no last event found"
-      }
-    } catch(e) {
-      trigger_fish.rbTDebug.log("no last event found");
-    }
-  },
-
-  
-  /**
-  * Invoke the action on rule.
-  * @param {object} rule The rule for which we need to invoke action
-  * @return void
-  */
-  invokeAction : function(rule)
-  {
-    try {
-      // Hand over action to templating engine for processing event action.
-      trigger_fish.rbT.invokeActionScript(rule.action);
-    } catch(e) {
-      trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                          "message": "action could not be invoked" , 
-                          "event" : event
-                         });
-    }
-  },
-
-  /**
-  * Check the data type of object
-  * @param {string} rule propertry
-  * @return {string} datatype of the object.
-  */  
-  getDataType : function(event,ruleProp,scope,json)
-  {
-    return json.type || undefined;
-    /* 
-    // FIXME :: WE NEED TO CHANGE THIS TO GET IT FROM SCHEMA
-    //return Object.prototype.toString.call(a).split("]")[0].split(" ")[1];
-    var appSchema = trigger_fish.rbTAPP.getAppDetail().app.schema;
-
-    if (scope === "e") {
-      return appSchema.events[event][ruleProp];
-    } else if (scope === "s") {
-      return appSchema.system[ruleProp];
-    } else if (scope === "a") {
-      return appSchema.profile[ruleProp];
-    }
-    */
-
-  },
-
-  /**
-  * FIXME : enable this with new json format (based on scope property)
-  * Evaluate property value to a suitable sys or user property
-  * @param {string} ruleProperty For which we need to evaluate data type
-  * @param {string} type Datatype of the property
-  * @param {string} scope Scope of the property, to which we need to look for.
-  * @return {object} or {boolean}
-  */
-  //evalProperty : function(ruleProperty, type, scope)
-  evalProperty : function(ruleJson)
-  {
-    if (!ruleJson.property)
-      return "";
- 
-    var p = ruleJson.property.replace(/]/g,"").replace(/\[/g,".");
-    var value = null;
-    var validProp = true;
-
-    function findprop(obj,path) {
-      var args=path.split('.'), l=args.length;
-      for (var i=0;i<l;i++) {
-        if (!obj.hasOwnProperty(args[i]) )
-            return undefined;
-        obj=obj[ args[i] ];
-      }
-      return obj; 
-    }
-
-    try {
-      if (ruleJson.scope === "a") {
-        value = findprop(trigger_fish.rbTActor.getProperties(),p).slice(-1)[0];
-      } else if (ruleJson.scope === "s") {
-        value = findprop(trigger_fish.rbTSystemVar.getProperty(),p);
-      } else if (ruleJson.scope === "e") {
-        value = findprop(trigger_fish.rbTAPP.getTransVar(ruleJson.event),p);
-      }
-    } catch (e) {
-      validProp = false;
-    } 
-
-    if (!validProp || !value) {
-      trigger_fish.rbTAPP.log({"message":"Not a valid property to evaluate rule on"});
-      return false;
-    }
-    
-    var type = this.getDataType(ruleJson.event, ruleJson.property, ruleJson.scope, ruleJson);
-    if (!type)
-        return value;
-
-    return this.valueDataType(ruleJson.property, value, type);
-
-  },
-
-  /**
-  *   Execute rules table for particular events
-  *   @param {string} property The property for which we need to operate upon
-  *   @param {string} value The value for which we need to operate upon
-  *   @return {object} value Converted value based on property data type
-  */
-  valueDataType : function(property, value, dataType)
-  {
-    "use strict";
-    // We are expecting only 3 types i.e string or number or date
-    // ******FIXME : WE NEED TO GET THE DATA TYPES FROM APP SCHEMA********
-    if (!value || !property)
-      return undefined;
-    var dt = dataType;
-    try {
-        if (dt === "String") {
-          return value.toString();
-        } else if(dt === "Number") {
-          return parseFloat(value);
-        } else if(dt === "Date") {
-          return new Date(value);
-        }
-    } catch (e) {
-        // FIXME :: something wrong with type conversion
-        trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                            "message":"data type conversion on rule value failed" , 
-                            "property" : property,
-                            "value" : value
+      } catch (e) {
+        rbTAPP.reportError({"exception" : e.message,
+                            "message"   : "rule table setting failed",
+                            "rules"     : rules
                            });
-    }
-  },
+      }
 
-  /**
-  * Check the validity of the rule based on permitted operations on data type
-  * @param {object} ruleJson. Type of condition.
-  * @return boolean validity
-  */
-  isValidRule : function(ruleJson )
-  {
-    if (!ruleJson.property) 
-      return false;
-    if (ruleJson.type ==="set") 
-      return true;
-    var propVal = this.evalProperty(ruleJson);
-    if (!propVal)
-      return false;
-    var propDT = this.getDataType(ruleJson.event, ruleJson.property, ruleJson.scope, ruleJson);
-       
+    },
 
-    var v1DT = Object.prototype.toString.call(ruleJson.value1).split("]")[0].split(" ")[1];
-    if (ruleJson.value2)
-      var v2DT = Object.prototype.toString.call(ruleJson.value2).split("]")[0].split(" ")[1];
-
-    var v2DT = v2DT || v1DT;
-
-    if (!this.permissions[propDT] || this.permissions[propDT].indexOf(ruleJson.operation) < 0)
-      return false;
+    /**
+    * Execute rules table for particular events
+    * @param {string} event The event for which we need to check rules.
+    * @return void
+    */
+    executeRulesOnEvent : function(event)
+    {
+      // Client will not execute any rules if there is no schema set. 
+      var appData = rbTAPP.getAppDetail();
+      var _this=this;
+      if (!appData.app.schema) {
+        rbTDebug.log({"message":"There is no schema set for app, cannot execute rules"});
+        return;
+      }
+      try {
+            var rules = __ruleTable[event];
+            for (var ev in rules) {
+              if (rules.hasOwnProperty(ev)) {
+                var conditionCount = rules[ev].conditions.length;
+                var isRuleValid = true;
+                for(var i = 0; i < conditionCount ; i++) {
+                  if (!_this.evalRule(rules[ev].conditions[i])) {
+                    isRuleValid = false;
+                    break;
+                  }
+                } 
+                if (isRuleValid) {
+                  rbTAPP.log({"message":"++ALL CONDITIONS PASSED++","rule":rules[ev]});
+                  _this.invokeAction(rules[ev]);
+                } else {
+                  rbTAPP.log({"message":"**ALL CONDITIONS FAILED**","rule":rules[ev]});
+                }
+              }  
+            }
+            
+      } catch (e) {
+        rbTAPP.reportError({"exception"  : e.message,
+                            "message"    : "rule execution on event failed" , 
+                            "event_name" : event,
+                           });
+      } 
+    },
     
-    if (propDT === "String" && (v1DT!==propDT || v2DT!==propDT)) {
-      return false;
-    } else if (propDT === "Number" && (parseFloat(ruleJson.value1) === "NaN" || (ruleJson.value2 && parseFloat(ruleJson.value2) === "NaN"))) {
-      return false;
-    } else if (propDT === "Date") {
-      var v1Date = new Date(ruleJson.value2);
-      if (ruleJson.value2)
-        var v2Date = new Date(ruleJson.value2);
-      v2Date = v2Date || v1Date;
-      if (v1Date.toString() === "Invalid Date" || v2Date.toString() === "Invalid Date")
+
+    
+
+    /**
+    * FIXME : check if this needs to be invoked in getRulesTable's server response
+    * Evaluate property value to a suitable sys or user property
+    * 
+    * @return {string} status Status of the event execution (no-pending, executed, error)
+    */
+    executeLastPendingEvent : function()
+    {
+      "use strict";
+      try {
+        var lastEvent = rbTStore.get("lastevent");
+        if (lastEvent) {
+          this.executeRulesOnEvent(lastEvent);
+        } else {
+          throw "no last event found"
+        }
+      } catch(e) {
+        rbTDebug.log("no last event found");
+      }
+    },
+
+    
+    /**
+    * Invoke the action on rule.
+    * @param {object} rule The rule for which we need to invoke action
+    * @return void
+    */
+    invokeAction : function(rule)
+    {
+      try {
+        // Hand over action to templating engine for processing event action.
+        trigger_fish.rbT.invokeActionScript(rule.action);
+      } catch(e) {
+        rbTAPP.reportError({"exception" : e.message,
+                            "message": "action could not be invoked" , 
+                            "event" : event
+                           });
+      }
+    },
+
+    /**
+    * Check the data type of object
+    * @param {string} rule propertry
+    * @return {string} datatype of the object.
+    */  
+    getDataType : function(event,ruleProp,scope,json)
+    {
+      // FIXME :: WE NEED TO CHANGE THIS TO GET IT FROM SCHEMA
+      return json.type || undefined;
+    },
+
+    /**
+    * FIXME : enable this with new json format (based on scope property)
+    * Evaluate property value to a suitable sys or user property
+    * @param {string} ruleProperty For which we need to evaluate data type
+    * @param {string} type Datatype of the property
+    * @param {string} scope Scope of the property, to which we need to look for.
+    * @return {object} or {boolean}
+    */
+    //evalProperty : function(ruleProperty, type, scope)
+    evalProperty : function(ruleJson)
+    {
+      if (!ruleJson.property)
+        return "";
+   
+      var p = ruleJson.property.replace(/]/g,"").replace(/\[/g,".");
+      var value = null;
+      var validProp = true;
+
+      function findprop(obj,path) {
+        var args=path.split('.'), l=args.length;
+        for (var i=0;i<l;i++) {
+          if (!obj.hasOwnProperty(args[i]) )
+              return undefined;
+          obj=obj[ args[i] ];
+        }
+        return obj; 
+      }
+
+      try {
+        if (ruleJson.scope === "a") {
+          value = findprop(rbTActor.getProperties(),p).slice(-1)[0];
+        } else if (ruleJson.scope === "s") {
+          value = findprop(rbTSystemVar.getProperty(),p);
+        } else if (ruleJson.scope === "e") {
+          value = findprop(rbTAPP.getTransVar(ruleJson.event),p);
+        }
+      } catch (e) {
+        validProp = false;
+      } 
+
+      if (!validProp || !value) {
+        rbTAPP.log({"message":"Not a valid property to evaluate rule on"});
         return false;
-    }
-    
-    return true; 
-  },
- 
-  /**
-  * Function to evaluate rule.
-  * @param {object} rule The rule json which needs to be executed.
-  *
-  * @return {boolean} result That outcome of rule evaluation.
-  */
-  evalRule : function(rule)
-  {
-    var ruleJson = typeof rule === "object" ? rule :ruleJSON.parse(rule);
-    try {
+      }
       
-      trigger_fish.rbTAPP.log({"message":"for rule condition","rule":ruleJson}); 
-      var res = false;
+      var type = this.getDataType(ruleJson.event, ruleJson.property, ruleJson.scope, ruleJson);
+      if (!type)
+          return value;
 
-      if (!this.isValidRule(ruleJson) || !this.rule.hasOwnProperty(ruleJson.operation))
-          return res;
+      return this.valueDataType(ruleJson.property, value, type);
 
-      var propDT = this.getDataType(ruleJson.event, ruleJson.property, ruleJson.scope, ruleJson),f
-          p = this.evalProperty(ruleJson),
-          a = this.valueDataType(ruleJson.property, ruleJson.value1, propDT),
-          b = this.valueDataType(ruleJson.property, ruleJson.value2, propDT);
-
-      res = this.rule[ruleJson.operation](p,a,b);
-      
-      return (ruleJson.negation === "true") ? !res : res;
-
-    } catch (e) {
-      trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                                       "message"   :"rule evaluation on"+ ruleJson.operation +" failed" , 
-                                       "rule"      : ruleJson,
-                                      });
-      return false;
-    }
-  },
-
-  /* RULE FUNCTIONS */
-  rule : 
-  {
-    /**
-    * Rule to check for less than
-    * @param {object} p Rule property
-    * @param {object} v Rule value
-    * @return {boolean} Validity based on rule
-    */ 
-    ltn : function(p,v)
-    {
-      $("#applyingrules").append("<h3>less than</h3>");
-      return (p < v);
     },
+
+    /**
+    *   Execute rules table for particular events
+    *   @param {string} property The property for which we need to operate upon
+    *   @param {string} value The value for which we need to operate upon
+    *   @return {object} value Converted value based on property data type
+    */
+    valueDataType : function(property, value, dataType)
+    {
+      "use strict";
+      // We are expecting only 3 types i.e string or number or date
+      // ******FIXME : WE NEED TO GET THE DATA TYPES FROM APP SCHEMA********
+      if (!value || !property)
+        return undefined;
+      var dt = dataType;
+      try {
+          if (dt === "String") {
+            return value.toString();
+          } else if(dt === "Number") {
+            return parseFloat(value);
+          } else if(dt === "Date") {
+            return new Date(value);
+          }
+      } catch (e) {
+          // FIXME :: something wrong with type conversion
+          rbTAPP.reportError({"exception" : e.message,
+                              "message":"data type conversion on rule value failed" , 
+                              "property" : property,
+                              "value" : value
+                             });
+      }
+    },
+
+    /**
+    * Check the validity of the rule based on permitted operations on data type
+    * @param {object} ruleJson. Type of condition.
+    * @return boolean validity
+    */
+    isValidRule : function(ruleJson )
+    {
+      if (!ruleJson.property) return false;
+      if (ruleJson.type === "set") return true;
+
+      var propVal = this.evalProperty(ruleJson);
+      if (!propVal) return false;
+
+      var propDT = this.getDataType(ruleJson.event, ruleJson.property, ruleJson.scope, ruleJson);
+         
+      var v1DT = rbTUtils.type(ruleJson.value1);
+      if (ruleJson.value2)
+        var v2DT = rbTUtils.type(ruleJson.value2);
+      var v2DT = v2DT || v1DT;
+
+      if (!__permissions[propDT] || 
+          __permissions[propDT].indexOf(ruleJson.operation) < 0) {
+        return false;
+      }
+      
+      if (propDT === "String" && (v1DT!==propDT || v2DT!==propDT)) {
+        return false;
+      } else if (propDT === "Number" && 
+                (parseFloat(ruleJson.value1) === "NaN" || 
+                  (ruleJson.value2 && parseFloat(ruleJson.value2) === "NaN"))) {
+        return false;
+      } else if (propDT === "Date") {
+        var v1Date = new Date(ruleJson.value2);
+        if (ruleJson.value2) {
+          var v2Date = new Date(ruleJson.value2);
+        }
+        v2Date = v2Date || v1Date;
+        if (v1Date.toString() === "Invalid Date" || v2Date.toString() === "Invalid Date") return false;
+      }
+      
+      return true; 
+    },
+   
+    /**
+    * Function to evaluate rule.
+    * @param {object} rule The rule json which needs to be executed.
+    *
+    * @return {boolean} result That outcome of rule evaluation.
+    */
+    evalRule : function(rule)
+    {
+      var ruleJson = (rbTUtils.type(rule) === "Object") ? rule : JSON.parse(rule);
+      try {
         
-    /**
-    * Rule to check for greater than
-    * @param {object} p Rule property
-    * @param {object} v Rule value
-    * @return {boolean} Validity based on rule    */ 
-    gtn : function(p,v)
-    {
-      "use strict";
-      $("#applyingrules").append("<h3>greater than</h3>");
-      return (p > v);
+        rbTAPP.log({"message":"for rule condition","rule":ruleJson}); 
+        var res = false;
+
+        if (!this.isValidRule(ruleJson) || !this.rule.hasOwnProperty(ruleJson.operation))
+            return res;
+
+        var propDT = this.getDataType(ruleJson.event, ruleJson.property, ruleJson.scope, ruleJson),
+            p = this.evalProperty(ruleJson),
+            a = this.valueDataType(ruleJson.property, ruleJson.value1, propDT),
+            b = this.valueDataType(ruleJson.property, ruleJson.value2, propDT);
+
+        res = this.rule[ruleJson.operation](p,a,b);
+        
+        return (ruleJson.negation === "true") ? !res : res;
+
+      } catch (e) {
+        rbTAPP.reportError({"exception" : e.message,
+                                         "message"   :"rule evaluation on"+ ruleJson.operation +" failed" , 
+                                         "rule"      : ruleJson,
+                                        });
+        return false;
+      }
     },
 
-    /**
-    * Rule to check for equal to
-    * @param {object} p Rule property
-    * @param {object} v Rule value
-    * @return {boolean} Validity based on rule
-    */ 
-    eql : function(p,v)
+    /* RULE FUNCTIONS */
+    rule : 
     {
-      "use strict";
-      $("#applyingrules").append("<h3>equal to</h3>");
-      return (p === v);
-    },
+      /**
+      * Rule to check for less than
+      * @param {object} p Rule property
+      * @param {object} v Rule value
+      * @return {boolean} Validity based on rule
+      */ 
+      ltn : function(p,v)
+      {
+        return (p < v);
+      },
+          
+      /**
+      * Rule to check for greater than
+      * @param {object} p Rule property
+      * @param {object} v Rule value
+      * @return {boolean} Validity based on rule    */ 
+      gtn : function(p,v)
+      {
+        return (p > v);
+      },
 
-    /**
-    * Rule to check for contains
-    * @param {object} p Rule property
-    * @param {object} v Rule value
-    * @return {boolean} Validity based on rule
-    */ 
-    cns: function(p,v)
-    {
-      "use strict";
-      $("#applyingrules").append("<h3>contains</h3>");
-      return ((p.indexOf(v) >= 0)?true:false);
-    },
+      /**
+      * Rule to check for equal to
+      * @param {object} p Rule property
+      * @param {object} v Rule value
+      * @return {boolean} Validity based on rule
+      */ 
+      eql : function(p,v)
+      {
+        return (p === v);
+      },
 
-    /**
-    * Rule to check for starts with condition
-    * @param {object} p Rule property
-    * @param {object} v Rule value
-    * @return {boolean} Validity based on rule
-    */ 
-    swh : function(p,v)
-    {
-      "use strict";
-      $("#applyingrules").append("<h3>starts with</h3>");
-      return ((p.match("^"+v))?true:false);  
-    },
+      /**
+      * Rule to check for contains
+      * @param {object} p Rule property
+      * @param {object} v Rule value
+      * @return {boolean} Validity based on rule
+      */ 
+      cns: function(p,v)
+      {
+        return ((p.indexOf(v) >= 0)?true:false);
+      },
 
-    /**
-    * Rule to check for ends with condition
-    * @param {object} p Rule property
-    * @param {object} v Rule value
-    * @return {boolean} Validity based on rule
-    */ 
-    ewh : function(p,v)
-    {
-      "use strict";
-      $("#applyingrules").append("<h3>ends with</h3>");
-      return (p.match(v+"$")?true:false);
-    },
+      /**
+      * Rule to check for starts with condition
+      * @param {object} p Rule property
+      * @param {object} v Rule value
+      * @return {boolean} Validity based on rule
+      */ 
+      swh : function(p,v)
+      {
+        return ((p.match("^"+v))?true:false);  
+      },
 
-    /**
-    * Rule to check for in between range
-    * @param {object} p Rule property
-    * @param {object} v1 Rule value1
-    * @param {object} v2 Rule value2
-    * @return {boolean} Validity based on rule
-    */ 
-    btn : function(p,v1,v2)
-    {
-      "use strict";
-      $("#applyingrules").append("<h3>between</h3>");
-      return ((p>=v1)&&(p<=v2))?true:false;
-    },
+      /**
+      * Rule to check for ends with condition
+      * @param {object} p Rule property
+      * @param {object} v Rule value
+      * @return {boolean} Validity based on rule
+      */ 
+      ewh : function(p,v)
+      {
+        return (p.match(v+"$")?true:false);
+      },
 
-    /**
-    * Rule to check for regex condition
-    * @param {object} p Rule property
-    * @param {object} v Rule value
-    * @return {boolean} Validity based on rule
-    */ 
-    rgx : function(p,v)
-    {
-      "use strict";
-      $("#applyingrules").append("<h3>regex</h3>");
-      var regexp = new RegExp(v,'gi'); 
-      var res = regexp.test(p);
-      return res;
-    },
+      /**
+      * Rule to check for in between range
+      * @param {object} p Rule property
+      * @param {object} v1 Rule value1
+      * @param {object} v2 Rule value2
+      * @return {boolean} Validity based on rule
+      */ 
+      btn : function(p,v1,v2)
+      {
+        return ((p>=v1)&&(p<=v2))?true:false;
+      },
 
-    /**
-    * Rule to check for days ago condition
-    * @param {object} p Rule property
-    * @param {object} v Rule value
-    * @return {boolean} Validity based on rule
-    */
-    dag : function(p,v)
-    {
-      "use strict";
-      $("#applyingrules").append("<h3>days ago</h3>");
-      var oneDay = 24*60*60*1000,fD = new Date(p),sD = new Date();
-      var diffDays = Math.round( Math.abs((fD.getTime() - sD.getTime())/(oneDay)) );
-      return (diffDays === trigger_fish.rbTRules.valueDataType(diffDays, v))?true:false;
-    },
+      /**
+      * Rule to check for regex condition
+      * @param {object} p Rule property
+      * @param {object} v Rule value
+      * @return {boolean} Validity based on rule
+      */ 
+      rgx : function(p,v)
+      {
+        var regexp = new RegExp(v,'gi'); 
+        var res = regexp.test(p);
+        return res;
+      },
 
-    /**
-    * Rule to check for date range condition
-    * @param {object} p Rule property
-    * @param {object} v Rule value
-    * @return {boolean} Validity based on rule
-    */
-    drg : function(p,v1,v2)
-    {
-      "use strict";
-      $("#applyingrules").append("<h3>days between</h3>");
-      return ( (p>=trigger_fish.rbTRules.valueDataType(p,v1)) && 
-               (p<=trigger_fish.rbTRules.valueDataType(p,v2)) )
-                ? true : false;  
-    },
+      /**
+      * Rule to check for days ago condition
+      * @param {object} p Rule property
+      * @param {object} v Rule value
+      * @return {boolean} Validity based on rule
+      */
+      dag : function(p,v)
+      {
+        var oneDay = 24*60*60*1000,fD = new Date(p),sD = new Date();
+        var diffDays = Math.round( Math.abs((fD.getTime() - sD.getTime())/(oneDay)) );
+        return (diffDays === rbTRules.valueDataType(diffDays, v))?true:false;
+      },
 
-    /**
-    * Rule to check for set to condition
-    * @param {object} p Rule property
-    * @return {boolean} Validity based on rule
-    */
-    set : function(p)
-    {
-      "use strict";
-      $("#applyingrules").append("<h3>set prop</h3>");
-      return (p?true:false);
+      /**
+      * Rule to check for date range condition
+      * @param {object} p Rule property
+      * @param {object} v Rule value
+      * @return {boolean} Validity based on rule
+      */
+      drg : function(p,v1,v2)
+      {
+        return ( (p>=rbTRules.valueDataType(p,v1)) && 
+                 (p<=rbTRules.valueDataType(p,v2)) )
+                  ? true : false;  
+      },
+
+      /**
+      * Rule to check for set to condition
+      * @param {object} p Rule property
+      * @return {boolean} Validity based on rule
+      */
+      set : function(p)
+      {
+        return (p?true:false);
+      }
     }
-
-  }
-};
+  };
+}();
 
 
 /****************************[[rbTServerResponse.js]]*************************************/ 
@@ -2472,7 +2397,8 @@ trigger_fish.rbTRules = {
  * documents the function and classes that are added to jQuery by this plug-in.
  * @memberOf jQuery
  */
-trigger_fish.rbTServerResponse = {
+//rbTServerResponse = {
+var rbTServerResponse = {  
 
   /** 
   *  Handle default success callback if not mentioned explicitly
@@ -2482,7 +2408,7 @@ trigger_fish.rbTServerResponse = {
   defaultSuccessCallback : function(respData)
   {
     // FIXME : what to do?
-    trigger_fish.rbTAPP.log({"message": "Success callback : default server response","data":respData});
+    rbTAPP.log({"message": "Success callback : default server response","data":respData});
   },
   /** 
   *  Handle default error callback if not mentioned explicitly
@@ -2492,7 +2418,7 @@ trigger_fish.rbTServerResponse = {
   defaultErrorCallback : function(respData)
   {
     // FIXME : what to do?
-    trigger_fish.rbTAPP.log({"message": "Error callback : default server response","data":respData});
+    rbTAPP.log({"message": "Error callback : default server response","data":respData});
   },
 
 
@@ -2504,16 +2430,16 @@ trigger_fish.rbTServerResponse = {
   setActorID : function(respData)
   { 
     "use strict";
-    trigger_fish.rbTAPP.log({"message": "Setting actor ID with server resp","data":respData});
+    rbTAPP.log({"message": "Setting actor ID with server resp","data":respData});
     try {
       if (respData && respData.id) {
-        trigger_fish.rbTActor.setID(respData.id);
-        trigger_fish.rbTActor.requestActorDetails(respData);
+        rbTActor.setID(respData.id);
+        rbTActor.requestActorDetails(respData);
       } else {
         throw new Error("there is no server resp data");
       }
     } catch(e) {
-      trigger_fish.rbTAPP.reportError({"exception" : e.message,
+      rbTAPP.reportError({"exception" : e.message,
                           "message"   : "setting actor failed",
                           "data"      : respData
                         });
@@ -2529,18 +2455,18 @@ trigger_fish.rbTServerResponse = {
   setActorProperty : function(respData)
   {
     "use strict";
-    trigger_fish.rbTAPP.log({"message": "Setting actor detail property with server resp","data":respData});
+    rbTAPP.log({"message": "Setting actor detail property with server resp","data":respData});
 
     // FIXME : check for which property to set
     try {
       if (respData && respData.actor.description.profile) {
-        trigger_fish.rbTActor.setProperties(respData.actor.description.profile);
+        rbTActor.setProperties(respData.actor.description.profile);
 
       } else {
         throw new Error("there is no data for setting actor property");
       }
     } catch(e) {
-      trigger_fish.rbTAPP.reportError({"exception" : e.message,
+      rbTAPP.reportError({"exception" : e.message,
                                        "message"   : "setting user property failed",
                                        "data"      : respData
                                       });
@@ -2557,15 +2483,15 @@ trigger_fish.rbTServerResponse = {
   handleEvent : function(respData)
   {
     "use strict";
-    trigger_fish.rbTAPP.log({"message": "Handling event with server resp","data":respData});
+    rbTAPP.log({"message": "Handling event with server resp","data":respData});
     try {
       if(respData && respData.actor) {
-        trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.actor, respData.actor);
+        rbTStore.set(rbTStore.defaultKeys.actor, respData.actor);
       } else {
         throw "there is no data";
       }
     } catch(e) {
-      trigger_fish.rbTAPP.reportError({"exception" : e.message,
+      rbTAPP.reportError({"exception" : e.message,
                           "message"   : "handling event failed",
                           "data"      : respData
                         });
@@ -2580,16 +2506,16 @@ trigger_fish.rbTServerResponse = {
   setRules : function(respData)
   {
     "use strict";
-    trigger_fish.rbTAPP.log({"message": "Setting rules with server resp","data":respData});
+    rbTAPP.log({"message": "Setting rules with server resp","data":respData});
 
     try {
       if(respData) {
-        trigger_fish.rbTRules.setRulesTable(respData);
+        rbTRules.setRulesTable(respData);
       } else {
         throw "there is no data";
       }
     } catch(e) {
-      trigger_fish.rbTAPP.reportError({"exception" : e.message,
+      rbTAPP.reportError({"exception" : e.message,
                           "message"   : "setting rules failed",
                           "data"      : respData
                         });
@@ -2599,18 +2525,24 @@ trigger_fish.rbTServerResponse = {
 
   /**
   * Set App Specific configs
+  * Once we get the App deatails, do the following
+  * 1). Set App details
+  * 2). Set rules table
+  * 3). Set system vars
+  * 4). Retrieve stored actor data.
+  * 5). Make rbt app alive for calls.
   * @param {object} respData Data in response to server.
+  *
   */
   setAppDetail : function(respData)
   {
-    trigger_fish.rbTAPP.log({"message": "Setting app details with server resp","data":respData});
-    trigger_fish.rbTAPP.setAppDetail(respData);
-    trigger_fish.rbTRules.setRulesTable(respData.app.rules || {});
-    trigger_fish.rbTSystemVar.init(respData);
-    trigger_fish.rbTActor.retFromCookie();
-    trigger_fish.rbTAPP.setrbTAlive();
+    rbTAPP.log({"message": "Setting app details with server resp","data":respData});
+    rbTAPP.setAppDetail(respData);
+    rbTRules.setRulesTable(respData.app.rules || {});
+    rbTSystemVar.init(respData);
+    //rbTActor.retFromCookie();
+    rbTAPP.setrbTAlive();
   }
-
 };
 
 
@@ -2633,7 +2565,8 @@ trigger_fish.rbTServerResponse = {
  * documents the function and classes that are added to jQuery by this plug-in.
  * @memberOf jQuery
  */
-trigger_fish.rbTServerChannel = {
+//rbTServerChannel = {
+var rbTServerChannel = {
   
   rbt_url : (document.location.hostname==="localhost" || document.location.hostname==="127.0.1.1") ? 
             "http://localhost:3000/" : "http://rulebot.com/",
@@ -2657,8 +2590,8 @@ trigger_fish.rbTServerChannel = {
 
   /* Default options for server request */
   defaultOptions : {
-    "success_callback" : trigger_fish.rbTServerResponse.defaultSuccessCallback,
-    "error_callback"   : trigger_fish.rbTServerResponse.defaultErrorCallback
+    "success_callback" : rbTServerResponse.defaultSuccessCallback,
+    "error_callback"   : rbTServerResponse.defaultErrorCallback
   },
 
 
@@ -2679,12 +2612,14 @@ trigger_fish.rbTServerChannel = {
   */
   flushReqQueue : function()
   {
-    if (!this.queue.length)
-      return;
-    for (var req in this.queue) {
-      var r = this.queue[req];
-      if (r.event && !trigger_fish.rbTActor.isReady()) {
-        trigger_fish.rbTActor.bufferEvRQ(r);
+    var qLen = this.queue.length;
+    
+    if (!qLen) return;
+
+    for (var i = 0 ; i < qLen ; ++i) {
+      var r = this.queue[i];
+      if (r.event && !rbTActor.isReady()) {
+        rbTActor.bufferEvRQ(r);
       } else {
         this.makeServerRequest(r);
       }
@@ -2707,24 +2642,26 @@ trigger_fish.rbTServerChannel = {
       k = {};
       k["properties"] = obj.params ? obj.params:{};
       k["name"] = obj.event;  
-      k["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
-      k["actor_id"] = trigger_fish.rbTActor.getID() || "";
+      k["app_id"] = rbTAPP.getAppID() || "";
+      k["actor_id"] = rbTActor.getID() || "";
     } else if (obj.app_read) {
-      k["id"] = trigger_fish.rbTAPP.getAppID() || "";
+      k["id"] = rbTAPP.getAppID() || "";
+    } else if(obj.actor_create) {
+      k["app_id"] = rbTAPP.getAppID() || "";
     } else if (obj.set_actor) {
       k["properties"] = {"profile":obj.params ? obj.params:{}};
-      k["id"] = trigger_fish.rbTActor.getID() || "";
-      k["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
+      k["id"] = rbTActor.getID() || "";
+      k["app_id"] = rbTAPP.getAppID() || "";
     } else if(obj.set_actor_prop) {
-      k["id"] = trigger_fish.rbTActor.getID() || "";
-      k["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
+      k["id"] = rbTActor.getID() || "";
+      k["app_id"] = rbTAPP.getAppID() || "";
     } else if(obj.identify) {
       k["uid"] = obj.params;
-      k["id"] = trigger_fish.rbTActor.getID() || "";
-      k["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
+      k["id"] = rbTActor.getID() || "";
+      k["app_id"] = rbTAPP.getAppID() || "";
     } else if(obj.err || obj.conversion) {
-      k["app_id"] = trigger_fish.rbTAPP.getAppID() || "";
-      k["actor_id"] = trigger_fish.rbTActor.getID() || "";
+      k["app_id"] = rbTAPP.getAppID() || "";
+      k["actor_id"] = rbTActor.getID() || "";
       k["properties"] = obj.params ? obj.params:{};
     }
 
@@ -2751,26 +2688,23 @@ trigger_fish.rbTServerChannel = {
 
     function resetEventVar(e)
     {
-      trigger_fish.rbTAPP.setTransVar(e,{});
+      rbTAPP.setTransVar(e,{});
     }
 
     var that = obj;
-    trigger_fish.rbTAPP.log("Making rulebot server call for " + obj.url);
+    rbTAPP.log("Making rulebot server call for " + obj.url);
     try {
       var reqServerData = this.extendRequestData(obj);
       var callback = this.extendCallbacks(obj.cb);
-      if (obj.async && obj.async === "noasync")
-        var asyncSt = false;
-      else 
-        var asyncSt = true;
+      if (obj.async && obj.async === "noasync") var asyncSt = false;
+      else var asyncSt = true;
       var that = obj;
-      var url = (obj.event) ? trigger_fish.rbTServerChannel.url.fireEvent : obj.url;
+      var url = (obj.event) ? rbTServerChannel.url.fireEvent : obj.url;
       that.requestData = reqServerData;
       jQuery.ajax({
             url: getURL.call(this,obj.type,url),
             type: that.type || 'GET',
             async: asyncSt,
-            //dataType: 'json',
             contentType : getContentType(obj.type),
             data: reqServerData,
             crossDomain:true,
@@ -2778,17 +2712,17 @@ trigger_fish.rbTServerChannel = {
             xhrField : { withCredentials:true},
             beforeSend: function() {
                 if (that.event) {
-                  trigger_fish.rbTCookie.setCookie("lastevent", that.event);
-                  trigger_fish.rbTAPP.setTransVar(that.event,that.params);
+                  rbTStore.set("lastevent", that.event);
+                  rbTAPP.setTransVar(that.event,that.params);
                 }
             },
             success: function ( respData ) {
                 if (typeof respData === "string") respData = JSON.parse(respData);
-                trigger_fish.rbTAPP.log({"message":"server response success " + that.url,"data":respData});
+                rbTAPP.log({"message":"server response success " + that.url,"data":respData});
 
                 if (that.event) {
-                  trigger_fish.rbTCookie.deleteCookie("lastevent");
-                  trigger_fish.rbTRules.executeRulesOnEvent(that.event);
+                  rbTStore.deleteKey("lastevent");
+                  rbTRules.executeRulesOnEvent(that.event);
                   if (respData && respData.actor) { 
                     callback.success(respData);
                   }
@@ -2800,28 +2734,24 @@ trigger_fish.rbTServerChannel = {
                 }
             },
             error:function(XMLHttpRequest,textStatus, errorThrown){ 
-                trigger_fish.rbTAPP.log({"message":"server response error " + that.url,"data_closure":that,"textStatus":textStatus});
+                rbTAPP.log({"message":"server response error " + that.url,"data_closure":that,"textStatus":textStatus});
                 if (that.event) {
                   resetEventVar(that.event); 
                 } else if (that.identify && XMLHttpRequest.responseText.indexOf("is already in use")) {
-                  trigger_fish.rbTAPP.log("Actor is already in use ::" + that.requestData.uid);
-                  trigger_fish.rbTServerChannel.actorDetails();
+                  rbTAPP.log("Actor is already in use ::" + that.requestData.uid);
+                  rbTServerChannel.actorDetails();
                 }
                 callback.error();
-                
             }
       });
     } catch(e) {
-      trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                          "message"   :"SERVER REQUEST FAILED" , 
+      rbTAPP.reportError({ "exception": e.message,
+                          "message"   : "SERVER REQUEST FAILED" , 
                           "obj"       : JSON.stringify(that),
                           "log"       : "error" 
                          }); 
     }
   },
-
-
-
 
   /**
   * Prepare Server request, queue req's if needed be.
@@ -2832,18 +2762,19 @@ trigger_fish.rbTServerChannel = {
     var that = obj;
     if (!obj)
       return;
-    if (!trigger_fish.rbTAPP.isrbTAlive()) {
-      if (obj.url)
+    if (!rbTAPP.isAlive()) {
+      if (obj.url) {
         obj.async = obj.async || "async";
+      }
       this.queueReq(obj); 
       return; 
     } else {
       this.flushReqQueue();
     }
     try {
-      trigger_fish.rbTServerChannel.makeServerRequest(obj);
+      rbTServerChannel.makeServerRequest(obj);
     } catch (e) {
-      trigger_fish.rbTAPP.reportError({"exception" : e.message,
+      rbTAPP.reportError({"exception" : e.message,
                           "message"   : "server request params are not valid" , 
                           "url"       : that.url,
                           "log"       : true,
@@ -2858,14 +2789,15 @@ trigger_fish.rbTServerChannel = {
   *  FIXME : IF THERE IS ANYTHING MISSING
   *  @return void
   */  
-  appDetails : function(params, callback)
+  appDetails : function()
   {
     "use strict";
-    var cb = this.extendCallbacks(callback);
-    this.makeServerRequest({"url": this.url.details,
-                      "params"     : params,
-                      "cb"         : cb
-                     });  
+    this.makeServerRequest({"url"      : this.url.appDetails,
+                            "app_read" : true,
+                            "cb"       : { success: rbTServerResponse.setAppDetail,
+                                           error  : rbTServerResponse.defaultError
+                                         }
+                           });  
   }, 
 
   /**
@@ -2877,8 +2809,8 @@ trigger_fish.rbTServerChannel = {
   {
     this.makeRequest({"url"           : this.url.readActor, 
                       "set_actor_prop": true,
-                      "cb"            : { success: trigger_fish.rbTServerResponse.setActorProperty,
-                                          error  : trigger_fish.rbTServerResponse.defaultError
+                      "cb"            : { success: rbTServerResponse.setActorProperty,
+                                          error  : rbTServerResponse.defaultError
                                         }
                      });
   },
@@ -2909,7 +2841,12 @@ trigger_fish.rbTServerChannel = {
   {
     "use strict";
     var callback = this.extendCallbacks(callback);
-    this.makeRequest({"url":this.url.reportError,"params":params,"type":"POST","err":true, "cb":callback});
+    this.makeRequest({"url":this.url.reportError,
+                      "params":params,
+                      "type":"POST",
+                      "err":true, 
+                      "cb":callback
+                     });
   },
 
   /** 
@@ -2948,7 +2885,8 @@ trigger_fish.rbTServerChannel = {
  * @memberOf jQuery
  */
 /* Rule Bot scope to handle systems variables */
-trigger_fish.rbTSystemVar = {
+//rbTSystemVar = {
+var rbTSystemVar = {
 
   // All properties will be set here
   properties : {},
@@ -2961,7 +2899,7 @@ trigger_fish.rbTSystemVar = {
     "use strict";
     function isSystemVarDirty()
     {
-      var sysVarInCookie = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.systemProp);
+      var sysVarInCookie = rbTStore.get(rbTStore.defaultKeys.systemProp);
       
       if (!sysVarInCookie) {
         return true; 
@@ -2994,7 +2932,7 @@ trigger_fish.rbTSystemVar = {
   */
   notifyServerOfChange : function(systemVarsDesired)
   {
-    trigger_fish.rbTAPP.log({"message":"System variables desired from dashboard","variables":systemVarsDesired});
+    rbTAPP.log({"message":"System variables desired from dashboard","variables":systemVarsDesired});
   },
 
   /** Set system variable property
@@ -3009,25 +2947,25 @@ trigger_fish.rbTSystemVar = {
 
 
   /** Get system variable property
-    'browser' : 'String'
+    'browser'         : 'String'
     'browser_version' : 'String'
     'operatingsystem' : 'String'
-    'referrer[host]' : 'String'
-    'referrer[path]' : 'String'
-    'referrer[name]' : 'String'
-    'device[type]' : 'String'
-    'device[name]' : 'String'
-    'screen[height]' : 'Number'
-    'screen[width]' :  'Number'
-    'viewport[height]' : 'Number'
+    'referrer[host]'  : 'String'
+    'referrer[path]'  : 'String'
+    'referrer[name]'  : 'String'
+    'device[type]'    : 'String'
+    'device[name]'    : 'String'
+    'screen[height]'  : 'Number'
+    'screen[width]'   : 'Number'
+    'viewport[height]': 'Number'
     'viewport[width]' : 'Number'
-    'search[engine]' : 'String'
-    'search[query]'  : 'String'
-    'country' : 'String'
-    'language' : 'String'
-    'plugins' : 'Array'
-    'timezone' : 'String'
-    'day_light_saving' : 'Boolean'
+    'search[engine]'  : 'String'
+    'search[query]'   : 'String'
+    'country'         : 'String'
+    'language'        : 'String'
+    'plugins'         : 'Array'
+    'timezone'        : 'String'
+    'day_light_saving': 'Boolean'
   */
   getProperty : function(propertyTypes)
   {
@@ -3036,7 +2974,7 @@ trigger_fish.rbTSystemVar = {
 
   setPropertyInCookie : function(property)
   {
-    trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.systemProp, JSON.stringify(property));
+    rbTStore.set(rbTStore.defaultKeys.systemProp, JSON.stringify(property));
   },
 
   setEJProp : function(json)
@@ -3048,7 +2986,7 @@ trigger_fish.rbTSystemVar = {
 
   setSessionJSProp : function(json)
   {
-    trigger_fish.rbTAPP.log({"message":"System Properties got through Session JS","data":json});
+    rbTAPP.log({"message":"System Properties got through Session JS","data":json});
     this.setProperty("browser",json.browser.browser);
     this.setProperty("browser_version",json.browser.version);
     this.setProperty("operatingsystem",json.browser.os);
@@ -3138,15 +3076,7 @@ var session_fetch = (function(win, doc, nav)
     };
     // Location switch
     // FIXME :: NOW NOT GETTING LOCATION INFO FROM SESSION JS, INSTEAD GETTING FROM EASYJQUERY
-    /*
-    if (options.use_html5_location){
-      unloaded_modules.location = modules.html5_location();
-    } else if (options.ipinfodb_key){
-      unloaded_modules.location = modules.ipinfodb_location(options.ipinfodb_key);
-    } else if (options.gapi_location){
-      unloaded_modules.location = modules.gapi_location();
-    }
-    */
+
     // Cache win.session.start
     if (win.session && win.session.start){
       var start = win.session.start;
@@ -3188,17 +3118,10 @@ var session_fetch = (function(win, doc, nav)
         //rbTSystemVar.setProperty(property, unloaded_modules[property] );
         sessionJSProp[property] = unloaded_modules[property];
       }
-      trigger_fish.rbTSystemVar.setSessionJSProp(sessionJSProp);
+      rbTSystemVar.setSessionJSProp(sessionJSProp);
     })();
-    trigger_fish.rbTSystemVar.setEJProp(trigger_fish.rbTUtils.easyJQVars());
-    //EasyjQuery_Get_IP("trigger_fish.rbTSystemVar.setEJProp");
+    rbTSystemVar.setEJProp(rbTUtils.easyJQVars());
   };
-
-
-
-
-
-
   // Browser (and OS) detection
   var browser = {
     detect: function(){
@@ -3326,13 +3249,13 @@ var session_fetch = (function(win, doc, nav)
       };
     },
     session: function (cookie, expires){
-      var session = util.get_obj(cookie);
+      var session = rbTStore.get(cookie);
       if (session == null){
         session = {
           visits: 1,
           start: new Date().getTime(), last_visit: new Date().getTime(),
           url: win.location.href, path: win.location.pathname,
-          referrer: doc.referrer, referrer_info: util.parse_url(doc.referrer),
+          referrer: doc.referrer, referrer_info: rbTUtils.parseURL(doc.referrer),
           search: { engine: null, query: null }
         };
         var search_engines = [
@@ -3370,154 +3293,13 @@ var session_fetch = (function(win, doc, nav)
         session.visits++;
         session.time_since_last_visit = session.last_visit - session.prev_visit;
       }
-      util.set_cookie(cookie, util.package_obj(session), expires);
+      rbTStore.set(cookie, session);
       return session;
     },
-    html5_location: function(){
-      return function(callback){
-        nav.geolocation.getCurrentPosition(function(pos){
-          pos.source = 'html5';
-          callback(pos);
-        }, function(err) {
-          if (options.gapi_location){
-            modules.gapi_location()(callback);
-          } else {
-            callback({error: true, source: 'html5'}); }
-        });
-      };
-    },
-    gapi_location: function(){
-      return function(callback){
-        var location = util.get_obj(options.location_cookie);
-        if (!location || location.source !== 'google'){
-          win.gloader_ready = function() {
-            if ("google" in win){
-              if (win.google.loader.ClientLocation){
-                win.google.loader.ClientLocation.source = "google";
-                callback(win.google.loader.ClientLocation);
-              } else {
-                callback({error: true, source: "google"});
-              }
-              util.set_cookie(
-                options.location_cookie,
-                util.package_obj(win.google.loader.ClientLocation),
-                options.location_cookie_timeout * 60 * 60 * 1000);
-            }}
-          util.embed_script("https://www.google.com/jsapi?callback=gloader_ready");
-        } else {
-          callback(location);
-        }}
-    },
-    ipinfodb_location: function(api_key){
-      return function (callback){
-        var location_cookie = util.get_obj(options.location_cookie);
-        if (location_cookie && location_cookie.source === 'ipinfodb'){ callback(location_cookie); }
-        win.ipinfocb = function(data){
-          if (data.statusCode === "OK"){
-            data.source = "ipinfodb";
-            util.set_cookie(
-              options.location_cookie,
-              util.package_obj(data),
-              options.location_cookie * 60 * 60 * 1000);
-            callback(data);
-          } else {
-            if (options.gapi_location){ return modules.gapi_location()(callback); }
-            else { callback({error: true, source: "ipinfodb", message: data.statusMessage}); }
-          }}
-        util.embed_script("http://api.ipinfodb.com/v3/ip-city/?key=" + api_key + "&format=json&callback=ipinfocb");
-      }}
+
   };
-
-  // Utilities
-  var util = {
-    parse_url: function(url_str){
-      var a = doc.createElement("a"), query = {};
-      a.href = url_str; query_str = a.search.substr(1);
-      // Disassemble query string
-      if (query_str != ''){
-        var pairs = query_str.split("&"), i = 0,
-            length = pairs.length, parts;
-        for (; i < length; i++){
-          parts = pairs[i].split("=");
-          if (parts.length === 2){
-            query[parts[0]] = decodeURI(parts[1]); }
-        }
-      }
-      return {
-        host:     a.host,
-        path:     a.pathname,
-        protocol: a.protocol,
-        port:     a.port === '' ? 80 : a.port,
-        search:   a.search,
-        query:    query }
-    },
-    set_cookie: function(cname, value, expires, options){ // from jquery.cookie.js
-      if (!cname){ return null; }
-      if (!options){ var options = {}; }
-      if (value === null || value === undefined){ expires = -1; }
-      if (expires){ options.expires = (new Date().getTime()) + expires; }
-      return (doc.cookie = [
-          encodeURIComponent(cname), '=',
-          encodeURIComponent(String(value)),
-          options.expires ? '; expires=' + new Date(options.expires).toUTCString() : '', // use expires attribute, max-age is not supported by IE
-          '; path=' + (options.path ? options.path : '/'),
-          options.domain ? '; domain=' + options.domain : '',
-          (win.location && win.location.protocol === 'https:') ? '; secure' : ''
-      ].join(''));
-    },
-    get_cookie: function(cookie_name, result){ // from jquery.cookie.js
-      return (result = new RegExp('(?:^|; )' + encodeURIComponent(cookie_name) + '=([^;]*)').exec(doc.cookie)) ? decodeURIComponent(result[1]) : null;
-    },
-    embed_script: function(url){
-      var element  = doc.createElement("script");
-      element.type = "text/javascript";
-      element.src  = url;
-      doc.getElementsByTagName("body")[0].appendChild(element);
-    },
-    package_obj: function (obj){
-      if(obj) {
-        obj.version = API_VERSION;
-        var ret = JSON.stringify(obj);
-        delete obj.version;
-        return ret;
-      }
-    },
-    get_obj: function(cookie_name){
-      var obj;
-      try { obj = JSON.parse(util.get_cookie(cookie_name)); } catch(e){};
-      if (obj && obj.version == API_VERSION){
-        delete obj.version; return obj;
-      }
-    }
-  };
-
-  // JSON
-  var JSON = {
-    parse: (win.JSON && win.JSON.parse) || function(data){
-        if (typeof data !== "string" || !data){ return null; }
-        return (new Function("return " + data))();
-    },
-    stringify: (win.JSON && win.JSON.stringify) || function(object){
-      var type = typeof object;
-      if (type !== "object" || object === null) {
-        if (type === "string"){ return '"' + object + '"'; }
-      } else {
-        var k, v, json = [],
-            isArray = (object && object.constructor === Array);
-        for (k in object ) {
-          v = object[k]; type = typeof v;
-          if (type === "string")
-            v = '"' + v + '"';
-          else if (type === "object" && v !== null)
-            v = this.stringify(v);
-          json.push((isArray ? "" : '"' + k + '":') + v);
-        }
-        return (isArray ? "[" : "{") + json.join(",") + (isArray ? "]" : "}");
-      } } };
-
   // Initialize SessionRunner
   SessionRunner();
-
 });
 
 
@@ -3543,36 +3325,19 @@ var session_fetch = (function(win, doc, nav)
  * @memberOf jQuery
  */
 
-var backcode="1102012";
-function EasyjQuery_Cache_IP(fname,json) {
-  trigger_fish.rbTAPP.log({"message":"easy jquery response","data":json});
-  eval(fname + "(json);");
-}
-function EasyjQuery_Get_IP(fname,is_full) {
-  var full_version = "";
-  var easyJQData = trigger_fish.rbTCookie.getCookie("easy_jquery");
-  if (!easyJQData) {
-    trigger_fish.rbTAPP.log("Could not found easyJQData in cache, fetching it now!!!");
-    jQuery.getScript("https://api.easyjquery.com/ips/?callback=" + fname + full_version);
-  } else{
-    trigger_fish.rbTAPP.log("Found easyJQData in cache, setting it now!!!");
-    trigger_fish.rbTUtils.keepEasyJQVars(easyJQData);
-  }
-}
 
-trigger_fish.rbTUtils = {
+var rbTUtils = {
 
   eJQ : {},
 
   /**
   *
-  *
   */
   keepEasyJQVars : function(data)
   {
     this.eJQ = data;
-    trigger_fish.rbTCookie.setCookie("easy_jquery",data);
-    trigger_fish.rbTAPP.wake_RBT_APP(); 
+    rbTStore.set("easy_jquery",data);
+    rbTAPP.initialize(); 
   },
 
   /**
@@ -3585,14 +3350,21 @@ trigger_fish.rbTUtils = {
 
   /**
   *
-  *
   */
-  invokeEasyJquery : function()
+  invokeEasyJquery : function(fname, is_full)
   {
-    trigger_fish.enableCORS(jQuery);
-    trigger_fish.initJStorage();
-    EasyjQuery_Get_IP("trigger_fish.rbTUtils.keepEasyJQVars");
+    var full_version = "";
+    var easyJQData = rbTStore.get("easy_jquery");
+    
+    if (!easyJQData) {
+      rbTAPP.log("Could not found easyJQData in cache, fetching it now!!!");
+      jQuery.getScript("https://api.easyjquery.com/ips/?callback=" + fname + full_version);
+    } else{
+      rbTAPP.log("Found easyJQData in cache, setting it now!!!");
+      this.keepEasyJQVars(easyJQData);
+    }
   },
+
 
   /** Initialize jquery if needed be
     *  @return void
@@ -3602,7 +3374,10 @@ trigger_fish.rbTUtils = {
   {
     function includeJQ()
     { 
-      this.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",trigger_fish.rbTUtils.invokeEasyJquery);
+      var rbTApp = rbTAPP;
+      this.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",
+                        this.bindCB(rbTApp,rbTApp.actOnJQInit)
+                      );
     }
 
     if (typeof jQuery != 'undefined') {
@@ -3613,13 +3388,78 @@ trigger_fish.rbTUtils = {
             || /^1.3/.test(jQuery.fn.jquery)) {
             includeJQ.call(this);
         } else {
-          trigger_fish.rbTUtils.invokeEasyJquery();
+          rbTAPP.actOnJQInit();
         }
     } else {
         includeJQ.call(this);
     }
   },
 
+  /**
+  *
+  */
+  bindCB : function(scope, fn) 
+  {
+    return function () {
+        fn.apply(scope, arguments);
+    };
+  },
+  
+  /**
+  * 
+  */
+  type : function(obj)
+  {
+    return Object.prototype.toString.call(obj).split("]")[0].split(" ")[1];
+  },
+
+  /**
+  * Check if object is empty. Find it recursively not only on keys but also on values.
+  * @param {object} o The object for which emptiness has to be checked.
+  * @return {boolean} 
+  */
+  isEmpty : function(o) 
+  {
+    if (!o) return true;
+    if (this.type(o) === "String" || this.type(o) === "Array") {
+      return o.length === 0;
+    } else if (this.type(o) === "Number") { return false;}
+    for(var i in o) {
+      if (this.type(o[i]) === "Object") {
+        return this.isEmpty(o[i]);
+      } else if (this.type(o[i]) === "String" || this.type(o[i]) === "Array") {
+        if (o[i].length) { return false;}
+      } else if (this.type(o[i]) === "Number") { return false;}
+    }
+    return true;
+  },
+
+  /**
+  * Specially curated to get difference from Rulebot server response.
+  * @param {object} first. The object for which difference has to be find out.
+  * @param {object} second. The object against which difference has to be find out.
+  * @param {object} r. The resultant object in which differential data will be stored.
+  * @return {object|undefined} If differential object, else undefined.
+  */ 
+  diff : function(first,second,r)
+  {
+    var i = 0;
+    for (i in first) {
+      if (this.type(second[i]) === "Undefined")  {
+        r[i] = first[i];  
+      } else if (this.type(first[i]) === "Object" && this.type(second[i]) === "Object") {
+        r[i] = diff(first[i], second[i], {});
+        if (!result[i]) delete result[i];
+      } else if ( this.type(second[i]) === "Array" && first[i] !== second[i][second[i].length-1]) {
+        r[i] = first[i];
+      }
+    }
+    return this.isEmpty(r) ? undefined : r;
+  },
+
+  /**
+  *
+  */ 
 	parseURL: function(urlStr)
 	{
       var a = document.createElement("a"), query = {};
@@ -3662,7 +3502,7 @@ trigger_fish.rbTUtils = {
         if(!this.readyState ||
             this.readyState == "loaded" || 
             this.readyState == "complete") {
-            trigger_fish.rbTDebug.log("Script "+ url +"loaded successfully");
+            rbTDebug.log("Script "+ url +"loaded successfully");
             if (callback) {
               if (params)
                 callback(params);
@@ -3671,7 +3511,7 @@ trigger_fish.rbTUtils = {
         }
       }
   },
-  
+  /*
   // JSON
   JSON : {
       parse: (window.JSON && window.JSON.parse) || function(data)
@@ -3704,11 +3544,13 @@ trigger_fish.rbTUtils = {
         } 
       } 
     }
+    */
+
     
 };
 
 
-/****************************[[rbTCookieHandler.js]]*************************************/ 
+/****************************[[rbTStore.js]]*************************************/ 
 
 
 /**
@@ -3727,174 +3569,113 @@ trigger_fish.rbTUtils = {
  * documents the function and classes that are added to jQuery by this plug-in.
  * @memberOf jQuery
  */
-trigger_fish.rbTCookie = {
+//rbTKey = {
+//rbTStore = {  
+var rbTStore = {  
+
 
   namePrefix : "RBT__",
+  defaultTTL:24 * 60 * 60 * 1000,  // in hours
 
-  // If we do not send following params while setting cookies, defaults will be used. 
-  defaultOptions : {
-    expire : 24 * 60 * 60 * 1000,  // in hours
-    path : "/",
-    domain : window.location.hostname,
-    secure: false
-  },
-
-  // Just harcode names for some of the default cookies which we will be using
-  defaultCookies : {
+  // Just harcode names for some of the default keys which we will be using
+  defaultKeys : {
     "actorID"    : "actor_id",
     "systemProp" : "system_prop",
     "actorProp"  : "actor_prop"
   },
 
-  /** Get RBT cookie string name.
-   *  @param {string} cookieName
+  /** Get RBT key string name.
+   *  @param {string} key
    *  @return string
    */
-  name : function(cookieName)
+  qualifiedName : function(key)
   {
-    return this.namePrefix + cookieName;
+    return this.namePrefix + key;
   },
 
-  /** Get cookie string.
-   *  @param {String} cookieName
+  /** Get key string.
+   *  @param {String} key
    *  @return string
    */
-  getCookie : function(cookieName)
+  get : function(key)
   {
-    "use strict";
-    //var results = document.cookie.match ( '(^|;) ?' + this.name(cookieName) + '=([^;]*)(;|$)' );
-    var value = trigger_fish.jStorage.get(this.name(cookieName));
-
-    if (value)
-        return value;
-    else
-        return undefined;
+    var value = jStorage.get(this.qualifiedName(key));
+    return (value?value:undefined);
   },
 
-  /** Check cookie existence
-   *  @param {string} cookieName
+  /** Check key existence
+   *  @param {string} key
    *  @return boolean
    */
-  doesCookieExist : function(cookieName)
+  doesKeyExist : function(key)
   {
-    //if (document.cookie.indexOf(this.name(cookieName)) >= 0) {
-    if (this.getCookie(cookieName)) {
-        return true;
-    } else {
-        return false;
-    }
+    return (this.get(key)?true:false);
   }, 
 
-
-  /** Set cookie options.
+  /** Set key with options passed as key:value pair.
    * 
-   * @param {this.defaultOptions} [options] set options
+   * @param {string} key
+   * @param {string} keyValue
+   * @param {this.defaultTTL} [options] set options
    * @return string
    */
-  cookieOptions : function(options) {
-    "use strict";
-    var cOptions = {};
-
-    function getExpDate(hours)
-    {
-      var expiryDate = new Date();
-      expiryDate.setTime(expiryDate.getTime()+(30 * hours)); // default day is set to 30
-      return expiryDate.toGMTString();
-    }
-
-    if (!options) {
-      this.defaultOptions.expire = getExpDate(this.defaultOptions.expire);
-      return this.defaultOptions;
-    }
-      
-
-    // Set options if passed else use default options.
-    cOptions.expire = options.expire || this.defaultOptions.expire;
-    cOptions.path = options.path || this.defaultOptions.path;
-    cOptions.domain = options.domain || this.defaultOptions.domain;
-    cOptions.secure = options.secure || this.defaultOptions.secure;  
-
-    cOptions.expire = getExpDate(cOptions.expire);
-
-    return cOptions;
-
-  },
- 
-  /** Set cookie with options passed as key:value pair.
-   * 
-   * @param {string} cookieName
-   * @param {string} cookieValue
-   * @param {this.defaultOptions} [options] set options
-   * @return string
-   */
-  setCookie : function(cookieName, cookieValue, options)
+  set : function(key, keyValue, options)
   {
     "use strict";
     try {
-        
-        /*
-        var cookieString = this.name(cookieName) + "=" + escape(cookieValue);
-        var cookieOptions =  this.cookieOptions(options);
-        cookieString += "; expires=" + cookieOptions.expire;
-        cookieString += "; path=" + escape(cookieOptions.path);
-        cookieString += "; domain=" + escape(cookieOptions.domain);
-        if (cookieOptions.secure) cookieString += "; secure";
-        document.cookie = cookieString; 
-        */
-
-        trigger_fish.jStorage.set(this.name(cookieName), cookieValue, {TTL: this.defaultOptions.expire});
-
+      jStorage.set(this.qualifiedName(key), 
+                                keyValue, 
+                                {TTL: this.defaultTTL});
     } catch(e) {
-      // FIXME  what to do?
-      trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                          "message"   : "cookie set failed",
-                          "name"      : cookieName,
-                          "value"     : cookieValue,
+      rbTAPP.reportError({"exception" : e.message,
+                          "message"   : "key set failed",
+                          "name"      : key,
+                          "value"     : keyValue,
                           "options"   : options,
                           "log"       : true 
                          });
     }
   },
 
-  /** Delete a cookie
+  /** Delete a key
    *
-   * @param {string} cookieName
+   * @param {string} key
    * @return void
    */
-  deleteCookie :  function(cookieName, options)
+  deleteKey :  function(key, options)
   {
     "use strict";
     try {
-        trigger_fish.jStorage.deleteKey(this.name(cookieName));                  
+        jStorage.deleteKey(this.qualifiedName(key));                  
     } catch (e) {
-      trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                          "message"   : "cookie delete failed",
-                          "name"      : cookieName,
+      rbTAPP.reportError({"exception" : e.message,
+                          "message"   : "key delete failed",
+                          "name"      : key,
                           "log"       : true 
                          });
     }
   },
 
 
-  /** Flush all cookie
+  /** Flush all key
    *
    *  @return void
    */
-  flushAllCookie: function() 
+  flushAllKey: function() 
   {
     "use strict";
     try {
-      var cookies = trigger_fish.jStorage.index();
-      for (var i = 0; i < cookies.length; i++) {   
-          var cookie =  cookies[i]
-          if ((cookie.match("^"+this.namePrefix))) {
-            trigger_fish.jStorage.deleteKey(cookie);
+      var keys = jStorage.index();
+      for (var i = 0; i < keys.length; i++) {   
+          var key =  keys[i]
+          if ((key.match("^"+this.namePrefix))) {
+            jStorage.deleteKey(key);
           }
       }
     } catch(e) {
       // FIXME what to do?
-      trigger_fish.rbTAPP.reportError({"exception" : e.message,
-                          "message"   : "cookie flush all failed",
+      rbTAPP.reportError({"exception" : e.message,
+                          "message"   : "key flush all failed",
                           "log"       : true 
                          });
     }
@@ -3924,102 +3705,142 @@ trigger_fish.rbTCookie = {
  */
 /* MAIN BUSINESS SPECIFIC CALLS */
 var RBT = function() {
-	this._appID = trigger_fish.rbTAPP.getAppID();
-	this._accountID = trigger_fish.rbTAPP.getAccountID();
-	this._status = trigger_fish.rbTAPP.isrbTAlive();
+	this._appID = rbTAPP.getAppID();
+	this._accountID = rbTAPP.getAccountID();
+	this._status = rbTAPP.isAlive();
+  this._state = true;
 };
 
 
-/** 
-* Tell whether RBT app is alive
-* 
-* @return {boolean} status
-*/
-RBT.prototype.isAlive = function()
-{
-	this._status = trigger_fish.rbTAPP.isrbTAlive();
-	return this._status;
-};
+RBT.prototype = {
+  /** 
+  * Tell whether RBT app is alive
+  * 
+  * @return {boolean} status
+  */
+  isAlive : function()
+  {
+    this._status = rbTAPP.isAlive();
+    return this._status;
+  },
 
+  /**
+  * Enable rulebot api's
+  */
+  enable : function()
+  { 
+    this._state = true;
+  },
 
-/** 
-* Send event to RBT server 
-* 
-* @param {string} event
-* @param {object} [params]
-* @return void
-*/
-RBT.prototype.sendEvent = function(event, params)
-{
-  "use strict";
-  if (!event || typeof(event) != "string" || event === "" ) {
-    return;
-  }
-  var obj = {"event" : event, 
-             "params": params,
-             "type"  : "POST",
-             "cb"    : { success: trigger_fish.rbTServerResponse.handleEvent,
-                         error  : trigger_fish.rbTServerResponse.defaultError
-                       }
-            };
-  trigger_fish.rbTServerChannel.makeRequest(obj);
-};
+  /**
+  * Disable rulebot api's
+  */
+  disable : function()
+  {
+    this._state = false;
+  },
 
-/** 
-* Req RBT server to identify actor based on params
-* 
-* @param {object} params Option based on which actor will be identified
-* @return void
-*/
-RBT.prototype.identify = function(params)
-{
-  "use strict";
-  var obj = {"url"     : trigger_fish.rbTServerChannel.url.identify, 
-             "params"  : params,
-             "identify": true,
-             "type"    : "POST",
-             "cb"      : { success: trigger_fish.rbTServerResponse.setActorID,
-                           error  : trigger_fish.rbTServerResponse.defaultError
+  /**
+  * Tell the status of rulebot.
+  * @param {boolean} state.
+  */
+  isEnabled : function()
+  {
+    return this._state;
+  },
+
+  /**
+  * Set easy jquery callback data coming from global Callback of EasyJquery
+  * @param {Object} data. EasyJQuery data
+  */
+  setSysVars : function(data)
+  {
+    rbTUtils.keepEasyJQVars(data);
+  },
+
+  /** 
+  * Send event to RBT server 
+  * 
+  * @param {string} event
+  * @param {object} [params]
+  * @return void
+  */
+  sendEvent : function(event, params)
+  {
+    "use strict";
+    if (!this.isEnabled())
+      return;  
+    if (!event || typeof(event) != "string" || event === "" ) {
+      return;
+    } 
+    var obj = {"event" : event, 
+               "params": params,
+               "type"  : "POST",
+               "cb"    : { success: rbTServerResponse.handleEvent,
+                           error  : rbTServerResponse.defaultError
                          }
-            };
-  trigger_fish.rbTServerChannel.makeRequest(obj);
-};
+              };
+    rbTServerChannel.makeRequest(obj);
+  },
 
+  /** 
+  * Req RBT server to identify actor based on params
+  * 
+  * @param {object} params Option based on which actor will be identified
+  * @return void
+  */
+  identify : function(params)
+  {
+    "use strict";
+    if (!this.isEnabled())
+      return;
+    var obj = {"url"     : rbTServerChannel.url.identify, 
+               "params"  : params,
+               "identify": true,
+               "type"    : "POST",
+               "cb"      : { success: rbTServerResponse.setActorID,
+                             error  : rbTServerResponse.defaultError
+                           }
+              };
+    rbTServerChannel.makeRequest(obj);
+  },
 
+  /** 
+  * Req RBT server to set current actor property
+  * 
+  * @param {object} params Option based on which actor property will be set
+  * @return void
+  */
+  setUser : function(params)
+  {
+    "use strict";
+    var diff = {};
+    if (!this.isEnabled()) return;
+    diff = rbTActor.propExist(params);
+    //params = (diff === undefined ) ? params : diff ;
+    if (!diff) return;  
+    var obj = {"url"      : rbTServerChannel.url.setActor, 
+               "params"   : diff,
+               "set_actor": true,
+               "type"     : "POST",
+               "cb"       : { success: rbTServerResponse.setActorProperty,
+                              error  : rbTServerResponse.defaultError
+                            }
+               };
+    rbTServerChannel.makeRequest(obj);
+  },
+  /** 
+  * ALIAS
+  * 
+  * @param {object} params Option based on which system property will be set
+  * @return void
+  */
+  alias : function()
+  {
+    if (!this.isEnabled())
+      return;
+  }
 
-/** 
-* Req RBT server to set current actor property
-* 
-* @param {object} params Option based on which actor property will be set
-* @return void
-*/
-RBT.prototype.setActor = function(params)
-{
-  "use strict";
-  if (trigger_fish.rbTActor.propExist(params))
-    return;
-
-  var obj = {"url"      : trigger_fish.rbTServerChannel.url.setActor, 
-             "params"   : params,
-             "set_actor": true,
-             "type"    : "POST",
-             "cb"       : { success: trigger_fish.rbTServerResponse.setActorProperty,
-                            error  : trigger_fish.rbTServerResponse.defaultError
-                          }
-             };
-  trigger_fish.rbTServerChannel.makeRequest(obj);
-};
-
-
-/** 
-* ALIAS
-* 
-* @param {object} params Option based on which system property will be set
-* @return void
-*/
-RBT.prototype.alias = function(params)
-{
-    // FIXME : what to do?
 };
 
 
@@ -4050,39 +3871,30 @@ RBT.prototype.alias = function(params)
 * @return void
 *
 */
-(function StartRBTApp(appid,accid){
-  trigger_fish.rbTAPP.log("Initializing RBT APP with AppID = " + appid + " Account ID = " + accid);
-  function releasePreInitCalls(w)
-  {
-    var l = w.rb.q;
-    w.rb = new RBT();
-    if (l.length) {
-      for (var c in l) { var o = l[c]; rb[o.t](o.a,o.b,o.c); }    
-    }
-  }
+(function StartRBTApp(appid,accid,ver){
+  rbTAPP.log("Initializing RBT APP with AppID = " + appid + " Account ID = " + accid);
   try {
     if (!appid || !accid || appid == "" || accid == "") {
       throw new Error("App-id, Account-ID are not mentioned")
     } else {
       // if everything seems fine, then set app/acc id and initialize rbTAPP.
-      trigger_fish.rbTAPP.setAppID(appid);
-      trigger_fish.rbTAPP.setAccountID(accid);
-      trigger_fish.rbTUtils.includeJQIfNeeded();
-      releasePreInitCalls(window);
+      rbTAPP.setAppID(appid);
+      rbTAPP.setAccountID(accid);
+      rbTUtils.includeJQIfNeeded();
     }
   } catch (e) {
-    trigger_fish.rbTAPP.reportError({"exception": e.message, 
+    rbTAPP.reportError({"exception": e.message, 
                                      "message"  : "App init/exec failed",
                                      "appid"    : appid || "",
                                      "accid"    : accid || ""
                                     });
   }
-})(_rbTK[0][1], _rbTK[1][1]);
+})(_rbTK[0][1], _rbTK[1][1], _rbTK[2][1]);
 
 
 
 
-/****************************[[./action_script/templSingle.js]]*************************************/ 
+/****************************[[./action_script/templSingleForClient.js]]*************************************/ 
 
 
 
@@ -4097,662 +3909,119 @@ var trigger_fish = {};
 trigger_fish.rbT = { inited: false};
 
 
-/****************************[[templates.js]]*************************************/ 
+/****************************[[templatesLibForClient.js]]*************************************/ 
 
 
 trigger_fish.rbT.templateLib = {
-'topbar' :{ 
- 				'generic.normal':'rbTemplTopbarGenericNormalHTML',
-				'generic.twitterfollow':'rbTemplTopbarGenericTwitterfollowHTML',
-				'generic.fblike':'rbTemplTopbarGenericFblikeHTML',
-				'generic.twittershare':'rbTemplTopbarGenericTwittershareHTML'
- 
- 	 	 	 }, 
-
-
-
- 'bottombar' :{ 
- 				'generic.fblike':'rbTemplBottombarGenericFblikeHTML',
+		'bottombar':{ 
+				'generic.fblike':'rbTemplBottombarGenericFblikeHTML',
 				'generic.twitterfollow':'rbTemplBottombarGenericTwitterfollowHTML',
 				'generic.twittershare':'rbTemplBottombarGenericTwittershareHTML',
 				'generic.normal':'rbTemplBottombarGenericNormalHTML'
  
- 	 	 	 }, 
-
-
-
- 'modal' :{ 
- 				'generic.normal':'rbTemplModalGenericNormalHTML'
+ 	 	 	 },
+		'topbar':{ 
+				'generic.normal':'rbTemplTopbarGenericNormalHTML',
+				'generic.twitterfollow':'rbTemplTopbarGenericTwitterfollowHTML',
+				'generic.fblike':'rbTemplTopbarGenericFblikeHTML',
+				'generic.twittershare':'rbTemplTopbarGenericTwittershareHTML'
  
- 	 	 	 }, 
-
-
-
- 'support' :{ 
- 				'olark.normal':'rbTemplSupportOlarkNormalHTML'
+ 	 	 	 },
+		'support':{ 
+				'olark.normal':'rbTemplSupportOlarkNormalHTML'
  
- 	 	 	 }, 
-
-
-
- 'feedback' :{ 
- 				'uservoice.normal':'rbTemplFeedbackUservoiceNormalHTML'
+ 	 	 	 },
+		'modal':{ 
+				'generic.normal':'rbTemplModalGenericNormalHTML'
+ 
+ 	 	 	 },
+		'feedback':{ 
+				'uservoice.normal':'rbTemplFeedbackUservoiceNormalHTML'
  
  	 	 	 }
  
- 	 	 	 }; 
+ }; 
 
 
 
- trigger_fish.rbT.templateName = {
-	 			'bottombar.generic.fblike':'A bottom bar to influence visitors from Facebook',
-	 			'topbar.generic.normal':'A promo top bar with link and some text',
-	 			'topbar.generic.twitterfollow':'Top bar to Gather followers from twitter',
-	 			'bottombar.generic.twitterfollow':'Bottom bar to Gather followers from twitter',
-	 			'topbar.generic.fblike':'A top bar to influence visitors from Facebook',
-	 			'uservoice.generic.normal':'User Voice Feedback',
-	 			'bottombar.generic.twittershare':'Influence a Twitter user to share about your business',
-	 			'support.olark.normal':'Chat Window',
-	 			'modal.generic.normal':'A modal annonucement',
-	 			'feedback.uservoice.normal':'User Voice Feedback',
-	 			'bottombar.generic.normal':'A promo bottom bar with link and some text',
-	 			'topbar.generic.twittershare':'Influence a Twitter user to share about your business'
- 	 	 	 	 }; 
-
-
-
- trigger_fish.rbT.templateArgs = {
-	 	  'bottombar.generic.fblike':{
-
- 	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.nr.base_zindex',
-	 	 	 	 	 				value :'10000'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.nr.font_size',
-	 	 	 	 	 				value :'14'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.ft.font',
-	 	 	 	 	 				value :'Arial'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.cr.border_color',
-	 	 	 	 	 				value :'#304A80'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.background_color',
-	 	 	 	 	 				value :'#6087C6'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.show_width',
-	 	 	 	 	 				value :'900'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.nr.bar_height',
-	 	 	 	 	 				value :'40'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.ul.facebook_page',
-	 	 	 	 	 				value :'http://www.google.com'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '9' :{
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
-	 	 	 	 	 				value :'Woo Facebook users coming to your page by writing something to make them like you.'
-	 	 	 	 	 	  }
-	 	 	 	 	 },
-	 	  'topbar.generic.normal':{
-
- 	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.nr.base_zindex',
-	 	 	 	 	 				value :'10000'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.cr.base_backgroundcolor',
-	 	 	 	 	 				value :'#E24E35'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.nr.show_width',
-	 	 	 	 	 				value :'900'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.nr.base_height',
-	 	 	 	 	 				value :'40'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.text_color ',
-	 	 	 	 	 				value :'#ffffff'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
-	 	 	 	 	 				value :'14'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
-	 	 	 	 	 				value :'Arial'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
-	 	 	 	 	 				value :'normal'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.cr.button_background',
-	 	 	 	 	 				value :'whiteSmoke'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.cr.button_color',
-	 	 	 	 	 				value :'#333'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.nr.button_fontSize',
-	 	 	 	 	 				value :'16'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '12' : {
-	 	 	 	 	 				key :'rb.t.cr.button_background_on_focus',
-	 	 	 	 	 				value :'#d9d9d9'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '13' : {
-	 	 	 	 	 				key :'rb.t.cr.button_color_on_focus',
-	 	 	 	 	 				value :'#888'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '14' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
-	 	 	 	 	 				value :'Please add the promotional left text here'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '15' : {
-	 	 	 	 	 				key :'rb.t.ul.button_link',
-	 	 	 	 	 				value :'http://www.google.com'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '16' : {
-	 	 	 	 	 				key :'rb.t.sg.button_label',
-	 	 	 	 	 				value :'Promo Link'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '17' :{
-	 	 	 	 	 				key :'rb.t.vsg.text_right',
-	 	 	 	 	 				value :'Please add the promotional right text here'
-	 	 	 	 	 	  }
-	 	 	 	 	 },
-	 	  'topbar.generic.twitterfollow':{
-
- 	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.nr.base_zindex',
-	 	 	 	 	 				value :'10000'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.cr.base_background_color',
-	 	 	 	 	 				value :'#377CA8'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.nr.show_width',
-	 	 	 	 	 				value :'900'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.nr.base_height',
-	 	 	 	 	 				value :'40'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.text_color ',
-	 	 	 	 	 				value :'#ffffff'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
-	 	 	 	 	 				value :'14'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
-	 	 	 	 	 				value :'Arial'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
-	 	 	 	 	 				value :'normal'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.sg.twitter_account_link',
-	 	 	 	 	 				value :'@act_witty'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.sg.twitter_label',
-	 	 	 	 	 				value :'@act_witty'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
-	 	 	 	 	 				value :'Increase your market reach by connecting to users'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '12' :{
-	 	 	 	 	 				key :'rb.t.vsg.text_right',
-	 	 	 	 	 				value :'Gathering reach on twitter to increase business.'
-	 	 	 	 	 	  }
-	 	 	 	 	 },
-	 	  'bottombar.generic.twitterfollow':{
-
- 	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.nr.base_zindex',
-	 	 	 	 	 				value :'10000'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.cr.base_background_color',
-	 	 	 	 	 				value :'#377CA8'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.nr.show_width',
-	 	 	 	 	 				value :'900'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.nr.base_height',
-	 	 	 	 	 				value :'40'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.text_color ',
-	 	 	 	 	 				value :'#ffffff'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
-	 	 	 	 	 				value :'14'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
-	 	 	 	 	 				value :'Arial'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
-	 	 	 	 	 				value :'normal'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.sg.twitter_account_link',
-	 	 	 	 	 				value :'@act_witty'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.sg.twitter_label',
-	 	 	 	 	 				value :'@act_witty'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
-	 	 	 	 	 				value :'Increase your market reach by connecting to users'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '12' :{
-	 	 	 	 	 				key :'rb.t.vsg.text_right',
-	 	 	 	 	 				value :'Gathering reach on twitter to increase business.'
-	 	 	 	 	 	  }
-	 	 	 	 	 },
-	 	  'topbar.generic.fblike':{
-
- 	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.nr.base_zindex',
-	 	 	 	 	 				value :'10000'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.nr.font_size',
-	 	 	 	 	 				value :'14'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.ft.font',
-	 	 	 	 	 				value :'Arial'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.cr.border_color',
-	 	 	 	 	 				value :'#304A80'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.background_color',
-	 	 	 	 	 				value :'#6087C6'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.show_width',
-	 	 	 	 	 				value :'900'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.nr.bar_height',
-	 	 	 	 	 				value :'40'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.ul.facebook_page',
-	 	 	 	 	 				value :'http://www.google.com'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '9' :{
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
-	 	 	 	 	 				value :'Woo Facebook users coming to your page by writing something to make them like you.'
-	 	 	 	 	 	  }
-	 	 	 	 	 },
-	 	  'uservoice.generic.normal':{
-
-	 	 	 	 	 },
-	 	  'bottombar.generic.twittershare':{
-
- 	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.nr.base_zindex',
-	 	 	 	 	 				value :'10000'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.cr.base_background_color',
-	 	 	 	 	 				value :'#377CA8'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.nr.show_width',
-	 	 	 	 	 				value :'900'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.nr.base_height',
-	 	 	 	 	 				value :'40'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.text_color ',
-	 	 	 	 	 				value :'#ffffff'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
-	 	 	 	 	 				value :'14'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
-	 	 	 	 	 				value :'Arial'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
-	 	 	 	 	 				value :'normal'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.sg.twitter_share_text',
-	 	 	 	 	 				value :'make #twitter user to share about your blog at a sample url like http://www.rulebot.com'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
-	 	 	 	 	 				value :'Ask here to twitter user to share your blog'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '11' :{
-	 	 	 	 	 				key :'rb.t.vsg.text_right',
-	 	 	 	 	 				value :'Influence your visitors.'
-	 	 	 	 	 	  }
-	 	 	 	 	 },
-	 	  'support.olark.normal':{
-
- 	 	 	 	 	 	 '1' :{
-	 	 	 	 	 				key :'rb.t.sg.olarkIdentity',
-	 	 	 	 	 				value :'\'6679-845-10-6199\''
-	 	 	 	 	 	  }
-	 	 	 	 	 },
-	 	  'modal.generic.normal':{
-
- 	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.f.nr.background_zindex',
-	 	 	 	 	 				value :'10000'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.f.nr.dialog_zindex',
-	 	 	 	 	 				value :'10001'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.cr.background_color',
-	 	 	 	 	 				value :'white'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.sg.modal_cover_image',
-	 	 	 	 	 				value :'https://s3.amazonaws.com/actwitty_ganga/image/modal_demo.jpg'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.heading_background_color',
-	 	 	 	 	 				value :'#D44413'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.cr.heading_color',
-	 	 	 	 	 				value :'#FFFFFF'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.nr.heading_font_size',
-	 	 	 	 	 				value :'20'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.ft.heading_fontfamily',
-	 	 	 	 	 				value :'Arial'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.cr.heading_text_shadow',
-	 	 	 	 	 				value :'#97310E'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.nr.text_font_size',
-	 	 	 	 	 				value :'20'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.nr.line-height',
-	 	 	 	 	 				value :'24'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '12' : {
-	 	 	 	 	 				key :'rb.t.cr.text_color',
-	 	 	 	 	 				value :'#000000'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '13' : {
-	 	 	 	 	 				key :'rb.t.cr.button_border',
-	 	 	 	 	 				value :'#f5881f'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '14' : {
-	 	 	 	 	 				key :'rb.t.cr.button_background',
-	 	 	 	 	 				value :'#f15c24'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '15' : {
-	 	 	 	 	 				key :'rb.t.cr.button_color',
-	 	 	 	 	 				value :'#fffffd'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '16' : {
-	 	 	 	 	 				key :'rb.t.nr.button_font_size',
-	 	 	 	 	 				value :'25'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '17' : {
-	 	 	 	 	 				key :'rb.t.vsg.heading_text',
-	 	 	 	 	 				value :'An announcement to catch attention'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '18' : {
-	 	 	 	 	 				key :'rb.t.vsg.offer_text',
-	 	 	 	 	 				value :'This is a way to connect to your customers to woo them to engage with your product.                We can help you to automate the offerings being presented by popping out such modals                when rules get hit. You can change this text.'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '19' : {
-	 	 	 	 	 				key :'rb.t.ul.modal_button_link',
-	 	 	 	 	 				value :'http://www.rulebot.com'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '20' :{
-	 	 	 	 	 				key :'rb.t.sg.modal_button_label',
-	 	 	 	 	 				value :'Order Now'
-	 	 	 	 	 	  }
-	 	 	 	 	 },
-	 	  'feedback.uservoice.normal':{
-
-	 	 	 	 	 },
-	 	  'bottombar.generic.normal':{
-
- 	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.nr.base_zindex',
-	 	 	 	 	 				value :'10000'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.cr.base_backgroundcolor',
-	 	 	 	 	 				value :'#181818'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.nr.show_width',
-	 	 	 	 	 				value :'900'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.nr.base_height',
-	 	 	 	 	 				value :'40'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.text_color ',
-	 	 	 	 	 				value :'#ffffff'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
-	 	 	 	 	 				value :'14'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
-	 	 	 	 	 				value :'Arial'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
-	 	 	 	 	 				value :'normal'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.cr.button_background',
-	 	 	 	 	 				value :'#0e0c0b'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.cr.button_color',
-	 	 	 	 	 				value :'#BFBFBF'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '11' : {
-	 	 	 	 	 				key :'rb.t.nr.button_fontSize',
-	 	 	 	 	 				value :'14'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '12' : {
-	 	 	 	 	 				key :'rb.t.cr.button_background_on_focus',
-	 	 	 	 	 				value :'#333'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '13' : {
-	 	 	 	 	 				key :'rb.t.cr.button_color_on_focus',
-	 	 	 	 	 				value :'#FFFFFF'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '14' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
-	 	 	 	 	 				value :'Please add the promotional left text here'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '15' : {
-	 	 	 	 	 				key :'rb.t.ul.button_link',
-	 	 	 	 	 				value :'http://www.google.com'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '16' : {
-	 	 	 	 	 				key :'rb.t.sg.button_label',
-	 	 	 	 	 				value :'Promo Link'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '17' :{
-	 	 	 	 	 				key :'rb.t.vsg.text_right',
-	 	 	 	 	 				value :'Please add the promotional right text here'
-	 	 	 	 	 	  }
-	 	 	 	 	 },
-	 	  'topbar.generic.twittershare':{
-
- 	 	 	 	 	 	 '1' : {
-	 	 	 	 	 				key :'rb.t.nr.base_zindex',
-	 	 	 	 	 				value :'10000'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '2' : {
-	 	 	 	 	 				key :'rb.t.cr.base_background_color',
-	 	 	 	 	 				value :'#377CA8'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '3' : {
-	 	 	 	 	 				key :'rb.t.nr.show_width',
-	 	 	 	 	 				value :'900'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '4' : {
-	 	 	 	 	 				key :'rb.t.nr.base_height',
-	 	 	 	 	 				value :'40'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '5' : {
-	 	 	 	 	 				key :'rb.t.cr.text_color ',
-	 	 	 	 	 				value :'#ffffff'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '6' : {
-	 	 	 	 	 				key :'rb.t.nr.text_fontsize',
-	 	 	 	 	 				value :'14'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '7' : {
-	 	 	 	 	 				key :'rb.t.ft.text_fontfamily',
-	 	 	 	 	 				value :'Arial'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '8' : {
-	 	 	 	 	 				key :'rb.t.fw.text_fontweight',
-	 	 	 	 	 				value :'normal'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '9' : {
-	 	 	 	 	 				key :'rb.t.sg.twitter_share_text',
-	 	 	 	 	 				value :'make #twitter user to share about your blog at a sample url like http://www.rulebot.com'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '10' : {
-	 	 	 	 	 				key :'rb.t.vsg.text_left',
-	 	 	 	 	 				value :'Ask here to twitter user to share your blog'
-	 	 	 	 	 	  },
- 	 	 	 	 	 	 '11' :{
-	 	 	 	 	 				key :'rb.t.vsg.text_right',
-	 	 	 	 	 				value :'Influence your visitors.'
-	 	 	 	 	 	  }
-	 	 	 	 	 }
- 	 	 	 	 }; 
  
 
 
 
-/****************************[[./templates/topbars/rbTemplBottombarGenericFblike.js]]*************************************/ 
+/****************************[[./templates/js/rbTemplBottombarGenericFblike.js]]*************************************/ 
 
 
 trigger_fish.rbT.rbTemplBottombarGenericFblikeHTML='<div id="rbBottombarGenericFblikeBaseContainer">    <!-- -->    <link rel="stylesheet" type="text/css" href="https://s3.amazonaws.com/actwitty_ganga/css/common_styles.css">    <style>      .rbTbFbLikeBtmDyn{        position: fixed;        bottom: 0px;        left: 0px;           z-index: {{1}};            color: white;        font-size: {{2}}px;        font-family:\'{{3}}\';        text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);            border: 1px solid {{4}};        background-color: {{5}};          }      .rbTbFbLikeBtmDyn .barDyn{        width: {{6}}px;        height: {{7}}px;        vertical-align: middle;        position: relative;      }      .rbTbFbLikeBtmDyn .rbDynText{        white-space: nowrap;        overflow:hidden;       }              .rbTbFbLikeBtmDyn .rbDynLeftText{        position: absolute;        left:20px;         width:80%;        top: 10px;        text-align: center;        margin-right: 20px;       }        .rbTbFbLikeBtmDyn .rbTbFbLikeRight{        position: absolute;        right:0px;         width:200px;            text-align: center;        margin: 0px;        padding: 0px;        overflow: hidden;        border: 0px;                }       .rbTbFbLikeBtmDyn .rbInfoBtnDyn{        position: absolute;        top: 5px;        right: -130px;        display: inline-block;        overflow: hidden;        }          </style>    <div  class="rbBaseStyle rbTbFbLikeBtmDyn" >      <div class=\'rbIframeContent\'><!--<div id="fb-root"></div>          <script>            (function(d, s, id) {            var js, fjs = d.getElementsByTagName(s)[0];            if (d.getElementById(id)) return;            js = d.createElement(s); js.id = id;            js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";            fjs.parentNode.insertBefore(js, fjs);            }(document, "script", "facebook-jssdk"));          </script>          <div class="fb-like"               data-href="{{8}}"               data-send="true"               data-layout="button_count"               data-width="250px"               data-show-faces="false"               data-font="arial">          </div>--></div>      <div class="rbBarWidth barDyn">        <p id="rbBottombarGenericFblikeLeftClick" class="rbTextLeft rbDynLeftText rbDynText" >          {{9}}        </p>                  <iframe class="rbIframe rbTbFbLikeRight">        </iframe>                <div class="rbInfoBtnDyn">          <div class="rb-btn-group" >            <button id="rbBottombarGenericFblikeRoiHelp" class="rb-info-btn rb-info-btn-small rbClickable" link="http://www.rulebot.com">              ?            </button>            <button id="rbBottombarGenericFblikeCloseClick" class="rb-info-btn rb-info-btn-small rbClickable" >              X            </button>                      </div>        </div>        </div>      <script>        var frameClass=\'rbIframeContent\';        var base = document.getElementById(\'rbBottombarGenericFblikeBaseContainer\');        if( base !== undefined){          var inner = base.getElementsByClassName(\'rbIframeContent\');              var iframe = base.getElementsByClassName(\'rbIframe\');          if( inner !== undefined && iframe !== undefined  ){            var ifrm = iframe[0];            ifrm = (ifrm.contentWindow) ? ifrm.contentWindow : (ifrm.contentDocument.document) ? ifrm.contentDocument.document : ifrm.contentDocument;            if(ifrm !== undefined){              ifrm.document.open();              ifrm.document.write(inner[0].firstChild.nodeValue);              ifrm.document.close();                }          }        }      </script>    </div></div>'
 
 
 
-/****************************[[./templates/topbars/rbTemplBottombarGenericTwitterfollow.js]]*************************************/ 
+/****************************[[./templates/js/rbTemplBottombarGenericTwitterfollow.js]]*************************************/ 
 
 
 trigger_fish.rbT.rbTemplBottombarGenericTwitterfollowHTML='<div  id="rbBottombarGenericTwitterfollowBaseContainer" >  <!-- -->  <link rel="stylesheet" type="text/css" href="https://s3.amazonaws.com/actwitty_ganga/css/common_styles.css">  <style>        .rbBmTwFollowDyn{      position: fixed;      bottom: 0px;      left: 0px;         z-index: {{1}};          background: {{2}} !important;          border-bottom: 1px solid #18496A !important;    }    .rbBmTwFollowDyn .barDyn{      width: {{3}}px;      height: {{4}}px;      vertical-align: middle;      position: relative;    }    .rbBmTwFollowDyn .rbDynText     {       color:{{5}};       font-size: {{6}}px;       font-family: {{7}};       font-weight:{{8}};       white-space: nowrap;       overflow:hidden;     }          .rbBmTwFollowDyn .rbDynLeftText{      position: absolute;      left:20px;       width:40%;      top: 10px;      text-align: center;      margin-right: 20px;     }          .rbBmTwFollowDyn .rbDynRightText{      position: absolute;      right: 20px;       top: 10px;          width:30%;       text-align: center;         margin-left: 20px;     }     .rbBmTwFollowDyn .rbBtnDyn {                          position: absolute;              width:180px;        left: 42%;        top: 0px;        overflow: hidden;        margin-right: 20px;         border: 0px;                          }         .rbBmTwFollowDyn .rbInfoBtnDyn{      position: absolute;      top: 5px;      right: -130px;      display: inline-block;     }  </style>  <div class="rbBaseStyle rbBmTwFollowDyn" >    <div class=\'rbIframeContent\'><!--<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>    <a  data-show-count="false" data-button = "blue" class="twitter-follow-button" href="https://twitter.com/{{9}}" data-size="large">Follow {{10}} </a>--></div>    <div class="rbBarWidth barDyn">    <div class="rbBarWidth barDyn">      <p  class="rbTextLeft rbDynLeftText rbDynText" >        {{11}}      </p>      <iframe class ="rbBtn rbIframe rbBtnDyn" >       </iframe>          <p  class="rbTextRight rbDynRightText rbDynText" >                   {{12}}        </p>      <div class="rbInfoBtnDyn">        <div class="rb-btn-group" >          <button id="rbBottombarGenericTwitterfollowRoiHelp" class="rb-info-btn rb-info-btn-small rbClickable" link="http://www.rulebot.com">            ?          </button>          <button id="rbBottombarGenericTwitterfollowCloseClick" class="rb-info-btn rb-info-btn-small rbClickable" >            X          </button>                    </div>      </div>      </div>    <script>          var base = document.getElementById(\'rbBottombarGenericTwitterfollowBaseContainer\');      if( base !== undefined){        var inner = base.getElementsByClassName(\'rbIframeContent\');            var iframe = base.getElementsByClassName(\'rbIframe\');        if( inner !== undefined && iframe !== undefined  ){          var ifrm = iframe[0];          ifrm = (ifrm.contentWindow) ? ifrm.contentWindow : (ifrm.contentDocument.document) ? ifrm.contentDocument.document : ifrm.contentDocument;          if(ifrm !== undefined){            ifrm.document.open();            ifrm.document.write(inner[0].firstChild.nodeValue);            ifrm.document.close();              }        }      }    </script>  </div></div>'
 
 
 
-/****************************[[./templates/topbars/rbTemplBottombarGenericNormal.js]]*************************************/ 
+/****************************[[./templates/js/rbTemplBottombarGenericNormal.js]]*************************************/ 
 
 
 trigger_fish.rbT.rbTemplBottombarGenericNormalHTML='<div id="rbBottombarGenericNormalBaseContainer">    <!-- -->    <link rel="stylesheet" type="text/css" href="https://s3.amazonaws.com/actwitty_ganga/css/common_styles.css">    <style>      .rbBbGenDyn{        position: fixed;        bottom: 0px;        left: 0px;           z-index: {{1}};            background: {{2}} !important;        border-top: 1px solid #333 !important;        border-bottom: 1px solid #333 !important;      }      .rbBbGenDyn .barDyn{        width: {{3}}px;        height: {{4}}px;        vertical-align: middle;        position: relative;      }      .rbBbGenDyn .rbDynText       {         color:{{5}};         font-size: {{6}}px;         font-family: {{7}};         font-weight:{{8}};         white-space: nowrap;         overflow:hidden;       }              .rbBbGenDyn .rbDynLeftText{        position: absolute;        left:20px;         width:40%;        top: 10px;        text-align: center;        margin-right: 20px;       }              .rbBbGenDyn .rbDynRightText{        position: absolute;        right: 20px;         top: 10px;            width:40%;         text-align: center;           margin-left: 20px;       }       .rbBbGenDyn .rbBtnDyn {                padding: 12px 15px 12px;          text-shadow: none !important;          border-right: 1px solid #333;          border-left: 1px solid #333;          -webkit-transition: background 1s ease;          -moz-transition: background 1s ease;          -o-transition: background 1s ease;          transition: background 1s ease;                      position: absolute;                width:100px;          left: 42%;          top: 0;          margin-right: 20px;                              background-color: {{9}} !important;          color: {{10}} !important; !important;          font-size: {{11}}px; !important;             white-space: nowrap;            overflow: hidden;           text-overflow: ellipsis;       }       .rbBbGenDyn .rbBtnDyn:hover {          background-color: {{12}} !important;          color: {{13}} !important;          -webkit-transition: background 1s ease;          -moz-transition: background 1s ease;          -o-transition: background 1s ease;          transition: background 1s ease;       }       .rbBbGenDyn .rbInfoBtnDyn{        position: absolute;        top: 5px;        right: -130px;        display: inline-block;       }    </style>    <div  class="rbBaseStyle rbBbGenDyn" >      <div class="rbBarWidth barDyn">        <p id="rbBottombarGenericNormalLeftClick" class="rbTextLeft rbDynLeftText rbDynText" >          {{14}}        </p>          <div id="rbBottombarGenericNormalRoiMiddlebutton" class ="rbClickable rbBtn rbBtnDyn"               link="{{15}}">           {{16}}         </div>              <p id="rbBottombarGenericNormalRightClick" class="rbTextRight rbDynRightText rbDynText" >                     {{17}}          </p>        <div class="rbInfoBtnDyn">          <div class="rb-btn-group" >            <button id="rbBottombarGenericNormalRoiHelp" class="rb-info-btn rb-info-btn-small rbClickable" link="http://www.rulebot.com">              ?            </button>            <button id="rbBottombarGenericNormalCloseClick" class="rb-info-btn rb-info-btn-small rbClickable" >              X            </button>                      </div>        </div>        </div>    </div></div>'
 
 
 
-/****************************[[./templates/topbars/rbTemplBottombarGenericTwittershare.js]]*************************************/ 
+/****************************[[./templates/js/rbTemplBottombarGenericTwittershare.js]]*************************************/ 
 
 
 trigger_fish.rbT.rbTemplBottombarGenericTwittershareHTML='<div  id="rbBottombarGenericTwittershareBaseContainer" >  <!-- -->  <link rel="stylesheet" type="text/css" href="https://s3.amazonaws.com/actwitty_ganga/css/common_styles.css">  <style>        .rbBmTwShareDyn{      position: fixed;      bottom: 0px;      left: 0px;         z-index: {{1}};          background: {{2}} !important;          border-bottom: 1px solid #18496A !important;    }    .rbBmTwShareDyn .barDyn{      width: {{3}}px;      height: {{4}}px;      vertical-align: middle;      position: relative;    }    .rbBmTwShareDyn .rbDynText     {       color:{{5}};       font-size: {{6}}px;       font-family: {{7}};       font-weight:{{8}};       white-space: nowrap;       overflow:hidden;     }          .rbBmTwShareDyn .rbDynLeftText{      position: absolute;      left:20px;       width:40%;      top: 10px;      text-align: center;      margin-right: 20px;     }          .rbBmTwShareDyn .rbDynRightText{      position: absolute;      right: 20px;       top: 10px;          width:40%;       text-align: center;         margin-left: 20px;     }     .rbBmTwShareDyn .rbBtnDyn {                          position: absolute;              width:100px;        left: 42%;        top: 0px;        overflow: hidden;        margin-right: 20px;         border: 0px;                           }         .rbBmTwShareDyn .rbInfoBtnDyn{      position: absolute;      top: 5px;      right: -130px;      display: inline-block;     }  </style>  <div class="rbBaseStyle rbBmTwShareDyn" >    <div class=\'rbIframeContent\'><!--<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>    <a href="https://twitter.com/share?text={{9}}" class="twitter-share-button" data-count="none" data-lang="en" data-size="large">Tweet this</a>--></div>    <div class="rbBarWidth barDyn">      <p  class="rbTextLeft rbDynLeftText rbDynText" >        {{10}}      </p>      <iframe class ="rbBtn rbIframe rbBtnDyn" >       </iframe>          <p  class="rbTextRight rbDynRightText rbDynText" >                   {{11}}        </p>      <div class="rbInfoBtnDyn">        <div class="rb-btn-group" >          <button id="rbBottombarGenericTwittershareRoiHelp" class="rb-info-btn rb-info-btn-small rbClickable" link="http://www.rulebot.com">            ?          </button>          <button id="rbBottombarGenericTwittershareCloseClick" class="rb-info-btn rb-info-btn-small rbClickable" >            X          </button>                    </div>      </div>      </div>    <script>            var base = document.getElementById(\'rbBottombarGenericTwittershareBaseContainer\');        if( base !== undefined){          var inner = base.getElementsByClassName(\'rbIframeContent\');              var iframe = base.getElementsByClassName(\'rbIframe\');          if( inner !== undefined && iframe !== undefined  ){            var ifrm = iframe[0];            ifrm = (ifrm.contentWindow) ? ifrm.contentWindow : (ifrm.contentDocument.document) ? ifrm.contentDocument.document : ifrm.contentDocument;            if(ifrm !== undefined){              ifrm.document.open();              ifrm.document.write(inner[0].firstChild.nodeValue);              ifrm.document.close();                }          }        }    </script>  </div></div>         '
 
 
 
-/****************************[[./templates/topbars/rbTemplTopbarGenericFblike.js]]*************************************/ 
+/****************************[[./templates/js/rbTemplTopbarGenericFblike.js]]*************************************/ 
 
 
 trigger_fish.rbT.rbTemplTopbarGenericFblikeHTML='<div  id="rbTopbarGenericFblikeBaseContainer">  <!-- -->  <link rel="stylesheet" type="text/css" href="https://s3.amazonaws.com/actwitty_ganga/css/common_styles.css">  <style>    .rbTbFbLikeDyn{      position: fixed;      top: 0px;      left: 0px;         z-index: {{1}};          color: white;      font-size: {{2}}px;      font-family:\'{{3}}\';      text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);          border: 1px solid {{4}};      background-color: {{5}};        }    .rbTbFbLikeDyn .barDyn{      width: {{6}}px;      height: {{7}}px;      vertical-align: middle;      position: relative;    }    .rbTbFbLikeDyn .rbDynText{      white-space: nowrap;      overflow:hidden;     }          .rbTbFbLikeDyn .rbDynLeftText{      position: absolute;      left:20px;       width:80%;      top: 10px;      text-align: center;      margin-right: 20px;     }      .rbTbFbLikeDyn .rbTbFbLikeRight{      position: absolute;      right:0px;       width:200px;          text-align: center;      margin: 0px;      padding: 0px;      overflow: hidden;      border: 0px;            }     .rbTbFbLikeDyn .rbInfoBtnDyn{      position: absolute;      top: 5px;      right: -130px;      display: inline-block;      overflow: hidden;      }      </style>  <div class="rbBaseStyle rbTbFbLikeDyn" >    <div class=\'rbIframeContent\'><!--<div id="fb-root"></div>        <script>          (function(d, s, id) {          var js, fjs = d.getElementsByTagName(s)[0];          if (d.getElementById(id)) return;          js = d.createElement(s); js.id = id;          js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";          fjs.parentNode.insertBefore(js, fjs);          }(document, "script", "facebook-jssdk"));        </script>        <div class="fb-like"             data-href="{{8}}"             data-send="true"             data-layout="button_count"             data-width="250px"             data-show-faces="false"             data-font="arial">        </div>--></div>    <div class="rbBarWidth barDyn">      <p id="rbBottombarGenericFblikeLeftClick" class="rbTextLeft rbDynLeftText rbDynText" >        {{9}}      </p>              <iframe class="rbIframe rbTbFbLikeRight">      </iframe>            <div class="rbInfoBtnDyn">        <div class="rb-btn-group" >          <button id="rbTopbarGenericFblikeRoiHelp" class="rb-info-btn rb-info-btn-small rbClickable" link="http://www.rulebot.com">            ?          </button>          <button id="rbTopbarGenericFblikeCloseClick" class="rb-info-btn rb-info-btn-small rbClickable" >            X          </button>                    </div>      </div>      </div>    <script>      var frameClass=\'rbIframeContent\';      var base = document.getElementById(\'rbTopbarGenericFblikeBaseContainer\');      if( base !== undefined){        var inner = base.getElementsByClassName(\'rbIframeContent\');            var iframe = base.getElementsByClassName(\'rbIframe\');        if( inner !== undefined && iframe !== undefined  ){          var ifrm = iframe[0];          ifrm = (ifrm.contentWindow) ? ifrm.contentWindow : (ifrm.contentDocument.document) ? ifrm.contentDocument.document : ifrm.contentDocument;          if(ifrm !== undefined){            ifrm.document.open();            ifrm.document.write(inner[0].firstChild.nodeValue);            ifrm.document.close();              }        }      }    </script>  </div></div>'
 
 
 
-/****************************[[./templates/topbars/rbTemplTopbarGenericTwitterfollow.js]]*************************************/ 
+/****************************[[./templates/js/rbTemplTopbarGenericTwitterfollow.js]]*************************************/ 
 
 
 trigger_fish.rbT.rbTemplTopbarGenericTwitterfollowHTML=' <div id="rbTopbarGenericTwitterfollowBaseContainer">    <!-- -->    <link rel="stylesheet" type="text/css" href="https://s3.amazonaws.com/actwitty_ganga/css/common_styles.css">    <style>            .rbTpTwFollowDyn{        position: fixed;        top: 0px;        left: 0px;           z-index: {{1}};            background: {{2}} !important;            border-bottom: 1px solid #18496A !important;      }      .rbTpTwFollowDyn .barDyn{        width: {{3}}px;        height: {{4}}px;        vertical-align: middle;        position: relative;      }      .rbTpTwFollowDyn .rbDynText       {         color:{{5}};         font-size: {{6}}px;         font-family: {{7}};         font-weight:{{8}};         white-space: nowrap;         overflow:hidden;       }              .rbTpTwFollowDyn .rbDynLeftText{        position: absolute;        left:20px;         width:40%;        top: 10px;        text-align: center;        margin-right: 20px;       }              .rbTpTwFollowDyn .rbDynRightText{        position: absolute;        right: 20px;         top: 10px;            width:30%;         text-align: center;           margin-left: 20px;       }       .rbTpTwFollowDyn .rbBtnDyn {                              position: absolute;                width:180px;          left: 42%;          top: 0px;          margin-right: 20px;               overflow: hidden;            border: 0px;                       }             .rbTpTwFollowDyn .rbInfoBtnDyn{        position: absolute;        top: 5px;        right: -130px;        display: inline-block;       }    </style>    <div  class="rbBaseStyle rbTpTwFollowDyn" >      <div class=\'rbIframeContent\'><!--<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>      <a  data-show-count="false" data-button = "blue" class="twitter-follow-button" href="https://twitter.com/{{9}}" data-size="large">Follow {{10}} </a>--></div>      <div class="rbBarWidth barDyn">        <p  class="rbTextLeft rbDynLeftText rbDynText" >          {{11}}        </p>        <iframe class ="rbBtn rbIframe rbBtnDyn" >         </iframe>              <p  class="rbTextRight rbDynRightText rbDynText" >                     {{12}}          </p>        <div class="rbInfoBtnDyn">          <div class="rb-btn-group" >            <button id="rbTopbarGenericTwitterfollowRoiHelp" class="rb-info-btn rb-info-btn-small rbClickable" link="http://www.rulebot.com">              ?            </button>            <button id="rbTopbarGenericTwitterfollowCloseClick" class="rb-info-btn rb-info-btn-small rbClickable" >              X            </button>                      </div>        </div>        </div>      <script>            var base = document.getElementById(\'rbTopbarGenericTwitterfollowBaseContainer\');        if( base !== undefined){          var inner = base.getElementsByClassName(\'rbIframeContent\');              var iframe = base.getElementsByClassName(\'rbIframe\');          if( inner !== undefined && iframe !== undefined  ){            var ifrm = iframe[0];            ifrm = (ifrm.contentWindow) ? ifrm.contentWindow : (ifrm.contentDocument.document) ? ifrm.contentDocument.document : ifrm.contentDocument;            if(ifrm !== undefined){              ifrm.document.open();              ifrm.document.write(inner[0].firstChild.nodeValue);              ifrm.document.close();                }          }        }      </script>    </div>    </div>'
 
 
 
-/****************************[[./templates/topbars/rbTemplTopbarGenericNormal.js]]*************************************/ 
+/****************************[[./templates/js/rbTemplTopbarGenericNormal.js]]*************************************/ 
 
 
 trigger_fish.rbT.rbTemplTopbarGenericNormalHTML='<div id="rbTopbarGenericNormalBaseContainer">  <!-- -->  <link rel="stylesheet" type="text/css" href="https://s3.amazonaws.com/actwitty_ganga/css/common_styles.css">  <style>        .rbTpGenDyn{      position: fixed;      top: 0px;      left: 0px;         z-index: {{1}};          background: {{2}} !important;      border-top: 1px solid #CC412A !important;      border-bottom: 1px solid #CC412A !important;    }    .rbTpGenDyn .barDyn{      width: {{3}}px;      height: {{4}}px;      vertical-align: middle;      position: relative;    }    .rbTpGenDyn .rbDynText     {       color:{{5}};       font-size: {{6}}px;       font-family: {{7}};       font-weight:{{8}};       white-space: nowrap;       overflow:hidden;     }          .rbTpGenDyn .rbDynLeftText{      position: absolute;      left:20px;       width:40%;      top: 10px;      text-align: center;      margin-right: 20px;     }          .rbTpGenDyn .rbDynRightText{      position: absolute;      right: 20px;       top: 10px;          width:40%;       text-align: center;         margin-left: 20px;     }     .rbTpGenDyn .rbBtnDyn {          padding: 5px;          text-shadow: none !important;        border: 1px solid #BBB;        border: 1px solid #BBB;        border-color: #E6E6E6 #E6E6E6 #BFBFBF;        border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);        -webkit-border-radius: 4px;        -moz-border-radius: 4px;        border-radius: 4px;        -webkit-transition: background 1s ease;        -moz-transition: background 1s ease;        -o-transition: background 1s ease;        transition: background 1s ease;                    position: absolute;              width:100px;        left: 42%;        top:7%;        height:20px;        margin-right: 20px;                            background-color: {{9}} !important;        color: {{10}} !important; !important;        font-size: {{11}}px;         text-align: center;          white-space: nowrap;          overflow: hidden;         text-overflow: ellipsis;     }     .rbTpGenDyn .rbBtnDyn:hover {        background-color: {{12}} !important;        color: {{13}} !important;        -webkit-transition: background 1s ease;        -moz-transition: background 1s ease;        -o-transition: background 1s ease;        transition: background 1s ease;     }     .rbTpGenDyn .rbInfoBtnDyn{      position: absolute;      top: 5px;      right: -130px;      display: inline-block;     }  </style>  <div class="rbBaseStyle rbTpGenDyn" >    <div class="rbBarWidth barDyn">      <p id="rbTopbarGenericNormalLeftClick" class="rbTextLeft rbDynLeftText rbDynText" >        {{14}}      </p>        <div id="rbTopbarGenericNormalRoiMiddlebutton" class ="rbClickable rbBtn rbBtnDyn"             link="{{15}}">         {{16}}       </div>          <p id="rbTopbarGenericNormalRightClick" class="rbTextRight rbDynRightText rbDynText" >                   {{17}}        </p>      <div class="rbInfoBtnDyn">        <div class="rb-btn-group" >          <button id="rbTopbarGenericNormalRoiHelp" class="rb-info-btn rb-info-btn-small rbClickable" link="http://www.rulebot.com">            ?          </button>          <button id="rbTopbarGenericNormalCloseClick" class="rb-info-btn rb-info-btn-small rbClickable" >            X          </button>                    </div>      </div>      </div>  </div></div>'
 
 
 
-/****************************[[./templates/topbars/rbTemplTopbarGenericTwittershare.js]]*************************************/ 
+/****************************[[./templates/js/rbTemplTopbarGenericTwittershare.js]]*************************************/ 
 
 
 trigger_fish.rbT.rbTemplTopbarGenericTwittershareHTML='<div id="rbTopbarGenericTwittershareBaseContainer">  <!-- -->  <link rel="stylesheet" type="text/css" href="https://s3.amazonaws.com/actwitty_ganga/css/common_styles.css">  <style>        .rbTpTwShareDyn{      position: fixed;      top: 0px;      left: 0px;         z-index: {{1}};          background: {{2}} !important;          border-bottom: 1px solid #18496A !important;    }    .rbTpTwShareDyn .barDyn{      width: {{3}}px;      height: {{4}}px;      vertical-align: middle;      position: relative;    }    .rbTpTwShareDyn .rbDynText     {       color:{{5}};       font-size: {{6}}px;       font-family: {{7}};       font-weight:{{8}};       white-space: nowrap;       overflow:hidden;     }          .rbTpTwShareDyn .rbDynLeftText{      position: absolute;      left:20px;       width:40%;      top: 10px;      text-align: center;      margin-right: 20px;     }          .rbTpTwShareDyn .rbDynRightText{      position: absolute;      right: 20px;       top: 10px;          width:40%;       text-align: center;         margin-left: 20px;     }     .rbTpTwShareDyn .rbBtnDyn {                          position: absolute;              width:100px;        left: 42%;        top: 0px;        overflow: hidden;        margin-right: 20px;          border: 0px;                          }         .rbTpTwShareDyn .rbInfoBtnDyn{      position: absolute;      top: 5px;      right: -130px;      display: inline-block;     }  </style>  <div class="rbBaseStyle rbTpTwShareDyn" >    <div class=\'rbIframeContent\'><!--<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>    <a href="https://twitter.com/share?text={{9}}" class="twitter-share-button" data-count="none" data-lang="en" data-size="large">Tweet this</a>--></div>    <div class="rbBarWidth barDyn">      <p  class="rbTextLeft rbDynLeftText rbDynText" >        {{10}}      </p>      <iframe class ="rbBtn rbIframe rbBtnDyn" >       </iframe>          <p  class="rbTextRight rbDynRightText rbDynText" >                   {{11}}        </p>      <div class="rbInfoBtnDyn">        <div class="rb-btn-group" >          <button id="rbTopbarGenericTwittershareRoiHelp" class="rb-info-btn rb-info-btn-small rbClickable" link="http://www.rulebot.com">            ?          </button>          <button id="rbTopbarGenericTwittershareCloseClick" class="rb-info-btn rb-info-btn-small rbClickable" >            X          </button>                    </div>      </div>      </div>    <script>            var base = document.getElementById(\'rbTopbarGenericTwittershareBaseContainer\');        if( base !== undefined){          var inner = base.getElementsByClassName(\'rbIframeContent\');              var iframe = base.getElementsByClassName(\'rbIframe\');          if( inner !== undefined && iframe !== undefined  ){            var ifrm = iframe[0];            ifrm = (ifrm.contentWindow) ? ifrm.contentWindow : (ifrm.contentDocument.document) ? ifrm.contentDocument.document : ifrm.contentDocument;            if(ifrm !== undefined){              ifrm.document.open();              ifrm.document.write(inner[0].firstChild.nodeValue);              ifrm.document.close();                }          }        }    </script>  </div></div>         '
 
 
 
-/****************************[[./templates/topbars/rbTemplSupportOlarkNormal.js]]*************************************/ 
+/****************************[[./templates/js/rbTemplSupportOlarkNormal.js]]*************************************/ 
 
 
 trigger_fish.rbT.rbTemplSupportOlarkNormalHTML='<div id="rbChatGenericNormalBaseContainer">	<!-- -->	<script data-cfasync="false" type=\'text/javascript\'>	window.olark||(function(c){var f=window,d=document,l=f.location.protocol=="https:"?"https:":"http:",z=c.name,r="load";var nt=function(){f[z]=function(){(a.s=a.s||[]).push(arguments)};var a=f[z]._={},q=c.methods.length;while(q--){(function(n){f[z][n]=function(){f[z]("call",n,arguments)}})(c.methods[q])}a.l=c.loader;a.i=nt;a.p={0:+new Date};a.P=function(u){a.p[u]=new Date-a.p[0]};function s(){a.P(r);f[z](r)}f.addEventListener?f.addEventListener(r,s,false):f.attachEvent("on"+r,s);var ld=function(){function p(hd){hd="head";return["<",hd,"></",hd,"><",i,\' onl\' + \'oad="var d=\',g,";d.getElementsByTagName(\'head\')[0].",j,"(d.",h,"(\'script\')).",k,"=\'",l,"//",a.l,"\'",\'"\',"></",i,">"].join("")}var i="body",m=d[i];if(!m){return setTimeout(ld,100)}a.P(1);var j="appendChild",h="createElement",k="src",n=d[h]("div"),v=n[j](d[h](z)),b=d[h]("iframe"),g="document",e="domain",o;n.style.display="none";m.insertBefore(n,m.firstChild).id=z;b.frameBorder="0";b.id=z+"-loader";if(/MSIE[ ]+6/.test(navigator.userAgent)){b.src="javascript:false"}b.allowTransparency="true";v[j](b);try{b.contentWindow[g].open()}catch(w){c[e]=d[e];o="javascript:var d="+g+".open();d.domain=\'"+d.domain+"\';";b[k]=o+"void(0);"}try{var t=b.contentWindow[g];t.write(p());t.close()}catch(x){b[k]=o+\'d.write("\'+p().replace(/"/g,String.fromCharCode(92)+\'"\')+\'");d.close();\'}a.P(2)};ld()};nt()})({loader: "static.olark.com/jsclient/loader0.js",name:"olark",methods:["configure","extend","declare","identify"]});	olark.identify({{1}});	olark.configure(\'box.width\', 200);	olark.configure(\'box.height\', 100);	</script></div>'
 
 
 
-/****************************[[./templates/topbars/rbTemplModalGenericNormal.js]]*************************************/ 
-
-
-trigger_fish.rbT.rbTemplModalGenericNormalHTML='<!-- --><style>#rbModalGenericNormalTranblockContainer {      visibility: visible;     position: fixed;      left: 0px;      top: 0px;       width:100%;       height:100%;        z-index:{{1}};  opacity:0.6;  filter:alpha(opacity=60);  background-color:black; }#rbModalGenericNormalBaseContainer{      visibility: visible;     position: fixed;      left: 0px;      top: 0px;       width:100%;       height:100%;  z-index:{{2}}; }#rbModalGenericNormalSubsubContainer{      width:500px;   height: 400px;  background-color:{{3}};    border:8px solid rgba(0, 0, 0, .7);;     position: fixed;  top : 25%;  left : 30%;  padding : 15px;  -webkit-border-radius: 5px;  -moz-border-radius: 5px;  border-radius: 5px;  }.rbModalContainer{      width: 500px;   height: 400px;    border:1px solid #a3a3a3;     position: fixed;  -webkit-border-radius: 5px;  -moz-border-radius: 5px;  border-radius: 5px;    }.rbModalCover{  position: absolute;  top: 0px;  left: 0px;  width: 500px;   height: 400px;    padding: 0px;  display: block;  background: #ffffff url(\'{{4}}\') no-repeat right top;             filter:alpha(opacity=60);  opacity:0.6;  -webkit-border-top-left-radius: 5px;  -webkit-border-top-right-radius: 5px;  -moz-border-radius-topleft: 5px;  -moz-border-radius-topright: 5px;  border-top-left-radius: 5px;  border-top-right-radius: 5px;  z-index: -1;  }.rbModalHead{  background-color:{{5}};      width: 100%;  height: 50px;      position: relative;  display: block;  -webkit-border-top-left-radius: 5px;  -webkit-border-top-right-radius: 5px;  -moz-border-radius-topleft: 5px;  -moz-border-radius-topright: 5px;  border-top-left-radius: 5px;  border-top-right-radius: 5px;  z-index: 1;   }  .rbModalHead .rbModalClose{    position: absolute;    top: 4px;    right: 4px;    display: inline-block;    font-size: 14px;    font-weight: normal;    color: white;    cursor: pointer;    z-index: 1;  }  .rbModalClose:hover{    color: #aaa;  }.rbModalHeader{  top:0;  left:0;  position: absolute;    white-space: nowrap;    overflow: hidden;   text-overflow: ellipsis;  color:{{6}};  width:80%;   height:30px;  font-size:{{7}}px;  font-family:{{8}};   overflow:hidden;  border-top-left-radius:5px;  border-top-right-radius:5px;  padding:5px;  padding-top: 10px;  text-shadow:1px 1px {{9}};}.rbOffer{  margin-top: 10px;  width: 100%;  height: 200px;  display: block;    z-index: 1;}.rbModalOffer{  overflow: hidden;   text-overflow: ellipsis;  font-size: {{10}}px;    line-height: {{11}}px;    color:{{12}};   background: rgba(255,255,255,0.1) }.rbModalButton{  bottom: 2%;  right: 2%;  position:absolute;  width: 160px;  height: 30px;  text-align: center;    border:4px solid {{13}};  background-color: {{14}};    color:{{15}};  font-size: {{16}}px;  border-radius:5px;  padding: 5px;    font-weight: normal;  display: block;  float: right;  margin-right: 10px;  cursor:pointer;}</style><div id="rbModalGenericNormalTranblockContainer"></div> <div id="rbModalGenericNormalBaseContainer">   <div id="rbModalGenericNormalSubContainer">      <div id="rbModalGenericNormalSubsubContainer">                  <div class="rbModalContainer" >          <div class="rbModalCover"></div>            <div class="rbModalHead">              <div class="rbModalHeader">                 {{17}}              </div>              <div id="rbModalGenericNormalCloseClick" class="rbModalClose  rbClickable" >                X              </div>                        </div>            <div class="rbOffer">              <p class="rbModalOffer">                 {{18}}              </p>            </div>                     <div  class="rbModalButton">               <div  id="rbModalGenericNormalRoiClickbutton" class="rbClickable" link= "{{19}}" class="rbClickable" >                {{20}}                             </div>             </div>                 </div></div>  </div></div>'
-
-
-
-/****************************[[./templates/topbars/rbTemplFeedbackUservoiceNormal.js]]*************************************/ 
+/****************************[[./templates/js/rbTemplFeedbackUservoiceNormal.js]]*************************************/ 
 
 
 trigger_fish.rbT.rbTemplFeedbackUservoiceNormalHTML='<div id="rbUservoiceGenericNormalBaseContainer">		<!-- -->	<script>	  var uvOptions = {};	  (function() {	    var uv = document.createElement(\'script\'); uv.type = \'text/javascript\'; uv.async = true;	    uv.src = (\'https:\' == document.location.protocol ? \'https://\' : \'http://\') + \'widget.uservoice.com/QteXP0WAzCiaFH1O2obGg.js\';	    var s = document.getElementsByTagName(\'script\')[0]; s.parentNode.insertBefore(uv, s);	   })();	</script></div>'
+
+
+
+/****************************[[./templates/js/rbTemplModalGenericNormal.js]]*************************************/ 
+
+
+trigger_fish.rbT.rbTemplModalGenericNormalHTML='<!-- --><style>#rbModalGenericNormalTranblockContainer {      visibility: visible;     position: fixed;      left: 0px;      top: 0px;       width:100%;       height:100%;        z-index:{{1}};  opacity:0.6;  filter:alpha(opacity=60);  background-color:black; }#rbModalGenericNormalBaseContainer{      visibility: visible;     position: fixed;      left: 0px;      top: 0px;       width:100%;       height:100%;  z-index:{{2}}; }#rbModalGenericNormalSubsubContainer{      width:500px;   height: 400px;  background-color:{{3}};    border:8px solid rgba(0, 0, 0, .7);;  position: absolute;     top: 50% ;  left: 50% ;  margin-top: -220px ;   margin-left: -250px;  padding : 15px;  -webkit-border-radius: 5px;  -moz-border-radius: 5px;  border-radius: 5px;  }.rbModalContainer{      width: 500px;   height: 400px;    border:1px solid #a3a3a3;     position: fixed;  -webkit-border-radius: 5px;  -moz-border-radius: 5px;  border-radius: 5px;    }.rbModalCover{  position: absolute;  top: 0px;  left: 0px;  width: 500px;   height: 400px;    padding: 0px;  display: block;  background: #ffffff url(\'{{4}}\') no-repeat right top;             filter:alpha(opacity=60);  background-size:500px 400px;  background-repeat:no-repeat;  opacity:0.6;  -webkit-border-top-left-radius: 5px;  -webkit-border-top-right-radius: 5px;  -moz-border-radius-topleft: 5px;  -moz-border-radius-topright: 5px;  border-top-left-radius: 5px;  border-top-right-radius: 5px;  z-index: -1;  }.rbModalHead{  background-color:{{5}};      width: 100%;  height: 50px;      position: relative;  display: block;  -webkit-border-top-left-radius: 5px;  -webkit-border-top-right-radius: 5px;  -moz-border-radius-topleft: 5px;  -moz-border-radius-topright: 5px;  border-top-left-radius: 5px;  border-top-right-radius: 5px;  z-index: 1;   }  .rbModalHead .rbModalClose{    position: absolute;    top: 4px;    right: 4px;    display: inline-block;    font-size: 14px;    font-weight: normal;    color: white;    cursor: pointer;    z-index: 1;  }  .rbModalClose:hover{    color: #aaa;  }.rbModalHeader{  top:0;  left:0;  position: absolute;    white-space: nowrap;    overflow: hidden;   text-overflow: ellipsis;  color:{{6}};  width:80%;   height:30px;  font-size:{{7}}px;  font-family:{{8}};   overflow:hidden;  border-top-left-radius:5px;  border-top-right-radius:5px;  padding:5px;  padding-top: 10px;  text-shadow:1px 1px {{9}};}.rbOffer{  margin-top: 10px;  width: 100%;  height: 200px;  display: block;    z-index: 1;}.rbModalOffer{  overflow: hidden;   text-overflow: ellipsis;  font-size: {{10}}px;    line-height: {{11}}px;    color:{{12}};   background: rgba(255,255,255,0.1) }.rbModalButton{  bottom: 2%;  right: 2%;  position:absolute;  width: 160px;  height: 30px;  text-align: center;    border:4px solid {{13}};  background-color: {{14}};    color:{{15}};  font-size: {{16}}px;  border-radius:5px;  padding: 5px;    font-weight: normal;  display: block;  float: right;  margin-right: 10px;  cursor:pointer;}</style><div id="rbModalGenericNormalTranblockContainer"></div> <div id="rbModalGenericNormalBaseContainer">   <div id="rbModalGenericNormalSubContainer">      <div id="rbModalGenericNormalSubsubContainer">                  <div class="rbModalContainer" >          <div class="rbModalCover"></div>            <div class="rbModalHead">              <div class="rbModalHeader">                 {{17}}              </div>              <div id="rbModalGenericNormalCloseClick" class="rbModalClose  rbClickable" >                X              </div>                        </div>            <div class="rbOffer">              <p class="rbModalOffer">                 {{18}}              </p>            </div>                     <div  class="rbModalButton">               <div  id="rbModalGenericNormalRoiClickbutton" class="rbClickable" link= "{{19}}" class="rbClickable" >                {{20}}                             </div>             </div>                 </div></div>  </div></div>'
 
 
 
@@ -4763,7 +4032,7 @@ trigger_fish.rbT.rbTemplFeedbackUservoiceNormalHTML='<div id="rbUservoiceGeneric
 
 // Templ Sys , Actor and Event Varibales
 
-trigger_fish.rbT.currentSystemVar = {} //{'browser':{'name':'Chrome','version':'1.2','name2':{'myname':'Amartya'}}};
+trigger_fish.rbT.currentSystemVar ={};// {'browser':{'name':'Chrome','version':'1.2','name2':{'myname':'Amartya'}}};
 trigger_fish.rbT.currentActorVar = {};
 trigger_fish.rbT.currentEventVar = {};
 
@@ -4776,6 +4045,27 @@ trigger_fish.rbT.templTimers= {
 
 };
 
+//Array of Global HTML
+trigger_fish.rbT.globalHTMLQ = new Array(10);
+
+//HTML for Appending to the page
+trigger_fish.rbT.htmlGlobalStruct ={
+
+ 'trigger_fish.rbT.html' : 'undefined' ,
+ 'trigger_fish.rbT.type' : 'undefined' ,
+ 'trigger_fish.rbT.roiServerMsg' : 'undefined',   
+};
+
+
+
+//templ delay Q
+
+trigger_fish.rbT.minPipeSize = 10;
+trigger_fish.rbT.globalDelayQ = new Array(trigger_fish.rbT.minPipeSize);
+trigger_fish.rbT.globalDelayQTimeVal = new Array(trigger_fish.rbT.minPipeSize); 
+
+
+
 // display lock for templ positions
 
 trigger_fish.rbT.templatesDisplayLockFlags = {
@@ -4785,39 +4075,142 @@ trigger_fish.rbT.templatesDisplayLockFlags = {
     'trigger_fish.rbT.modal.displayLock' :'false',
     'trigger_fish.rbT.chat.displayLock' :'false',
     'trigger_fish.rbT.uservoice.displayLock' :'false',
-
-
+    'trigger_fish.rbT.custom.displayLock' :'false',
 };
 
-//function fir set the display lock for templ postions
+//function to handle on timout for templ delay display
+trigger_fish.rbT.handleTimeoutforTemplDelayedDisplay = function(timerIndexforDisplayDelay,actionIndexforDisplayDelay)
+{ 
+   if(trigger_fish.rbT.globalDelayQ[actionIndexforDisplayDelay] != undefined )
+   {
+      trigger_fish.rbT.globalDelayQ[actionIndexforDisplayDelay].timers.delay = 0;
+      
+      var tempStatus=trigger_fish.rbT.invokeActionScript(trigger_fish.rbT.globalDelayQ[actionIndexforDisplayDelay]);
+      
+      trigger_fish.rbT.globalDelayQ[actionIndexforDisplayDelay] = undefined;
+      
+    } 
+    
+    if(trigger_fish.rbT.globalDelayQTimeVal[timerIndexforDisplayDelay] != undefined)
+    {  
+      clearInterval(trigger_fish.rbT.globalDelayQTimeVal[timerIndexforDisplayDelay]);
+        
+      trigger_fish.rbT.globalDelayQTimeVal[timerIndexforDisplayDelay] = undefined; 
+    }    
+};
+
+// find the Blank Index in Global HTML Q
+trigger_fish.rbT.findEmptyIndexInGlobalHTMLQ = function()
+{
+   var i = 0;
+   for(i=0;i<trigger_fish.rbT.globalHTMLQ.length;i++)
+   {
+      if(trigger_fish.rbT.globalHTMLQ[i] == undefined)
+       {
+          break;
+       } 
+   }
+
+   return i;
+};
+
+
+
+//function for handling delay for templ display
+ trigger_fish.rbT.handlingOfDelayForTemplDisplay=function(action)
+ {
+
+    var i= 0;
+    var j = 0;
+    var foundTimerIndex = false;
+    var foundActionIndex = false;
+
+
+    var delay = action.timers.delay;
+
+    
+    for(i=0 ; i<trigger_fish.rbT.globalDelayQTimeVal.length;i++)
+    {
+      if(trigger_fish.rbT.globalDelayQTimeVal[i] == undefined)
+       { 
+         foundTimerIndex =true;
+          break;
+        } 
+
+    }
+    
+
+    for(j=0 ;j<trigger_fish.rbT.globalDelayQ.length;j++)
+    {
+      if(trigger_fish.rbT.globalDelayQ[j] === undefined)
+      {
+        foundActionIndex =true; 
+        break;
+       }  
+
+    }
+ 
+    if(foundActionIndex === true && foundTimerIndex === false)
+     {
+        trigger_fish.rbT.globalDelayQTimeVal.push('undefined');
+        i = i+1;
+     } 
+
+     else if(foundActionIndex === false && foundTimerIndex === true)
+     {
+        trigger_fish.rbT.globalDelayQ.push('undefined');
+        j = j+1;
+     } 
+
+      var timerIndexforDisplayDelay = i;
+      var actionIndexforDisplayDelay = j;
+      trigger_fish.rbT.globalDelayQ[j] = action; 
+      
+      trigger_fish.rbT.globalDelayQTimeVal[timerIndexforDisplayDelay] = setInterval(function(){trigger_fish.rbT.handleTimeoutforTemplDelayedDisplay(timerIndexforDisplayDelay,actionIndexforDisplayDelay)}
+          ,delay*1000); 
+
+
+
+ };
+
+
+
+
+
+//function for set the display lock for templ postions
 
 trigger_fish.rbT.setTemplatesDisplayLockFlags=function(pos,value)
 {
 
-   if(pos == 'topbar') 
+   if(pos === 'topbar') 
    {
      trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.topbar.displayLock'] = value; 
    }
 
-   else if(pos == 'bottombar') 
+   else if(pos === 'bottombar') 
    {
      trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.bottombar.displayLock'] = value; 
    }
 
-   else if(pos == 'modal') 
+   else if(pos === 'modal') 
    {
      trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.modal.displayLock'] = value; 
    }
 
-   else if(pos == 'chat') 
+   else if(pos === 'chat') 
    {
      trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.chat.displayLock'] = value; 
    }
 
-  else if(pos == 'feedback') 
+  else if(pos === 'feedback') 
    {
      trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.feedback.displayLock'] = value; 
    }
+
+   else if(pos == 'custom')
+   {
+      trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.custom.displayLock'] = value; 
+   } 
 
 }
 
@@ -4953,7 +4346,7 @@ trigger_fish.rbT.fillTheRuntimeValueForTemplArgs = function(tempMatch,actionparm
 
                                          actionparmaskey = actionparmaskey.replace(tempMatch[i],objNested);
                               } 
-                               return actionparmaskey;
+                              return actionparmaskey;
 
 
               
@@ -4970,40 +4363,47 @@ trigger_fish.rbT.fillTheRuntimeValueForTemplArgs = function(tempMatch,actionparm
 //check for the if templ position is occupied
 trigger_fish.rbT.isTemplPosOccupied = function(pos){
    
-   var ret = false;
- 
+       var ret = false;
+     
 
-   if(pos == 'topbar' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.topbar.displayLock'] 
-    == true ) 
-   {
-     ret= true;
-      
-   }
-   else if(pos == 'bottombar' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.bottombar.displayLock'] 
-    == true ) 
-   {
-     ret= true;
-    }
-  else if(pos == 'modal' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.modal.displayLock'] 
-    == true )
-  {
-     //TODO
-  }
+      if(pos === 'topbar' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.topbar.displayLock'] 
+        == true ) 
+       {
+         ret= true;
+          
+       }
+      else if(pos === 'bottombar' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.bottombar.displayLock'] 
+        == true ) 
+       {
+         ret= true;
+        }
+      else if(pos === 'modal' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.modal.displayLock'] 
+        == true )
+      {
+         //TODO
+      }
 
- else if(pos == 'chat' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.chat.displayLock'] 
-    == true )
-  {
-     ret= true;
-  }
+     else if(pos === 'chat' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.chat.displayLock'] 
+        == true )
+      {
+         ret= true;
+      }
+
+      else if(pos === 'custom' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.custom.displayLock'] 
+        == true )
+      {
+         ret= true;
+      }
 
 
-  else if(pos == 'feedback')
-  {
-     //TODO
-  }
+      else if(pos === 'feedback' && trigger_fish.rbT.templatesDisplayLockFlags['trigger_fish.rbT.feedback.displayLock'])
+      {
+         ret= true;
+
+      }
 
 
- return ret;
+     return ret;
 };
 
 
@@ -5033,11 +4433,14 @@ trigger_fish.rbT.findZIndex = function(){
 
 trigger_fish.rbT.sendErrorToRBServer = function(string){
 
-// INTEGRATION_ENABLE  
-   
- trigger_fish.rbTAPP.log({"message": string,"log":true});
+  // INTEGRATION_ENABLE  
+     
+  console.log(string);
+  trigger_fish.rbTAPP.log({"message": string,"log":true});
 
- trigger_fish.rbTAPP.reportError({"message":string,"server":true});
+  trigger_fish.rbTAPP.reportError({"message":string,"server":true});
+
+  //console.log(string);
 
 };
 
@@ -5113,12 +4516,12 @@ trigger_fish.rbT.eventHandler = {
 
    if (idMatch[3])
    {
-     if ( idMatch[3] == 'Close')
+     if ( idMatch[3] === 'Close')
      {
         trigger_fish.rbT.eventHandler.closeTempl(idMatch);
      }
   
-    else if ( idMatch[3] == 'Roi' )
+    else if ( idMatch[3] === 'Roi' )
     {
          trigger_fish.rbT.eventHandler.roiFromTemplClick(idMatch,evt);
 
@@ -5167,7 +4570,7 @@ trigger_fish.rbT.eventHandler = {
        }     
 
 
-     else if(tempMatch[0] == 'modal')
+     else if(tempMatch[0] === 'modal')
      {
 
          var id = "rb" + trigger_fish.rbT.makeFirstLetterCapital(tempMatch[0])+trigger_fish.rbT.makeFirstLetterCapital(tempMatch[2])+trigger_fish.rbT.makeFirstLetterCapital(tempMatch[4])+"BaseContainer";
@@ -5208,7 +4611,7 @@ trigger_fish.rbT.eventHandler = {
           clearInterval(trigger_fish.rbT.templTimers['templ.displaytimer']);
 
       }
-      if(idMatch[0] == 'Topbar' || idMatch[0] == 'Bottombar' )
+      if(idMatch[0] === 'Topbar' || idMatch[0] === 'Bottombar' )
 
      {   
 
@@ -5217,7 +4620,7 @@ trigger_fish.rbT.eventHandler = {
 
      }
 
-     else if(idMatch[0] == 'Modal')
+     else if(idMatch[0] === 'Modal')
      {
 
          var id = "rb" + idMatch[0]+idMatch[1]+idMatch[2]+"BaseContainer";
@@ -5298,14 +4701,11 @@ trigger_fish.rbT.eventHandler = {
 
 trigger_fish.rbT.init = function(){
 	trigger_fish.rbT.keyPrefix = "{{";
-	trigger_fish.rbT.keySuffix = "}}";
-	trigger_fish.rbT.inited = true;
+	trigger_fish.rbT.keySuffix = "}}";  
+  trigger_fish.rbT.inited = true;
+
 
 };
-
-
-
-
 
 
 //******************************************************************************************
@@ -5374,17 +4774,25 @@ trigger_fish.rbT.isTemplateGoodToApplyInternal = function(html){
 
 //**************************************************************************************
 
-trigger_fish.rbT.applyHtmltoPageInternal = function(html){
+trigger_fish.rbT.applyHtmltoPageInternal = function(html,type){
 
-	if(html.length){
+  var isPosOccupied = trigger_fish.rbT.isTemplPosOccupied(type);
+   
+   if(isPosOccupied)
+   {
+      trigger_fish.rbT.sendErrorToRBServer("+++Postion Occupied by Another Template");
+   }else{
+	
+      if(html.length){
 
-	 jQuery('body').append(html);
-	// document.body.innerHTML = document.body.innerHTML+html;
-	}else{
+    	 jQuery('body').append(html);
+    	// document.body.innerHTML = document.body.innerHTML+html;
+    	}else{
 
-         trigger_fish.rbT.sendErrorToRBServer("Bad variable array error for template");
-	 			 return "";
-	 }
+             trigger_fish.rbT.sendErrorToRBServer("Bad variable array error for template");
+    	 			 return "";
+    	 }
+  }
 };
 
 //***********************************************************************************
@@ -5398,7 +4806,26 @@ trigger_fish.rbT.enableTimeOutHadnlingInternal= function(templateName,timerValue
     trigger_fish.rbT.eventHandler.timeOutHandler(templateName,timerValue);
 };
 
+//***************************************************************************************
+trigger_fish.rbT.applyHtmlToPage= function(){
+   
+    var html = trigger_fish.rbT.htmlGlobalStruct['trigger_fish.rbT.html'];
+    var type = trigger_fish.rbT.htmlGlobalStruct['trigger_fish.rbT.type']; 
+    var servermsg = trigger_fish.rbT.htmlGlobalStruct['trigger_fish.rbT.roiServerMsg']; 
+
+    if (trigger_fish.rbT.isTemplateGoodToApply(html)){
+        trigger_fish.rbT.applyHtmltoPage(html);
+        trigger_fish.rbT.enableClickHandling();
+        // trigger_fish.rbT.enableTimeOutHadnling(templateName,trigger_fish.rbT.templTimers['templ.templduration']*1000);
+
+        params.display = servermsg + " " +"Display " + "Success";
+
+        //trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
+    }
+};
+
 //*************************************************************************************
+
 trigger_fish.rbT.invokeActionScriptInternal=function(action){
 
 /*
@@ -5407,90 +4834,109 @@ trigger_fish.rbT.invokeActionScriptInternal=function(action){
 
 */
 
-if(1) // Check for Service Type Enhancement
- {   
- 
-      params= {};  
-      
-      trigger_fish.rbT.init();
-      
-      var actionParams = action.params;
-       
-      var type=action.desc.type; 
-      var api = action.desc.api;
-      var servermsg = type + "."+api;
-      
-      var isPosOccupied = trigger_fish.rbT.isTemplPosOccupied(type);
-
-      if(isPosOccupied)
-      {
-
-          trigger_fish.rbT.sendErrorToRBServer("Postion Occupied by Another Template");
-      }
-      else
-      {
-          var html = trigger_fish.rbT.getTemplateHTMLByName(type,api);
-
+    if(1) // Check for Service Type Enhancement
+     {   
+     
+          params= {};  
           
-              for (var key in actionParams)
-                 {
-                  if(actionParams.hasOwnProperty(key))
-                  {
-                     var keyVal = key;
-                       var value = actionParams[key];
-                       var tempMatch = ""
-                       var tempMatch = value.match(/\{\{[\w.\=\%\:\/\s\#\@\-\']*\}\}/g);
-                      
-                       if(tempMatch)
-                       {
-                       	  var tempActionKeyRetVal =""
-                       	  tempActionKeyRetVal=trigger_fish.rbT.fillTheRuntimeValueForTemplArgs(tempMatch,actionParams[key]);
-                          
-
-                          if(tempActionKeyRetVal != undefined)
-                          {	
-                             actionParams[key] = tempActionKeyRetVal;
-                          }   
-                       }
-                   }
-
-                 }      
-
-        //   for (var key in actionParams) {             
-        //     if(actionParams.hasOwnProperty(key)){	
-			     //     if( 'Zindex' == actionParams[key] ) {               
-				    //      actionParams[key] =  trigger_fish.rbT.findZIndex()+5;
-			     //     }
-			     //  }              
-		      // } 
-
-		
+          trigger_fish.rbT.init();
 
 
-
-          html = trigger_fish.rbT.getTemplateApplyVars(html, actionParams);
-          
-
-         if (trigger_fish.rbT.isTemplateGoodToApply(html)){
-            trigger_fish.rbT.applyHtmltoPage(html);
-            trigger_fish.rbT.enableClickHandling();
-           // trigger_fish.rbT.enableTimeOutHadnling(templateName,trigger_fish.rbT.templTimers['templ.templduration']*1000);
-		         trigger_fish.rbT.setTemplatesDisplayLockFlags(type,true);
-
-             params.display = servermsg + " " +"Display " + "Success";
-
-             //trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
+          //var delayVal = action.timers.delay;
 
 
-         }
-      }	
-  }else{
+          if(1)//delayVal==0)  //check for delay value to display templates
+            {
+                var actionParams = action.params;
+                 
+                var type=action.desc.type; 
+                var api = action.desc.api;
+                var servermsg = type + "."+api;
+                var custom = undefined;
 
-  	 // Report to Server for If Service Type Wrong
+                var isPosOccupied = trigger_fish.rbT.isTemplPosOccupied(type);
 
-  }    
+                if(isPosOccupied)
+                {
 
-};	 
+                    trigger_fish.rbT.sendErrorToRBServer("----Postion Occupied by Another Template");
+                }
+                else
+                {
+                        if(type != 'custom' && api != 'html')
+                    
+                        {
+                          var html = trigger_fish.rbT.getTemplateHTMLByName(type,api);
+                     
+                        }
+                        else{
+
+                          var html = undefined;    
+                        }
+                        for (var key in actionParams)
+                        {
+                            if(actionParams.hasOwnProperty(key))
+                            {
+                               var keyVal = key;
+                                 var value = actionParams[key];
+                                 var tempMatch = ""
+                                 var tempMatch = value.match(/\{\{[\w.\=\%\:\/\s\#\@\-\']*\}\}/g);
+                                 if(tempMatch)
+                                 {
+                                    var tempActionKeyRetVal =""
+                                    tempActionKeyRetVal=trigger_fish.rbT.fillTheRuntimeValueForTemplArgs(tempMatch,actionParams[key]);
+                                    
+
+                                    if(tempActionKeyRetVal != undefined)
+                                    { 
+                                       actionParams[key] = tempActionKeyRetVal;
+                                    }   
+                                 }
+                             }
+
+                        }      
+
+                  //   for (var key in actionParams) {             
+                  //     if(actionParams.hasOwnProperty(key)){  
+                     //     if( 'Zindex' == actionParams[key] ) {               
+                      //      actionParams[key] =  trigger_fish.rbT.findZIndex()+5;
+                     //     }
+                     //  }              
+                    // } 
+
+                    if(type != 'custom' && api != 'html'){
+                       html = trigger_fish.rbT.getTemplateApplyVars(html, actionParams);
+                   
+
+                    }else
+                    {
+                       html = actionParams.html;
+                    }
+                    
+                    if (trigger_fish.rbT.isTemplateGoodToApply(html)){
+                      trigger_fish.rbT.applyHtmltoPage(html,type);
+                      trigger_fish.rbT.enableClickHandling();
+                     // trigger_fish.rbT.enableTimeOutHadnling(templateName,trigger_fish.rbT.templTimers['templ.templduration']*1000);
+                       
+                       trigger_fish.rbT.setTemplatesDisplayLockFlags(type,true);
+
+                       params.display = servermsg + " " +"Display " + "Success";
+
+                       //trigger_fish.rbTServerChannel.conversion(params,trigger_fish.rbT.eventHandler.roiCallBackfromServerResponse);
+                    }
+                }
+          }else{
+
+                    trigger_fish.rbT.handlingOfDelayForTemplDisplay(action);
+
+          }   
+      }else{
+
+         // Report to Server for If Service Type Wrong
+
+      }    
+
+    };   
 
 
 /****************************[[interfaces.js]]*************************************/ 
@@ -5539,7 +4985,7 @@ trigger_fish.rbT.isTemplateGoodToApply = function(html){
 };
 
 //------------------------------------------
-trigger_fish.rbT.applyHtmltoPage = function(html){
+trigger_fish.rbT.applyHtmltoPage = function(html,type){
 	if (!trigger_fish.rbT.isInitialized()){
 		return "";
 	}
@@ -5547,7 +4993,7 @@ trigger_fish.rbT.applyHtmltoPage = function(html){
 		trigger_fish.rbT.sendErrorToRBServer("improper access of interface applyHtmltoPage");
 		return "";
 	}
-	return trigger_fish.rbT.applyHtmltoPageInternal(html);
+	return trigger_fish.rbT.applyHtmltoPageInternal(html,type);
 };
 
 
@@ -5589,3 +5035,5 @@ trigger_fish.rbT.invokeActionScript = function(action)
 	
 }
 
+
+})();

@@ -47,7 +47,7 @@ class Event
 
   # OUTPUT => {:return => true, :error => nil}
   def self.add!(params)
-    puts("Enter Event Add #{params.inspect}")
+    Rails.logger.info("Enter Event Add #{params.inspect}")
     
     if params["account_id"].blank? or params["app_id"].blank? or params["name"].blank? or params["properties"].blank?
       raise et("event.invalid_argument_in_event") 
@@ -61,7 +61,7 @@ class Event
     if params["actor_id"].blank?
       actor = Actor.create!(account_id: params["account_id"], app_id: params["app_id"])
       params["actor_id"] = actor._id 
-      puts("creating anonymous actor")
+      Rails.logger.info("creating anonymous actor")
     else
       actor = Actor.where(app_id: params["app_id"], _id: params["actor_id"]).first
       raise et("event.invalid_actor_id") if actor.blank?
@@ -91,7 +91,7 @@ class Event
 
     {:return => ev, :error => nil}  
   rescue => e
-    puts("**** ERROR **** #{er(e)}")
+    Rails.logger.error("**** ERROR **** #{er(e)}")
     {:return => nil, :error => e}
   end
 

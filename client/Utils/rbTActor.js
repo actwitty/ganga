@@ -14,7 +14,7 @@
  * documents the function and classes that are added to jQuery by this plug-in.
  * @memberOf jQuery
  */
-trigger_fish.rbTActor = function() {
+var rbTActor = function() {
 
   var __id = "";
   var __prop = {};
@@ -29,14 +29,17 @@ trigger_fish.rbTActor = function() {
       */
       retFromCookie : function()
       {
-      	trigger_fish.rbTDebug.log("retrieveing data for actor from cookie");
-        if (trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorProp)) {
-          this.setProperties(trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorProp)); 
+      	rbTDebug.log("Trying to retrieve data for actor from cookie");
+        if (rbTStore.get(rbTStore.defaultKeys.actorProp)) {
+          rbTDebug.log("Got Actor data in storage - enabling actor now!!");  
+          this.setProperties(rbTStore.get(rbTStore.defaultKeys.actorProp)); 
           this.enable();
         }
-        if (trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID)) {
-          this.setID(trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID));
+        if (rbTStore.get(rbTStore.defaultKeys.actorID)) {
+          rbTDebug.log("Got actor id in storage - setting actor id now!!");
+          this.setID(rbTStore.get(rbTStore.defaultKeys.actorID));
         } else {
+          rbTDebug.log("HAVE TO CREATE DUMMY ACTOR!!");
           this.createDummyActor();
         }
       },
@@ -77,7 +80,7 @@ trigger_fish.rbTActor = function() {
       */
       setID : function(id)
       {
-        trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.actorID, id);
+        rbTStore.set(rbTStore.defaultKeys.actorID, id);
         __id = id;
       },
 
@@ -88,7 +91,7 @@ trigger_fish.rbTActor = function() {
       setProperties : function(prop)
       {
         __prop = prop;
-        trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.actorProp, JSON.stringify(prop));
+        rbTStore.set(rbTStore.defaultKeys.actorProp, prop);
         this.enable();
       },
 
@@ -98,10 +101,9 @@ trigger_fish.rbTActor = function() {
       */
       propExist : function(prop)
       {
-        var a = JSON.stringify(__prop).replace(/(^{)|(}$)/g, "");
-        var b = JSON.stringify(prop).replace(/(^{)|(}$)/g, "");
-        trigger_fish.rbTDebug.log({"stored" : a , "passed" : b, "message":"actor prop existence"});
-        return (a.indexOf(b) >= 0) ? true : false;
+        var diff = {};
+        diff = rbTUtils.diff(prop,__prop, diff);
+        return diff;
       },
 
       /**
@@ -110,14 +112,16 @@ trigger_fish.rbTActor = function() {
       */
       createDummyActor : function()
       {
+        rbTAPP.log({"message":"Creating dummy actor"});
         if (!__id || !__prop) {
-          var obj = {"url"      : trigger_fish.rbTServerChannel.url.createActor,
-                     "app_read" : true, 
-                     "cb"       : { success: trigger_fish.rbTServerResponse.setActorID,
-                                    error  : trigger_fish.rbTServerResponse.defaultError
-                                  }
-                  };
-          trigger_fish.rbTServerChannel.makeServerRequest(obj);
+          var obj = {"url"         : rbTServerChannel.url.createActor,
+                     "actor_create": true, 
+                     "type"        : "POST",
+                     "cb"          : { success: rbTServerResponse.setActorID,
+                                       error  : rbTServerResponse.defaultError
+                                     }
+                    };
+          rbTServerChannel.makeServerRequest(obj);
         }
       },
 
@@ -127,12 +131,12 @@ trigger_fish.rbTActor = function() {
       */
       requestActorDetails : function(data)
       {
-        var oldActorId = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorID);
-        var actorProp = trigger_fish.rbTCookie.getCookie(trigger_fish.rbTCookie.defaultCookies.actorProp);
+        var oldActorId = rbTStore.get(rbTStore.defaultKeys.actorID);
+        var actorProp = rbTStore.get(rbTStore.defaultKeys.actorProp);
         if (!oldActorId || (oldActorId !== data.id) || !actorProp) {
-          trigger_fish.rbTCookie.setCookie(trigger_fish.rbTCookie.defaultCookies.actorID, JSON.stringify(data.id));
+          rbTStore.set(rbTStore.defaultKeys.actorID, JSON.stringify(data.id));
           this.setID(data.id);
-          trigger_fish.rbTServerChannel.actorDetails();
+          rbTServerChannel.actorDetails();
         }
       },
 
@@ -147,7 +151,7 @@ trigger_fish.rbTActor = function() {
           return;
         for (var req in __eventRQ) {
           var r = __eventRQ[req];
-          trigger_fish.rbTServerChannel.makeServerRequest(r);
+          rbTServerChannel.makeServerRequest(r);
         }
         __eventRQ = [];
       }

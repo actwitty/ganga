@@ -2,6 +2,10 @@ require 'rubygems'
 require 'spork'
 require 'capybara/rails'
 require 'yajl/json_gem'
+
+require 'sidekiq'
+#require 'sidekiq/testing'
+require 'sidekiq/testing/inline'
 #uncomment the following line to use spork with the debugger
 #require 'spork/ext/ruby-debug'
 

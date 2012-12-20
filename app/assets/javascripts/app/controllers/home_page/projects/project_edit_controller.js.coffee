@@ -39,17 +39,17 @@ App.ProjectEditController = Em.ObjectController.extend
 
     name = project.get 'description.name'
     email = project.get 'description.email'
-    domain = project.get 'description.domain'
+    origin = project.get 'description.origin'
     
     nameReg = /^[-a-zA-Z0-9_ ]+$/
     
-    urlReg = /http(s?):\/\/[A-Za-z0-9\.-]{3,}\.[A-Za-z]{2,4}/
+    urlReg = /http(s?):\/\/[A-Za-z0-9\.-]{3,}\.[0-9A-Za-z]{1,4}/
     emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/    
-    if email is null or name is null and domain is null or
-       email.length is 0 or name.length is 0 or domain.length is 0 or
+    if email is null or name is null and origin is null or
+       email.length is 0 or name.length is 0 or origin.length is 0 or
         not emailReg.test(email) or not nameReg.test(name) 
       # TODO: Commented to accept port
-      #or not urlReg.test(domain)      
+      #or not urlReg.test(origin)      
       message = "Domain, email and name are mandatory. Please correct the settings"
       App.get('router.applicationController').setInlineAlert('error', 'Validation Failed !', message )   
       false

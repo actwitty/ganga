@@ -13,11 +13,11 @@ App.Router = Ember.Router.extend
           if App.isLoggedIn is true
             router.get('accountController').load()            
           else
-            router.transitionTo('landingState')
+            router.transitionTo('landingState.home')
       credentialGetDone: (router, event) ->        
         router.transitionTo('loggedInState.index')
       credentialGetFailed:(router, event) ->
-        router.transitionTo('landingState')
+        router.transitionTo('landingState.home')
 
     #STATES
     index: Ember.Route.extend
@@ -43,15 +43,34 @@ App.Router = Ember.Router.extend
     # LANDING STATE STARTS HERE
     landingState: Ember.Route.extend 
       #SETUP
+
       route: '/'
-      connectOutlets: (router) ->        
-        router.get('applicationController').connectOutlet('main')
-        mainController = router.get('mainController')
-        mainController.connectOutlet({name: 'mainTopbar',outletName: 'mainTopBarOutlet'} )
-        mainController.connectOutlet({name: 'mainInvite',outletName: 'mainInviteBoxOutlet'} )
+      connectOutlets: (router, event) ->        
+        router.get('applicationController').connectOutlet('main')        
+        
+      
       #EVENTS
+      navClick: (router, event) ->        
+        mainView =  event.view.get('_parentView')        
+        newstate = mainView.applyModeChange(event)        
+        if newstate isnt null
+          router.transitionTo(newstate) 
+          $(window).scrollTop(0)
+        event.preventDefault()
 
       #STATES
+      home: Ember.Route.extend 
+        route: '/home'
+      pricing: Ember.Route.extend 
+        route: '/pricing'
+      howitworks: Ember.Route.extend 
+        route: '/howitworks'
+      features: Ember.Route.extend 
+        route: '/features'
+      contactus: Ember.Route.extend 
+        route: '/contactus'        
+      aboutus: Ember.Route.extend 
+        route: '/aboutus'
     # LANDING STATE ENDS HERE
     
     # LOGGED IN STATE STARTS HERE
@@ -125,9 +144,7 @@ App.Router = Ember.Router.extend
 
       #event --------------------------------------------
       openEventList: (router, event) ->
-        router.transitionTo('loggedInState.projectConfigState.listEventState')
-        console.log router
-
+        router.transitionTo('loggedInState.projectConfigState.listEventState')       
         event.preventDefault()
 
       #event --------------------------------------------
@@ -191,7 +208,7 @@ App.Router = Ember.Router.extend
           router.get('homeSideController').set 'selectedMenu', 'appList'   
           projectController = router.get('projectsController')       
           if projectController.selected is null
-            if projectController.get 'content' isnt null and projectController.get('content').length isnt 0
+            if projectController.get('content') isnt null and projectController.get('content').length isnt 0
               projectController.set 'selected', projectController.get('content')[0]
           homeController.connectOutlet({name: 'projects', outletName: 'homeContentOutlet'} )
 

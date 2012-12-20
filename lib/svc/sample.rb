@@ -1,5 +1,3 @@
-require 'sample/actions'
-require 'sample/triggers'
 # NOTE - A Template SVC
 
 module Svc

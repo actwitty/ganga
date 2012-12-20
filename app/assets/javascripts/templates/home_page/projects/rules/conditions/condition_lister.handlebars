@@ -1,9 +1,0 @@
-<div class="conditions_box">
-
-  <h3> Trigger Condition </h3>
-  {{#each condition in view.conditions}}
-  	{{view App.ConditionView conditionBinding="condition"}}
-  {{/each}}
-  <div class="add_line"> </div>
-  <div class="add" {{action "addNewCondition"}}> </div>
-</div>  <!-- Conditions Main box end here -->

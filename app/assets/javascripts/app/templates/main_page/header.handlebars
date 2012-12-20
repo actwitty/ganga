@@ -1,0 +1,69 @@
+<div class="navbar navbar-fixed-top">
+  
+  <div class="navbar-inner">
+    
+    <div class="container">
+      
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+      
+      <a class="brand" href="./">
+        Rulebot        
+      </a>      
+      <div style="float:right;margin-top:-8px;">
+        <a class="btn btn-large btn-warning" nav='register' style='cursor:pointer;' href="/accounts/sign_in">
+          Sign-In
+        </a>  
+      </div> 
+      <div class="nav-collapse">
+
+        <ul class="nav pull-right">
+          <li class="nav_home">           
+            <a {{action navClick}} nav='home' style='cursor:pointer;'>
+              Home
+            </a>            
+          </li>
+          
+          <li class="dropdown nav_pricing" style='cursor:pointer;'>           
+            <a {{action navClick}} nav='pricing'>
+              Plans
+            </a>            
+          </li>
+          
+          <li class="nav_features">            
+            <a {{action navClick}} nav='features' style='cursor:pointer;'>
+              Features
+            </a>            
+          </li>
+          
+          <li class="nav_aboutus">            
+            <a {{action navClick}} nav='aboutus' style='cursor:pointer;'>
+              About Us
+            </a>            
+          </li>
+          
+          <li class="nav_faq">            
+            <a {{action navClick}} nav='howitworks' style='cursor:pointer;'>
+              How It Works
+            </a>            
+          </li>
+      
+          <li class="nav_contactus">            
+            <a {{action navClick}} nav='contactus' style='cursor:pointer;'>
+              Contact Us
+            </a>            
+          </li>
+
+
+        </ul>
+
+      </div><!--/.nav-collapse -->  
+  
+    </div> <!-- /container -->
+    
+  </div> <!-- /navbar-inner -->
+  
+</div> <!-- /navbar -->

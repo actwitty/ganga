@@ -15,36 +15,19 @@
  * @memberOf jQuery
  */
 
-var backcode="1102012";
-function EasyjQuery_Cache_IP(fname,json) {
-  trigger_fish.rbTAPP.log({"message":"easy jquery response","data":json});
-  eval(fname + "(json);");
-}
-function EasyjQuery_Get_IP(fname,is_full) {
-  var full_version = "";
-  var easyJQData = trigger_fish.rbTCookie.getCookie("easy_jquery");
-  if (!easyJQData) {
-    trigger_fish.rbTAPP.log("Could not found easyJQData in cache, fetching it now!!!");
-    jQuery.getScript("https://api.easyjquery.com/ips/?callback=" + fname + full_version);
-  } else{
-    trigger_fish.rbTAPP.log("Found easyJQData in cache, setting it now!!!");
-    trigger_fish.rbTUtils.keepEasyJQVars(easyJQData);
-  }
-}
 
-trigger_fish.rbTUtils = {
+var rbTUtils = {
 
   eJQ : {},
 
   /**
   *
-  *
   */
   keepEasyJQVars : function(data)
   {
     this.eJQ = data;
-    trigger_fish.rbTCookie.setCookie("easy_jquery",data);
-    trigger_fish.rbTAPP.wake_RBT_APP(); 
+    rbTStore.set("easy_jquery",data);
+    rbTAPP.initialize(); 
   },
 
   /**
@@ -57,14 +40,21 @@ trigger_fish.rbTUtils = {
 
   /**
   *
-  *
   */
-  invokeEasyJquery : function()
+  invokeEasyJquery : function(fname, is_full)
   {
-    trigger_fish.enableCORS(jQuery);
-    trigger_fish.initJStorage();
-    EasyjQuery_Get_IP("trigger_fish.rbTUtils.keepEasyJQVars");
+    var full_version = "";
+    var easyJQData = rbTStore.get("easy_jquery");
+    
+    if (!easyJQData) {
+      rbTAPP.log("Could not found easyJQData in cache, fetching it now!!!");
+      jQuery.getScript("https://api.easyjquery.com/ips/?callback=" + fname + full_version);
+    } else{
+      rbTAPP.log("Found easyJQData in cache, setting it now!!!");
+      this.keepEasyJQVars(easyJQData);
+    }
   },
+
 
   /** Initialize jquery if needed be
     *  @return void
@@ -74,7 +64,10 @@ trigger_fish.rbTUtils = {
   {
     function includeJQ()
     { 
-      this.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",trigger_fish.rbTUtils.invokeEasyJquery);
+      var rbTApp = rbTAPP;
+      this.embedScript("https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",
+                        this.bindCB(rbTApp,rbTApp.actOnJQInit)
+                      );
     }
 
     if (typeof jQuery != 'undefined') {
@@ -85,13 +78,78 @@ trigger_fish.rbTUtils = {
             || /^1.3/.test(jQuery.fn.jquery)) {
             includeJQ.call(this);
         } else {
-          trigger_fish.rbTUtils.invokeEasyJquery();
+          rbTAPP.actOnJQInit();
         }
     } else {
         includeJQ.call(this);
     }
   },
 
+  /**
+  *
+  */
+  bindCB : function(scope, fn) 
+  {
+    return function () {
+        fn.apply(scope, arguments);
+    };
+  },
+  
+  /**
+  * 
+  */
+  type : function(obj)
+  {
+    return Object.prototype.toString.call(obj).split("]")[0].split(" ")[1];
+  },
+
+  /**
+  * Check if object is empty. Find it recursively not only on keys but also on values.
+  * @param {object} o The object for which emptiness has to be checked.
+  * @return {boolean} 
+  */
+  isEmpty : function(o) 
+  {
+    if (!o) return true;
+    if (this.type(o) === "String" || this.type(o) === "Array") {
+      return o.length === 0;
+    } else if (this.type(o) === "Number") { return false;}
+    for(var i in o) {
+      if (this.type(o[i]) === "Object") {
+        return this.isEmpty(o[i]);
+      } else if (this.type(o[i]) === "String" || this.type(o[i]) === "Array") {
+        if (o[i].length) { return false;}
+      } else if (this.type(o[i]) === "Number") { return false;}
+    }
+    return true;
+  },
+
+  /**
+  * Specially curated to get difference from Rulebot server response.
+  * @param {object} first. The object for which difference has to be find out.
+  * @param {object} second. The object against which difference has to be find out.
+  * @param {object} r. The resultant object in which differential data will be stored.
+  * @return {object|undefined} If differential object, else undefined.
+  */ 
+  diff : function(first,second,r)
+  {
+    var i = 0;
+    for (i in first) {
+      if (this.type(second[i]) === "Undefined")  {
+        r[i] = first[i];  
+      } else if (this.type(first[i]) === "Object" && this.type(second[i]) === "Object") {
+        r[i] = diff(first[i], second[i], {});
+        if (!result[i]) delete result[i];
+      } else if ( this.type(second[i]) === "Array" && first[i] !== second[i][second[i].length-1]) {
+        r[i] = first[i];
+      }
+    }
+    return this.isEmpty(r) ? undefined : r;
+  },
+
+  /**
+  *
+  */ 
 	parseURL: function(urlStr)
 	{
       var a = document.createElement("a"), query = {};
@@ -134,7 +192,7 @@ trigger_fish.rbTUtils = {
         if(!this.readyState ||
             this.readyState == "loaded" || 
             this.readyState == "complete") {
-            trigger_fish.rbTDebug.log("Script "+ url +"loaded successfully");
+            rbTDebug.log("Script "+ url +"loaded successfully");
             if (callback) {
               if (params)
                 callback(params);
@@ -143,7 +201,7 @@ trigger_fish.rbTUtils = {
         }
       }
   },
-  
+  /*
   // JSON
   JSON : {
       parse: (window.JSON && window.JSON.parse) || function(data)
@@ -176,5 +234,7 @@ trigger_fish.rbTUtils = {
         } 
       } 
     }
+    */
+
     
 };

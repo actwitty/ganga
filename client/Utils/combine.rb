@@ -9,7 +9,7 @@ files = ["rbTAPP.js",
 	     "rbTServerReq.js",
 	     "rbTSystemVar.js",
 	     "rbTUtils.js",
-	     "rbTCookieHandler.js",
+	     "rbTStore.js",
 	     "rbTBusiness.js",
 	     #"rbJSON.js",
 	     "rbTInitApp.js"

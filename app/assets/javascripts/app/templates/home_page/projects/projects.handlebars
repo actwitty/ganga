@@ -1,0 +1,29 @@
+{{view App.BannerView }}
+<div class="proj_list"> 
+
+  <table id="appsTable" style="margin-top:20px;margin-bottom:40px"  cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered dataTable"> 
+    <thead>
+      <tr style="height:40px;"> 
+        <th style="padding-bottom:10px;">AppId</th> 
+        <th style="padding-bottom:10px;">Name</th> 
+        <th style="padding-bottom:10px;">Domain</th> 
+        <th style="padding-bottom:10px;">Email</th> 
+        <th style="padding-bottom:10px;" >Comment</th> 
+        <th style="padding-bottom:10px;"></th>         
+      </tr> 
+    </thead>
+
+    <tbody> 
+      {{#each project in controller.content}}        
+        <tr style='cursor:pointer;height:40px;padding-top:8px;'>  
+          <td  {{action showProjectRules project }}>{{project.id}}</td> 
+          <td  {{action showProjectRules project }}>{{project.description.name}}</td> 
+          <td  {{action showProjectRules project }}>{{project.description.origin}}</td> 
+          <td  {{action showProjectRules project }}>{{project.description.email}}</td> 
+          <td  {{action showProjectRules project }}>{{project.description.comment}}</td> 
+          <td ><a class="edit_link" {{action editProject project  }}> Edit </a></td>           
+        </tr> 
+      {{/each}}
+    </tbody>
+  </table>
+</div>

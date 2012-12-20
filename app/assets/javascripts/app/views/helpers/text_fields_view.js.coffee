@@ -43,7 +43,7 @@ App.RequiredUrlField = Ember.TextField.extend
   focusOut: ->  
     url = @get 'value'
     url= jQuery.trim( url )
-    urlReg = /http(s?):\/\/[A-Za-z0-9\.-]{3,}\.[A-Za-z]{2,4}/
+    urlReg = /http(s?):\/\/[A-Za-z0-9\.-]{3,}\.[0-9A-Za-z]{1,4}/
 
     if url.length is 0
       url =  ''
