@@ -26,12 +26,9 @@
 //= require_self
 //= require ember_app
 
-
-
-
-App = Ember.Application.create( {
-								 rootElement: '#rulebotEmberBase',
-								 autoinit: false
+App = Ember.Application.create({
+									autoinit: false,
+								 	rootElement: '#trigmaticEmberBase'								 
 							   });
 
 

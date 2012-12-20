@@ -73,7 +73,7 @@ class App
   ##    :account_id => "2334534534"           [MANDATORY] 
   ##    :description => {                     [MANDATORY]
   ##      :name => "App Name 1"               [MANDATORY] # must be unique in account
-  ##      :origin => "http://www.rulebot.com" [OPTIONAL]  # can be used from API
+  ##      :origin => "http://www.trigmatic.com" [OPTIONAL]  # can be used from API
   ##      :email => "john.doe@example.com",
   ##      :address => {:city => "Bangalore"}
   ##    }

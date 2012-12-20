@@ -1,9 +1,9 @@
 {{view App.BannerView }}
 <div class="ev_list">
-  <h2> Enabling Rulebot on your web </h2>
+  <h2> Enabling Trigmatic on your web </h2>
   <!--  Initializer script -->
     <p class="description">
-      The following script needs to be added to the all the pages where you would like rulebot to roll actions.<br/>
+      The following script needs to be added to the all the pages where you would like Trigmatic to roll actions.<br/>
       How-ever it is recommended to include this script in the main layout of the site, which can be accessed from
       all pages of the site.
     </p>
@@ -12,11 +12,11 @@
 // Add this code snippet to the start of head tag
 &lt;script type="text/javascript" src="https://s3.amazonaws.com/actwitty-rbt/tgG.js.jgz"&gt;&lt;/script&gt;
 &lt;script type="application/javascript"&gt;
-var a=a||[];a.push(["_setApp","{{getvalue view.projectId}}"]),a.push(["_setAccount","{{getvalue view.account.id}}"]),a.push(["_setVer","1.0.1"]),function(a,b){if(!a.getElementById(b)){var c=a.createElement("script");c.type="text/javascript",c.async=!0,c.src="https://s3.amazonaws.com/actwitty-rbt/rbt"+(tfGzip?".min.js.jgz":".min.js"),c.id=b,a.getElementsByTagName("head")[0].appendChild(c),function(a,b){function e(b){a.rb[b]=function(c,d,e){a.rb.q.push({t:b,a:c,b:d,c:e})}}var c,d=b.length;a.rb={},a.rb.q=[];for(c=0;c&lt;d;c++)e(b[c])}(window,["identify","sendEvent","setUser","alias"])}}(document,"trigger-fish-pdk")
+var _rbTk=_rbTk||{};_rbTk.appID="{{getvalue view.projectId}}";_rbTk.accountID="{{getvalue view.account.id}}";_rbTk.version="1.0.1";function(a,b){if(!a.getElementById(b)){var c=a.createElement("script");c.type="text/javascript",c.async=!0,c.src="https://s3.amazonaws.com/actwitty-rbt/rbt"+(tfGzip?".min.js.jgz":".min.js"),c.id=b,a.getElementsByTagName("head")[0].appendChild(c),function(a,b){function e(b){a.rb[b]=function(c,d,e){a.rb.q.push({t:b,a:c,b:d,c:e})}}var c,d=b.length;a.rb={},a.rb.q=[];for(c=0;c&lt;d;c++)e(b[c])}(window,["identify","track"])}}(document,"trigger-fish-pdk")
 &lt;&#47;script&gt;
       </pre>
       <p class="description">
-        Paste this in the &lt;head&gt; &lt;&#47;head&gt; section of your page. The rulebot library is loaded asynchronously so as to make sure that there are no delays in loading your webpages.
+        Paste this in the &lt;head&gt; &lt;&#47;head&gt; section of your page. The trigmatic library is loaded asynchronously so as to make sure that there are no delays in loading your webpages.
       </p>
     </div>
   
@@ -34,7 +34,7 @@ var a=a||[];a.push(["_setApp","{{getvalue view.projectId}}"]),a.push(["_setAccou
   <div class="code_section">
     <pre class="prettyprint">
 $("#purchase").click(function(){
-    rb.sendEvent("book_purchase",{
+    rb.track("book_purchase",{
         'book' : { 
                      'name' : 'alchemist',
                      'author': 'Paulo Coelho',
@@ -66,7 +66,7 @@ $("#purchase").click(function(){
   </p>
   <div class="code_section">
     <pre class="prettyprint">
-rb.sendEvent("page_load",{
+rb.track("page_load",{
   'user' : {
       'name' : 'Lee Cooper',
       'gender' : 'male'    
@@ -99,7 +99,7 @@ rb.identify("213462356902");
   </p>
   <div class="code_section">
     <pre class="prettyprint">
-rb.setUser({
+rb.track("set_user",{
   'name' : 'John Doe',
   'gender': 38,
   'location' : {

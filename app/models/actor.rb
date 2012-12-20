@@ -121,7 +121,7 @@ class Actor
   # NOTE
   ## set the property of actor explicitly
   ## It sets both System property of Actor and Profile Properties of actor
-  ## System Property - describes browser, location, OS etc auto extracted by rulebot script
+  ## System Property - describes browser, location, OS etc auto extracted by trigmatic script
   ## Profile Property - describes property of actor which a business want to set like "gender", "dob" etc
 
   # INPUT

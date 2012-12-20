@@ -28,6 +28,7 @@
       throw new Error("App-id, Account-ID are not mentioned")
     } else {
       // if everything seems fine, then set app/acc id and initialize rbTAPP.
+      rbTDebug.useDefaults();
       rbTAPP.setAppID(appid);
       rbTAPP.setAccountID(accid);
       rbTUtils.includeJQIfNeeded();
@@ -39,5 +40,5 @@
                                      "accid"    : accid || ""
                                     });
   }
-})(_rbTK[0][1], _rbTK[1][1], _rbTK[2][1]);
+})(_rbTK.appID, _rbTK.accountID, _rbTK.version);
 

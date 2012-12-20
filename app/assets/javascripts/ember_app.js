@@ -65,6 +65,7 @@ $(document).ready(function(){
     App.AccountID = loggedInAccountID;
     App.isLoggedIn = true; 
   }
+  
   App.initialize(App.router);
   App.get("router").send("initDone");
   /* For debugging */

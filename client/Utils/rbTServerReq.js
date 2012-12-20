@@ -14,7 +14,10 @@
  * documents the function and classes that are added to jQuery by this plug-in.
  * @memberOf jQuery
  */
-//rbTServerChannel = {
+
+/**
+* Server request interaction manager for the application.
+*/
 var rbTServerChannel = {
   
   rbt_url : (document.location.hostname==="localhost" || document.location.hostname==="127.0.1.1") ? 
@@ -140,19 +143,18 @@ var rbTServerChannel = {
       rbTAPP.setTransVar(e,{});
     }
 
-    var that = obj;
     rbTAPP.log("Making rulebot server call for " + obj.url);
     try {
       var reqServerData = this.extendRequestData(obj);
       var callback = this.extendCallbacks(obj.cb);
       if (obj.async && obj.async === "noasync") var asyncSt = false;
       else var asyncSt = true;
-      var that = obj;
+      var __this = obj;
       var url = (obj.event) ? rbTServerChannel.url.fireEvent : obj.url;
-      that.requestData = reqServerData;
+      __this.requestData = reqServerData;
       jQuery.ajax({
             url: getURL.call(this,obj.type,url),
-            type: that.type || 'GET',
+            type: __this.type || 'GET',
             async: asyncSt,
             contentType : getContentType(obj.type),
             data: reqServerData,
@@ -160,34 +162,34 @@ var rbTServerChannel = {
             cache:true,
             xhrField : { withCredentials:true},
             beforeSend: function() {
-                if (that.event) {
-                  rbTStore.set("lastevent", that.event);
-                  rbTAPP.setTransVar(that.event,that.params);
+                if (__this.event) {
+                  rbTStore.set("lastevent", __this.event);
+                  rbTAPP.setTransVar(__this.event,__this.params);
                 }
             },
             success: function ( respData ) {
                 if (typeof respData === "string") respData = JSON.parse(respData);
-                rbTAPP.log({"message":"server response success " + that.url,"data":respData});
+                rbTAPP.log({"message":"server response success " + __this.url,"data":respData});
 
-                if (that.event) {
+                if (__this.event) {
                   rbTStore.deleteKey("lastevent");
-                  rbTRules.executeRulesOnEvent(that.event);
+                  rbTRules.executeRulesOnEvent(__this.event);
                   if (respData && respData.actor) { 
-                    callback.success(respData);
+                    callback.success(respData, __this);
                   }
-                  resetEventVar(that.event);
+                  resetEventVar(__this.event);
                 } else {
-                  respData.url = that.url;
-                  if (that.set_actor) respData.actor = respData;
-                  callback.success(respData);
+                  respData.url = __this.url;
+                  if (__this.set_actor) respData.actor = respData;
+                  callback.success(respData, __this);
                 }
             },
             error:function(XMLHttpRequest,textStatus, errorThrown){ 
-                rbTAPP.log({"message":"server response error " + that.url,"data_closure":that,"textStatus":textStatus});
-                if (that.event) {
-                  resetEventVar(that.event); 
-                } else if (that.identify && XMLHttpRequest.responseText.indexOf("is already in use")) {
-                  rbTAPP.log("Actor is already in use ::" + that.requestData.uid);
+                rbTAPP.log({"message":"server response error " + __this.url,"data_closure":__this,"textStatus":textStatus});
+                if (__this.event) {
+                  resetEventVar(__this.event); 
+                } else if (__this.identify && XMLHttpRequest.responseText.indexOf("is already in use")) {
+                  rbTAPP.log("Actor is already in use ::" + __this.requestData.uid);
                   rbTServerChannel.actorDetails();
                 }
                 callback.error();
@@ -196,7 +198,7 @@ var rbTServerChannel = {
     } catch(e) {
       rbTAPP.reportError({ "exception": e.message,
                           "message"   : "SERVER REQUEST FAILED" , 
-                          "obj"       : JSON.stringify(that),
+                          "obj"       : JSON.stringify(__this),
                           "log"       : "error" 
                          }); 
     }

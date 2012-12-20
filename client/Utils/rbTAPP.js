@@ -17,13 +17,19 @@
 
 var version = "1.0.1";
 
+/**
+* Main app specific holder managing all id's and initialization of plugins.
+* @return {Object} series of managing functions for application.
+*/
 var rbTAPP = function() {
   var configs = {
                  "status"   : false,
                  "transVar" : {}
-                }; 
+                };
+  var _p = "RulebotClient-"; 
 
-  return {    
+  return { 
+
       /** 
       *  Do following tasks on initialization of the app
       *  Get app details
@@ -31,7 +37,7 @@ var rbTAPP = function() {
       */
       initialize : function()
       {
-        rbTDebug.log("Initializing RBT APP");
+        rbTAPP.log("Initializing RBT APP");
         rbTServerChannel.appDetails();
       },
 
@@ -94,7 +100,7 @@ var rbTAPP = function() {
       */
       wakeUp : function()
       {
-        rbTDebug.log("Initializing RBT APP");
+        rbTAPP.log("Initializing RBT APP");
         this.initialize();
       },
 
@@ -194,13 +200,10 @@ var rbTAPP = function() {
       */ 
       reportError : function(params)
       {
-        try {
-            this.log(params);
-            if (params.server) {
-              rbTServerChannel.reportError(params);
-            }
-        } catch(e) {
-          // FIXME what to do?
+        params.scope = params.scope || _p + "==ERROR=="; 
+        rbTDebug.error(params);
+        if (params.server) {
+          rbTServerChannel.reportError(params);
         }
       },
       
@@ -211,11 +214,14 @@ var rbTAPP = function() {
       */
       log : function(params)
       {
-        if(params && params.message) {
-          rbTDebug.log(params.message);
+        if (typeof(params) === "string") {
+          params = _p + params;
+        } else if(params && params.message) {
+          params.scope = params.scope || _p; 
+          rbTAPP.log(_p + params.message);
         }
-        //rbTDebug.log(params)
-        console.log(params);
+        rbTDebug.log(params)
+        //console.log(params);
       },
   };    
 }();

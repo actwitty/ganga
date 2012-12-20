@@ -14,8 +14,10 @@
  * documents the function and classes that are added to jQuery by this plug-in.
  * @memberOf jQuery
  */
-//rbTKey = {
-//rbTStore = {  
+
+/**
+ * Data storage manager for the application.
+ */
 var rbTStore = {  
 
 

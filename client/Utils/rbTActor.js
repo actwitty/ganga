@@ -14,6 +14,11 @@
  * documents the function and classes that are added to jQuery by this plug-in.
  * @memberOf jQuery
  */
+
+ /**
+ * Actor specific stuffings to be manager.
+ * @return {Object} series of managing functions for actors.
+ */
 var rbTActor = function() {
 
   var __id = "";
@@ -29,19 +34,23 @@ var rbTActor = function() {
       */
       retFromCookie : function()
       {
-      	rbTDebug.log("Trying to retrieve data for actor from cookie");
-        if (rbTStore.get(rbTStore.defaultKeys.actorProp)) {
-          rbTDebug.log("Got Actor data in storage - enabling actor now!!");  
-          this.setProperties(rbTStore.get(rbTStore.defaultKeys.actorProp)); 
-          this.enable();
-        }
+      	rbTAPP.log("Trying to retrieve data for actor from cookie");
+
         if (rbTStore.get(rbTStore.defaultKeys.actorID)) {
-          rbTDebug.log("Got actor id in storage - setting actor id now!!");
+          rbTAPP.log("Got actor id in storage - setting actor id now!!");
           this.setID(rbTStore.get(rbTStore.defaultKeys.actorID));
+          if (rbTStore.get(rbTStore.defaultKeys.actorProp)) {
+            rbTAPP.log("Got Actor data in storage - enabling actor now!!");  
+            this.setProperties(rbTStore.get(rbTStore.defaultKeys.actorProp)); 
+            this.enable();
+          } else {
+            this.requestActorDetails({"id": this.getID()}); 
+          }
         } else {
-          rbTDebug.log("HAVE TO CREATE DUMMY ACTOR!!");
+          rbTAPP.log("HAVE TO CREATE DUMMY ACTOR!!");
           this.createDummyActor();
         }
+
       },
 
       isReady : function()
@@ -70,8 +79,10 @@ var rbTActor = function() {
 
       enable : function()
       {
-        __state = true;
-        this.flushEvRQ();
+        if(!__state) {
+          __state = true;
+          this.flushEvRQ();
+        }
       },  
       /** 
       *  Set Actor ID

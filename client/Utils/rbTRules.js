@@ -15,7 +15,10 @@
  * @memberOf jQuery
  */
 
-
+/**
+* Rule manager for application.
+* @return {Object} series of managing functions for rules.
+*/
 var rbTRules = function ()
 {
   var __ruleTable   = {},
@@ -141,7 +144,7 @@ var rbTRules = function ()
     {
       try {
         // Hand over action to templating engine for processing event action.
-        trigger_fish.rbT.invokeActionScript(rule.action);
+        rbT.invokeActionScript(rule.action);
       } catch(e) {
         rbTAPP.reportError({"exception" : e.message,
                             "message": "action could not be invoked" , 
@@ -324,7 +327,9 @@ var rbTRules = function ()
       }
     },
 
-    /* RULE FUNCTIONS */
+    /**
+     * Hold all rule functions 
+     */
     rule : 
     {
       /**

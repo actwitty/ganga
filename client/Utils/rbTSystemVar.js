@@ -15,7 +15,11 @@
  * @memberOf jQuery
  */
 /* Rule Bot scope to handle systems variables */
-//rbTSystemVar = {
+
+
+/**
+ * Manager for all systems specific variables.
+ */
 var rbTSystemVar = {
 
   // All properties will be set here
