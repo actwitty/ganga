@@ -73,9 +73,8 @@ Ganga::Application.configure do
 
   # adding mailer in production - alok - 6 lines
   config.action_mailer.default_url_options = { :host => 'rulebot.com' }
-  # A dummy setup for production - no deliveries, but logged
   config.action_mailer.delivery_method = :smtp
-  config.action_mailer.perform_deliveries = false
+  config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.default :charset => "utf-8"
 
@@ -85,7 +84,7 @@ Ganga::Application.configure do
     :address =>        'smtp.mandrillapp.com',
     :user_name =>      ENV['MANDRILL_USERNAME'],
     :password =>       ENV['MANDRILL_APIKEY'],
-    :domain =>         'heroku.com',
+    :domain =>         'rulebot.com',
     :authentication => :plain
   }
   ActionMailer::Base.delivery_method = :smtp
