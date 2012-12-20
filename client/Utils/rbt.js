@@ -3842,26 +3842,35 @@ var RBT = function()
     },
 
     /**
-    *
+    * Exposed api to track events
+    * @param {String} ev Event to ve tracked
+    * @param {Object} prop Property attached to the event.
+    * @return {Boolean} status of the api call. 
     */
     track : function(ev, prop)
     {
-      if (!ev || !prop) return;
+      if (!ev || !prop) return false;
 
       if (ev === "set") {
         _setUser.call(this,prop);
       } else {
         _sendEvent.call(this,ev, prop)
       }
+
+      return true;
     },
 
     /**
-    *
+    * Exposed api to track user
+    * @param {String} id The id on which user needs to be identified.
+    * @return {Boolean} status of the api call.
     */
-    identify : function(params)
+    identify : function(id)
     {
-      _identify.call(this,params);
+      _identify.call(this,id);
+      return true;
     },
+
   };
 };
 
