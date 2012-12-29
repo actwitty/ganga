@@ -37,7 +37,7 @@ var rbTStore = {
    */
   qualifiedName : function(key)
   {
-    return this.namePrefix + key;
+    return this.namePrefix + rbTAPP.getAppID() + "-" + key;
   },
 
   /** Get key string.
