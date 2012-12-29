@@ -29,7 +29,7 @@ class Formatter
           }  
 
 
-  ONLY_APP_LOGS  = false 
+  ONLY_APP_LOGS  = true 
   TEST_LOG_TO_CONSOLE = true
 
   SEVERITY_VALUE = {"INFO" => 1, "DEBUG" => 2, "WARN" => 3, "ERROR" => 4, "FATAL" => 5, "UNKNOWN" => 6}
