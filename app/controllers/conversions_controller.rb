@@ -17,7 +17,9 @@ class ConversionsController < ApplicationController
   ##   }
   ## }
 
-  # OUTPUT => {
+  # OUTPUT =>
+  ##[sync call] 
+  ##         {
   ##              "id"=>"50838a5e63fe85d820000005", 
   ##
   ##              "account_id"=>"50838a5e63fe85d820000004", 
@@ -32,18 +34,28 @@ class ConversionsController < ApplicationController
   ##                            ], 
   ##              "updated_at"=>"2012-10-21T05:38:38Z",   "created_at"=>"2012-10-21T05:38:38Z",
   ##          }
+  ##[async call]
+  ##          {status: true}
+
   def create
     Rails.logger.info("Enter Conversion Create")
-    
-    params[:account_id] = current_account._id 
-    ret = Conversion.add!(params)
 
+    ret = {:return => {status: true}, :error => nil}
+
+    params[:account_id] = current_account._id.to_s 
+    params[:method] = "create"
+    
+    if params[:sync]
+      ret = ConversionsWorker.create(params)
+    else
+      ConversionsWorker.perform_async(params)
+    end  
+    
     raise ret[:error] if !ret[:error].blank?
 
-    respond_with(ret[:return].format_conversion, status: 200, location: "nil")
-  rescue => e
+    respond_with( ret[:return], status: 200, location: "nil")
+  rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    respond_with({errors: e.message}, status: 422, location: "nil")
-  end 
-  
+    respond_with({ errors:  e.message}, status: 422, :location => "nil")
+  end  
 end

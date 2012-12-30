@@ -46,21 +46,33 @@ class RulesController < ApplicationController
   ##           }
   ##  }
 
-  # OUTPUT => {
+  # OUTPUT => 
+  ##[sync call]
+  ##          {
   ##            rule_id: "1211221"
   ##          }
+  ##[async call]
+  ##          {status: true}
   def create
     Rails.logger.info("Enter Rule Update")
 
-    params[:account_id] = current_account._id 
-    ret = Rule.add!(params)
+    ret = {:return => {status: true}, :error => nil}
 
+    params[:account_id] = current_account._id.to_s 
+    params[:method] = "create"
+    
+    if params[:sync]
+      ret = RulesWorker.create(params)
+    else
+      RulesWorker.perform_async(params)
+    end  
+    
     raise ret[:error] if !ret[:error].blank?
 
-    respond_with({rule_id: ret[:return]}, status: 200, location: "nil")
-  rescue => e
+    respond_with( ret[:return], status: 200, location: "nil")
+  rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    respond_with({errors: e.message}, status: 422, location: "nil")
+    respond_with({ errors:  e.message}, status: 422, :location => "nil")
   end
 
 
@@ -105,21 +117,33 @@ class RulesController < ApplicationController
   ##           }
   ##  }
 
-  # OUTPUT => {
+  # OUTPUT => 
+  ##[sync call]
+  ##          {
   ##            status: true or false
   ##          }
+  ##[async call]
+  ##          {status: true}
   def update
     Rails.logger.info("Enter Rule Update")
 
-    params[:account_id] = current_account._id 
-    ret = Rule.update(params)
+    ret = {:return => {status: true}, :error => nil}
 
+    params[:account_id] = current_account._id.to_s 
+    params[:method] = "update"
+    
+    if params[:sync]
+      ret = RulesWorker.update(params)
+    else
+      RulesWorker.perform_async(params)
+    end  
+    
     raise ret[:error] if !ret[:error].blank?
 
-    respond_with({status: ret[:return]}, status: 200, location: "nil")
-  rescue => e
+    respond_with( ret[:return], status: 200, location: "nil")
+  rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    respond_with({errors: e.message}, status: 422, location: "nil")
+    respond_with({ errors:  e.message}, status: 422, :location => "nil")
   end
 
 
@@ -135,24 +159,36 @@ class RulesController < ApplicationController
   ##                 
   ## }
 
-  # OUTPUT => rules: [ 
+  # OUTPUT => 
+  ##[sync call]
+  ##          rules: [ 
   ##                    {"name"=>"fancy rule 1", "event"=>"sign_up", "owner"=>"client", "action"=>"topbar", "action_param"=>{"text"=>"A quickbrown fox jumps over a lazy dog", "href"=>"http://www.google.com", "color"=>"#333333", "width"=>"50"}, "conditions"=>[{"property"=>"person[email]", "negation"=>"true", "operation"=>"ew", "value1"=>"@gmail.com", "connect"=>"and"}], "updated_at"=>"2012-11-01T09:39:42Z", "created_at"=>"2012-11-01T09:39:42Z", "id"=>"5092435e63fe855b28000005"},
   ##                    {"name"=>"fancy rule 2", "event"=>"sign_in", "owner"=>"client", "action"=>"topbar", "action_param"=>{"text"=>"A quickbrown fox jumps over a lazy dog", "href"=>"http://www.google.com", "color"=>"#333333", "width"=>"50"}, "conditions"=>["sadasdasdasd", "dsdasdasd"], "updated_at"=>"2012-11-01T09:39:42Z", "created_at"=>"2012-11-01T09:39:42Z", "id"=>"5092435e63fe855b28000006"}, 
   ##                    {"name"=>"fancy rule 3", "event"=>"sign_up", "owner"=>"client", "action"=>"topbar", "action_param"=>{"text"=>"A quickbrown fox jumps over a lazy dog", "href"=>"http://www.google.com", "color"=>"#333333", "width"=>"50"}, "conditions"=>[], "updated_at"=>"2012-11-01T09:39:42Z", "created_at"=>"2012-11-01T09:39:42Z", "id"=>"5092435e63fe855b28000007"}
   ##                 ], 
-  ##            
+  ##
+  ##[async call]
+  ##          {status: true}            
   def read
     Rails.logger.info("Enter Rule read")
 
-    params[:account_id] = current_account._id 
-    ret = Rule.read(params)
+    ret = {:return => {status: true}, :error => nil}
 
+    params[:account_id] = current_account._id.to_s 
+    params[:method] = "read"
+    
+    if params[:sync]
+      ret = RulesWorker.read(params)
+    else
+      RulesWorker.perform_async(params)
+    end  
+    
     raise ret[:error] if !ret[:error].blank?
 
-    respond_with({rules: ret[:return]}, status: 200)
-  rescue => e
+    respond_with( ret[:return], status: 200)
+  rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    respond_with({errors: e.message}, status: 422)
+    respond_with({ errors:  e.message}, status: 422)
   end
 
   ## delete one or all rule
@@ -167,20 +203,32 @@ class RulesController < ApplicationController
   ##                 
   ## }
 
-  # OUTPUT => {
+  # OUTPUT => 
+  ##[sync call]
+  ##          {
   ##            : status => true or false
   ##          }
+  ##[async call]
+  ##          {status: true}
   def delete
     Rails.logger.info("Enter Rule Delete")
 
-    params[:account_id] = current_account._id 
-    ret = Rule.delete(params)
+    ret = {:return => {status: true}, :error => nil}
 
+    params[:account_id] = current_account._id.to_s 
+    params[:method] = "delete"
+    
+    if params[:sync]
+      ret = RulesWorker.delete(params)
+    else
+      RulesWorker.perform_async(params)
+    end  
+    
     raise ret[:error] if !ret[:error].blank?
 
-    respond_with({status: ret[:return]}, status: 200, location: "nil")
-  rescue => e
+    respond_with( ret[:return], status: 200, location: "nil")
+  rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    respond_with({errors: e.message}, status: 422, location: "nil")
+    respond_with({ errors:  e.message}, status: 422, :location => "nil")
   end
 end

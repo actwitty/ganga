@@ -1,6 +1,6 @@
 # NOTE - Implement Actions on MailChimp
 module Svc
-	module MailChimp
+  module MailChimp
     class Actions
       
     end

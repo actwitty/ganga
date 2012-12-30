@@ -30,28 +30,28 @@ class ActorsController < ApplicationController
   ##             "time"=> "2009-02-19 00:00:00 UTC",
   ##             "description"=>{"customer[address][city]"=>"Bangalore", "email"=>"john.doe@example.com"}, 
   ##          }
+  ##[async call]
+  ##          {status: true}
   def create
     Rails.logger.info("Enter Create Actor")
 
-    # Create Anonymous actor
+    ret = {:return => {status: true}, :error => nil}
+
     params[:account_id] = current_account._id.to_s 
+    params[:method] = "create"
+    
+    if params[:sync]
+      ret = ActorsWorker.create(params)
+    else
+      ActorsWorker.perform_async(params)
+    end  
+    
+    raise ret[:error] if !ret[:error].blank?
 
-    obj = Actor.create!(app_id: params[:app_id], account_id: params[:account_id])
-
-    raise et("actor.create_failed") if obj.blank?
-
-    params[:id] = obj._id
-
-    if !params[:properties].blank?
-      ret = Actor.set(params)
-      raise et("actor.create_failed_in_set_property") if !ret[:error].blank?
-      obj = ret[:return]
-    end
-   
-    respond_with(obj.reload.format_actor, status: 200, location: "nil")
+    respond_with( ret[:return], status: 200, location: "nil")
   rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    respond_with({ errors: e.message} , status: 422, location: "nil")
+    respond_with({ errors:  e.message}, status: 422, :location => "nil")
   end
   
   # NOTE
@@ -62,7 +62,11 @@ class ActorsController < ApplicationController
   ##    :id => 123                [MANDATORY]
   ## }
 
-  # OUTPUT => {status; true or false}
+  # OUTPUT => 
+  ##[sync call]
+  ##          {status; true or false}
+  ##[async call]
+  ##          {status: true}
   def delete
     Rails.logger.info("Enter App Delete")
     
@@ -70,13 +74,21 @@ class ActorsController < ApplicationController
       raise et("actor.invalid_argument_in_delete") 
     end
 
-    # Create Anonymous actor
-    params[:account_id] = current_account._id 
+    ret = {:return => {status: true}, :error => nil}
 
-    Actor.where(account_id: params[:account_id] , _id: params[:id]).destroy
+    params[:account_id] = current_account._id.to_s 
+    params[:method] = "delete"
+    
+    if params[:sync]
+      ret = ActorsWorker.delete(params)
+    else
+      ActorsWorker.perform_async(params)
+    end  
+    
+    raise ret[:error] if !ret[:error].blank?
 
-    respond_with({status: true}, status: 200, :location => "nil")     
-  rescue => e
+    respond_with( ret[:return], status: 200, location: "nil")
+  rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
     respond_with({ errors:  e.message}, status: 422, :location => "nil")
   end
@@ -101,19 +113,31 @@ class ActorsController < ApplicationController
   ## }
 
 
-  # OUTPUT => {:id => 1232323}
+  # OUTPUT => 
+  ##[sync call]
+  ##          {:id => 1232323}
+  ##[async call]
+  ##          {status: true}
   def identify
     Rails.logger.info("Enter Actor Identify")
 
-    params[:account_id] = current_account._id 
-    ret = Actor.identify(params)
+    ret = {:return => {status: true}, :error => nil}
 
+    params[:account_id] = current_account._id.to_s 
+    params[:method] = "identify"
+    
+    if params[:sync]
+      ret = ActorsWorker.identify(params)
+    else
+      ActorsWorker.perform_async(params)
+    end  
+    
     raise ret[:error] if !ret[:error].blank?
 
-    respond_with({id: ret[:return]}, status: 200, location: "nil" )
-  rescue => e
+    respond_with( ret[:return], status: 200, location: "nil")
+  rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    respond_with({ errors: e.message} , status: 422, location: "nil")
+    respond_with({ errors:  e.message}, status: 422, :location => "nil")
   end
 
   # NOTE
@@ -138,28 +162,39 @@ class ActorsController < ApplicationController
   ##     }
   ## }
 
-  # OUTPUT => {
+  # OUTPUT =>
+  ##[sync call] 
+  ##         {
   ##             "id"=>"50742b0063fe85d42a000005",
   ##             "account_id"=>"50742aff63fe85d42a000001", 
   ##             "app_id"=>"50742b0063fe85d42a000003",
   ##             "created_at"=>"2012-10-09T13:47:44Z", "updated_at"=>"2012-10-09T13:47:44Z",
   ##             "description"=>{"customer[address][city]"=>"Bangalore", "email"=>"john.doe@example.com"}, 
   ##          }
+  ##[async call]
+  ##          {status: true}
 
 
   def set
     Rails.logger.info("Enter Actor Set")
 
-    params[:account_id] = current_account._id 
+    ret = {:return => {status: true}, :error => nil}
 
-    ret = Actor.set(params)
-
+    params[:account_id] = current_account._id.to_s 
+    params[:method] = "set"
+    
+    if params[:sync]
+      ret = ActorsWorker.set(params)
+    else
+      ActorsWorker.perform_async(params)
+    end  
+    
     raise ret[:error] if !ret[:error].blank?
 
-    respond_with( ret[:return].format_actor, status: 200, location: "nil")
-  rescue => e
+    respond_with( ret[:return], status: 200, location: "nil")
+  rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    respond_with({ errors: e.message} , status: 422, location: "nil")
+    respond_with({ errors:  e.message}, status: 422, :location => "nil")
   end
 
   # NOTE
@@ -172,20 +207,31 @@ class ActorsController < ApplicationController
   ##   new_uid: "+1-9911231234"   [MANDATORY]
   ## }
 
-  # OUTPUT => {:status => true}
+  # OUTPUT => 
+  ##[sync call]
+  ##          {:status => true}
+  ##[async call]
+  ##          {status: true}
   def alias
     Rails.logger.info("Enter Actor Alias")
 
-    params[:account_id] = current_account._id 
-    ret = Actor.alias(params)
+    ret = {:return => {status: true}, :error => nil}
 
+    params[:account_id] = current_account._id.to_s 
+    params[:method] = "alias"
+    
+    if params[:sync]
+      ret = ActorsWorker.alias(params)
+    else
+      ActorsWorker.perform_async(params)
+    end  
+    
     raise ret[:error] if !ret[:error].blank?
 
-    respond_with({status: ret[:return]}, status: 200, location: "nil")
-
+    respond_with( ret[:return], status: 200, location: "nil")
   rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    respond_with({ errors: e.message} , status: 422, location: "nil")
+    respond_with({ errors:  e.message}, status: 422, :location => "nil")
   end
 
   # NOTE
@@ -205,7 +251,9 @@ class ActorsController < ApplicationController
   ##   errors: true or false         [OPTIONAL] # errors
   ## }
 
-  # OUTPUT => {
+  # OUTPUT => 
+  ##[sync call]
+  ##          {
   ##            account: {id: "232342343"}
   ##            app: {id: "234324"}
   ##
@@ -237,18 +285,27 @@ class ActorsController < ApplicationController
   ##                       {...}
   ##                    ],
   ##          }
+  ##[async call]
+  ##          {status: true}
   def read
     Rails.logger.info("Enter Actor Read")
 
-    params[:account_id] = current_account._id 
-    ret = Actor.read(params)
+    ret = {:return => {status: true}, :error => nil}
 
+    params[:account_id] = current_account._id.to_s 
+    params[:method] = "read"
+    
+    if params[:sync]
+      ret = ActorsWorker.read(params)
+    else
+      ActorsWorker.perform_async(params)
+    end  
+    
     raise ret[:error] if !ret[:error].blank?
 
-    respond_with(ret[:return], status: 200)
-
+    respond_with( ret[:return], status: 200)
   rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    respond_with({ errors: e.message} , status: 422)
+    respond_with({ errors:  e.message}, status: 422)
   end
 end

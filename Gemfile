@@ -69,7 +69,7 @@ gem 'em-synchrony'
 
 
 #thin Webserver
-gem 'thin'
+gem 'puma'
 
 #haml
 gem 'haml-rails'
@@ -86,12 +86,17 @@ gem 'haml-rails'
 # gem 'acts-as-taggable-on', '~> 2.3.1'
 
 #Queue 
-gem 'amqp'
+#gem 'amqp'
+gem 'pusher'
+
+# memcache
+gem 'dalli'
 
 
 #Background Job
 gem 'redis'
 gem 'sidekiq'
+gem 'kiqstand'
 
 #mongo db
 gem "mongoid"

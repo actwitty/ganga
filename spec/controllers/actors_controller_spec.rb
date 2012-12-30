@@ -2,7 +2,6 @@ require 'spec_helper'
 
 
 describe ActorsController do
-
   before(:each) do
     @account = FactoryGirl.create(:account)
     @account.confirm!
@@ -27,7 +26,8 @@ describe ActorsController do
 
       puts JSON.parse(response.body).inspect
       response.status.should eq(200)
-      Actor.count.should eq(3)
+      
+      Actor.count.should eq(2)
     end
   end
 
@@ -52,12 +52,12 @@ describe ActorsController do
 
     it "should not delete an invalid app" do
       post 'delete', { id: "3423424234" }
-      Actor.count.should eq(3)
+      Actor.count.should eq(2)
     end
 
     it "should delete a valid app" do
       post 'delete', { id: @id }
-      Actor.count.should eq(2)
+      Actor.count.should eq(1)
     end
   end
 
@@ -222,7 +222,7 @@ describe ActorsController do
     it "should not set actor with invalid actor_id" do
       a_pp = FactoryGirl.create(:app, account_id: @account._id)
       actor = FactoryGirl.create(:actor, app: a_pp._id)
-      @h[:actor_id] = actor._id
+      @h[:id] = actor._id
       post   'set', @h
       response.status.should eq(422)
     end

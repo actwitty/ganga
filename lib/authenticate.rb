@@ -3,6 +3,12 @@ require 'authenticate/authenticate_api'
 require 'authenticate/authenticate_origin'
 
 module Authenticate
+
+  # will e called in context of controller
+  def make_sync_request
+    params[:sync] = true
+  end
+
   # builds a session temporarily for cross-origin access or api access
   # INPUT - object "app" or "account"
   def build_session(object)

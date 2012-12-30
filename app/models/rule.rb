@@ -19,7 +19,7 @@ class Rule
   ##  :app_id => "1234444',   [MANDATORY]
   ##  :rule => {              [MANDATORY]
   ##              name: 'A fancy rule',
-  ##              event: 'singup',
+  ##              event: 'signup',
   ##              owner: 'client',
   ##              action: 'topbar',
   ##              action_param: {
@@ -28,11 +28,11 @@ class Rule
   ##                              color: "#333333",
   ##                              width: "50",
   ##                            },
-  ##                  conditions: [
+  ##              conditions: [
   ##                                {
   ##                                  property: 'person[email]',
   ##                                  negation: 'true',
-  ##                                  operation: 'ew',
+  ##                                  operation: 'eq',
   ##                                  value1: '@gmail.com',
   ##                                  connect: 'and',
   ##                                },

@@ -3,20 +3,36 @@ class EventsWorker
   sidekiq_options retry: false
   
   def perform(params)
-    Rails.logger.info("Event Worker Perform #{params.class}")
+    Rails.logger.info("Events Worker Perform")
 
-    ret = nil
+    ret = {:return => nil, :error => nil}
 
     case params["method"]
     when "create"
-      ret = Event.add!(params)
+      ret = EventsWorker.create(params)  
     else
-
+      raise "Method does not exists"
     end       
+
     raise ret[:error] if !ret[:error].blank?
-    true
+
+    ret
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    false
+    {:return => nil, :error => ret[:error]}
+  end
+
+  # INPUT - Check EventsController#create
+  # OUTPUT - Check EventsController#create [sync mode]
+  def self.create(params)
+    Rails.logger.info("Enter Events Create")
+    
+    ret = Event.add!(params) 
+    
+    raise ret[:error] if !ret[:error].blank?
+      
+    {:return => ret[:return].format_event, :error => nil}
+  rescue => e
+    {:return => nil, :error => ret[:error]}
   end
 end

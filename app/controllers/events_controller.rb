@@ -16,7 +16,9 @@ class EventsController < ApplicationController
   ##      :customer => {:address => {:city => "Bangalore"}}}
   ## }
 
-  # OUTPUT => {
+  # OUTPUT => 
+  ##[sync call]
+  ##          {
   ##              "id"=>"50838a5e63fe85d820000005", 
   ##
   ##              "account_id"=>"50838a5e63fe85d820000004", 
@@ -38,22 +40,28 @@ class EventsController < ApplicationController
   ##                            ], 
   ##              "updated_at"=>"2012-10-21T05:38:38Z",   "created_at"=>"2012-10-21T05:38:38Z",
   ##          }
+  ##[async call]
+  ##          {status: true}
 
   def create
-    Rails.logger.info("Enter Event Create #{params.inspect}")
+    Rails.logger.info("Enter Event Create")
 
-    params[:account_id] = current_account.id.to_s
-    
+    ret = {:return => {status: true}, :error => nil}
+
+    params[:account_id] = current_account._id.to_s 
     params[:method] = "create"
-    EventsWorker.perform_async(params)
-    # ret = Event.add!(params)
+    
+    if params[:sync]
+      ret = EventsWorker.create(params)
+    else
+      EventsWorker.perform_async(params)
+    end  
+    
+    raise ret[:error] if !ret[:error].blank?
 
-    # raise ret[:error] if !ret[:error].blank?
-
-    # respond_with(ret[:return].format_event, status: 200, location:  "nil")
-    head :ok
-  rescue => e
+    respond_with( ret[:return], status: 200, location: "nil")
+  rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    respond_with({errors: e.message}, status: 422, location: "nil")
+    respond_with({ errors:  e.message}, status: 422, :location => "nil")
   end
 end

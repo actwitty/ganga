@@ -37,7 +37,8 @@ describe "access control" do
 
   it "should not authenticate origin for cross_site with wrong app id" do
     # lets make out of session request
-    get('/app/read', {  format: 'json', id: "2312312321", actors: true},  { "HTTP_HOST" => "http://rulebot.com" })
+    #need put sync = true as it will return status ok for async case
+    get('/app/read', {  sync: true, format: 'json', id: "2312312321", actors: true},  { "HTTP_HOST" => "http://rulebot.com" })
     puts JSON.parse(response.body)
     response.status.should_not eq(200)  
     #resp.status.should eq(200)

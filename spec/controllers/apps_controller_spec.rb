@@ -34,7 +34,9 @@ describe AppsController do
                                                                :name => "alok 1",
                                                                origin: "https://actwitty.com"
                                                                }
-                      }
+         
+                   }
+             
       puts JSON.parse(response.body).inspect
       response.status.should eq(200)
       a= App.where("access_info.origin_base" => "actwitty.com").first
@@ -137,7 +139,9 @@ describe AppsController do
                                                                 :name => "alok 1"
                                                                 }
                        }
+
       @app = JSON.parse(response.body)
+      puts @app.inspect      
       response.status.should eq(200)
 
       @actor = FactoryGirl.create(:actor, app_id: @app["id"], account_id: @app["account_id"])

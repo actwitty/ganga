@@ -20,7 +20,9 @@ class AppsController < ApplicationController
   ##    }
   ## }
 
-  # OUTPUT => {
+  # OUTPUT => 
+  ##[sync call]
+  ##          {
   ##					  "id"=>"5074143063fe853420000005", 
   ##
   ##						"account_id"=>"5074143063fe853420000001", 
@@ -64,22 +66,29 @@ class AppsController < ApplicationController
   ##                              {..}
   ##                      ],   
   ##         }
+  ##[async call]
+  ##        {status: true}
 	def create
 		Rails.logger.info("Enter App Create")
 		
 
-    # Create Anonymous actor
-    params[:account_id] = current_account._id 
+    ret = {:return => {status: true}, :error => nil}
 
-		ret = App.add!(params)
+    params[:account_id] = current_account._id.to_s 
+    params[:method] = "create"
+    
+    if params[:sync]
+      ret = AppsWorker.create(params)
+    else
+      AppsWorker.perform_async(params)
+    end  
     
     raise ret[:error] if !ret[:error].blank?
-    
-	  respond_with(ret[:return].format_app , status: 200, :location => "nil")			
 
-	rescue => e
-		Rails.logger.error("**** ERROR **** #{er(e)}")
-		respond_with({ errors: e.message} , status: 422, :location => "nil")
+    respond_with( ret[:return], status: 200, location: "nil")
+  rescue => e 
+    Rails.logger.error("**** ERROR **** #{er(e)}")
+    respond_with({ errors:  e.message}, status: 422, :location => "nil")
 	end
 
 
@@ -91,7 +100,11 @@ class AppsController < ApplicationController
   ##  	:id => 123                [MANDATORY]
   ## }
 
-  # OUTPUT => {status; true or false}
+  # OUTPUT =>
+  ##[sync call] 
+  ##        {status; true or false}
+  ##[async call]
+  ##        {status: true}
 	def delete
 		Rails.logger.info("Enter App Delete")
 		
@@ -99,15 +112,23 @@ class AppsController < ApplicationController
 			raise et("app.invalid_argument_in_delete") 
 		end
 
-    # Create Anonymous actor
-    params[:account_id] = current_account._id 
+    ret = {:return => {status: true}, :error => nil}
 
-		App.where(account_id: params[:account_id] , _id: params[:id]).destroy
+    params[:account_id] = current_account._id.to_s 
+    params[:method] = "delete"
+    
+    if params[:sync]
+      ret = AppsWorker.delete(params)
+    else
+      AppsWorker.perform_async(params)
+    end  
+    
+    raise ret[:error] if !ret[:error].blank?
 
-		respond_with({status: true}, status: 200, :location => "nil")			
-	rescue => e
-		Rails.logger.error("**** ERROR **** #{er(e)}")
-		respond_with({ errors:  e.message}, status: 422, :location => "nil")
+    respond_with( ret[:return], status: 200, location: "nil")
+  rescue => e 
+    Rails.logger.error("**** ERROR **** #{er(e)}")
+    respond_with({ errors:  e.message}, status: 422, :location => "nil")
 	end
 
 
@@ -124,7 +145,9 @@ class AppsController < ApplicationController
   ##      "address" => {:city => "Bangalore"}}
   ## }
 
-  # OUTPUT => {
+  # OUTPUT => 
+  ##[sync call]
+  ##          {
   ##					  "id"=>"5074143063fe853420000005", 
   ##
   ##						"account_id"=>"5074143063fe853420000001", 
@@ -167,18 +190,28 @@ class AppsController < ApplicationController
   ##                      ],   
   ##            "time"=>"2012-10-09T12:10:24Z",
   ##         }
+  ##[async call]
+  ##        {status: true}
 	def update
-		Rails.logger.info("Enter App Update #{params.inspect}")
+		Rails.logger.info("Enter App Update")
 		
-		params[:account_id] = current_account._id 
-		ret = App.update(params)
+		ret = {:return => {status: true}, :error => nil}
 
-		raise ret[:error] if !ret[:error].blank?
+    params[:account_id] = current_account._id.to_s 
+    params[:method] = "update"
+    
+    if params[:sync]
+      ret = AppsWorker.update(params)
+    else
+      AppsWorker.perform_async(params)
+    end  
+    
+    raise ret[:error] if !ret[:error].blank?
 
-		respond_with(ret[:return].format_app, status: 200, :location => "nil")		
-	rescue => e
-		Rails.logger.error("**** ERROR **** #{er(e)}")
-		respond_with({ errors: e.message}, status: 422, :location => "nil")
+    respond_with( ret[:return], status: 200, location: "nil")
+  rescue => e 
+    Rails.logger.error("**** ERROR **** #{er(e)}")
+    respond_with({ errors:  e.message}, status: 422, :location => "nil")
 	end	
 
 
@@ -194,7 +227,9 @@ class AppsController < ApplicationController
   ##    actors: true or false         [OPTIONAL] # actors
   ## }
 
-  # OUTPUT =>{ 
+  # OUTPUT =>
+  ##[sync call]
+  ##          { 
   ##            account: {id: "445654654645"},
   ##
   ##            app: {
@@ -273,19 +308,27 @@ class AppsController < ApplicationController
   ##                      {..}
   ##                  ]
   ##        }
+  ##[async call]
+  ##        {status: true}
 	def read
 		Rails.logger.info("Enter App read")
 
-		params[:account_id] = current_account._id
-    puts params.inspect
+		ret = {:return => {status: true}, :error => nil}
 
-		ret = App.read(params)
-		
-		raise ret[:error] if !ret[:error].blank?
+    params[:account_id] = current_account._id.to_s 
+    params[:method] = "read"
+    
+    if params[:sync]
+      ret = AppsWorker.read(params)
+    else
+      AppsWorker.perform_async(params)
+    end  
+    
+    raise ret[:error] if !ret[:error].blank?
 
-		respond_with(ret[:return], status: 200)			
-	rescue => e
-		Rails.logger.error("**** ERROR **** #{er(e)}")
-		respond_with( { errors: e.message}, status: 422)
+    respond_with( ret[:return], status: 200)
+  rescue => e 
+    Rails.logger.error("**** ERROR **** #{er(e)}")
+    respond_with({ errors:  e.message}, status: 422)
 	end
 end

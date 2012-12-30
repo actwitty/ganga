@@ -38,6 +38,52 @@ class Actor
   # Function  
 
   # NOTE
+  ## Creates an actor.. 
+  
+  # INPUT => 
+  ## {
+  ##  :account_id => "323232" [MANDATORY]
+  ##  :app_id => "1234444',   [MANDATORY]
+  ##  :properties =>          [OPTIONAL] ## if present, then either system or profile property must be there
+  ##     {        
+  ##        profile: {
+  ##          :email => "john.doe@example.com",
+  ##          :customer => {:address => {:city => "Bangalore"}}}
+  ##        }
+  ##        system: {
+  ##          :browser => "chrome"
+  ##        }
+  ##     }
+  ## }
+
+  # OUTPUT => {
+  ##             "id"=>"50742b0063fe85d42a000005",
+  ##             "account_id"=>"50742aff63fe85d42a000001", 
+  ##             "app_id"=>"50742b0063fe85d42a000003",
+  ##             "time"=> "2009-02-19 00:00:00 UTC",
+  ##             "description"=>{"customer[address][city]"=>"Bangalore", "email"=>"john.doe@example.com"}, 
+  ##          }
+  def self.add!(params)
+    Rails.logger.info("Entering Actor Add #{params.inspect}")
+     
+    obj = Actor.create!(app_id: params["app_id"], account_id: params["account_id"])
+    raise et("actor.create_failed") if obj.blank?
+    params["id"] = obj._id
+
+    if !params["properties"].blank?
+      ret = set(params)
+      raise et("actor.create_failed_in_set_property") if !ret[:error].blank?
+      obj = ret[:return]
+    end
+
+    {:return => obj.reload, :error => nil }
+  rescue => e
+    Rails.logger.error("**** ERROR **** #{er(e)}")
+    {:return => nil, :error => e }
+  end
+
+
+  # NOTE
   ## Uniqly identify an actor..
   ## If not set an auto unique id is assigned to actor
   ## Also If not set, then for example a user coming from mobile and PC
@@ -148,37 +194,36 @@ class Actor
     Rails.logger.info("Enter Actor Set")
 
     if params["account_id"].blank? or params["app_id"].blank? or  params["id"].blank? or
-     ( params[:properties][:profile].blank? and params[:properties][:system].blank? )
+     ( params["properties"]["profile"].blank? and params["properties"]["system"].blank? )
       raise et("actor.invalid_argument_in_set") 
     end
     
-    Rails.logger.info("*******TESTING Enter Actor Set")
-
     app = App.where(account_id: params["account_id"], _id: params["app_id"] ).first
     raise et("actor.invalid_app_id", id: params["app_id"]) if app.blank?
     
-    params[:meta] =  true
+    params["meta"] =  true
 
     # First get the actor
     actor = Actor.where(app_id: params["app_id"], _id: params["id"]).first 
     raise et("actor.invalid_actor_id", id: params["id"]) if actor.blank?
 
-    properties = params[:properties]
-    params.delete(:properties)
+    properties = params["properties"]
+    params.delete("properties")
 
     properties.each do |k,v|
       # k is profile or system
       k = k.to_s
 
       # save event
-      params[:name] = AppConstants.send("event_set_actor_#{k.to_s}")
-      params[:properties] = v
-      params[:property_type] = k
+      params["name"] = AppConstants.send("event_set_actor_#{k.to_s}")
+      params["properties"] = v
+      params["property_type"] = k
+      params["actor_id"] = params["id"]
       ret = Event.add!(params)
 
       raise ret[:error] if !ret[:error].blank?
 
-      desc = Utility.serialize_to(hash: params[:properties], serialize_to: "value")    
+      desc = Utility.serialize_to(hash: params["properties"], serialize_to: "value")    
 
       # key is like "customer[address][city]", value is like "Bangalore"
       desc.each do |key,value|

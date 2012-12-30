@@ -1,7 +1,8 @@
 class AccountsController < ApplicationController
 
   protect_from_forgery
-  before_filter :authenticate_account!, :except => [:credentials]
+  #before_filter :authenticate_account!, :except => [:credentials]
+  authenticate_request(account: {:except => [:credentials]})
 
   respond_to  :json
   # API to send the credentials to check if the user is logged in
@@ -89,15 +90,23 @@ class AccountsController < ApplicationController
   def read
     Rails.logger.info("Enter Account read")
 
-    params[:id] = current_account._id 
-    ret = Account.read(params)
+    ret = {:return => {status: true}, :error => nil}
 
+    params[:id] = current_account._id.to_s 
+    params[:method] = "read"
+    
+    if params[:sync]
+      ret = AccountsWorker.read(params)
+    else
+      AccountsWorker.perform_async(params)
+    end  
+    
     raise ret[:error] if !ret[:error].blank?
-  
-    respond_with(ret[:return], status: 200)     
-  rescue => e
+
+    respond_with( ret[:return], status: 200)
+  rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    respond_with( { errors: e.message}, status: 422)
+    respond_with({ errors:  e.message}, status: 422)
   end
 
 
@@ -158,18 +167,23 @@ class AccountsController < ApplicationController
   def list_apps
     Rails.logger.info("Enter Account => List Apps")
 
-    hash = { apps: []}
+    ret = {:return => {status: true}, :error => nil}
 
-    params[:account_id] = current_account._id 
+    params[:account_id] = current_account._id.to_s 
+    params[:method] = "list_apps"
     
-    App.where(account_id: params[:account_id]).all.each do |attr|
-      hash[:apps] << attr.format_app  
-    end
+    if params[:sync]
+      ret = AccountsWorker.list_apps(params)
+    else
+      AccountsWorker.perform_async(params)
+    end  
+    
+    raise ret[:error] if !ret[:error].blank?
 
-    respond_with(hash, status: 200)      
-  rescue => e
+    respond_with( ret[:return], status: 200)
+  rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
-    respond_with( { errors: e.message}, status: 422)
+    respond_with({ errors:  e.message}, status: 422)
   end
 
 end

@@ -1,6 +1,6 @@
 # NOTE - Implement Triggers on MailChimp
 module Svc
-	module MailChimp
+  module MailChimp
     class Triggers
     	
     end
