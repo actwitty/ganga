@@ -201,7 +201,6 @@ var RBT = function()
       return true;
     },
 
-    set
   };
 };
 
