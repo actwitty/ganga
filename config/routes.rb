@@ -16,45 +16,49 @@ Ganga::Application.routes.draw do
                                           :passwords => "accounts/passwords"
                                         }
   
-  get   '/credentials',       :to => 'accounts#credentials'
-  get   '/category',          :to => 'rules#category'
+  get   '/credentials',               :to => 'accounts#credentials'
+  get   '/category',                  :to => 'rules#category'
  
   # Actor Api
-  post  '/actor/create',      :to => 'actors#create'
-  post  '/actor/delete',      :to => "actors#delete"
-  get   '/actor/read',        :to => 'actors#read'
-  post  '/actor/identify',    :to => 'actors#identify'
-  post  '/actor/set',         :to => 'actors#set'
-  post  '/actor/alias',       :to => 'actors#alias'
+  post  '/actor/create',              :to => 'actors#create'
+  post  '/actor/delete',              :to => "actors#delete"
+  get   '/actor/read',                :to => 'actors#read'
+  post  '/actor/identify',            :to => 'actors#identify'
+  post  '/actor/set',                 :to => 'actors#set'
+  post  '/actor/alias',               :to => 'actors#alias'
 
 
 
   # App Api
-  post  '/app/create',        :to => 'apps#create'
-  get   '/app/read',          :to => 'apps#read'
-  post  '/app/update',        :to => 'apps#update'
-  post  '/app/delete',        :to => 'apps#delete'
-  
+  post  '/app/create',                :to => 'apps#create'
+  get   '/app/read',                  :to => 'apps#read'
+  post  '/app/update',                :to => 'apps#update'
+  post  '/app/delete',                :to => 'apps#delete'
+  post  '/app/add_sample_event' ,     :to => 'apps#add_sample_event'
+  post  '/app/delete_sample_event' ,  :to => 'apps#delete_sample_event' 
 
   # Event Api
-  post '/event/create',       :to => 'events#create'
- 
+  post '/event/create',               :to => 'events#create'
+  get  '/event/read',                 :to => 'events#read'
+
   # Account Api
-  get  '/account/read',       :to => 'accounts#read'
-  get  '/account/list_apps',  :to => 'accounts#list_apps'
+  get  '/account/read',               :to => 'accounts#read'
+  get  '/account/list_apps',          :to => 'accounts#list_apps'
 
   # Rule Api
-  post '/rule/create',        :to => "rules#create"
-  post '/rule/update',        :to => "rules#update"
-  get  '/rule/read',          :to => "rules#read"
-  post '/rule/delete',        :to => "rules#delete"
+  post '/rule/create',                :to => "rules#create"
+  post '/rule/update',                :to => "rules#update"
+  get  '/rule/read',                  :to => "rules#read"
+  post '/rule/delete',                :to => "rules#delete"
 
   # Conversion Api
-  post '/conversion/create',  :to => "conversions#create"
+  post '/conversion/create',          :to => "conversions#create"
+  get  '/conversion/read',            :to => 'conversions#read'
 
   # Error Api
-  post '/err/create',         :to => "errs#create"
-  
+  post '/err/create',                 :to => "errs#create"
+  get  '/err/read',                   :to => 'errs#read'
+
   # Some browsers send an options request to the server first, 
   # to make sure the correct access headers are set.
   # We need to catch this in Rails, returning a 200 status with the correct headers.

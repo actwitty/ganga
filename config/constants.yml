@@ -37,10 +37,6 @@ development: &default
   token:                   "token"
   origin:                  "origin"
 
-  # Token Prefix
-  app_token_prefix:       "1"
-  account_token_prefix:   "2"
-
   # Limits
   limit_events:           100
   limit_actors:           100
@@ -49,6 +45,11 @@ development: &default
 
   # Token Expiry Time
   token_expiry_days:      60
+
+  # Request Types
+  request_type_origin:    "origin"
+  request_type_api:    "api"
+  request_type_session:    "session"
 
   # Service Keys
   facebook_app_id:      '244515575666539'
@@ -70,6 +71,12 @@ development: &default
   mixpanel_key:         'd73d98b374597f86aa5c6131d24b75b0'
   kissmetric_key:       '37e967f88262226bb6b042b360823198784fee85'
   user_voice_wait:       120000
+
+  # Pusher 
+  pusher_app_id:         '34493'
+  pusher_key:            '883af054d063d4812722'
+  pusher_secret:         '2cdf14f73a87630c73d7'
+  
 production:  
   <<: *default
   facebook_app_id:      '172893766124779'

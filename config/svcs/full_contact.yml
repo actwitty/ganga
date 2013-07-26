@@ -1,18 +1,32 @@
 svc:
   full_contact:
+    name: Full Contact
     keys: 
-      api: 85fd2e47682cf8d7
-    triggers: 
-      [ 
-        { 
-          name: Search by Email, 
-          endpoint: "https://api.fullcontact.com/v2/person.json", 
-          params: {}
-        },
-        { 
-          name: Search By Facebook ID, 
-          endpoint: "https://api.fullcontact.com/v2/person.json", 
-          params: {}
-        }
-      ]
+      api: provided
+    
+    triggers:
+    
+    actions:
+      search_by_email:
+        name: Search by Email
+        execute: fbr
+        end_point: https://api.fullcontact.com/v2/person.json
+        params: 
+          email: m
+        request: get
+
+      search_by_fb_id: 
+        name: Search by Facebook
+        execute: fbr
+        end_point: https://api.fullcontact.com/v2/person.json
+        params: 
+          email: m
+        request: get
+      search_by_twitter_id:  
+        name: Search by Twitter ID
+        execute: fbr
+        end_point: https://api.fullcontact.com/v2/person.json
+        params: 
+          email: m
+        request: get
 

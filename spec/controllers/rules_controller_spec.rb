@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe RulesController do
+
   before(:each) do
     @account = FactoryGirl.create(:account)
     @account.confirm!
@@ -31,7 +32,7 @@ describe RulesController do
     request.env['HTTP_ACCEPT'] = "application/json"
   end
 
-  describe "create event" do
+  describe "create rule" do
     it "should not create rule with invalid app id" do
       post 'create', {
         app_id: "1234444",
@@ -61,7 +62,7 @@ describe RulesController do
       @app.reload
       @app.rules.count.should eq(1)
 
-      a = App.read(account_id: @account._id, id: @app._id, event: false)
+      a = App.read("account_id" => @account._id, "id" => @app._id, "event" => false)
       puts a.inspect
       puts a[:return][:app][:rules][0]["id"].inspect
     end

@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
-ruby "1.9.3"
+ruby "2.0.0"
 
-gem 'rails', '3.2.9'
+gem 'rails', '3.2.13'
 
 gem 'heroku'
 gem 'rb-readline'
@@ -59,17 +59,17 @@ gem 'app_constants'
 
 
 #for http client Adaptor 
-#gem 'faraday'
-#gem 'faraday_middleware'
+gem 'faraday'
+gem 'faraday_middleware'
 #gem 'faraday_middleware-parse_oj' #to register Oj json parser in faraday middleware
 
 #for asynchronous web-socket
-#gem 'em-http-request'
-#gem 'em-synchrony'
+gem 'em-http-request'
+gem 'em-synchrony'
 
 
 #thin Webserver
-gem 'thin'
+gem 'puma'
 
 #haml
 gem 'haml-rails'
@@ -86,15 +86,20 @@ gem 'haml-rails'
 # gem 'acts-as-taggable-on', '~> 2.3.1'
 
 #Queue 
-gem 'amqp'
+#gem 'amqp'
+gem 'pusher'
+
+# memcache
+gem 'dalli'
 
 
 #Background Job
 gem 'redis'
 gem 'sidekiq'
+gem 'kiqstand'
 
 #mongo db
-gem "mongoid", "~> 3.0.0"
+gem "mongoid"
 
 gem 'colorize'
 
@@ -103,9 +108,16 @@ gem 'yajl-ruby'
 # domain parser
 gem 'domainatrix'
 
+# for v8 update
+#gem 'therubyracer'
+
+# deployment capistrano 
+gem 'capistrano'
+
 group :test, :development  do
   gem 'rspec-rails'
   gem 'factory_girl_rails'
+
 end
 
 group :test  do
@@ -113,7 +125,7 @@ group :test  do
   gem 'spork-rails'
   gem 'database_cleaner'
   gem 'ruby-prof'
-  gem 'capybara'
-  gem 'capybara-webkit'
-  gem 'capybara-json'
+  # gem 'capybara'
+  # gem 'capybara-webkit'
+  # gem 'capybara-json'
 end

@@ -2,7 +2,6 @@ require 'spec_helper'
 
 
 describe ActorsController do
-
   before(:each) do
     @account = FactoryGirl.create(:account)
     @account.confirm!
@@ -27,7 +26,8 @@ describe ActorsController do
 
       puts JSON.parse(response.body).inspect
       response.status.should eq(200)
-      Actor.count.should eq(3)
+      
+      Actor.count.should eq(2)
     end
   end
 
@@ -52,12 +52,12 @@ describe ActorsController do
 
     it "should not delete an invalid app" do
       post 'delete', { id: "3423424234" }
-      Actor.count.should eq(3)
+      Actor.count.should eq(2)
     end
 
     it "should delete a valid app" do
       post 'delete', { id: @id }
-      Actor.count.should eq(2)
+      Actor.count.should eq(1)
     end
   end
 
@@ -163,7 +163,7 @@ describe ActorsController do
       Identifier.create!(account_id: @app.account_id, app_id: @app._id, actor_id: @actor._id, uid: 'balu@gmail.com')
 
       actor = Actor.create!(account_id: @app.account_id, app_id: @app._id)
-      Event.add!(account_id: @app.account_id, app_id: @app._id, actor_id: actor._id, name: "sign_up", properties: h)
+      Event.add!("account_id" => @app.account_id, "app_id" => @app._id, "actor_id" => actor._id, "name" => "sign_up", "properties" => h)
 
       expect{
         post   'identify', { app_id: @app._id, id: actor._id, uid: 'balu@gmail.com'}
@@ -222,7 +222,7 @@ describe ActorsController do
     it "should not set actor with invalid actor_id" do
       a_pp = FactoryGirl.create(:app, account_id: @account._id)
       actor = FactoryGirl.create(:actor, app: a_pp._id)
-      @h[:actor_id] = actor._id
+      @h[:id] = actor._id
       post   'set', @h
       response.status.should eq(422)
     end
@@ -359,45 +359,45 @@ describe ActorsController do
 
   describe "Read Actor" do
     before(:each) do
-      Event.add!( account_id: @app.account_id, app_id: @app._id, actor_id: @actor._id, name: "sign_in",
-              properties: { :email => "john.doe@example.com", :customer => {:address => {:city => "Bangalore"}}})
+      Event.add!( "account_id" => @app.account_id, "app_id" => @app._id, "actor_id" => @actor._id, "name" => "sign_in",
+              "properties" => { "email" => "john.doe@example.com", "customer" => {"address" => {"city" => "Bangalore"}}})
 
-      Event.add!( account_id: @app.account_id, app_id: @app._id, actor_id: @actor._id, name: "sign_in",
-        properties: { :email => "mon.doe@example.com", :customer => {:address => {:city => "Pune"}}})
+      Event.add!( "account_id" => @app.account_id, "app_id" => @app._id, "actor_id" => @actor._id, "name" => "sign_in",
+        "properties" => { "email" => "mon.doe@example.com", "customer" => {"address" => {"city" => "Pune"}}})
 
-      Event.add!( account_id: @app.account_id, app_id: @app._id, actor_id: @actor._id, name: "sign_in",
-        properties: { :email => "tom.doe@example.com", :customer => {:address => {:city => "Delkhi"}}})
+      Event.add!( "account_id" => @app.account_id, "app_id" => @app._id, "actor_id" => @actor._id, "name" => "sign_in",
+        "properties" => { "email" => "tom.doe@example.com", "customer" => {"address" => {"city" => "Delkhi"}}})
 
-      Err.add!( account_id: @app["account_id"], app_id: @app._id, actor_id: @actor._id, 
-      properties: { :name => "Something failed",:reason => { err: "I know", code: 402}})
+      Err.add!( "account_id" => @app["account_id"], "app_id" => @app._id, "actor_id" => @actor._id, 
+      "properties" => { "name" => "Something failed","reason" => { "err" => "I know", "code" => 402}})
 
-      Err.add!( account_id: @app["account_id"], app_id: @app._id, actor_id: @actor._id,
-      properties: { :name => "Javascript failed",:reason => { err: "dont know", code: 402}})
+      Err.add!( "account_id" => @app["account_id"], "app_id" => @app._id, "actor_id" => @actor._id,
+      "properties" => { "name" => "Javascript failed","reason" => { "err" => "dont know", "code" => 402}})
 
-      Conversion.add!( account_id: @app["account_id"], app_id: @app._id, actor_id: @actor._id,
-      properties: { :button => "clicked",:times => {:time => ["20/12/2011", "19/11/2012"], :count => 30}})
+      Conversion.add!( "account_id" => @app["account_id"], "app_id" => @app._id, "actor_id" => @actor._id,
+      "properties" => { "button" => "clicked","times" => {"time" => ["20/12/2011", "19/11/2012"], "count" => 30}})
 
-      Conversion.add!( account_id: @app["account_id"], app_id: @app._id, actor_id: @actor._id,
-      properties: { :button => "hovered",:times => {:time => ["20/12/2011", "19/11/2012"], :count => 30}})
+      Conversion.add!( "account_id" => @app["account_id"], "app_id" => @app._id, "actor_id" => @actor._id,
+      "properties" => { "button" => "hovered","times" => {"time" => ["20/12/2011", "19/11/2012"], "count" => 30}})
 
 
       Actor.count.should eq(1)
       Event.count.should eq(3)
 
-      Identifier.create!(account_id: @actor.account_id, app_id: @actor.app_id, actor_id: @actor._id, uid: 'balu@gmail.com', type: "fb_uid")
-      Identifier.create!(account_id: @actor.account_id, app_id: @actor.app_id, actor_id: @actor._id, uid: 'alok@gmail.com', type: "email")
+      Identifier.create!("account_id" => @actor.account_id, "app_id" => @actor.app_id, "actor_id" => @actor._id, "uid" => 'balu@gmail.com', "type" => "fb_uid")
+      Identifier.create!("account_id" => @actor.account_id, "app_id" => @actor.app_id, "actor_id" => @actor._id, "uid" => 'alok@gmail.com', "type" => "email")
 
    
-      @h ={ app_id: @app._id, uid: "balu@gmail.com", events: true, identifiers: true, conversions: true, errors: true }
+      @h ={ "app_id" => @app._id, "uid" => "balu@gmail.com", "events" => true, "identifiers" => true, "conversions" => true, "errors" => true }
     end
     it "should not set actor with wrong arguments" do
-      @h.delete(:app_id)
+      @h.delete("app_id")
       get  'read', @h
       response.status.should eq(422)
     end
 
     it "should not set actor with invalid app_id" do
-      @h[:app_id] = 42342342
+      @h["app_id"] = 42342342
       get  'read', @h
       response.status.should eq(422)
     end
@@ -405,7 +405,7 @@ describe ActorsController do
     it "should not set actor with invalid actor_id" do
       a_pp = FactoryGirl.create(:app, account_id: @account._id)
       actor = FactoryGirl.create(:actor, app: a_pp._id)
-      @h[:id] = actor._id
+      @h["id"] = actor._id
       get  'read', @h
       response.status.should eq(422)
     end

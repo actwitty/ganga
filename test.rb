@@ -70,7 +70,6 @@ def base(url)
 u = "apu.actwitty.com/dcsd?23432&fjwe"
 #parse(u)
 base(u)
-=end
 
 require 'yaml'
 require 'pp'
@@ -89,19 +88,51 @@ class String
   end
 end
 
+class Rails
+  def self.root
+    '.'
+  end
+end
+
 module Svc
-  class FullContact
-  
+  module FullContact
+    HELLO = "hell"
+    class Actions
+    end
+    class Triggers
+    end
   end
-  class Gmail
-  
+  module Gmail
+    class Actions
+    end
+    class Triggers
+    end
+    class PreHooks
+    end
   end
-  class MailChimp
+  module Sample
+    class PreHooks
+    end
+  end
+  module MailChimp
     def self.method_missing(name, *args, &block)
+
       if name.to_s == "config"
-        puts self.name.underscore.split('/')[1]
-        thing = YAML.load_file(self.name.underscore)
+        key = self.name.underscore.split('/')[1]
+        thing = YAML.load_file("#{Rails.root}/config/svcs/#{key}.yml")
+
+        self.instance_eval %Q?
+          def config=(val)
+            @config=val
+          end
+          def config
+            @config
+          end
+        ?       
+        self.send("config=", thing["svc"][key])
       end
+    end
+    class Triggers
     end
   end
   
@@ -110,8 +141,22 @@ module Svc
       thing = YAML.load_file(rb_file)
       key = thing["svc"].keys[0]
 
-      str = key.camelize
-      klass = Object.const_get("#{self.name}").const_get(str)
+      klass = Object.const_get("#{self.name}").const_get(key.camelize)
+      
+      puts klass
+      puts klass.constants
+      puts "================"
+      klass.constants.each do |konst|
+        # like Svc::FullContact::Actions
+       # sub_klass = "#{klass}::#{konst}".constantize 
+
+        # verify if it is a class or normal constant
+        #if "#{klass}::#{konst}".constantize.is_a?(Class)
+          # add hash key like "actions" .. { svc: Svc::FullContact, actions: Svc::FullContact::Actions..}
+         # @@svc_classes[key][konst.to_s.underscore] = sub_klass
+       # end
+      end
+
       klass.instance_eval %Q?
         def config=(val)
           @config=val
@@ -126,6 +171,55 @@ module Svc
 end
 
 Svc.load
-pp Svc::Gmail.config
-pp Svc::FullContact.config
+# pp Svc::Gmail.config
+# pp Svc::FullContact.config
 pp Svc::MailChimp.config
+pp Svc::MailChimp.config
+Svc::FullContact.constants.each {|type| puts "Svc::FullContact::#{type}"}
+=end
+require "em-synchrony"
+require "net/http"
+# require "em-synchrony/em-http"
+# f =  Fiber.current
+# f1 = nil
+# EM.synchrony do
+#   TCPSocket = EventMachine::Synchrony::TCPSocket
+
+#   resp = Net::HTTP.get("github.com", "/index.html")
+        
+#   #Actor.create!(account_id: "sdfsdfsdfsd", app_id: "sfsssss")
+        
+#   puts resp
+
+#   multi = EventMachine::Synchrony::Multi.new
+#   multi.add :a, EventMachine::HttpRequest.new("http://www.postrank.com").aget
+#   multi.add :b, EventMachine::HttpRequest.new("http://www.postrank.com").apost
+#   res = multi.perform
+
+#   p "Look ma, no callbacks, and parallel HTTP requests!"
+#   p res
+
+#   EM.stop
+# end
+
+# puts Fiber.current
+# puts "hello"
+
+class Account
+  attr_accessor :id
+  def initialize(id)
+    @_id = id || 0
+  end
+end
+class Cont
+  def set_verified(account_id)
+    puts self.methods
+    b = Proc.new {|account_id| Account.new(5)}
+    self.class.send(define_method, "current_account", &b)
+  end  
+end
+
+c = Cont.new
+c.set_verified(5)
+
+puts c.current_account.id

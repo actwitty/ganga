@@ -2,8 +2,8 @@ module Authenticate
   class Origin
     # this is called from the controller automatically when we use before_filter
     def before( controller )
-      Rails.logger.info("before filter called")
-      controller.authenticate_origin!
+      Rails.logger.info("Authenticate Origin before filter called")
+      controller.authenticate_origin! unless controller.current_account or controller.authenticated?
     end
   end
 
@@ -11,12 +11,7 @@ module Authenticate
   # INPUT -
   def authenticate_origin!
     Rails.logger.info("Enter Authenticate Origin")
-   
-    if !current_account.blank?
-      Rails.logger.info("Authenticated Account")
-      return true
-    end
-
+ 
     # just to test we are using HTTP_HOST in test mode as HTTP_ORIGIN cant be set
     Rails.env == "test" ? origin = request.env['HTTP_HOST'] : origin = request.env['HTTP_ORIGIN']
 
@@ -24,25 +19,16 @@ module Authenticate
       origin_base = Url.base(origin)
       raise et("application.invalid_origin", url: params[:origin]) if origin_base.blank?
 
-      app = App.where("access_info.origin_base" => origin_base).first
+      app = AppsCache.access_origin(origin_base)
+
+      raise et("application.unauthorized") if app.blank? or validate_app_from_app_id(app[:id]).blank? 
       
-      # TODO : 
-      # if app id is not matching with requests app id return unauthorised 
-      # if !params[:id].blank? and (params[:id] != app._id.to_s)
-      #   raise et("application.unauthorized")
-      # end
+      fill_headers(origin)      
 
-      if !app.blank?
-        headers['Access-Control-Allow-Origin'] = origin
-
-        headers["Access-Control-Allow-Methods"] = %w{GET POST}.join(",")
-        headers["Access-Control-Allow-Headers"] = %w{Origin Accept Content-Type X-Requested-With X-CSRF-Token}.join(",")
-        headers['Access-Control-Max-Age'] = '86400'
-        headers['Access-Control-Expose-Headers'] = 'ETag'
-        headers['Access-Control-Allow-Credentials'] = "true"
-      else
-        raise et("application.unauthorized")
-      end
+      # set account_id in params
+      params[:account_id] = app[:account_id] if params[:account_id].blank?
+       # set the request type
+      params[:request_type] = AppConstants.request_type_origin
 
       # Some browsers send an options request to the server first, 
       # to make sure the correct access headers are set.
@@ -52,11 +38,20 @@ module Authenticate
         head :ok
       else
         # continue with callback chain
-        raise et("application.unauthorized") if build_session(app) == false
+        set_authenticated
       end
     end
   rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
     head :unauthorized
-  end  
+  end 
+
+  def fill_headers(origin)
+    headers['Access-Control-Allow-Origin'] = origin
+    headers["Access-Control-Allow-Methods"] = %w{GET POST}.join(",")
+    headers["Access-Control-Allow-Headers"] = %w{Origin Accept Content-Type X-Requested-With X-CSRF-Token}.join(",")
+    headers['Access-Control-Max-Age'] = '86400'
+    headers['Access-Control-Expose-Headers'] = 'ETag'
+    headers['Access-Control-Allow-Credentials'] = "true"
+  end 
 end

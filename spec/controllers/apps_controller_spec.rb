@@ -34,10 +34,12 @@ describe AppsController do
                                                                :name => "alok 1",
                                                                origin: "https://actwitty.com"
                                                                }
-                      }
+         
+                   }
+             
       puts JSON.parse(response.body).inspect
       response.status.should eq(200)
-      a= App.where("access_info.origin_base" => "actwitty.com").first
+      a= App.where("access_origin.origin_base" => "actwitty.com").first
       a.should_not be_blank
       puts a.inspect
     end
@@ -111,7 +113,7 @@ describe AppsController do
 
     it "should update app" do
       post 'update', {account_id: @account._id, :id => @app["id"],:description => { email: "bon.doe@example.com",address: {city: "Bangalore"}, 
-                                                                                    super_actor_id: 2323232, token: "fsdfsdfsdf", 
+                                                                                    token: "fsdfsdfsdf", 
                                                                                     origin: "http://www.actwitty.com" }}
 
       response.status.should eq(200)
@@ -123,9 +125,9 @@ describe AppsController do
       hash["description"]["customer"]["address"]["city"].should eq("Bangalore")
       hash["description"]["origin"].should eq("http://www.actwitty.com")
       
-      a = App.where("access_info.origin_base" => "actwitty.com").first
+      a = App.where("access_origin.origin_base" => "actwitty.com").first
       a.should_not be_blank
-      puts a.access_info.inspect
+      puts a.access_origin.inspect    
     end
   end
 
@@ -137,13 +139,15 @@ describe AppsController do
                                                                 :name => "alok 1"
                                                                 }
                        }
+
       @app = JSON.parse(response.body)
+      puts @app.inspect      
       response.status.should eq(200)
 
       @actor = FactoryGirl.create(:actor, app_id: @app["id"], account_id: @app["account_id"])
 
-      Actor.set(account_id: @actor.account_id, app_id: @actor.app_id, id: @actor._id,
-                properties: { profile: {
+      Actor.set("account_id" => @actor.account_id, "app_id" => @actor.app_id, "id" => @actor._id,
+                "properties" => { profile: {
                                 :email => "john.doe@example.com",
                                 :customer => {:address => {:city => "Bangalore"}}
                               },
@@ -151,8 +155,8 @@ describe AppsController do
                               }
                 )
 
-      Actor.set(account_id: @actor.account_id, app_id: @actor.app_id, id: @actor._id,
-                properties: { 
+      Actor.set("account_id" => @actor.account_id, "app_id" => @actor.app_id, "id" => @actor._id,
+                "properties" => { 
                               system: {browser: "chrome", os: 23}
                             }
                 )
@@ -170,26 +174,26 @@ describe AppsController do
 
     it "should read the app detail" do
       
-      Event.add!( account_id: @app["account_id"], app_id: @app["id"], actor_id: @actor._id, name: "sign_in",
-                  properties: { :email => "john.doe@example.com", :customer => {:address => {:city => "Bangalore"}}})
+      Event.add!( "account_id" => @app["account_id"], "app_id" => @app["id"], "actor_id" => @actor._id, "name" => "sign_in",
+                  "properties" => { "email"  => "john.doe@example.com", "customer" => {"address" => {"city" => "Bangalore"}}})
 
-      Event.add!( account_id: @app["account_id"], app_id: @app["id"], actor_id: @actor._id, name: "sign_up",
-                  properties: { :email => "mon.doe@example.com", :customer => {:address => {:city => "Pune"}}})
+      Event.add!( "account_id" => @app["account_id"], "app_id" => @app["id"], "actor_id" => @actor._id, "name" => "sign_up",
+                  "properties" => { "email"  => "mon.doe@example.com", "customer" => {"address" => {"city" => "Pune"}}})
 
-      Event.add!( account_id: @app["account_id"], app_id: @app["id"], actor_id: @actor._id, name: "sign_in",
-                  properties: { :email => 23, :customer => {:address => {:city => "Bangalore"}}})
+      Event.add!( "account_id" => @app["account_id"], "app_id" => @app["id"], "actor_id" => @actor._id, "name" => "sign_in",
+                  "properties" => { "email"  => 23, "customer" => {"address" => {"city" => "Bangalore"}}})
 
-      Err.add!( account_id: @app["account_id"], app_id: @app["id"], actor_id: @actor._id,
-                properties: { :name => "Something failed",:reason => { err: "I know", code: 402}})
+      Err.add!( "account_id" => @app["account_id"], "app_id" => @app["id"], "actor_id" => @actor._id,
+                "properties" => { "name" => "Something failed","reason" => { "err" => "I know", "code" => 402}})
 
-      Err.add!( account_id: @app["account_id"], app_id: @app["id"], actor_id: @actor._id,
-                properties: { :name => "Javascript failed",:reason => { err: "dont know", code: 402}})
+      Err.add!( "account_id" => @app["account_id"], "app_id" => @app["id"], "actor_id" => @actor._id,
+                "properties" => { "name" => "Javascript failed","reason" => { "err" => "dont know", "code" => 402}})
 
-      Conversion.add!( account_id: @app["account_id"], app_id: @app["id"], actor_id: @actor._id,
-                       properties: { :button => "clicked",:times => {:time => ["20/12/2011", "19/11/2012"], :count => 30}})
+      Conversion.add!( "account_id" => @app["account_id"], "app_id" => @app["id"], "actor_id" => @actor._id,
+                       "properties" => { "button" => "clicked","times" => {"time" => ["20/12/2011", "19/11/2012"], :count => 30}})
 
-      Conversion.add!( account_id: @app["account_id"], app_id: @app["id"], actor_id: @actor._id,
-                       properties: { :button => "hovered",:times => {:time => ["20/12/2011", "19/11/2012"], :count => 30}})
+      Conversion.add!( "account_id" => @app["account_id"], "app_id" => @app["id"], "actor_id" => @actor._id,
+                       "properties" => { "button" => "hovered","times" => {"time" => ["20/12/2011", "19/11/2012"], :count => 30}})
 
       puts @account._id
       get 'read', {account_id: @account._id, id: @app["id"],events: true, actors: true, conversions: true, errors: true}

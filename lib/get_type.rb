@@ -47,6 +47,9 @@ module GetType
     type
   end
 
+  def self.get_system_type(key)
+    return "String"
+  end
   def self.get_type(val)
     type = to_something(val)
     return type_map(type.class.to_s )

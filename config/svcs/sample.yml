@@ -1,0 +1,19 @@
+svc:
+  sample:
+    type: custom
+    keys: 
+      api: 
+    triggers: 
+      [ 
+        { 
+          name: Sign up, 
+          request: get
+          endpoint: "TODO", 
+          params: {}
+        },
+        { 
+          name: Sign in, 
+          endpoint: "TODO", 
+          params: {}
+        }
+      ]

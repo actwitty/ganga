@@ -1,0 +1,17 @@
+svc:
+  mail_chimp:
+    keys: 
+      api: 
+    triggers: 
+      [ 
+        { 
+          name: Send Email From Mailchimp, 
+          endpoint: "TODO", 
+          params: {}
+        },
+        { 
+          name: Receive Email From Mailchimp, 
+          endpoint: "TODO", 
+          params: {}
+        }
+      ]
