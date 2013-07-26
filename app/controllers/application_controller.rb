@@ -30,9 +30,6 @@ class ApplicationController < ActionController::Base
     else
       before_filter Authenticate::Acc.new, params[:account]
     end
-
-    # called always - so session build with Authenticate_origin is also taken care(deleted)
-    after_filter  Authenticate::Api.new
   rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
     #head :unauthorized

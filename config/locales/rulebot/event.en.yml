@@ -1,7 +1,8 @@
 en:
   event:
-    invalid_argument_in_event: "Invalid arguments given in create event"
+    invalid_argument_in_add_event: "Invalid arguments given in create event"
     create_failed: "Event creation failed"
     property_not_serialized: "Event's property is not serialized"
     invalid_actor_id: "Invalid Actor!!"
-    invalid_app_id: "Invalid App ID"
+    invalid_app_id: "Invalid App id"
+    invalid_argument_in_read: "Invalid arguments given in read events"

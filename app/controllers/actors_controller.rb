@@ -1,6 +1,7 @@
 require 'utility'
 class ActorsController < ApplicationController
   protect_from_forgery
+  
   authenticate_request( origin: { only: ["create","read","identify","set"] } )
 
   respond_to :json
@@ -37,9 +38,6 @@ class ActorsController < ApplicationController
 
     ret = {:return => {status: true}, :error => nil}
 
-    params[:account_id] = current_account._id.to_s 
-    params[:method] = "create"
-    
     if params[:sync]
       ret = ActorsWorker.create(params)
     else
@@ -76,9 +74,6 @@ class ActorsController < ApplicationController
 
     ret = {:return => {status: true}, :error => nil}
 
-    params[:account_id] = current_account._id.to_s 
-    params[:method] = "delete"
-    
     if params[:sync]
       ret = ActorsWorker.delete(params)
     else
@@ -123,9 +118,6 @@ class ActorsController < ApplicationController
 
     ret = {:return => {status: true}, :error => nil}
 
-    params[:account_id] = current_account._id.to_s 
-    params[:method] = "identify"
-    
     if params[:sync]
       ret = ActorsWorker.identify(params)
     else
@@ -180,9 +172,6 @@ class ActorsController < ApplicationController
 
     ret = {:return => {status: true}, :error => nil}
 
-    params[:account_id] = current_account._id.to_s 
-    params[:method] = "set"
-    
     if params[:sync]
       ret = ActorsWorker.set(params)
     else
@@ -217,9 +206,6 @@ class ActorsController < ApplicationController
 
     ret = {:return => {status: true}, :error => nil}
 
-    params[:account_id] = current_account._id.to_s 
-    params[:method] = "alias"
-    
     if params[:sync]
       ret = ActorsWorker.alias(params)
     else
@@ -254,36 +240,9 @@ class ActorsController < ApplicationController
   # OUTPUT => 
   ##[sync call]
   ##          {
-  ##            account: {id: "232342343"}
-  ##            app: {id: "234324"}
-  ##
-  ##            actor: {id: "3433434", description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}},time: 2009-02-19 00:00:00 UTC }
-  ##            identifiers: [{"a@b.com" => "email"}, {"9999999" => "mobile"}, {"34433444" => "facebook_uid"}],
-  ##
-  ##            events: [
-  ##                      {
-  ##                         id: "3232342434", name: "sign_in", 
-  ##                         properties: [{"k" => "name", "v" => "alok"}, {"k" => "address[city]", "v" => "Bangalore"}]
-  ##                         time: 2009-02-19 00:00:00 UTC
-  ##                      },
-  ##                      {...}
-  ##                    ],
-  ##            conversions: [
-  ##                            {
-  ##                              id: "32323424355",
-  ##                              properties: [{"k" => "button", "v" => "clicked"}, {"k" => "times", "v" => "40"}]
-  ##                              time: 2009-02-19 23:00:00 UTC
-  ##                            },
-  ##                            {...}
-  ##                         ],
-  ##            errors: [
-  ##                       {
-  ##                          id: "3232342434",
-  ##                          properties: [{"k" => "name", "v" => "Javascript Error"}, {"k" => "reason", "v" => "dont know"}]
-  ##                          time: 2009-02-19 21:00:00 UTC
-  ##                       },
-  ##                       {...}
-  ##                    ],
+  ##            id: "3433434", app_id: "434343", account_id: "44464646",
+  ##            description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}},
+  ##            time: 2009-02-19 00:00:00 UTC }
   ##          }
   ##[async call]
   ##          {status: true}
@@ -291,9 +250,6 @@ class ActorsController < ApplicationController
     Rails.logger.info("Enter Actor Read")
 
     ret = {:return => {status: true}, :error => nil}
-
-    params[:account_id] = current_account._id.to_s 
-    params[:method] = "read"
     
     if params[:sync]
       ret = ActorsWorker.read(params)

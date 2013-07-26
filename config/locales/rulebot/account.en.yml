@@ -2,3 +2,4 @@ en:
   account:
     invalid_argument_in_read: "Invalid Argument in Account Read"
     invalid_account_id: "Account not found ..Invalid Account Id %{id}"
+    create_token_failed: "Token creation failed"

@@ -1,16 +1,18 @@
 svc:
   sample:
+    type: custom
     keys: 
       api: 
     triggers: 
       [ 
         { 
-          name: Sample Trigger 1, 
+          name: Sign up, 
+          request: get
           endpoint: "TODO", 
           params: {}
         },
         { 
-          name: Sample Trigger 2, 
+          name: Sign in, 
           endpoint: "TODO", 
           params: {}
         }

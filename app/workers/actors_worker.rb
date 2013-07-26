@@ -9,7 +9,7 @@ class ActorsWorker
 
     ret = {:return => nil, :error => nil}
 
-    case params["method"]
+    case params["action"]
     when "create"
       ret = ActorsWorker.create(params)
     when "read"

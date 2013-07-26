@@ -32,7 +32,7 @@ describe RulesController do
     request.env['HTTP_ACCEPT'] = "application/json"
   end
 
-  describe "create event" do
+  describe "create rule" do
     it "should not create rule with invalid app id" do
       post 'create', {
         app_id: "1234444",

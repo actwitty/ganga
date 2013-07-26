@@ -57,9 +57,6 @@ class RulesController < ApplicationController
     Rails.logger.info("Enter Rule Update")
 
     ret = {:return => {status: true}, :error => nil}
-
-    params[:account_id] = current_account._id.to_s 
-    params[:method] = "create"
     
     if params[:sync]
       ret = RulesWorker.create(params)
@@ -129,7 +126,6 @@ class RulesController < ApplicationController
 
     ret = {:return => {status: true}, :error => nil}
 
-    params[:account_id] = current_account._id.to_s 
     params[:method] = "update"
     
     if params[:sync]
@@ -174,7 +170,6 @@ class RulesController < ApplicationController
 
     ret = {:return => {status: true}, :error => nil}
 
-    params[:account_id] = current_account._id.to_s 
     params[:method] = "read"
     
     if params[:sync]
@@ -215,7 +210,6 @@ class RulesController < ApplicationController
 
     ret = {:return => {status: true}, :error => nil}
 
-    params[:account_id] = current_account._id.to_s 
     params[:method] = "delete"
     
     if params[:sync]

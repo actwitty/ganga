@@ -7,7 +7,7 @@ class RulesWorker
 
     ret = {:return => nil, :error => nil}
 
-    case params["method"]
+    case params["action"]
     when "create"
       ret = RulesWorker.create(params)
     when "read"

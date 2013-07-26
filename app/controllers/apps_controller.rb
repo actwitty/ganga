@@ -27,34 +27,17 @@ class AppsController < ApplicationController
   ##
   ##						"account_id"=>"5074143063fe853420000001", 
   ##
-  ##             "time"=>"2012-10-09T12:10:24Z",
+  ##            "time"=>"2012-10-09T12:10:24Z",
   ##
   ##            "description"=>{"email"=>"john.doe@example.com", "customer"=>{"address"=>{"city"=>"Bangalore"}}, "origin"=>"http://example.com"}, 
   ##
-  ##            "schema" => {
-  ##                             properties: {
-  ##                                           'customer[email]' => {  
-  ##                                                                   "total"=>5, 
-  ##                                                                   "types" => { 
-  ##                                                                                "String" => {"total" => 3, "events" => {"set_actor" => 2, "sign_up" => 1}},
-  ##                                                                                "Number" => {"total" => 2, "events" => {"purchased" => 1, "sign_up" => 1}}
-  ##                                                                              }
-  ##                                                                }
-  ##                                         }
-  ##                           
-  ##                             events:     {
-  ##                                           'sign_up' => {"name" => String, "address[city]" => "String"}
-  ##                                         }
+  ##            "schema"=>  {
+  ##                         
+  ##                          events: {
+  ##                                    'sign_up' => {"name" => String, "address[city]" => "String", "$l" => "String"}
+  ##                                  }
   ##                             
-  ##                             profile:    {
-  ##                                           "customer[address][city]"=>  {"total"=>1, "types"=>{"String"=>1}}, 
-  ##                                           "email"=>                    {"total"=>1, "types"=>{"String"=>1}}
-  ##                                         }  
-  ##                             system:     {
-  ##                                           "os"=>        {"total"=>2, "types"=>{"String"=>1, "Number"=>1}}, 
-  ##                                           "browser"=>   {"total"=>2, "types"=>{"String"=>2}}}
-  ##                                         }  
-  ##                        }  
+  ##                        }, 
   ##            "rules" => [
   ##                              {
   ##                                "name"=>"A fancy rule", "event"=>"singup", "owner"=>"client", "action"=>"topbar",
@@ -70,13 +53,9 @@ class AppsController < ApplicationController
   ##        {status: true}
 	def create
 		Rails.logger.info("Enter App Create")
-		
-
+	
     ret = {:return => {status: true}, :error => nil}
 
-    params[:account_id] = current_account._id.to_s 
-    params[:method] = "create"
-    
     if params[:sync]
       ret = AppsWorker.create(params)
     else
@@ -113,9 +92,6 @@ class AppsController < ApplicationController
 		end
 
     ret = {:return => {status: true}, :error => nil}
-
-    params[:account_id] = current_account._id.to_s 
-    params[:method] = "delete"
     
     if params[:sync]
       ret = AppsWorker.delete(params)
@@ -148,36 +124,25 @@ class AppsController < ApplicationController
   # OUTPUT => 
   ##[sync call]
   ##          {
-  ##					  "id"=>"5074143063fe853420000005", 
+  ##            "id"=>"5074143063fe853420000005", 
   ##
-  ##						"account_id"=>"5074143063fe853420000001", 
+  ##            "account_id"=>"5074143063fe853420000001", 
+  ##
+  ##            "time"=>"2012-10-09T12:10:24Z",
   ##
   ##            "description"=>{"email"=>"john.doe@example.com", "customer"=>{"address"=>{"city"=>"Bangalore"}}, "origin"=>"http://example.com"}, 
   ##
-  ##            "schema" => {
-  ##                             properties: {
-  ##                                           'customer[email]' => {  
-  ##                                                                   "total"=>5, 
-  ##                                                                   "types" => { 
-  ##                                                                                "String" => {"total" => 3, "events" => {"set_actor" => 2, "sign_up" => 1}},
-  ##                                                                                "Number" => {"total" => 2, "events" => {"purchased" => 1, "sign_up" => 1}}
-  ##                                                                              }
-  ##                                                                }
-  ##                                         }
-  ##                           
-  ##                             events:     {
-  ##                                           'sign_up' => {"name" => String, "address[city]" => "String"}
-  ##                                         }
+  ##            "schema"=>  {
+  ##                         
+  ##                           events: {
+  ##                                    'sign_up' => {"name" => String, "address[city]" => "String", "$l" => "String"}
+  ##                                   }
   ##                             
-  ##                             profile:    {
-  ##                                           "customer[address][city]"=>  {"total"=>1, "types"=>{"String"=>1}}, 
-  ##                                           "email"=>                    {"total"=>1, "types"=>{"String"=>1}}
-  ##                                         }  
-  ##                             system:     {
-  ##                                           "os"=>        {"total"=>2, "types"=>{"String"=>1, "Number"=>1}}, 
-  ##                                           "browser"=>   {"total"=>2, "types"=>{"String"=>2}}}
-  ##                                         }  
-  ##                        }  
+  ##                        }, 
+  ##            "sample_events" => {
+  ##                                      'sign_up' => {"name" => "john", "address" => { "city" => "NY"}, "email" => "john@doe.com", $l" => "String"}
+  ##                                      'purchased' => {"itme" => "ipod", "value" => 50 $" , "$l" => "Bangalore", "$b" => "chrome"}
+  ##                               },
   ##            "rules" => [
   ##                              {
   ##                                "name"=>"A fancy rule", "event"=>"singup", "owner"=>"client", "action"=>"topbar",
@@ -188,7 +153,6 @@ class AppsController < ApplicationController
   ##                              },
   ##                              {..}
   ##                      ],   
-  ##            "time"=>"2012-10-09T12:10:24Z",
   ##         }
   ##[async call]
   ##        {status: true}
@@ -196,9 +160,6 @@ class AppsController < ApplicationController
 		Rails.logger.info("Enter App Update")
 		
 		ret = {:return => {status: true}, :error => nil}
-
-    params[:account_id] = current_account._id.to_s 
-    params[:method] = "update"
     
     if params[:sync]
       ret = AppsWorker.update(params)
@@ -229,94 +190,43 @@ class AppsController < ApplicationController
 
   # OUTPUT =>
   ##[sync call]
-  ##          { 
-  ##            account: {id: "445654654645"},
+  ##          {
+  ##            "id"=>"5074143063fe853420000005", 
   ##
-  ##            app: {
-  ##                   id: "4545554654645", 
-  ##                   description: {"super_app_id": "23131313", "name": "my app", "origin": "http://myapp.com"}, 
-  ##                   schema: {
-  ##                             properties: {
-  ##                                           'customer[email]' => {  
-  ##                                                                   "total"=>5, 
-  ##                                                                   "types" => { 
-  ##                                                                                "String" => {"total" => 3, "events" => {"set_actor" => 2, "sign_up" => 1}},
-  ##                                                                                "Number" => {"total" => 2, "events" => {"purchased" => 1, "sign_up" => 1}}
-  ##                                                                              }
-  ##                                                                }
-  ##                                         }
-  ##                           
-  ##                             events:     {
-  ##                                           'sign_up' => {"name" => String, "address[city]" => "String"}
-  ##                                         }
+  ##            "account_id"=>"5074143063fe853420000001", 
+  ##
+  ##            "time"=>"2012-10-09T12:10:24Z",
+  ##
+  ##            "description"=>{"email"=>"john.doe@example.com", "customer"=>{"address"=>{"city"=>"Bangalore"}}, "origin"=>"http://example.com"}, 
+  ##
+  ##            "schema"=>  {
+  ##                         
+  ##                          events: {
+  ##                                    'sign_up' => {"name" => String, "address[city]" => "String", "$l" => "String"}
+  ##                                  }
   ##                             
-  ##                             profile:    {
-  ##                                           "customer[address][city]"=>  {"total"=>1, "types"=>{"String"=>1}}, 
-  ##                                           "email"=>                    {"total"=>1, "types"=>{"String"=>1}}
-  ##                                         }  
-  ##                             system:     {
-  ##                                           "os"=>        {"total"=>2, "types"=>{"String"=>1, "Number"=>1}}, 
-  ##                                           "browser"=>   {"total"=>2, "types"=>{"String"=>2}}}
-  ##                                         }  
-  ##                           },
-  ##                   rules: [
-  ##                             {
-  ##                               "name"=>"A fancy rule", "event"=>"singup", "owner"=>"client", "action"=>"topbar",
-  ##                               "action_param"=>{"text"=>"A quickbrown fox jumps over a lazy dog", "href"=>"http://www.google.com", "color"=>"#333333", "width"=>"50"}, 
-  ##                               "conditions"=>[{"property"=>"person[email]", "negation"=>"true", "operation"=>"ew", "value1"=>"@gmail.com", "connect"=>"and"}], 
-  ##                               "updated_at"=>2012-10-24 07:43:38 UTC, 
-  ##                               "created_at"=>2012-10-24 07:43:38 UTC, "id"=>"50879c2a63fe855d14000005"
-  ##                             },
-  ##                             {..}
-  ##                           ],
-  ##                   time: 2009-02-19 21:00:00 UTC   
-  ##                 }           
-  ##            
-  ##           events: [
-  ##                      {
-  ##                        id: "3232342434", name: "sign_in", 
-  ##                        properties: [{"k" => "name", "v" => "alok"}, {"k" => "address[city]", "v" => "Bangalore"}]
-  ##                        actor_id: "3433434",
-  ##                        time: 2009-02-19 00:00:00 UTC
-  ##                      },
-  ##                      {..}
-  ##                    ],
-  ##          conversions: [
-  ##                            {
-  ##                              id: "32323424355",
-  ##                              properties: [{"k" => "button", "v" => "clicked"}, {"k" => "times", "v" => "40"}]
-  ##                              actor_id: "3433434",
-  ##                              time: 2009-02-19 23:00:00 UTC
-  ##                            },
-  ##                            {...}
-  ##                       ],
-  ##          errors: [
-  ##                       {
-  ##                          id: "3232342434",
-  ##                          properties: [{"k" => "name", "v" => "Javascript Error"}, {"k" => "reason", "v" => "dont know"}]
-  ##                          actor_id: "3433434",
-  ##                          time: 2009-02-19 21:00:00 UTC
-  ##                       },
-  ##                       {...}
-  ##                 ],
-  ##          actors: [
-  ##                      {
-  ##                        id: "3433434", 
-  ##                        description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}},
-  ##                        time: 2009-02-19 21:00:00 UTC
-  ##                      }
-  ##                      {..}
-  ##                  ]
-  ##        }
+  ##                        }, 
+  ##            "sample_events" => {
+  ##                                      'sign_up' => {"name" => "john", "address" => { "city" => "NY"}, "email" => "john@doe.com", $l" => "String"}
+  ##                                      'purchased' => {"itme" => "ipod", "value" => 50 $" , "$l" => "Bangalore", "$b" => "chrome"}
+  ##                               },
+  ##            "rules" => [
+  ##                              {
+  ##                                "name"=>"A fancy rule", "event"=>"singup", "owner"=>"client", "action"=>"topbar",
+  ##                                "action_param"=>{"text"=>"A quickbrown fox jumps over a lazy dog", "href"=>"http://www.google.com", "color"=>"#333333", "width"=>"50"}, 
+  ##                                "conditions"=>[{"property"=>"person[email]", "negation"=>"true", "operation"=>"ew", "value1"=>"@gmail.com", "connect"=>"and"}], 
+  ##                                "updated_at"=>2012-10-24 07:43:38 UTC, 
+  ##                                "created_at"=>2012-10-24 07:43:38 UTC, "id"=>"50879c2a63fe855d14000005"
+  ##                              },
+  ##                              {..}
+  ##                      ],   
+  ##         }
   ##[async call]
   ##        {status: true}
 	def read
 		Rails.logger.info("Enter App read")
 
 		ret = {:return => {status: true}, :error => nil}
-
-    params[:account_id] = current_account._id.to_s 
-    params[:method] = "read"
     
     if params[:sync]
       ret = AppsWorker.read(params)
@@ -331,4 +241,76 @@ class AppsController < ApplicationController
     Rails.logger.error("**** ERROR **** #{er(e)}")
     respond_with({ errors:  e.message}, status: 422)
 	end
+
+  # NOTE
+  ## Add a sample event
+
+  # INPUT
+  ## {
+  ##  :id => "1234444',       [MANDATORY]
+  ##  :name =>    "sign_up",  [MANDATORY] # event name is case sensitive
+  ##  :properties => {        [MANDATORY]
+  ##      :email => "john.doe@example.com",
+  ##      :customer => {:address => {:city => "Bangalore"}},
+  ##      :$l => "bangalore",
+  ##      :$c => "india" 
+  ##   }
+  ## }
+
+  # OUTPUT => 
+  ##[sync call]
+  ##          {:return => true, :error => nil}
+  ##[async call]
+  ##          {status: true}
+  def add_sample_event
+    Rails.logger.info("Enter Add Sample Event")
+    
+    ret = {:return => {status: true}, :error => nil}
+    
+    if params[:sync]
+      ret = AppsWorker.add_sample_event(params)
+    else
+      AppsWorker.perform_async(params)
+    end  
+    
+    raise ret[:error] if !ret[:error].blank?
+
+    respond_with( ret[:return], status: 200, location: "nil")
+  rescue => e 
+    Rails.logger.error("**** ERROR **** #{er(e)}")
+    respond_with({ errors:  e.message}, status: 422, :location => "nil")
+  end
+
+  # NOTE
+  ## Delete a sample event
+
+  # INPUT
+  ## {
+  ##  :id => "1234444',       [MANDATORY]
+  ##  :name =>    "sign_up",  [MANDATORY] # event name is case sensitive
+  ## }
+
+  # OUTPUT => 
+  ##[sync call]
+  ##          {:return => true, :error => nil}
+  ##[async call]
+  ##          {status: true}
+  def delete_sample_event
+    Rails.logger.info("Enter Delete Sample Event")
+    
+    ret = {:return => {status: true}, :error => nil}
+    
+    if params[:sync]
+      ret = AppsWorker.delete_sample_event(params)
+    else
+      AppsWorker.perform_async(params)
+    end  
+    
+    raise ret[:error] if !ret[:error].blank?
+
+    respond_with( ret[:return], status: 200, location: "nil")
+  rescue => e 
+    Rails.logger.error("**** ERROR **** #{er(e)}")
+    respond_with({ errors:  e.message}, status: 422, :location => "nil")
+  end 
 end

@@ -9,34 +9,35 @@ module Authenticate
     params[:sync] = true
   end
 
-  # builds a session temporarily for cross-origin access or api access
-  # INPUT - object "app" or "account"
-  def build_session(object)
-    Rails.logger.info("Enter  Session")
-
-    if object.class.to_s ==  "App"
-      object=Account.find(object.account_id)
-    end
-    
-    raise et("application.account_invalid") if object.blank? # This error should not happen
-
-    sign_in(object)
-    self.instance_variable_set(:@tear_down, current_account )
-
-    true
-  rescue => e 
-    Rails.logger.error("**** ERROR **** #{er(e)}")
-    false
+  # NOTE - check if already authenticated
+  def authenticated?
+    instance_variable_get(:@authenticated)
   end
 
-  # deletes temporary session made for cross-origin access or api access
-  # INPUT - 
-  def delete_session
-    Rails.logger.info("Enter Delete Session")
-    if !self.instance_variable_get(:@tear_down).blank?
-      Rails.logger.info("deleting session")
-      sign_out(current_account) 
-      self.instance_variable_set(:@tear_down, nil )
+  # NOTE - 
+
+  # NOTE - set request is authenticated
+  def set_authenticated
+    instance_variable_set(:@authenticated, true )
+  end
+ 
+  # NOTE - verify that app_id is matching with with app id coming in params.
+  ##       apps#create and accounts#* requests will not come here as it is 
+  ##       coming from clients browser and such requests are not allowed
+  def validate_app_from_app_id(app_id)
+    Rails.logger.info("Enter Validate App from App Id")
+    
+    # there should be no request for account in this context (access_origin)
+    if params[:controller] == "accounts" 
+      return false
+    elsif params[:controller] == "apps"
+      return params[:id] == app_id
+    else
+      return params[:app_id] == app_id # this case handles any other controller..
+                                       # app_id must be there for anyother request other than account                                        
     end
+  rescue => e 
+    Rails.logger.error("**** ERROR **** #{e.message}")
+    false
   end
 end

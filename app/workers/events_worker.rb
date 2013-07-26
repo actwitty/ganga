@@ -7,9 +7,11 @@ class EventsWorker
 
     ret = {:return => nil, :error => nil}
 
-    case params["method"]
+    case params["action"]
     when "create"
       ret = EventsWorker.create(params)  
+    when "read"
+      ret = EventsWorker.read(params)
     else
       raise "Method does not exists"
     end       
@@ -32,6 +34,20 @@ class EventsWorker
     raise ret[:error] if !ret[:error].blank?
       
     {:return => ret[:return].format_event, :error => nil}
+  rescue => e
+    {:return => nil, :error => ret[:error]}
+  end
+
+  # INPUT - Check EventsController#read
+  # OUTPUT - Check EventsController#read [sync mode]
+  def self.read(params)
+    Rails.logger.info("Enter Events Read")
+    
+    ret = Event.read(params) 
+    
+    raise ret[:error] if !ret[:error].blank?
+      
+    {:return => ret[:return], :error => nil}
   rescue => e
     {:return => nil, :error => ret[:error]}
   end

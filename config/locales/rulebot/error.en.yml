@@ -1,7 +1,0 @@
-en:
-  err:
-    invalid_argument_in_error: "invalid arguemnt in error Add"
-    create_failed: "Error creation failed"
-    invalid_app_id: "invalid App ID"
-    invalid_actor_id: "invalid Actor ID"
-    property_not_serialized: "Error is not serialized"

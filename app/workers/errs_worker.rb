@@ -7,9 +7,11 @@ class ErrsWorker
 
     ret = {:return => nil, :error => nil}
 
-    case params["method"]
+    case params["action"]
     when "create"
-      ret = ErrsWorker.create(params)  
+      ret = ErrsWorker.create(params)
+    when "read"
+      ret = ErrsWorker.read(params)  
     else
       raise "Method does not exists"
     end       
@@ -32,6 +34,20 @@ class ErrsWorker
     raise ret[:error] if !ret[:error].blank?
       
     {:return => ret[:return].format_err, :error => nil}
+  rescue => e
+    {:return => nil, :error => ret[:error]}
+  end
+
+  # INPUT - Check ErrsController#read
+  # OUTPUT - Check ErrsController#read [sync mode]
+  def self.read(params)
+    Rails.logger.info("Enter Errs Read")
+    
+    ret = Err.read(params) 
+    
+    raise ret[:error] if !ret[:error].blank?
+      
+    {:return => ret[:return], :error => nil}
   rescue => e
     {:return => nil, :error => ret[:error]}
   end

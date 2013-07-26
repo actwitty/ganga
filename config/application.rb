@@ -75,7 +75,6 @@ module Ganga
       g.helper_specs false
     end
 
-
     config.ember.variant = Rails.env.to_sym
     
     config.handlebars.templates_root = 'app/templates'

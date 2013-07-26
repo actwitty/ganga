@@ -47,53 +47,12 @@ class AccountsController < ApplicationController
   ## }
 
   # OUTPUT =>{ 
-  ##            account: {id: "445654654645", name: "Sudhanshu & Sons Chaddhi Wale", description: {subscription: "Free", authenticate_app: false}},
-  ##            events: [
-  ##                      {
-  ##                        name: "sign_in", 
-  ##                        properties: [{"k" => "name", "v" => "alok"}, {"k" => "address[city]", "v" => "Bangalore"}]
-  ##                        app_id: "343433433",
-  ##                        actor_id: "3434334"
-  ##                        time: 2009-02-19 00:00:00 UTC
-  ##                      },
-  ##                      {..}
-  ##                    ],
-  ##            conversions: [
-  ##                            {
-  ##                              id: "32323424355",
-  ##                              properties: [{"k" => "button", "v" => "clicked"}, {"k" => "times", "v" => "40"}],
-  ##                              app_id: "343433433",
-  ##                              actor_id: "3433434",
-  ##                              time: 2009-02-19 23:00:00 UTC
-  ##                            },
-  ##                            {...}
-  ##                         ],
-  ##            errors: [
-  ##                       {
-  ##                          id: "3232342434",
-  ##                          properties: [{"k" => "name", "v" => "Javascript Error"}, {"k" => "reason", "v" => "dont know"}]
-  ##                          app_id: "343433433",
-  ##                          actor_id: "3433434",
-  ##                          time: 2009-02-19 21:00:00 UTC
-  ##                       },
-  ##                       {...}
-  ##                    ],
-  ##            actors: [
-  ##                      {
-  ##                        id: "3433434", 
-  ##                        description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}},
-  ##                        time: 2009-02-19 21:00:00 UTC
-  ##                      }
-  ##                      {..}
-  ##                    ]
-  ##        }
+  ##            id: "445654654645", name: "Sudhanshu & Sons Chaddhi Wale", description: {subscription: "Free", authenticate_app: false}
+  ##         }
   def read
     Rails.logger.info("Enter Account read")
 
     ret = {:return => {status: true}, :error => nil}
-
-    params[:id] = current_account._id.to_s 
-    params[:method] = "read"
     
     if params[:sync]
       ret = AccountsWorker.read(params)
@@ -123,30 +82,16 @@ class AccountsController < ApplicationController
   ##                   { 
   ##                     id: "343433433", account_id: "324324", 
   ##                     description: {"name": "my app", "origin": "http://myapp.com"},
-  ##                     schema: {
-  ##                             properties: {
-  ##                                           'customer[email]' => {  
-  ##                                                                   "total"=>5, 
-  ##                                                                   "types" => { 
-  ##                                                                                "String" => {"total" => 3, "events" => {"set_actor" => 2, "sign_up" => 1}},
-  ##                                                                                "Number" => {"total" => 2, "events" => {"purchased" => 1, "sign_up" => 1}}
-  ##                                                                              }
-  ##                                                                }
-  ##                                         }
-  ##                           
-  ##                             events:     {
-  ##                                           'sign_up' => {"name" => String, "address[city]" => "String"}
-  ##                                         }
+  ##                     schema: {                      
+  ##                               events: {
+  ##                                        'sign_up' => {"name" => String, "address[city]" => "String", "$l" => "String"}
+  ##                                       }
   ##                             
-  ##                             profile:    {
-  ##                                           "customer[address][city]"=>  {"total"=>1, "types"=>{"String"=>1}}, 
-  ##                                           "email"=>                    {"total"=>1, "types"=>{"String"=>1}}
-  ##                                         }  
-  ##                             system:     {
-  ##                                           "os"=>        {"total"=>2, "types"=>{"String"=>1, "Number"=>1}}, 
-  ##                                           "browser"=>   {"total"=>2, "types"=>{"String"=>2}}}
-  ##                                         }  
-  ##                           },
+  ##                             },
+  ##                     sample_events: {
+  ##                                      'sign_up' => {"name" => "john", "address" => { "city" => "NY"}, "email" => "john@doe.com", $l" => "String"}
+  ##                                      'purchased' => {"itme" => "ipod", "value" => 50 $" , "$l" => "Bangalore", "$b" => "chrome"}
+  ##                                   },
   ##                     rules: [
   ##                              {
   ##                                "name"=>"A fancy rule", "event"=>"singup", "owner"=>"client", "action"=>"topbar",
@@ -168,9 +113,6 @@ class AccountsController < ApplicationController
     Rails.logger.info("Enter Account => List Apps")
 
     ret = {:return => {status: true}, :error => nil}
-
-    params[:account_id] = current_account._id.to_s 
-    params[:method] = "list_apps"
     
     if params[:sync]
       ret = AccountsWorker.list_apps(params)
@@ -185,5 +127,4 @@ class AccountsController < ApplicationController
     Rails.logger.error("**** ERROR **** #{er(e)}")
     respond_with({ errors:  e.message}, status: 422)
   end
-
 end

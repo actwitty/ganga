@@ -297,49 +297,12 @@ class Actor
   ##   account_id: "23232332"        [MANDATORY]
   ##   app_id: "1234444',            [MANDATORY]
   ##
-  ##   identifiers: true or false    [OPTIONAL] # associated identifiers 
-  ##   events: true or false         [OPTIONAL] # events 
-  ##   conversions: true or false    [OPTIONAL] # conversion
-  ##   errors: true or false         [OPTIONAL] # errors
   ## }
 
-  # OUTPUT => {
-  ##            account: {id: "232342343"}
-  ##            app: {id: "234324"}
-  ##
-  ##            actor: {id: "3433434", description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}},time: 2009-02-19 00:00:00 UTC }
-  ##            identifiers: [{"a@b.com" => "email"}, {"9999999" => "mobile"}, {"34433444" => "facebook_uid"}],
-  ##
-  ##            events: [
-  ##                      {
-  ##                         id: "3232342434", name: "sign_in", 
-  ##                         properties: [{"k" => "name", "v" => "alok"}, {"k" => "address[city]", "v" => "Bangalore"}]
-  ##                         time: 2009-02-19 00:00:00 UTC
-  ##                      },
-  ##                      {...}
-  ##                    ],
-  ##            conversions: [
-  ##                            {
-  ##                              id: "32323424355",
-  ##                              properties: [{"k" => "button", "v" => "clicked"}, {"k" => "times", "v" => "40"}]
-  ##                              time: 2009-02-19 23:00:00 UTC
-  ##                            },
-  ##                            {...}
-  ##                         ],
-  ##            errors: [
-  ##                       {
-  ##                          id: "3232342434",
-  ##                          properties: [{"k" => "name", "v" => "Javascript Error"}, {"k" => "reason", "v" => "dont know"}]
-  ##                          time: 2009-02-19 21:00:00 UTC
-  ##                       },
-  ##                       {...}
-  ##                    ],
-  ##
-  ##          }
+  # OUTPUT => {:return => object, :error => nil}
   def self.read(params)
     Rails.logger.info("Enter Actor Read")
 
-    hash = {identifiers: [], events: [], conversions: [], errors: [] }
     actor_id = nil
     actor = nil
 
@@ -364,37 +327,8 @@ class Actor
 
     actor = Actor.where(app_id: params["app_id"], _id: actor_id).first if actor.blank?
     raise et("actor.invalid_actor_id", id: actor_id) if actor.blank?
-
-    hash[:account] = {id: actor.account_id.to_s}
-    hash[:app] = {id: actor.app_id.to_s} 
-    hash[:actor] = actor.format_actor  
-
-    #BLOCKED FOR TIMEBEING
-    # if params[:identifiers] == true
-    #   ids = Identifier.where(actor_id: actor_id, app_id: params["app_id"]).all
-    #   ids.each {|attr| hash[:identifiers] << attr.format_identifier}
-    #   Rails.logger.info("Adding Identifiers")
-    # end
-    
-    if params["events"] == true
-      events = Event.where(actor_id: actor_id, app_id: params["app_id"], meta: false).limit(AppConstants.limit_events).desc(:_id)
-      events.each {|attr| hash[:events] << attr.format_event}
-      Rails.logger.info("Adding Events")
-    end
-
-    if params["conversions"] == true
-      conversions = Conversion.where(actor_id: actor_id, app_id: params["app_id"]).limit(AppConstants.limit_conversions).desc(:_id)
-      conversions.each {|attr| hash[:conversions] << attr.format_conversion}
-      Rails.logger.info("Adding Conversions")
-    end
-
-    if params["errors"] == true
-      errors = Err.where(actor_id: actor_id, app_id: params["app_id"]).limit(AppConstants.limit_errors).desc(:_id)
-      errors.each {|attr| hash[:errors] << attr.format_err}
-      Rails.logger.info("Adding Errors")
-    end
-
-    {:return => hash, :error => nil}    
+  
+    {:return => actor, :error => nil}    
   rescue => e 
     Rails.logger.error("**** ERROR **** #{er(e)}")
     {:return => {}, :error => e}

@@ -5,3 +5,4 @@ en:
     refresh_token_failed: "Refreshing access token failed"
     invalid_token: "Invalid Token"
     invalid_origin: "%{url} url is not valid"
+    invalid_app_id: "Invalid App id"

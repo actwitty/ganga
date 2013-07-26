@@ -7,7 +7,7 @@ class AccountsWorker
 
     ret = {:return => nil, :error => nil}
 
-    case params["method"]
+    case params["action"]
     when "read"
       ret = AccountsWorker.read(params)
     when "list_apps"
@@ -45,7 +45,7 @@ class AccountsWorker
 
     hash = { apps: []}
    
-    App.where(account_id: params["account_id"]).all.each do |attr|
+    App.where(account_id: params["id"]).all.each do |attr|
       hash[:apps] << attr.format_app  
     end 
       

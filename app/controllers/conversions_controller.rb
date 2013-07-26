@@ -10,7 +10,7 @@ class ConversionsController < ApplicationController
   # INPUT
   ## {
   ##  :app_id => "1234444',   [MANDATORY]
-  ##  :actor_id => "1223343", [MANDATORY]  # if not given, anonymous actor is created
+  ##  :actor_id => "1223343", [OPTIONAL]  # if not given, anonymous actor is created
   ##  :properties => {        [MANDATORY]
   ##      :button => "clicked",
   ##      :times => "40"
@@ -41,9 +41,6 @@ class ConversionsController < ApplicationController
     Rails.logger.info("Enter Conversion Create")
 
     ret = {:return => {status: true}, :error => nil}
-
-    params[:account_id] = current_account._id.to_s 
-    params[:method] = "create"
     
     if params[:sync]
       ret = ConversionsWorker.create(params)
@@ -58,4 +55,54 @@ class ConversionsController < ApplicationController
     Rails.logger.error("**** ERROR **** #{er(e)}")
     respond_with({ errors:  e.message}, status: 422, :location => "nil")
   end  
+
+  # NOTE
+  ## Read conversions
+
+  # INPUT
+  ## {
+  ##  :app_id => "1234444',   [MANDATORY]
+  ##  :filter => {            [MANDATORY]
+  ##      :app => true  
+  ##            OR
+  ##      :account => true
+  ##            OR
+  ##      :actor => true
+  ##      :actor_id => "21211313" [MANDATORY when actor: true]
+  ##   }
+  ## }
+
+  # OUTPUT =>  
+  ##[sync call]
+  ##          [
+  ##             {
+  ##               properties: [{"k" => "button", "v" => "clicked"}, {"k" => "times", "v" => "40"}],
+  ##               app_id: "343433433",
+  ##               actor_id: "3434334",
+  ##               account_id: "4446456456",
+  ##               time: 2009-02-19 00:00:00 UTC
+  ##             },
+  ##             {..}
+  ##          ],
+  ##[async call]
+  ##          {status: true}
+
+  def read
+    Rails.logger.info("Enter Conversion Read")
+
+    ret = {:return => {status: true}, :error => nil}
+    
+    if params[:sync]
+      ret = ConversionsWorker.read(params)
+    else
+      ConversionsWorker.perform_async(params)
+    end  
+    
+    raise ret[:error] if !ret[:error].blank?
+
+    respond_with( ret[:return], status: 200, location: "nil")
+  rescue => e 
+    Rails.logger.error("**** ERROR **** #{er(e)}")
+    respond_with({ errors:  e.message}, status: 422, :location => "nil")
+  end
 end

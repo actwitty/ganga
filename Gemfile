@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
-ruby "1.9.3"
+ruby "2.0.0"
 
-gem 'rails', '3.2.9'
+gem 'rails', '3.2.13'
 
 gem 'heroku'
 gem 'rb-readline'
@@ -109,7 +109,7 @@ gem 'yajl-ruby'
 gem 'domainatrix'
 
 # for v8 update
-gem 'libv8'
+#gem 'therubyracer'
 
 # deployment capistrano 
 gem 'capistrano'
@@ -125,7 +125,7 @@ group :test  do
   gem 'spork-rails'
   gem 'database_cleaner'
   gem 'ruby-prof'
-  gem 'capybara'
-  gem 'capybara-webkit'
-  gem 'capybara-json'
+  # gem 'capybara'
+  # gem 'capybara-webkit'
+  # gem 'capybara-json'
 end

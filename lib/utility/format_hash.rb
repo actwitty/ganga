@@ -43,9 +43,16 @@ module Utility
         else
           # process terminal element
           if params[:serialize_to] == "type"
-            schema[e[1][:path]] = GetType.get_type(e[0].values[0]) #"#{eval(e[0].values[0]).class}"
+            if e[1][:path][0] ==  "$"
+              # for system type, get their type from fixed yml
+              schema[e[1][:path]] = GetType.get_system_type(e[1][:path]) 
+            else
+              schema[e[1][:path]] = GetType.get_type(e[0].values[0]) #"#{eval(e[0].values[0]).class}"
+            end
+
           elsif params[:serialize_to] == "value"
             schema[e[1][:path]]= e[0].values[0]
+          
           else
             raise "Invalid Parameter: :serialize_to =>  #{params[:serialize_to]}"
           end   

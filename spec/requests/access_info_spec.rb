@@ -19,6 +19,7 @@ describe "access control" do
 
     resp = page.driver.post('/app/create', { format: 'json', account_id: @account._id, description: { :name => "tito", :email => "john.doe@example.com", origin: "http://rulebot.com"}})
     @json = JSON.parse(resp.body)
+    puts @json
     a = App.where(id: @json["id"]).first
   end
   
@@ -45,7 +46,7 @@ describe "access control" do
   end
 
   it "should authenticate origin for cross_site" do
-    # lets make out of session request
+    # make out of session request
     get('/app/read', {  format: 'json', id: @json["id"], actors: true},  { "HTTP_HOST" => "http://rulebot.com" })
     puts JSON.parse(response.body)
     response.status.should eq(200)  
@@ -64,8 +65,7 @@ describe "access control" do
     # lets make out of session request
 
     #request object is not available in request spec
-    a = App.find(@json["id"])
-    post('/app/update', { format: 'json', token: a.access_info.token, id: "3423423423", description: { :name => "hello", :email => "tom.doe@example.com", mobile: "943479474"}},  { "HTTP_HOST" => "" })
+    post('/app/update', { format: 'json', token: @account.access_token.token, id: "3423423423", description: { :name => "hello", :email => "tom.doe@example.com", mobile: "943479474"}},  { "HTTP_HOST" => "" })
     puts JSON.parse(response.body)
     response.status.should_not eq(200)
   end
@@ -74,8 +74,7 @@ describe "access control" do
     # lets make out of session request
 
     #request object is not available in request spec
-    a = App.find(@json["id"])
-    post('/app/update', { format: 'json', token: a.access_info.token, id: @json["id"], description: { :name => "hello", :email => "tom.doe@example.com", mobile: "943479474"}},  { "HTTP_HOST" => "" })
+    post('/app/update', { format: 'json', token: @account.access_token.token, id: @json["id"], description: { :name => "hello", :email => "tom.doe@example.com", mobile: "943479474"}},  { "HTTP_HOST" => "" })
     puts JSON.parse(response.body)
     response.status.should eq(200)
   end

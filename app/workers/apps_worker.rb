@@ -7,7 +7,7 @@ class AppsWorker
 
     ret = {:return => nil, :error => nil}
 
-    case params["method"]
+    case params["action"]
     when "create"
       ret = AppsWorker.create(params)
     when "read"
@@ -16,6 +16,10 @@ class AppsWorker
       ret = AppsWorker.delete(params)
     when "update"
       ret = AppsWorker.update(params)
+    when "add_sample_event"
+      ret = AppsWorker.add_sample_event(params)
+    when "delete_sample_event"
+      ret = AppsWorker.delete_sample_event(params)
     else
       raise "Method does not exist"
     end       
@@ -62,7 +66,7 @@ class AppsWorker
     ret = App.update(params)
 
     raise ret[:error] if !ret[:error].blank?
-
+     
     {:return => ret[:return].format_app, :error => nil }
   rescue => e
     {:return => nil, :error => ret[:error]}
@@ -73,15 +77,47 @@ class AppsWorker
   def self.read(params)
     Rails.logger.info("Enter App Read")
     
-    ret = Rails.cache.fetch(params["id"]) do
-      App.read(params)
-    end
-    #ret = App.read(params) 
+    ret = App.read(params)
     
-    raise ret[:error] if !ret[:error].blank?
-    
+    raise ret[:error] if !ret[:error].blank?    
 
-    {:return => ret[:return], :error => nil}
+    hash = ret[:return].format_app
+    
+    # delete rules and sample events while serving origin request
+    if params["request_type"] == AppConstants.request_type_origin
+      hash.delete(:rules) 
+      hash.delete(:sample_events) 
+    end
+
+    {:return => hash, :error => nil}
+  rescue => e
+    {:return => nil, :error => ret[:error]}
+  end
+
+  # INPUT - Check AppsController#add_sample_event
+  # OUTPUT - Check AppsController#add_sample_event [sync mode]
+  def self.add_sample_event(params)
+    Rails.logger.info("Enter App Sample Event")
+
+    ret = App.add_sample_event(params)
+
+    raise ret[:error] if !ret[:error].blank?
+     
+    {:return => ret[:return], :error => nil }
+  rescue => e
+    {:return => nil, :error => ret[:error]}
+  end
+
+  # INPUT - Check AppsController#delete_sample_event
+  # OUTPUT - Check AppsController#delete_sample_event [sync mode]
+  def self.delete_sample_event(params)
+    Rails.logger.info("Enter Delete Sample Event")
+
+    ret = App.delete_sample_event(params)
+
+    raise ret[:error] if !ret[:error].blank?
+     
+    {:return => ret[:return], :error => nil }
   rescue => e
     {:return => nil, :error => ret[:error]}
   end

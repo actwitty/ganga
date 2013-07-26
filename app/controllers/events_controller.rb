@@ -47,12 +47,60 @@ class EventsController < ApplicationController
     Rails.logger.info("Enter Event Create")
 
     ret = {:return => {status: true}, :error => nil}
-
-    params[:account_id] = current_account._id.to_s 
-    params[:method] = "create"
     
     if params[:sync]
       ret = EventsWorker.create(params)
+    else
+      EventsWorker.perform_async(params)
+    end  
+    
+    raise ret[:error] if !ret[:error].blank?
+
+    respond_with( ret[:return], status: 200, location: "nil")
+  rescue => e 
+    Rails.logger.error("**** ERROR **** #{er(e)}")
+    respond_with({ errors:  e.message}, status: 422, :location => "nil")
+  end
+
+  # NOTE
+  ## Read events
+
+  # INPUT
+  ## {
+  ##  :app_id => "1234444',   [MANDATORY]
+  ##  :filter => {            [MANDATORY]
+  ##      :app => true  
+  ##            OR
+  ##      :account => true
+  ##            OR
+  ##      :actor => true
+  ##      :actor_id => "21211313" [MANDATORY when actor: true]
+  ##   }
+  ## }
+
+  # OUTPUT =>  
+  ##[sync call]
+  ##          [
+  ##             {
+  ##               name: "sign_in", 
+  ##               properties: [{"k" => "name", "v" => "alok"}, {"k" => "address[city]", "v" => "Bangalore"}]
+  ##               app_id: "343433433",
+  ##               actor_id: "3434334",
+  ##               account_id: "4446456456",
+  ##               time: 2009-02-19 00:00:00 UTC
+  ##             },
+  ##             {..}
+  ##          ],
+  ##[async call]
+  ##          {status: true}
+
+  def read
+    Rails.logger.info("Enter Event Read")
+
+    ret = {:return => {status: true}, :error => nil}
+    
+    if params[:sync]
+      ret = EventsWorker.read(params)
     else
       EventsWorker.perform_async(params)
     end  

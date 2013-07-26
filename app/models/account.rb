@@ -1,3 +1,5 @@
+require 'generate_token'
+
 class Account
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -10,6 +12,7 @@ class Account
   has_many    :identifiers
   has_many    :conversions
   has_many    :errs,    :dependent => :destroy # errs can exist only in account scope, independent of actor and app
+  embeds_one  :access_token
 
   # Attributes
   ## Include default devise modules. Others available are:
@@ -67,9 +70,14 @@ class Account
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :name, :email, :password, :password_confirmation, :remember_me, :confirmed_at, :password_unset
-   
+  
+  after_create :create_token 
   after_create :add_user_to_mailchimp, :unless => Proc.new {|obj| Rails.env == "test"}
   before_destroy :remove_user_from_mailchimp 
+
+
+  # INDEX
+  index({"access_token.token" => 1})
 
   # Functions
 
@@ -83,51 +91,11 @@ class Account
   ## }
 
   # OUTPUT =>{ 
-  ##            account: {id: "445654654645", name: "Sudhanshu & Sons Chaddhi Wale", description: {subscription: "Free", authenticate_app: false}},
-  ##            events: [
-  ##                      {
-  ##                        name: "sign_in", 
-  ##                        properties: [{"k" => "name", "v" => "alok"}, {"k" => "address[city]", "v" => "Bangalore"}]
-  ##                        app_id: "343433433",
-  ##                        actor_id: "3434334"
-  ##                        time: 2009-02-19 00:00:00 UTC
-  ##                      },
-  ##                      {..}
-  ##                    ],
-  ##            conversions: [
-  ##                            {
-  ##                              id: "32323424355",
-  ##                              properties: [{"k" => "button", "v" => "clicked"}, {"k" => "times", "v" => "40"}],
-  ##                              app_id: "343433433",
-  ##                              actor_id: "3433434",
-  ##                              time: 2009-02-19 23:00:00 UTC
-  ##                            },
-  ##                            {...}
-  ##                         ],
-  ##            errors: [
-  ##                       {
-  ##                          id: "3232342434",
-  ##                          properties: [{"k" => "name", "v" => "Javascript Error"}, {"k" => "reason", "v" => "dont know"}]
-  ##                          app_id: "343433433",
-  ##                          actor_id: "3433434",
-  ##                          time: 2009-02-19 21:00:00 UTC
-  ##                       },
-  ##                       {...}
-  ##                    ],
-  ##            actors: [
-  ##                      {
-  ##                        id: "3433434", 
-  ##                        description:  { profile: {  "name": ["John Doe"],   "email": ["john@doe.com"] }, system: {os: ["win", "mac"]}},
-  ##                        time: 2009-02-19 21:00:00 UTC
-  ##                      }
-  ##                      {..}
-  ##                    ]
-  ##        }
+  ##            id: "445654654645", name: "Sudhanshu & Sons Chaddhi Wale", description: {subscription: "Free", authenticate_app: false}
+  ##         }
   def self.read(params)
 
     Rails.logger.info("Enter Account Read")
-
-    hash = {events: [], actors: [], conversions: [], errors: []}
 
     if params["id"].blank? 
       raise et("account.invalid_argument_in_read")
@@ -137,32 +105,8 @@ class Account
 
     raise et("account.invalid_account_id", id: params["id"]) if account.blank?
 
-    hash[:account] = {id: account._id.to_s, description: account.description}
-
-    if params["events"] == true
-      events = Event.where( account_id: params["id"], meta: false ).limit(AppConstants.limit_events).desc(:_id)
-      events.each { |attr| hash[:events] <<  attr.format_event }
-      Rails.logger.info("Adding Events")
-    end
-
-    if params["conversions"] == true
-      conversions = Conversion.where(account_id: account._id).limit(AppConstants.limit_conversions).desc(:_id)
-      conversions.each {|attr| hash[:conversions] << attr.format_conversion}
-      Rails.logger.info("Adding Conversions")
-    end
-
-    if params["errors"] == true
-      errors = Err.where(account_id: account._id).limit(AppConstants.limit_errors).desc(:_id)
-      errors.each {|attr| hash[:errors] << attr.format_err}
-      Rails.logger.info("Adding Errors")
-    end
-
-    if params["actors"] == true
-      actors = Actor.where(account_id: account._id).limit(AppConstants.limit_actors).desc(:_id)
-      actors.each {|attr| hash[:actors] << attr.format_actor  if attr.meta == false }
-      Rails.logger.info("Adding Actors")
-    end
-
+    hash = {id: account._id.to_s, description: account.description}
+   
     {:return => hash, :error => nil}  
   rescue => e
     Rails.logger.error("**** ERROR **** #{er(e)}")
@@ -206,4 +150,17 @@ class Account
     end
   end
   
+  # INPUT - After create callback for creating token access
+  def create_token
+    Rails.logger.info("Enter Create Token")
+    
+    # create token
+    token = GenerateToken.unique_token
+    access_token = self.create_access_token( token: token, role: {})
+    raise et("account.create_token_failed") if access_token.blank?
+
+    true
+  rescue => e 
+    Rails.logger.error("**** ERROR **** #{e.message}")
+  end  
 end

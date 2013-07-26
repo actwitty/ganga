@@ -179,28 +179,47 @@ Svc::FullContact.constants.each {|type| puts "Svc::FullContact::#{type}"}
 =end
 require "em-synchrony"
 require "net/http"
-require "em-synchrony/em-http"
-f =  Fiber.current
-      f1 = nil
-      EM.synchrony do
-        TCPSocket = EventMachine::Synchrony::TCPSocket
+# require "em-synchrony/em-http"
+# f =  Fiber.current
+# f1 = nil
+# EM.synchrony do
+#   TCPSocket = EventMachine::Synchrony::TCPSocket
 
-        resp = Net::HTTP.get("github.com", "/index.html")
+#   resp = Net::HTTP.get("github.com", "/index.html")
         
-        #Actor.create!(account_id: "sdfsdfsdfsd", app_id: "sfsssss")
+#   #Actor.create!(account_id: "sdfsdfsdfsd", app_id: "sfsssss")
         
-        puts resp
+#   puts resp
 
-        multi = EventMachine::Synchrony::Multi.new
-        multi.add :a, EventMachine::HttpRequest.new("http://www.postrank.com").aget
-        multi.add :b, EventMachine::HttpRequest.new("http://www.postrank.com").apost
-        res = multi.perform
+#   multi = EventMachine::Synchrony::Multi.new
+#   multi.add :a, EventMachine::HttpRequest.new("http://www.postrank.com").aget
+#   multi.add :b, EventMachine::HttpRequest.new("http://www.postrank.com").apost
+#   res = multi.perform
 
-        p "Look ma, no callbacks, and parallel HTTP requests!"
-        p res
+#   p "Look ma, no callbacks, and parallel HTTP requests!"
+#   p res
 
-        EM.stop
-      end
+#   EM.stop
+# end
 
-      puts Fiber.current
-      puts "hello"
+# puts Fiber.current
+# puts "hello"
+
+class Account
+  attr_accessor :id
+  def initialize(id)
+    @_id = id || 0
+  end
+end
+class Cont
+  def set_verified(account_id)
+    puts self.methods
+    b = Proc.new {|account_id| Account.new(5)}
+    self.class.send(define_method, "current_account", &b)
+  end  
+end
+
+c = Cont.new
+c.set_verified(5)
+
+puts c.current_account.id
