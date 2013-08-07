@@ -24,7 +24,7 @@ App.Project = Ember.Object.extend
 
   checkRulesIsNull: ->
     hasManyRules = @get 'hasManyRules'
-    if hasManyRules is null
+    if hasManyRules is null or hasManyRules is undefined
       true
   serialize: -> 
     {

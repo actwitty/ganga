@@ -47,7 +47,7 @@ App.ProjectsController = Em.ArrayController.extend
 
     if project.checkRulesIsNull() is true
       success= (data) ->         
-        project.setRules(data.app.rules)      
+        project.setRules(data.rules)      
         App.get("router").send("projectRulesLoaded", project)
 
       error= () ->

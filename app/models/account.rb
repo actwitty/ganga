@@ -22,6 +22,7 @@ class Account
     :recoverable, :rememberable, :trackable, :validatable,
     :lockable, :confirmable
 
+
   ## Database authenticatable
   field :email,              :type => String, :default => ""
   field :encrypted_password, :type => String, :default => ""
@@ -72,13 +73,15 @@ class Account
   attr_accessible :name, :email, :password, :password_confirmation, :remember_me, :confirmed_at, :password_unset
   
   after_create :create_token 
-  after_create :add_user_to_mailchimp, :unless => Proc.new {|obj| Rails.env == "test"}
-  before_destroy :remove_user_from_mailchimp 
+  # after_create :add_user_to_mailchimp, :unless => Proc.new {|obj| Rails.env == "test"}
+  # before_destroy :remove_user_from_mailchimp 
 
 
   # INDEX
   index({"access_token.token" => 1})
-
+  def confirmation_required?
+    false
+  end
   # Functions
 
   # INPUT

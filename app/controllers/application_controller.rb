@@ -6,9 +6,6 @@ class ApplicationController < ActionController::Base
 
   include Authenticate
 
-  def after_sign_in_path_for(resource_or_scope)
-    root_path
-  end
 
   def self.authenticate_request(params = {}, options = [])
     Rails.logger.info("Enter Authenticate Request")

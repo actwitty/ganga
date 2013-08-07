@@ -56,7 +56,7 @@ App.ConditionsView = Ember.View.extend
               activate: true
               header: 
                       main : "Reject all changes made "
-                      note : "You have requested Trigmatic to drop the edits to this rule."
+                      note : "You have requested rulebot to drop the edits to this rule."
               detail: "Clicking yes will clear all changes and you have done on this screen. Are you sure ? "
               first_btn:
                         class : "btn-warning"
@@ -94,7 +94,7 @@ App.ConditionsView = Ember.View.extend
               activate: true
               header: 
                       main : "Save the edit on this rule "
-                      note : "You have requested Trigmatic to save the edits on this rule."
+                      note : "You have requested rulebot to save the edits on this rule."
               detail: "Clicking yes will save the rule or you can reject the edit. Are you sure ? "
               first_btn:
                         class : "btn-success"

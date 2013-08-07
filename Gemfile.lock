@@ -1,3 +1,12 @@
+GIT
+  remote: git://github.com/seyhunak/twitter-bootstrap-rails.git
+  revision: 36060be332ffc8408daca5cee20ea5694261105b
+  branch: static
+  specs:
+    twitter-bootstrap-rails (2.0.7)
+      actionpack (>= 3.1)
+      railties (>= 3.1)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -34,16 +43,12 @@ GEM
     algorithms (0.6.1)
     app_constants (1.0.4)
     arel (3.0.2)
-    barber (0.4.2)
-      ember-source
-      execjs
-      handlebars-source
     bcrypt-ruby (3.1.1)
     bootstrap-colorpicker-rails (0.3.1)
       railties (>= 3.0)
     bootstrap-datepicker-rails (1.1.1.3)
       railties (>= 3.0)
-    bootstrap-sass (2.3.2.1)
+    bootstrap-sass (2.3.0.1)
       sass (~> 3.2)
     builder (3.0.4)
     capistrano (2.15.5)
@@ -89,17 +94,10 @@ GEM
       eventmachine (>= 1.0.0.beta.4)
     em-synchrony (1.0.3)
       eventmachine (>= 1.0.0.beta.1)
-    ember-data-source (0.13)
-      ember-source
-    ember-rails (0.12.0)
+    ember-rails (0.8.0)
       active_model_serializers
-      barber (>= 0.4.1)
-      ember-data-source
-      ember-source (>= 1.0.0.rc2.2)
       execjs (>= 1.2)
-      railties (>= 3.1)
-    ember-source (1.0.0.rc6.3)
-      handlebars-source (= 1.0.0.rc4)
+      railties (~> 3.1)
     erubis (2.7.0)
     eventmachine (1.0.3)
     excon (0.25.3)
@@ -145,7 +143,7 @@ GEM
     journey (1.0.4)
     jquery-datatables-rails (1.11.2)
       jquery-rails
-    jquery-rails (3.0.4)
+    jquery-rails (2.1.4)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
     jquery-ui-rails (4.0.4)
@@ -220,7 +218,7 @@ GEM
       rdoc (~> 3.4)
       thor (>= 0.14.6, < 2.0)
     rake (10.1.0)
-    rb-readline (0.5.0)
+    rb-readline (0.4.2)
     rdoc (3.12.2)
       json (~> 1.4)
     redis (3.0.4)
@@ -279,11 +277,6 @@ GEM
     treetop (1.4.14)
       polyglot
       polyglot (>= 0.3.1)
-    twitter-bootstrap-rails (2.2.7)
-      actionpack (>= 3.1)
-      execjs
-      rails (>= 3.1)
-      railties (>= 3.1)
     tzinfo (0.3.37)
     uglifier (2.1.2)
       execjs (>= 0.3.0)
@@ -300,9 +293,9 @@ DEPENDENCIES
   app_constants
   bootstrap-colorpicker-rails
   bootstrap-datepicker-rails
-  bootstrap-sass
+  bootstrap-sass (~> 2.3.0.1)
   capistrano
-  coffee-rails
+  coffee-rails (~> 3.2.1)
   colorize
   dalli
   database_cleaner
@@ -311,7 +304,7 @@ DEPENDENCIES
   domainatrix
   em-http-request
   em-synchrony
-  ember-rails
+  ember-rails (= 0.8.0)
   factory_girl_rails
   fancybox-rails
   faraday
@@ -319,10 +312,11 @@ DEPENDENCIES
   font-awesome-rails
   google-code-prettify-rails
   haml-rails
+  handlebars-source (= 1.0.0.rc4)
   heroku
   hominid
   jquery-datatables-rails
-  jquery-rails
+  jquery-rails (= 2.1.4)
   jquery-ui-rails
   kiqstand
   less-rails
@@ -332,15 +326,15 @@ DEPENDENCIES
   puma
   pusher
   rails (= 3.2.13)
-  rb-readline
+  rb-readline (~> 0.4.2)
   redis
   rspec-rails
   ruby-prof
-  sass-rails
+  sass-rails (~> 3.2.3)
   select2-rails
   sidekiq
   spork-rails
   therubyracer
-  twitter-bootstrap-rails
+  twitter-bootstrap-rails!
   uglifier
   yajl-ruby

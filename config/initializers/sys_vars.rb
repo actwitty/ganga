@@ -1,0 +1,1 @@
+SYS_VARS = YAML.load_file("#{Rails.root}/config/sys_vars.yml")

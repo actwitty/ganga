@@ -1,7 +1,7 @@
 !!!
 %html
   %head
-    %title Trigmatic
+    %title Rulebot
     
     
 
@@ -27,7 +27,7 @@
 
 
   %body  
-    #trigmaticEmberBase
+    #rulebotEmberBase
     -if !current_account.nil?
       :javascript
         var loggedInAccountID = '#{current_account.id}';
@@ -36,7 +36,7 @@
     /* Only in the production mode */
     -if  Rails.env.production?
       =render 'layouts/intercomio'
-      =render 'layouts/olark'
+      / =render 'layouts/olark'
       =render 'layouts/uservoice'
 
 

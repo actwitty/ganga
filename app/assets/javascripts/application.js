@@ -12,10 +12,10 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 //= require jquery
-//= require_tree ./vendor
-//= require ember
 //= require jquery_ujs
-//= require twitter/bootstrap
+//= require bootstrap
+//= require handlebars
+//= require ember
 //= require select2
 //= require bootstrap-colorpicker	
 //= require bootstrap-datepicker/core
@@ -28,7 +28,7 @@
 
 App = Ember.Application.create({
 									autoinit: false,
-								 	rootElement: '#trigmaticEmberBase'								 
+								 	rootElement: '#rulebotEmberBase'								 
 							   });
 
 
